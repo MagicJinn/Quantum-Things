@@ -37,7 +37,6 @@ public class EntitySpectreIlluminator extends Entity
 	@Override
 	public void onKillCommand()
 	{
-		// TODO Auto-generated method stub
 		super.onKillCommand();
 		
 		if (!world.isRemote)
@@ -73,15 +72,19 @@ public class EntitySpectreIlluminator extends Entity
 	{
 		if (!player.world.isRemote)
 		{
-			this.setDead();
+			// Prevent duplication of items
+			if (!isDead) {
+				this.setDead();
 
-			player.world.spawnEntity(new EntityItem(player.world, this.posX, this.posY, this.posZ, new ItemStack(ModItems.spectreIlluminator)));
+				player.world.spawnEntity(new EntityItem(player.world, this.posX, this.posY,
+						this.posZ, new ItemStack(ModItems.spectreIlluminator)));
 
-			SpectreIlluminationHandler handler = SpectreIlluminationHandler.get(this.world);
+				SpectreIlluminationHandler handler = SpectreIlluminationHandler.get(this.world);
 
-			if (handler.isIlluminated(this.getPosition()))
+				if (handler.isIlluminated(this.getPosition()))
 				handler.toggleChunk(this.world, this.getPosition());
 		}
+	}
 		return EnumActionResult.SUCCESS;
 	}
 
