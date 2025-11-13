@@ -966,7 +966,7 @@ public class RTEventHandler
 
 			if (recipe != null)
 			{
-				event.setOutput(recipe.getOutput());
+				event.setOutput(recipe.getOutput().copy());
 				event.setCost(recipe.getCost());
 			}
 		}

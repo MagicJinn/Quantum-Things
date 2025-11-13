@@ -238,7 +238,8 @@ public class SpectreHandler extends WorldSavedData
 			if (playerCube != null)
 			{
 				BlockPos spawn = playerCube.getSpawnBlock();
-				player.connection.setPlayerLocation(spawn.getX() + 0.5, spawn.getY() + 1, spawn.getZ() + 0.5, player.rotationYaw, player.rotationPitch);
+				player.setLocationAndAngles(spawn.getX() + 0.5, spawn.getY() + 1,
+						spawn.getZ() + 0.5, player.rotationYaw, player.rotationPitch);
 			}
 			else
 			{
