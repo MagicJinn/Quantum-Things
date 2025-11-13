@@ -1,5 +1,6 @@
 package lumien.randomthings.entitys;
 
+import javax.annotation.Nonnull;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationHandler;
 import lumien.randomthings.item.ModItems;
 import net.minecraft.entity.Entity;
@@ -22,6 +23,7 @@ public class EntitySpectreIlluminator extends Entity
 {
 	int actionTimer;
 	boolean illuminated;
+	boolean inPosition;
 
 	public EntitySpectreIlluminator(World worldIn)
 	{
@@ -30,6 +32,8 @@ public class EntitySpectreIlluminator extends Entity
 		this.noClip = true;
 
 		this.illuminated = false;
+
+		this.inPosition = false;
 
 		this.setSize(0.5F, 0.5F);
 	}
@@ -43,8 +47,10 @@ public class EntitySpectreIlluminator extends Entity
 		{
 			SpectreIlluminationHandler handler = SpectreIlluminationHandler.get(this.world);
 
-			if (handler.isIlluminated(this.getPosition()))
-				handler.toggleChunk(this.world, this.getPosition());
+			BlockPos myPosition = this.getPosition();
+
+			if (handler.isIlluminated(myPosition))
+				handler.toggleChunk(this.world, myPosition);
 		}
 	}
 
@@ -67,8 +73,10 @@ public class EntitySpectreIlluminator extends Entity
 		return true;
 	}
 
+	@SuppressWarnings("null")
 	@Override
-	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand)
+	public EnumActionResult applyPlayerInteraction(@Nonnull EntityPlayer player, @Nonnull Vec3d vec,
+			@Nonnull EnumHand hand)
 	{
 		if (!player.world.isRemote)
 		{
@@ -80,9 +88,10 @@ public class EntitySpectreIlluminator extends Entity
 						this.posZ, new ItemStack(ModItems.spectreIlluminator)));
 
 				SpectreIlluminationHandler handler = SpectreIlluminationHandler.get(this.world);
-
-				if (handler.isIlluminated(this.getPosition()))
-				handler.toggleChunk(this.world, this.getPosition());
+				BlockPos pos = this.getPosition();
+				if (handler.isIlluminated(pos)) {
+					handler.toggleChunk(this.world, pos);
+				}
 		}
 	}
 		return EnumActionResult.SUCCESS;
@@ -93,94 +102,78 @@ public class EntitySpectreIlluminator extends Entity
 	{
 		super.onEntityUpdate();
 
+		long worldTick = this.world.getTotalWorldTime();
+		int uuid = this.getEntityId(); // Use uuid as offset
+		if (inPosition && worldTick % 20 + uuid != 0)
+			return;
+
 		if (!this.world.isRemote)
 		{
-			int heighestBlockInChunk = 0;
-
-			Chunk c = world.getChunkFromBlockCoords(this.getPosition());
-
-			for (int x = 0; x < 16; x++)
-			{
-				for (int z = 0; z < 16; z++)
-				{
-					int height = c.getHeightValue(x, z);
-
-					if (height > heighestBlockInChunk)
-					{
-						heighestBlockInChunk = height;
-					}
-				}
-			}
-
-			heighestBlockInChunk++;
-
-			if (Math.abs(heighestBlockInChunk - this.posY) > 0.05)
-			{
-				if (heighestBlockInChunk < this.posY)
-				{
-					this.motionY = -0.05;
-				}
-				else if (heighestBlockInChunk > this.posY)
-				{
-					this.motionY = 0.05;
-				}
-			}
-			else
-			{
-				this.posY = heighestBlockInChunk;
-				this.motionY = 0;
-			}
-
 			BlockPos myPosition = this.getPosition();
+
+			Chunk thisChunk = world.getChunkFromBlockCoords(myPosition);
+
+			// Efficient way to get the highest block in the chunk
+			int heighestBlockInChunk = 0;
+			for (int y : thisChunk.getHeightMap()) {
+				if (y > heighestBlockInChunk) {
+					heighestBlockInChunk = y;
+				}
+			}
+			heighestBlockInChunk += 5; // 5 blocks above the ground
 
 			ChunkPos pos = new ChunkPos(myPosition);
 
 			double chunkX = (pos.getXStart() + pos.getXEnd()) / 2D;
 			double chunkZ = (pos.getZStart() + pos.getZEnd()) / 2D;
 
-			if (Math.abs(posX - chunkX) > 0.03)
-			{
-				if (chunkX > posX)
-				{
-					this.motionX = 0.03;
-				}
-				else
-				{
-					this.motionX = -0.03;
-				}
-			}
+			// Calculate distances
+			double distX = chunkX - this.posX;
+			double distY = heighestBlockInChunk - this.posY;
+			double distZ = chunkZ - this.posZ;
+
+			// Use smoother movement with interpolation
+			double speed = 0.05;
+			double threshold = 0.01;
+
+			// X movement
+			this.motionX = 0;
+			if (Math.abs(distX) > threshold)
+				this.motionX = Math.max(-speed, Math.min(speed, distX * 0.1));
 			else
-			{
 				this.posX = chunkX;
-				this.motionX = 0;
-			}
 
-			if (Math.abs(posZ - chunkZ) > 0.03)
-			{
-				if (chunkZ > posZ)
-				{
-					this.motionZ = 0.03;
-				}
-				else
-				{
-					this.motionZ = -0.03;
-				}
-			}
+
+			// Y movement
+			this.motionY = 0;
+			if (Math.abs(distY) > threshold)
+				this.motionY = Math.max(-speed, Math.min(speed, distY * 0.1));
 			else
-			{
+				this.posY = heighestBlockInChunk;
+
+			// Z movement
+			this.motionZ = 0;
+			if (Math.abs(distZ) > threshold)
+				this.motionZ = Math.max(-speed, Math.min(speed, distZ * 0.1));
+			else
 				this.posZ = chunkZ;
-				this.motionZ = 0;
-			}
 
-			if (!illuminated && this.posX == chunkX && this.posZ == chunkZ && !SpectreIlluminationHandler.get(this.world).isIlluminated(this.getPosition()))
+
+			if (Math.abs(distX) < threshold && Math.abs(distY) < threshold
+					&& Math.abs(distZ) < threshold)
 			{
-				SpectreIlluminationHandler.get(this.world).toggleChunk(this.world, this.getPosition());
-
-				this.illuminated = true;
+				if (!illuminated
+						&& !SpectreIlluminationHandler.get(this.world).isIlluminated(myPosition)) {
+					SpectreIlluminationHandler.get(this.world).toggleChunk(this.world, myPosition);
+					this.illuminated = true;
+					inPosition = true;
+				}
 			}
-		}
 
-		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+		}
+		if (motionX != 0 || motionY != 0 || motionZ != 0) {
+			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+		}
 	}
 
 	@Override
@@ -189,13 +182,13 @@ public class EntitySpectreIlluminator extends Entity
 	}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound compound)
+	protected void readEntityFromNBT(@Nonnull NBTTagCompound compound)
 	{
 		this.illuminated = compound.getBoolean("illuminated");
 	}
 
 	@Override
-	protected void writeEntityToNBT(NBTTagCompound compound)
+	protected void writeEntityToNBT(@Nonnull NBTTagCompound compound)
 	{
 		compound.setBoolean("illuminated", illuminated);
 	}
