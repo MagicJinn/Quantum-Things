@@ -23,12 +23,12 @@ public class ModConfiguration
 
 		Features.removeAirBubble = configuration.getBoolean("RemoveUnderwaterTexture", "Features", false, "TRIES to remove the weird water texture showing around ALL non full blocks. This might look weird when you, for example, are on a ladder underwater.");
 
-		configuration.getCategory("worldgen").setComment("Set to false to disable the generation of the respective objects");
-
-		Worldgen.beans = configuration.get("worldgen", "Beans", true).getBoolean();
-		Worldgen.natureCore = configuration.get("worldgen", "Nature-Core", true).getBoolean();
-		Worldgen.pitcherPlants = configuration.get("worldgen", "PitcherPlants", true).getBoolean();
-		Worldgen.sakanade = configuration.get("worldgen", "Sakanade", true).getBoolean();
+		configuration.getCategory("worldgen-plants").setComment(
+				"Set to false to disable the generation of the respective plants and natural features, or change their frequency");
+		configuration.getCategory("worldgen-features").setComment(
+				"Set to false to disable the generation of structures and special blocks, or change their frequency");
+		configuration.getCategory("worldgen-loot").setComment(
+				"Set to false to disable the generation of loot items in chests and structures, or change their frequency");
 
 		// Annotation Based Config
 		doAnnoations(configuration);

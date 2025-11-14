@@ -22,7 +22,7 @@ public class WorldGenPlants extends WorldGenerator
 		if (world.getWorldType() != WorldType.DEBUG_ALL_BLOCK_STATES)
 		{
 			// Beans
-			if (Worldgen.beans && random.nextBoolean())
+			if (Worldgen.beans && random.nextInt(Worldgen.BEANS_CHANCE) == 0)
 			{
 				int x = position.getX() + 8 + random.nextInt(16);
 				int z = position.getZ() + 8 + random.nextInt(16);
@@ -36,7 +36,7 @@ public class WorldGenPlants extends WorldGenerator
 			}
 
 			// Pitcher Plants
-			if (Worldgen.pitcherPlants && random.nextInt(10) == 0)
+			if (Worldgen.pitcherPlants && random.nextInt(Worldgen.PITCHER_PLANTS_CHANCE) == 0)
 			{
 				int x = position.getX() + 8 + random.nextInt(16);
 				int z = position.getZ() + 8 + random.nextInt(16);
@@ -54,7 +54,7 @@ public class WorldGenPlants extends WorldGenerator
 				}
 			}
 
-			if (Worldgen.LOTUS && random.nextInt(10) == 0)
+			if (Worldgen.LOTUS && random.nextInt(Worldgen.LOTUS_CHANCE) == 0)
 			{
 				int x = position.getX() + 8 + random.nextInt(16);
 				int z = position.getZ() + 8 + random.nextInt(16);
