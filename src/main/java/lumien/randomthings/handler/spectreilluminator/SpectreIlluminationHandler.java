@@ -88,10 +88,11 @@ public class SpectreIlluminationHandler extends WorldSavedData
 		return illuminatedChunks.contains(ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4));
 	}
 
+	@SuppressWarnings("null")
 	public void toggleChunk(World world, BlockPos pos)
 	{
 		long cpLong = ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4);
-		
+
 		boolean newValue;
 		
 		if (illuminatedChunks.contains(cpLong))
@@ -107,7 +108,8 @@ public class SpectreIlluminationHandler extends WorldSavedData
 			newValue = true;
 		}
 		
-		SpectreIlluminationHelper.lightUpdateChunk(world, new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4));
+		SpectreIlluminationHelper.lightUpdateChunk(world,
+				new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4));
 		
 		MessageSpectreIllumination msg = new MessageSpectreIllumination(world.provider.getDimension(), cpLong, newValue);
 		
