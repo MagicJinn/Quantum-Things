@@ -75,7 +75,7 @@ public class RandomThings implements LoadingCallback
 
 	public RTCreativeTab creativeTab;
 
-	public Logger logger;
+	public static Logger logger;
 
 	public ModConfiguration configuration;
 

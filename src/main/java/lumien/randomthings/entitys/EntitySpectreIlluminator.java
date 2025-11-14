@@ -1,6 +1,7 @@
 package lumien.randomthings.entitys;
 
 import javax.annotation.Nonnull;
+import lumien.randomthings.RandomThings;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationHandler;
 import lumien.randomthings.item.ModItems;
 import net.minecraft.entity.Entity;
@@ -104,8 +105,16 @@ public class EntitySpectreIlluminator extends Entity
 
 		long worldTick = this.world.getTotalWorldTime();
 		int uuid = this.getEntityId(); // Use uuid as offset
-		if (inPosition && worldTick % 20 + uuid != 0)
+		// When in position, only update every 100 ticks (staggered by entity ID)
+		// This allows continuous position tracking while reducing server load
+		// If we relog, this will just move normally again, but this is a good compromise for
+		// performance, especially for when the player is building etc etc
+		if (inPosition && (worldTick + uuid) % 100 != 0) {
+			this.motionX = 0;
+			this.motionY = 0;
+			this.motionZ = 0;
 			return;
+		}
 
 		if (!this.world.isRemote)
 		{
@@ -169,7 +178,6 @@ public class EntitySpectreIlluminator extends Entity
 					inPosition = true;
 				}
 			}
-
 		}
 		if (motionX != 0 || motionY != 0 || motionZ != 0) {
 			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
