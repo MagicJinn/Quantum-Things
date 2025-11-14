@@ -147,6 +147,7 @@ public class RandomThings implements LoadingCallback
 		// I know it's not my place to do this, but while this is not caused by this mod, spectre
 		// illuminators will trigger this dormant bug, so the least I can do is fix it.
 		net.minecraft.init.Blocks.SNOW.setTickRandomly(false);
+		// https://bugs.mojang.com/browse/MC/issues/MC-88097
 	}
 
 	@EventHandler
