@@ -1,5 +1,7 @@
 package lumien.randomthings.item;
 
+import javax.annotation.Nonnull;
+
 import lumien.randomthings.client.particles.EntityColoredSmokeFX;
 import lumien.randomthings.handler.EscapeRopeHandler;
 import net.minecraft.client.Minecraft;
@@ -26,19 +28,20 @@ public class ItemEscapeRope extends ItemBase
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack par1ItemStack)
+	public int getMaxItemUseDuration(@Nonnull ItemStack par1ItemStack)
 	{
 		return 20 * 60;
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack par1ItemStack)
+	public EnumAction getItemUseAction(@Nonnull ItemStack par1ItemStack)
 	{
 		return EnumAction.BOW;
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World par2World, EntityPlayer par3EntityPlayer, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(@Nonnull World par2World,
+			@Nonnull EntityPlayer par3EntityPlayer, @Nonnull EnumHand hand)
 	{
 		ItemStack par1ItemStack = par3EntityPlayer.getHeldItem(hand);
 
@@ -59,14 +62,14 @@ public class ItemEscapeRope extends ItemBase
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean hasEffect(ItemStack stack)
+	public boolean hasEffect(@Nonnull ItemStack stack)
 	{
 		return Minecraft.getMinecraft().player.getActiveItemStack() == stack;
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count)
+	public void onUsingTick(@Nonnull ItemStack stack, @Nonnull EntityLivingBase player, int count)
 	{
 		if (player.world.isRemote)
 		{

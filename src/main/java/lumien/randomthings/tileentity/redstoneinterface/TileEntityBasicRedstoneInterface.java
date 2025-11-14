@@ -49,16 +49,16 @@ public class TileEntityBasicRedstoneInterface extends TileEntityRedstoneInterfac
 				if (oldTarget != null)
 				{
 					IBlockState targetState = world.getBlockState(oldTarget);
-					targetState.neighborChanged(world, oldTarget, Blocks.REDSTONE_BLOCK, this.pos); // TODO
-																									// DANGEROUS
+					targetState.neighborChanged(world, oldTarget, Blocks.REDSTONE_BLOCK, this.pos);
+					// TODO: DANGEROUS
 					world.notifyNeighborsOfStateChange(oldTarget, Blocks.REDSTONE_BLOCK, false);
 				}
 
 				if (this.target != null)
 				{
 					IBlockState targetState = world.getBlockState(target);
-					targetState.neighborChanged(world, target, Blocks.REDSTONE_BLOCK, this.pos); // TODO
-																									// DANGEROUS
+					targetState.neighborChanged(world, target, Blocks.REDSTONE_BLOCK, this.pos);
+					// TODO: DANGEROUS
 					world.notifyNeighborsOfStateChange(target, Blocks.REDSTONE_BLOCK, false);
 				}
 			}
