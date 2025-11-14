@@ -3,7 +3,8 @@ package lumien.randomthings.item;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.mojang.authlib.GameProfile;
 
 import lumien.randomthings.util.PlayerUtil;
@@ -38,7 +39,8 @@ public class ItemStableEnderpearl extends ItemBase
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World world, List tooltip, ITooltipFlag advanced)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world,
+			@Nonnull List<String> tooltip, @Nonnull ITooltipFlag advanced)
 	{
 		NBTTagCompound compound;
 		if ((compound = stack.getTagCompound()) != null)

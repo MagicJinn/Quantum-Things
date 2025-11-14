@@ -1,7 +1,6 @@
 package lumien.randomthings.entitys;
 
 import javax.annotation.Nonnull;
-import lumien.randomthings.RandomThings;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationHandler;
 import lumien.randomthings.item.ModItems;
 import net.minecraft.entity.Entity;
@@ -12,8 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
@@ -37,6 +34,8 @@ public class EntitySpectreIlluminator extends Entity
 		this.inPosition = false;
 
 		this.setSize(0.5F, 0.5F);
+
+		setRenderDistanceWeight(0.1D);
 	}
 	
 	@Override
@@ -55,12 +54,6 @@ public class EntitySpectreIlluminator extends Entity
 		}
 	}
 
-	@Override
-	public boolean isInRangeToRenderDist(double distance)
-	{
-		return true;
-	}
-
 	public EntitySpectreIlluminator(World worldIn, double x, double y, double z)
 	{
 		this(worldIn);
@@ -69,12 +62,12 @@ public class EntitySpectreIlluminator extends Entity
 	}
 
 	@Override
+	// Mark as collidable so that the player can pick up the illuminator
 	public boolean canBeCollidedWith()
 	{
 		return true;
 	}
 
-	@SuppressWarnings("null")
 	@Override
 	public EnumActionResult applyPlayerInteraction(@Nonnull EntityPlayer player, @Nonnull Vec3d vec,
 			@Nonnull EnumHand hand)
@@ -105,11 +98,9 @@ public class EntitySpectreIlluminator extends Entity
 
 		long worldTick = this.world.getTotalWorldTime();
 		int uuid = this.getEntityId(); // Use uuid as offset
-		// When in position, only update every 100 ticks (staggered by entity ID)
+		// When in position, only update every x ticks (staggered with entity ID)
 		// This allows continuous position tracking while reducing server load
-		// If we relog, this will just move normally again, but this is a good compromise for
-		// performance, especially for when the player is building etc etc
-		if (inPosition && (worldTick + uuid) % 100 != 0) {
+		if (inPosition && (worldTick + uuid) % 20 != 0) {
 			this.motionX = 0;
 			this.motionY = 0;
 			this.motionZ = 0;

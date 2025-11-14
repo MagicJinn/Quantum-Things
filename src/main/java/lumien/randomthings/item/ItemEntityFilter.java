@@ -2,7 +2,8 @@ package lumien.randomthings.item;
 
 import java.util.HashMap;
 import java.util.List;
-
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import lumien.randomthings.lib.IEntityFilterItem;
@@ -82,7 +83,8 @@ public class ItemEntityFilter extends ItemBase implements IEntityFilterItem
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World world, List tooltip, ITooltipFlag advanced)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world,
+			@Nonnull List<String> tooltip, @Nonnull ITooltipFlag advanced)
 	{
 		super.addInformation(stack, world, tooltip, advanced);
 

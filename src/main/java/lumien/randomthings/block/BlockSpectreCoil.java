@@ -2,7 +2,8 @@ package lumien.randomthings.block;
 
 import java.awt.Color;
 import java.util.List;
-
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import com.mojang.authlib.GameProfile;
 
 import lumien.randomthings.config.Numbers;
@@ -74,7 +75,8 @@ public class BlockSpectreCoil extends BlockContainerBase implements ILuminousBlo
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World player,
+			@Nonnull List<String> tooltip, @Nonnull ITooltipFlag advanced)
 	{
 		String display;
 		

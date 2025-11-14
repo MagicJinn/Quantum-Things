@@ -1,7 +1,7 @@
 package lumien.randomthings.entitys;
 
 import java.util.Random;
-
+import javax.annotation.Nonnull;
 import lumien.randomthings.config.Numbers;
 import lumien.randomthings.item.ItemIngredient;
 import lumien.randomthings.item.ModItems;
@@ -46,7 +46,7 @@ public class EntitySpirit extends EntityFlying
 	}
 
 	@Override
-	public void readEntityFromNBT(NBTTagCompound tagCompund)
+	public void readEntityFromNBT(@Nonnull NBTTagCompound tagCompund)
 	{
 		super.readEntityFromNBT(tagCompund);
 
@@ -54,7 +54,7 @@ public class EntitySpirit extends EntityFlying
 	}
 
 	@Override
-	public void writeEntityToNBT(NBTTagCompound tagCompound)
+	public void writeEntityToNBT(@Nonnull NBTTagCompound tagCompound)
 	{
 		super.writeEntityToNBT(tagCompound);
 
@@ -75,7 +75,7 @@ public class EntitySpirit extends EntityFlying
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource source, float amount)
+	public boolean attackEntityFrom(@Nonnull DamageSource source, float amount)
 	{
 		if (source instanceof EntityDamageSource)
 		{
@@ -85,7 +85,8 @@ public class EntitySpirit extends EntityFlying
 				EntityPlayer player = (EntityPlayer) eds.getTrueSource();
 
 				ItemStack equipped;
-				if ((equipped = player.getHeldItemMainhand()) != null && equipped.getItem() == ModItems.spectreSword)
+				if (player != null && (equipped = player.getHeldItemMainhand()) != null
+						&& equipped.getItem() == ModItems.spectreSword)
 				{
 					return super.attackEntityFrom(source, amount);
 				}
@@ -107,13 +108,14 @@ public class EntitySpirit extends EntityFlying
 	}
 
 	@Override
-	public void knockBack(Entity entity, float p_70653_2_, double p_70653_3_, double p_70653_5_)
+	public void knockBack(@Nonnull Entity entity, float p_70653_2_, double p_70653_3_,
+			double p_70653_5_)
 	{
 
 	}
 
 	@Override
-	protected void collideWithEntity(Entity entityIn)
+	protected void collideWithEntity(@Nonnull Entity entityIn)
 	{
 	}
 

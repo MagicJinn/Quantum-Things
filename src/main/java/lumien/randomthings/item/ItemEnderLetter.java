@@ -1,7 +1,8 @@
 package lumien.randomthings.item;
 
 import java.util.List;
-
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import lumien.randomthings.RandomThings;
 import lumien.randomthings.lib.GuiIds;
 import net.minecraft.client.resources.I18n;
@@ -44,7 +45,8 @@ public class ItemEnderLetter extends ItemBase
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World world, List tooltip, ITooltipFlag advanced)
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World world,
+			@Nonnull List<String> tooltip, @Nonnull ITooltipFlag advanced)
 	{
 		super.addInformation(stack, world, tooltip, advanced);
 
