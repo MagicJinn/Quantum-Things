@@ -3,11 +3,18 @@ package lumien.randomthings.asm;
 import java.util.Map;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import org.spongepowered.asm.launch.MixinBootstrap;
+import org.spongepowered.asm.mixin.Mixins;
 
 @IFMLLoadingPlugin.SortingIndex(1001)
 public class LoadingPlugin implements IFMLLoadingPlugin
 {
 	public static boolean IN_MCP = false;
+
+	public LoadingPlugin() {
+		MixinBootstrap.init();
+		Mixins.addConfiguration("quantumthings.mixins.json");
+	}
 
 	@Override
 	public String[] getASMTransformerClass()

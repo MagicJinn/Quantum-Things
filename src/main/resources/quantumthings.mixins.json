@@ -1,0 +1,15 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "lumien.randomthings.mixin",
+    "compatibilityLevel": "JAVA_8",
+    "refmap": "mixins.quantumthings.refmap.json",
+    "mixins": [
+        "MixinBlockSnow"
+    ],
+    "client": [],
+    "server": [],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
