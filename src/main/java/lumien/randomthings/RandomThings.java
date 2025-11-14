@@ -140,6 +140,13 @@ public class RandomThings implements LoadingCallback
 		}
 		
 		FMLInterModComms.sendMessage("Thaumcraft", "harvestClickableCrop", new ItemStack(ModBlocks.lotus, 1, 3));
+
+		// Disable random ticking for BlockSnow to prevent it from melting
+
+		// Listen.
+		// I know it's not my place to do this, but while this is not caused by this mod, spectre
+		// illuminators will trigger this dormant bug, so the least I can do is fix it.
+		net.minecraft.init.Blocks.SNOW.setTickRandomly(false);
 	}
 
 	@EventHandler
