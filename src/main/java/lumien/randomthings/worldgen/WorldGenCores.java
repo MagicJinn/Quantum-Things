@@ -120,21 +120,18 @@ public class WorldGenCores implements IWorldGenerator
 								{
 									BlockPos check = new BlockPos(target.getX() + modX, target.getY() + modY, target.getZ() + modZ);
 
-									boolean isValidPosition = WorldUtil.isValidPosition(check);
-									if (isValidPosition)
+									if (!WorldUtil.isValidPosition(check))
 									{
-										boolean hasSolidGroundBelow =
-												!world.isAirBlock(check.down()) && world
-														.isSideSolid(check.down(), EnumFacing.UP);
-										boolean isBlockOccupied = !(world.isAirBlock(check)
-												|| world.getBlockState(check).getBlock()
-														.isReplaceable(world, check));
-
-										if (hasSolidGroundBelow && isBlockOccupied) {
+										canPlaceCore = false;
+										break;
+									}
+									if (!world.isAirBlock(check.down())
+											&& world.isSideSolid(check.down(), EnumFacing.UP)) {
+										if (!(world.isAirBlock(check) || world.getBlockState(check)
+												.getBlock().isReplaceable(world, check))) {
 											canPlaceCore = false;
 											break;
 										}
-
 									}
 								}
 							}
