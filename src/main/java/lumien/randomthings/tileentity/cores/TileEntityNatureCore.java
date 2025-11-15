@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import lumien.randomthings.block.ModBlocks;
+import lumien.randomthings.config.NatureCore;
 import lumien.randomthings.tileentity.TileEntityBase;
 import lumien.randomthings.util.BlockPattern.BlockInfo;
 import lumien.randomthings.worldgen.WorldGenCores;
@@ -34,11 +35,11 @@ public class TileEntityNatureCore extends TileEntityBase implements ITickable
 		if (!world.isRemote)
 		{
 			// Replace Sand
-			if (rand.nextInt(40) == 0)
+			if (rand.nextInt(NatureCore.SAND_REPLACEMENT_CHANCE) == 0)
 			{
-				int rX = this.pos.getX() + rand.nextInt(11) - 5;
-				int rY = this.pos.getY() + rand.nextInt(4) - 3;
-				int rZ = this.pos.getZ() + rand.nextInt(11) - 5;
+				int rX = this.pos.getX() + rand.nextInt(NatureCore.SAND_RANGE) - 5;
+				int rY = this.pos.getY() + rand.nextInt(5) - 3;
+				int rZ = this.pos.getZ() + rand.nextInt(NatureCore.SAND_RANGE) - 5;
 
 				BlockPos target = new BlockPos(rX, rY, rZ);
 				IBlockState state = world.getBlockState(target);
@@ -56,14 +57,14 @@ public class TileEntityNatureCore extends TileEntityBase implements ITickable
 			}
 
 			// Animal Spawning
-			if (rand.nextInt(400) == 0)
+			if (rand.nextInt(NatureCore.ANIMAL_CHANCE) == 0)
 			{
 				List<EntityAnimal> closeAnimals = world.getEntitiesWithinAABB(EntityAnimal.class, new AxisAlignedBB(this.pos, this.pos).grow(5, 5, 5));
 				if (closeAnimals.size() < 2)
 				{
-					int rX = this.pos.getX() + rand.nextInt(11) - 5;
+					int rX = this.pos.getX() + rand.nextInt(NatureCore.ANIMAL_RANGE) - 5;
 					int rY = this.pos.getY() + rand.nextInt(5) - 2;
-					int rZ = this.pos.getZ() + rand.nextInt(11) - 5;
+					int rZ = this.pos.getZ() + rand.nextInt(NatureCore.ANIMAL_RANGE) - 5;
 
 					Biome.SpawnListEntry entry = ((WorldServer) world).getSpawnListEntryForTypeAt(EnumCreatureType.CREATURE, new BlockPos(rX, rY, rZ));
 					if (entry != null)
@@ -91,11 +92,11 @@ public class TileEntityNatureCore extends TileEntityBase implements ITickable
 			}
 
 			// Bonemealing
-			if (rand.nextInt(100) == 0)
+			if (rand.nextInt(NatureCore.BONEMEAL_CHANCE) == 0)
 			{
-				int rX = this.pos.getX() + rand.nextInt(11) - 5;
-				int rY = this.pos.getY() + rand.nextInt(4) - 3;
-				int rZ = this.pos.getZ() + rand.nextInt(11) - 5;
+				int rX = this.pos.getX() + rand.nextInt(NatureCore.BONEMEAL_RANGE) - 5;
+				int rY = this.pos.getY() + rand.nextInt(5) - 3;
+				int rZ = this.pos.getZ() + rand.nextInt(NatureCore.BONEMEAL_RANGE) - 5;
 
 				BlockPos target = new BlockPos(rX, rY, rZ);
 				IBlockState state = world.getBlockState(target);
@@ -111,17 +112,16 @@ public class TileEntityNatureCore extends TileEntityBase implements ITickable
 			}
 
 			// Trees
-			if (rand.nextInt(600) == 0)
+			if (rand.nextInt(NatureCore.TREE_CHANCE) == 0)
 			{
-				double radius = rand.nextInt(20) + 10;
+				double radius = rand.nextInt(NatureCore.TREE_RADIUS_RANGE) + 10;
 				double angle = Math.random() * Math.PI * 2;
 
 				int x = (int) Math.floor(this.pos.getX() + radius * Math.cos(angle));
 				int z = (int) Math.floor(this.pos.getZ() + radius * Math.sin(angle));
-				int y = this.pos.getY() + rand.nextInt(4) - 3;
+				int y = this.pos.getY() + rand.nextInt(5) - 3;
 
 				BlockPos target = new BlockPos(x, y, z);
-				IBlockState state = world.getBlockState(target);
 
 				boolean space = true;
 				for (EnumFacing facing : EnumFacing.HORIZONTALS)
@@ -143,8 +143,8 @@ public class TileEntityNatureCore extends TileEntityBase implements ITickable
 				}
 			}
 
-			// Rebuild
-			if (rand.nextInt(600) == 0)
+			// rebuild
+			if (rand.nextInt(NatureCore.SHELL_REGENERATION_CHANCE) == 0)
 			{
 				ArrayList<BlockInfo> patternInfo = WorldGenCores.natureCore.getBlockInfo();
 

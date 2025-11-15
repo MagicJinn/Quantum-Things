@@ -67,7 +67,8 @@ public class WorldGenAncientFurnace implements IWorldGenerator
 	{
 		if (Worldgen.ANCIENT_FURNACE && world.getWorldType() != WorldType.DEBUG_ALL_BLOCK_STATES && world.getWorldInfo().isMapFeaturesEnabled())
 		{
-			if (world.provider.getDimension() == 0 && random.nextInt(2000) == 0)
+			if (world.provider.getDimension() == 0
+					&& random.nextInt(Worldgen.ANCIENT_FURNACE_CHANCE) == 0)
 			{
 				int x = chunkX * 16 + 8 + random.nextInt(16);
 				int z = chunkZ * 16 + 8 + random.nextInt(16);

@@ -43,47 +43,58 @@ public class LootHandler
 		if (event.getName().equals(LootTableList.CHESTS_SIMPLE_DUNGEON))
 		{
 			if (Worldgen.LAVA_CHARM)
-				addSingleItemWithChance(table, ModItems.lavaCharm, 5);
+				addSingleItemWithChance(table, ModItems.lavaCharm, Worldgen.LAVA_CHARM_CHANCE);
 
 			if (Worldgen.SUMMONING_PENDULUM)
-				addSingleItemWithChance(table, ModItems.summoningPendulum, 10);
+				addSingleItemWithChance(table, ModItems.summoningPendulum,
+						Worldgen.SUMMONING_PENDULUM_CHANCE);
 
 			if (Worldgen.MAGIC_HOOD)
-				addSingleItemWithChance(table, ModItems.magicHood, 5);
+				addSingleItemWithChance(table, ModItems.magicHood, Worldgen.MAGIC_HOOD_CHANCE);
 
 			if (Worldgen.SLIME_CUBE)
-				addSingleItemWithChance(table, Item.getItemFromBlock(ModBlocks.slimeCube), 10);
+				addSingleItemWithChance(table, Item.getItemFromBlock(ModBlocks.slimeCube),
+						Worldgen.SLIME_CUBE_CHANCE);
 
 			if (Worldgen.NUMBERED_COILS)
-				addSingleItemWithChance(table, Item.getItemFromBlock(ModBlocks.spectreCoilNumber), 10, onlyFound);
+				addSingleItemWithChance(table, Item.getItemFromBlock(ModBlocks.spectreCoilNumber),
+						Worldgen.NUMBERED_COILS_CHANCE, onlyFound);
 		}
 		else if (Worldgen.LAVA_CHARM && event.getName().equals(LootTableList.CHESTS_NETHER_BRIDGE))
 		{
-			addSingleItemWithChance(table, ModItems.lavaCharm, 30);
+			addSingleItemWithChance(table, ModItems.lavaCharm, Worldgen.LAVA_CHARM_CHANCE * 6);
 		}
 		else if (Worldgen.NUMBERED_COILS && event.getName().equals(LootTableList.CHESTS_ABANDONED_MINESHAFT))
 		{
-			addSingleItemWithChance(table, Item.getItemFromBlock(ModBlocks.spectreCoilNumber), 8, onlyFound);
+			addSingleItemWithChance(table, Item.getItemFromBlock(ModBlocks.spectreCoilNumber),
+					(int) (Worldgen.NUMBERED_COILS_CHANCE * 0.8f), onlyFound);
 		}
 		else if (Worldgen.MAGIC_HOOD && event.getName().equals(LootTableList.CHESTS_VILLAGE_BLACKSMITH))
 		{
-			addSingleItemWithChance(table, ModItems.magicHood, 15);
+			addSingleItemWithChance(table, ModItems.magicHood, Worldgen.MAGIC_HOOD_CHANCE * 3);
 		}
 		else if (Worldgen.SUMMONING_PENDULUM && event.getName().equals(LootTableList.CHESTS_STRONGHOLD_CORRIDOR))
 		{
-			addSingleItemWithChance(table, ModItems.summoningPendulum, 50);
+			addSingleItemWithChance(table, ModItems.summoningPendulum,
+					Worldgen.SUMMONING_PENDULUM_CHANCE * 5);
 		}
 		else if (Worldgen.SLIME_CUBE && event.getName().equals(LootTableList.CHESTS_JUNGLE_TEMPLE))
 		{
-			addSingleItemWithChance(table, Item.getItemFromBlock(ModBlocks.slimeCube), 80);
+			addSingleItemWithChance(table, Item.getItemFromBlock(ModBlocks.slimeCube),
+					Worldgen.SLIME_CUBE_CHANCE * 8);
 		}
 		else if (Worldgen.NUMBERED_COILS && event.getName().equals(LootTableList.CHESTS_END_CITY_TREASURE))
 		{
-			addSingleItemWithChance(table, Item.getItemFromBlock(ModBlocks.spectreCoilNumber), 30, onlyFound);
+			addSingleItemWithChance(table, Item.getItemFromBlock(ModBlocks.spectreCoilNumber),
+					Worldgen.NUMBERED_COILS_CHANCE * 3, onlyFound);
 		}
 
 		if (Worldgen.BIOME_CRYSTAL && event.getName().toString().startsWith("minecraft:chests/"))
 		{
+			// Invert the chance so lower values = more common (1/chance probability)
+			int chance = Math.max(1, Worldgen.BIOME_CRYSTAL_CHANCE);
+			float crystalChance = 1.0f / chance;
+
 			LootEntry crystalEntry = new LootEntryItem(ModItems.biomeCrystal, 1, 0, new LootFunction[] { new LootFunction(new LootCondition[] {})
 			{
 				@Override
@@ -99,13 +110,16 @@ public class LootHandler
 				}
 			} }, new LootCondition[] {}, "randomthings:biomeCrystal");
 
-			LootPool crystalPool = new LootPool(new LootEntry[] { crystalEntry }, new LootCondition[] { new RandomChance(0.2f) }, new RandomValueRange(1, 1), new RandomValueRange(0, 0), "randomthings:biomeCrystal");
+	LootPool crystalPool = new LootPool(new LootEntry[] {crystalEntry},
+			new LootCondition[] {new RandomChance(crystalChance)}, new RandomValueRange(1, 1),
+			new RandomValueRange(0, 0), "randomthings:biomeCrystal");
 			table.addPool(crystalPool);
 		}
 	}
 
 	private static void addSingleItemWithChance(LootTable table, Item item, int chance)
 	{
+		chance = Math.min(100, chance);
 		String itemName = item.getRegistryName().getResourcePath().toString();
 
 		LootEntry entryItem = new LootEntryItem(item, chance, 0, new LootFunction[0], new LootCondition[0], "item");

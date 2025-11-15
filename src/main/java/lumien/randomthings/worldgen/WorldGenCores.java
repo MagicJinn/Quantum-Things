@@ -15,6 +15,7 @@ import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockOldLeaf;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -89,7 +90,8 @@ public class WorldGenCores implements IWorldGenerator
 				int z = chunkZ * 16 + 8 + random.nextInt(16);
 				BlockPos target = world.getTopSolidOrLiquidBlock(new BlockPos(x, 40, z));
 
-				if (target != null && target.getY() >= 0)
+				if (target != null && target.getY() >= 0
+						&& world.getBlockState(target).getMaterial() != Material.WATER)
 				{
 					int natureMult = 30;
 					Biome biome = world.getBiome(target);

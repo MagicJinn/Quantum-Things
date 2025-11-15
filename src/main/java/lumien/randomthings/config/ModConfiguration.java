@@ -24,14 +24,17 @@ public class ModConfiguration
 		Features.removeAirBubble = configuration.getBoolean("RemoveUnderwaterTexture", "Features", false, "TRIES to remove the weird water texture showing around ALL non full blocks. This might look weird when you, for example, are on a ladder underwater.");
 
 		configuration.getCategory("worldgen-plants").setComment(
-				"Set to false to disable the generation of the respective plants and natural features, or change their frequency");
+				"Enable or disable generation of plants, or change their frequency");
 		configuration.getCategory("worldgen-features").setComment(
-				"Set to false to disable the generation of structures and special blocks, or change their frequency");
+				"Enable or disable generation of structures and special blocks, or change their frequency");
 		configuration.getCategory("worldgen-loot").setComment(
-				"Set to false to disable the generation of loot items in chests and structures, or change their frequency");
+				"Enable or disable generation of loot items in chests and structures, or change their frequency");
+		configuration.getCategory("nature-core").setComment("Configure Nature Core behavior");
 
 		// Annotation Based Config
 		doAnnoations(configuration);
+
+		checkWorldGenChanceValid();
 
 		if (configuration.hasChanged())
 		{
@@ -88,5 +91,41 @@ public class ModConfiguration
 			}
 		}
 
+	}
+
+	private void checkWorldGenChanceValid() {
+		// Plants
+		if (Worldgen.BEANS_CHANCE == 0)
+			Worldgen.BEANS = false;
+		if (Worldgen.PITCHER_PLANTS_CHANCE == 0)
+			Worldgen.PITCHER_PLANTS = false;
+		if (Worldgen.LOTUS_CHANCE == 0)
+			Worldgen.LOTUS = false;
+		if (Worldgen.GLOWING_MUSHROOM_CHANCE == 0)
+			Worldgen.GLOWING_MUSHROOM = false;
+
+		// Features
+		if (Worldgen.NATURE_CORE_CHANCE == 0)
+			Worldgen.NATURE_CORE = false;
+		if (Worldgen.WATER_CHEST_CHANCE == 0)
+			Worldgen.WATER_CHEST = false;
+		if (Worldgen.PEACE_CANDLE_CHANCE == 0)
+			Worldgen.PEACE_CANDLE = false;
+		if (Worldgen.ANCIENT_FURNACE_CHANCE == 0)
+			Worldgen.ANCIENT_FURNACE = false;
+
+		// Loot
+		if (Worldgen.MAGIC_HOOD_CHANCE == 0)
+			Worldgen.MAGIC_HOOD = false;
+		if (Worldgen.SUMMONING_PENDULUM_CHANCE == 0)
+			Worldgen.SUMMONING_PENDULUM = false;
+		if (Worldgen.BIOME_CRYSTAL_CHANCE == 0)
+			Worldgen.BIOME_CRYSTAL = false;
+		if (Worldgen.LAVA_CHARM_CHANCE == 0)
+			Worldgen.LAVA_CHARM = false;
+		if (Worldgen.SLIME_CUBE_CHANCE == 0)
+			Worldgen.SLIME_CUBE = false;
+		if (Worldgen.NUMBERED_COILS_CHANCE == 0)
+			Worldgen.NUMBERED_COILS = false;
 	}
 }
