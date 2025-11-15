@@ -69,7 +69,6 @@ import lumien.randomthings.util.InventoryUtil;
 import lumien.randomthings.util.ReflectionUtilClient;
 import lumien.randomthings.util.WorldUtil;
 import lumien.randomthings.util.client.RenderUtils;
-import lumien.randomthings.worldgen.WorldGenSakanade;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.material.Material;
@@ -477,7 +476,7 @@ public class RTEventHandler
 		}
 		else if (event instanceof DecorateBiomeEvent.Post)
 		{
-			WorldGenSakanade.instance.generate(event.getRand(), event.getPos().getX() >> 4, event.getPos().getZ() >> 4, event.getWorld(), null, null);
+			// Sakanade generation removed - block was unfinished and buggy
 		}
 	}
 

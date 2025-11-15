@@ -56,7 +56,6 @@ public class ModBlocks
 	public static BlockQuartzGlass quartzGlass;
 	public static BlockPotionVaporizer potionVaporizer;
 	public static BlockVoxelProjector voxelProjector;
-	public static BlockSakanade sakanade;
 	public static BlockRainShield rainShield;
 	public static BlockBlockBreaker blockBreaker;
 	public static BlockSuperLubricentIce superLubricentIce;
@@ -183,7 +182,6 @@ public class ModBlocks
 		voxelProjector = new BlockVoxelProjector();
 		contactButton = new BlockContactButton();
 		contactLever = new BlockContactLever();
-		sakanade = new BlockSakanade();
 		rainShield = new BlockRainShield();
 		blockBreaker = new BlockBlockBreaker();
 		superLubricentIce = new BlockSuperLubricentIce();

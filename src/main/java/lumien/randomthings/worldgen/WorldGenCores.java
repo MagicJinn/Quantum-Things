@@ -78,7 +78,7 @@ public class WorldGenCores implements IWorldGenerator
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
 	{
-		if (!Worldgen.natureCore)
+		if (!Worldgen.NATURE_CORE)
 			return;
 
 		if (world.getWorldType() != WorldType.DEBUG_ALL_BLOCK_STATES && world.getWorldInfo().isMapFeaturesEnabled())
@@ -165,11 +165,11 @@ public class WorldGenCores implements IWorldGenerator
 
 					if (te != null)
 					{
-						if (Worldgen.beans)
+						if (Worldgen.BEANS)
 						{
 							te.setInventorySlotContents(0, new ItemStack(ModItems.beans, random.nextInt(2) + 1, 2));
 						}
-						if (random.nextBoolean() && Worldgen.beans)
+						if (random.nextBoolean() && Worldgen.BEANS)
 							te.setInventorySlotContents(1, new ItemStack(ModItems.beans, random.nextInt(20) + 5));
 						if (random.nextBoolean())
 							te.setInventorySlotContents(2, new ItemStack(Items.WHEAT, random.nextInt(20) + 5));
