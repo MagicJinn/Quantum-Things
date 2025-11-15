@@ -11,9 +11,12 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.ParticleDigging;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -26,6 +29,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.ILockableContainer;
@@ -223,5 +227,83 @@ public class BlockSpecialChest extends BlockContainerBase
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, new IProperty[] { FACING });
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager) {
+		IBlockState state = Blocks.CHEST.getDefaultState();
+		manager.addBlockDestroyEffects(pos, state);
+		return true;
+	}
+
+	// This piece of shit code sucks
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target,
+			ParticleManager manager) {
+		if (target.typeOfHit == RayTraceResult.Type.BLOCK) {
+			BlockPos pos = target.getBlockPos();
+			IBlockState particleState = Blocks.CHEST.getDefaultState();
+
+			try {
+				int i = pos.getX();
+				int j = pos.getY();
+				int k = pos.getZ();
+
+				// What the fuck are these?
+				double doub1 = 0.10000000149011612D;
+				double doub2 = 0.20000000298023224D;
+
+				AxisAlignedBB axisalignedbb = particleState.getBoundingBox(worldObj, pos);
+				double d0 = (double) i
+						+ worldObj.rand.nextDouble()
+								* (axisalignedbb.maxX - axisalignedbb.minX - doub2)
+						+ doub1 + axisalignedbb.minX;
+				double d1 = (double) j
+						+ worldObj.rand.nextDouble()
+								* (axisalignedbb.maxY - axisalignedbb.minY - doub2)
+						+ doub1 + axisalignedbb.minY;
+				double d2 = (double) k
+						+ worldObj.rand.nextDouble()
+								* (axisalignedbb.maxZ - axisalignedbb.minZ - doub2)
+						+ doub1 + axisalignedbb.minZ;
+
+				EnumFacing side = target.sideHit;
+
+				if (side == EnumFacing.DOWN) {
+					d1 = (double) j + axisalignedbb.minY - doub1;
+				}
+
+				if (side == EnumFacing.UP) {
+					d1 = (double) j + axisalignedbb.maxY + doub1;
+				}
+
+				if (side == EnumFacing.NORTH) {
+					d2 = (double) k + axisalignedbb.minZ - doub1;
+				}
+
+				if (side == EnumFacing.SOUTH) {
+					d2 = (double) k + axisalignedbb.maxZ + doub1;
+				}
+
+				if (side == EnumFacing.WEST) {
+					d0 = (double) i + axisalignedbb.minX - doub1;
+				}
+
+				if (side == EnumFacing.EAST) {
+					d0 = (double) i + axisalignedbb.maxX + doub1;
+				}
+
+				ParticleDigging particle =
+						(ParticleDigging) new ParticleDigging.Factory().createParticle(0, worldObj,
+								d0, d1, d2, 0.0D, 0.0D, 0.0D, Block.getStateId(particleState));
+				particle.setBlockPos(pos).multiplyVelocity(0.2F).multipleParticleScaleBy(0.6F);
+				manager.addEffect(particle);
+			} catch (Exception e) {
+				// Ignore particle errors
+			}
+		}
+		return true;
 	}
 }
