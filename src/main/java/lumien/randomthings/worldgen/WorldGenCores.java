@@ -1,5 +1,7 @@
 package lumien.randomthings.worldgen;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import lumien.randomthings.block.ModBlocks;
@@ -25,7 +27,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
 public class WorldGenCores implements IWorldGenerator
@@ -77,6 +78,9 @@ public class WorldGenCores implements IWorldGenerator
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider)
 	{
+		if (!Worldgen.natureCore)
+			return;
+
 		if (world.getWorldType() != WorldType.DEBUG_ALL_BLOCK_STATES && world.getWorldInfo().isMapFeaturesEnabled())
 		{
 			if (world.provider.getDimension() == 0)
@@ -87,42 +91,25 @@ public class WorldGenCores implements IWorldGenerator
 
 				if (target != null && target.getY() >= 0)
 				{
-					Biome biome = world.getBiome(target);
-
 					int natureMult = 30;
-					if (BiomeDictionary.hasType(biome, Type.DENSE))
-					{
-						natureMult -= 8;
-					}
-					if (BiomeDictionary.hasType(biome, Type.SPARSE))
-					{
-						natureMult += 4;
-					}
-					if (BiomeDictionary.hasType(biome, Type.WET))
-					{
-						natureMult -= 4;
-					}
-					if (BiomeDictionary.hasType(biome, Type.DRY))
-					{
-						natureMult += 2;
-					}
-					if (BiomeDictionary.hasType(biome, Type.DEAD))
-					{
-						natureMult += 10;
-					}
-					if (BiomeDictionary.hasType(biome, Type.MAGICAL))
-					{
-						natureMult -= 8;
+					Biome biome = world.getBiome(target);
+					Map<BiomeDictionary.Type, Integer> modifiers =
+							new HashMap<BiomeDictionary.Type, Integer>();
+					modifiers.put(BiomeDictionary.Type.DENSE, -8);
+					modifiers.put(BiomeDictionary.Type.SPARSE, 4);
+					modifiers.put(BiomeDictionary.Type.WET, -4);
+					modifiers.put(BiomeDictionary.Type.DRY, 2);
+					modifiers.put(BiomeDictionary.Type.DEAD, 10);
+					modifiers.put(BiomeDictionary.Type.MAGICAL, -8);
+
+					for (Map.Entry<BiomeDictionary.Type, Integer> entry : modifiers.entrySet()) {
+						if (BiomeDictionary.hasType(biome, entry.getKey())) {
+							natureMult += entry.getValue();
+						}
 					}
 
-					boolean generateNatureCore = random.nextInt(18 * natureMult) == 0;
-
-					if (!Worldgen.natureCore)
-					{
-						generateNatureCore = false;
-					}
-
-					if (generateNatureCore)
+					if (random
+							.nextInt(Math.max(1, Worldgen.NATURE_CORE_CHANCE * natureMult)) == 0)
 					{
 						boolean canPlaceCore = true;
 						for (int modX = -2; modX < 3; modX++)
@@ -133,31 +120,29 @@ public class WorldGenCores implements IWorldGenerator
 								{
 									BlockPos check = new BlockPos(target.getX() + modX, target.getY() + modY, target.getZ() + modZ);
 
-									if (!WorldUtil.isValidPosition(check))
+									boolean isValidPosition = WorldUtil.isValidPosition(check);
+									if (isValidPosition)
 									{
-										canPlaceCore = false;
-										break;
-									}
+										boolean hasSolidGroundBelow =
+												!world.isAirBlock(check.down()) && world
+														.isSideSolid(check.down(), EnumFacing.UP);
+										boolean isBlockOccupied = !(world.isAirBlock(check)
+												|| world.getBlockState(check).getBlock()
+														.isReplaceable(world, check));
 
-									if (!world.isAirBlock(check.down()) && world.isSideSolid(check.down(), EnumFacing.UP))
-									{
-										if (!(world.isAirBlock(check) || world.getBlockState(check).getBlock().isReplaceable(world, check)))
-										{
+										if (hasSolidGroundBelow && isBlockOccupied) {
 											canPlaceCore = false;
 											break;
 										}
+
 									}
 								}
 							}
 						}
 
 						if (canPlaceCore)
-						{
-							if (generateNatureCore)
-							{
-								placeNatureCore(random, world, target);
-							}
-						}
+							placeNatureCore(random, world, target);
+
 					}
 				}
 			}
