@@ -31,6 +31,10 @@ public class ModConfiguration
 				"Enable or disable generation of loot items in chests and structures, or change their frequency");
 		configuration.getCategory("nature-core").setComment("Configure Nature Core behavior");
 
+		// ??
+		// Force load NatureCore class to ensure it's included in ASM scanning
+		NatureCore.class.getName();
+
 		// Annotation Based Config
 		doAnnoations(configuration);
 
