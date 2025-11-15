@@ -29,11 +29,7 @@ public class EntitySoul extends Entity implements IEntityAdditionalSpawnData
 
 	public EntitySoul(World world)
 	{
-		super(world);
-
-		this.setSize(0.3F, 0.3F);
-		this.noClip = true;
-		this.playerName = "";
+		this(world, 0, 0, 0, "");
 	}
 
 	@Override
@@ -69,6 +65,7 @@ public class EntitySoul extends Entity implements IEntityAdditionalSpawnData
 
 		this.noClip = true;
 		this.playerName = playerName;
+		setRenderDistanceWeight(5);
 	}
 
 	@Override

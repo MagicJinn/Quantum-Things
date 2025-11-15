@@ -37,7 +37,8 @@ public class WorldGenPeaceCandle
 		{
 			BlockPos blockpos = new BlockPos(getXWithOffset(2, 2, church, church.getBoundingBox()), getYWithOffset(2, church, church.getBoundingBox()), getZWithOffset(7, 7, church, church.getBoundingBox()));
 
-			if (structureBoundingBoxIn.isVecInside(blockpos) && randomIn.nextInt(3) == 0)
+			if (structureBoundingBoxIn.isVecInside(blockpos)
+					&& randomIn.nextInt(Worldgen.PEACE_CANDLE_CHANCE) == 0)
 			{
 				try
 				{

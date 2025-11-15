@@ -43,66 +43,57 @@ public class Worldgen
 			name = "NatureCoreChance") public static int NATURE_CORE_CHANCE =
 					18;
 
-	// TODO add chance
 	@ConfigOption(category = CATEGORY_FEATURES, name = "WaterChest",
-			comment = "Enable water chest generation. Chance: (Default = 10, lower is more common)") public static boolean WATER_CHEST =
+			comment = "Enable water chest generation. Chance: (Default = 1, lower is more common)") public static boolean WATER_CHEST =
 					true;
 	@ConfigOption(category = CATEGORY_FEATURES,
-			name = "WaterChestChance") public static int WATER_CHEST_CHANCE = 10;
+			name = "WaterChestChance") public static int WATER_CHEST_CHANCE = 1;
 
-	// TODO add chance
 	@ConfigOption(category = CATEGORY_FEATURES, name = "PeaceCandle",
-			comment = "Enable peace candle generation. Chance: (Default = 10, lower is more common)") public static boolean PEACE_CANDLE =
+			comment = "Enable peace candle generation. Chance: (Default = 3, lower is more common)") public static boolean PEACE_CANDLE =
 					true;
 	@ConfigOption(category = CATEGORY_FEATURES,
-			name = "PeaceCandleChance") public static int PEACE_CANDLE_CHANCE = 10;
+			name = "PeaceCandleChance") public static int PEACE_CANDLE_CHANCE = 3;
 
-	// TODO add chance
 	@ConfigOption(category = CATEGORY_FEATURES, name = "AncientFurnace",
-			comment = "Enable ancient furnace generation. Chance: (Default = 10, lower is more common)") public static boolean ANCIENT_FURNACE =
+			comment = "Enable ancient furnace generation. Chance: (Default = 2000, lower is more common)") public static boolean ANCIENT_FURNACE =
 					true;
 	@ConfigOption(category = CATEGORY_FEATURES,
-			name = "AncientFurnaceChance") public static int ANCIENT_FURNACE_CHANCE = 10;
+			name = "AncientFurnaceChance") public static int ANCIENT_FURNACE_CHANCE = 2000;
 
-	// TODO add chance
 	// Loot - Items found in chests and structures
 	@ConfigOption(category = CATEGORY_LOOT, name = "MagicHood",
-			comment = "Enable magic hood loot generation. Chance: (Default = 10, lower is more common)")
+			comment = "Enable magic hood loot generation. Chance: (Default = 5, lower is more common)")
 	public static boolean MAGIC_HOOD = true;
 	@ConfigOption(category = CATEGORY_LOOT,
-			name = "MagicHoodChance") public static int MAGIC_HOOD_CHANCE = 10;
+			name = "MagicHoodChance") public static int MAGIC_HOOD_CHANCE = 5;
 
-	// TODO add chance
 	@ConfigOption(category = CATEGORY_LOOT, name = "SummoningPendulum",
-			comment = "Enable summoning pendulum loot generation. Chance: (Default = 10, lower is more common)")
+			comment = "Enable summoning pendulum loot generation. Chance: (Default = -1, lower is more common)")
 	public static boolean SUMMONING_PENDULUM = true;
 	@ConfigOption(category = CATEGORY_LOOT,
 			name = "SummoningPendulumChance") public static int SUMMONING_PENDULUM_CHANCE = 10;
 
-	// TODO add chance
 	@ConfigOption(category = CATEGORY_LOOT, name = "BiomeCrystal",
-			comment = "Enable biome crystal loot generation. Chance: (Default = 10, lower is more common)")
+			comment = "Enable biome crystal loot generation. Chance: (Default = 20, lower is more common)")
 	public static boolean BIOME_CRYSTAL = true;
 	@ConfigOption(category = CATEGORY_LOOT,
-			name = "BiomeCrystalChance") public static int BIOME_CRYSTAL_CHANCE = 10;
+			name = "BiomeCrystalChance") public static int BIOME_CRYSTAL_CHANCE = 20;
 
-	// TODO add chance
 	@ConfigOption(category = CATEGORY_LOOT, name = "LavaCharm",
-			comment = "Enable lava charm loot generation. Chance: (Default = 10, lower is more common)")
+			comment = "Enable lava charm loot generation. Chance: (Default = 5, lower is more common)")
 	public static boolean LAVA_CHARM = true;
 	@ConfigOption(category = CATEGORY_LOOT,
-			name = "LavaCharmChance") public static int LAVA_CHARM_CHANCE = 10;
+			name = "LavaCharmChance") public static int LAVA_CHARM_CHANCE = 5;
 
-	// TODO add chance
 	@ConfigOption(category = CATEGORY_LOOT, name = "SlimeCube",
 			comment = "Enable slime cube loot generation. Chance: (Default = 10, lower is more common)")
 	public static boolean SLIME_CUBE = true;
 	@ConfigOption(category = CATEGORY_LOOT,
 			name = "SlimeCubeChance") public static int SLIME_CUBE_CHANCE = 10;
 
-	// TODO add chance
 	@ConfigOption(category = CATEGORY_LOOT, name = "NumberedSpectreCoils",
-			comment = "Enable numbered spectre coils loot generation. Chance: (Default = 10, lower is more common)")
+			comment = "Enable numbered spectre coils loot generation. Chance: (Default = -1, lower is more common)")
 	public static boolean NUMBERED_COILS = true;
 	@ConfigOption(category = CATEGORY_LOOT,
 			name = "NumberedSpectreCoilsChance") public static int NUMBERED_COILS_CHANCE = 10;

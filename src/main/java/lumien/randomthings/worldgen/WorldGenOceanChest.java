@@ -43,7 +43,7 @@ public class WorldGenOceanChest
 
 	public static void addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn, MonumentCoreRoom coreRoom)
 	{
-		if (Worldgen.WATER_CHEST)
+		if (Worldgen.WATER_CHEST && randomIn.nextInt(Worldgen.WATER_CHEST_CHANCE) == 0)
 		{
 			BlockPos blockpos = new BlockPos(getXWithOffset(6, 6, coreRoom, coreRoom.getBoundingBox()), getYWithOffset(1, coreRoom, coreRoom.getBoundingBox()), getZWithOffset(6, 6, coreRoom, coreRoom.getBoundingBox()));
 
