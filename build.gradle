@@ -78,6 +78,9 @@ processResources
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
+    // Handle duplicate files by excluding them
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
