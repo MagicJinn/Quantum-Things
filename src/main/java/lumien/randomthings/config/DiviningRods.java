@@ -5,11 +5,10 @@ public class DiviningRods {
                         "Allows you to add divining rods to the game, or disable/remove existing ones.";
 
         public static final String PROPERTY_COMMENT =
-                        "Allows you to add divining rods to the game, or disable/remove existing ones.\n"
-                                        + "Format: oreDictionaryName,recipeItem,red,green,blue\n"
-                                        + "  - oreDictionaryName: The ore dictionary name the rod detects (e.g., 'oreIron')\n"
-                                        + "  - recipeItem: The item used in the crafting recipe (ore dictionary name or 'minecraft:itemname' for vanilla items)\n"
-                                        + "  - red, green, blue: Color values (0-254) for the rod's visual appearance\n"
+                        "Format: oreDictionaryName,recipeItem,red,green,blue\n"
+                                        + "- oreDictionaryName: The ore dictionary name the rod detects (e.g., 'oreIron')\n"
+                                        + "- recipeItem: The item used in the crafting recipe (ore dictionary name or 'minecraft:itemname' for vanilla items)\n"
+                                        + "- red, green, blue: Color values (0-254) for the rod's visual appearance\n"
                                         + "Note: For recipeItem in rod entries, only use 'minecraft:' prefix for vanilla items. Mod item prefixes (e.g., 'modname:item') do NOT work - use ore dictionary names instead.\n";
 
         public static String[] DEFAULT_RODS = {
