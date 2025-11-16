@@ -4,6 +4,14 @@ public class DiviningRods {
         public static final String CONFIG_COMMENT =
                         "Allows you to add divining rods to the game, or disable/remove existing ones.";
 
+        public static final String PROPERTY_COMMENT =
+                        "Allows you to add divining rods to the game, or disable/remove existing ones.\n"
+                                        + "Format: oreDictionaryName,recipeItem,red,green,blue\n"
+                                        + "  - oreDictionaryName: The ore dictionary name the rod detects (e.g., 'oreIron')\n"
+                                        + "  - recipeItem: The item used in the crafting recipe (ore dictionary name or 'minecraft:itemname' for vanilla items)\n"
+                                        + "  - red, green, blue: Color values (0-254) for the rod's visual appearance\n"
+                                        + "Note: For recipeItem in rod entries, only use 'minecraft:' prefix for vanilla items. Mod item prefixes (e.g., 'modname:item') do NOT work - use ore dictionary names instead.\n";
+
         public static String[] DEFAULT_RODS = {
                         // Vanilla ores
                         "oreCoal,minecraft:coal,20,20,20", "oreIron,ingotIron,211,180,159",
@@ -26,6 +34,7 @@ public class DiviningRods {
                         "oreCertusQuartz,crystalCertusQuartz,136,166,193",
                         // Silent's Gems
                         "oreChaos,gemChaos,205,184,172", "oreAgate,gemAgate,202,28,202",
+                        "oreEnderEssence,gemEnderEssence,78,192,118",
                         "oreAlexandrite,gemAlexandrite,107,107,107", "oreAmber,gemAmber,202,144,28",
                         "oreAmethyst,gemAmethyst,144,28,202", "oreAmetrine,gemAmetrine,128,0,65",
                         "oreAmmolite,gemAmmolite,174,65,195", "oreApatite,gemApatite,65,195,163",
@@ -53,10 +62,6 @@ public class DiviningRods {
                         "oreTopaz,gemTopaz,202,101,28", "oreTurquoise,gemTurquoise,0,128,107",
                         "oreVioletSapphire,gemVioletSapphire,118,0,128",
                         "oreZircon,gemZircon,195,195,65",
-                        // Silent Gear
-                        // Non functional until it has an oredict entry (modpacks can add it
-                        // themselves).
-                        "oreCrimsonIron,ingotCrimsonIron,214,107,137",
                         // Galacticraft
                         "oreSilicon,itemSilicon,102,95,104", "oreCheese,foodCheese,255,216,107",
                         // Galacticraft Planets
@@ -76,6 +81,17 @@ public class DiviningRods {
                         "oreOrnamyte,gemOrnamyte,115,115,115", "oreRosite,ingotRosite,210,28,48",
                         "oreSapphire,gemSapphire,29,71,208", "oreShyregem,gemShyregem,0,231,251",
                         "oreShyrestone,ingotShyrestone,0,170,227",
-                        "oreVarsium,ingotVarsium,157,103,40",};
+                        "oreVarsium,ingotVarsium,157,103,40",
+
+                        // Sleepers are non functional until it has an oredict entry
+                        // (modpacks can add it themselves, I won't).
+                        // Silent Gear
+                        "oreCrimsonIron,ingotCrimsonIron,214,107,137",
+                        // More Planets
+                        "oreDiremsium,ingotDiremsium,186,84,84",
+                        "oreExtraIlonite,ingotExtraIlonite,60,163,103",
+                        "oreIllenium,ingotIllenium,129,116,157",
+                        "oreZyptorium,ingotZyptorium,78,109,201",
+                        "oreSetrorium,gemSetrorium,88,160,180"};
 
 }

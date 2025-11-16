@@ -215,7 +215,7 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 		}
 
 		String[] configRods = config.getStringList("Divining Rods", "Divining Rods",
-				DiviningRods.DEFAULT_RODS, DiviningRods.CONFIG_COMMENT);
+				DiviningRods.DEFAULT_RODS, DiviningRods.PROPERTY_COMMENT);
 
 		for (String rodEntry : configRods) {
 			if (rodEntry == null || rodEntry.trim().isEmpty()) {

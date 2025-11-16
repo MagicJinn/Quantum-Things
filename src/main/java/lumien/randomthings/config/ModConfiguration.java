@@ -33,7 +33,7 @@ public class ModConfiguration
 
 			// Ensure divining rods list property is registered
 			configuration.getStringList("Divining Rods", "Divining Rods", DiviningRods.DEFAULT_RODS,
-					DiviningRods.CONFIG_COMMENT);
+					DiviningRods.PROPERTY_COMMENT);
 		}
 	}
 
@@ -51,7 +51,7 @@ public class ModConfiguration
 		// Register divining rods list property to ensure it's in the config file on startup
 		// This must be done here so the property is registered before the config is saved
 		configuration.getStringList("Divining Rods", "Divining Rods", DiviningRods.DEFAULT_RODS,
-				DiviningRods.CONFIG_COMMENT);
+				DiviningRods.PROPERTY_COMMENT);
 
 		// Set category comments after loading (only needed on initial setup)
 		if (configuration.hasCategory("Worldgen Plants")) {
