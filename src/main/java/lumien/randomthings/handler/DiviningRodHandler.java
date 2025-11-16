@@ -124,7 +124,7 @@ public class DiviningRodHandler
 					RodType type = ItemDiviningRod.getRodType(rod);
 
 					int range = Numbers.DIVINING_ROD_RANGE;
-					int maxCoord = range + 1; // +1 because we go from -range to +range inclusive
+					int maxCoord = range + 1; // +1 because it is centered on the player
 					int totalBlocks = (range * 2 + 1) * (range * 2 + 1) * (range * 2 + 1);
 					int blocksPerTick = Math.max(1, totalBlocks / 20); // Check all blocks over 20
 																		// ticks

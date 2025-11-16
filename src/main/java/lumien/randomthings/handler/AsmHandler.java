@@ -240,6 +240,11 @@ public class AsmHandler
 		return b == ModBlocks.fertilizedDirt || b == ModBlocks.fertilizedDirtTilled;
 	}
 
+	// Check if a block is valid farmland (either vanilla farmland or tilled fertilized dirt)
+	public static boolean isValidFarmland(Block b) {
+		return b == net.minecraft.init.Blocks.FARMLAND || b == ModBlocks.fertilizedDirtTilled;
+	}
+
 	static PlayerInteractionManager interactionManager;
 
 	public static void preHarvest(PlayerInteractionManager manager)

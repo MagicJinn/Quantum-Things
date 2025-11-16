@@ -156,6 +156,10 @@ public class ClassTransformer implements IClassTransformer
 			transformations++;
 			return patchBlockFalling(basicClass);
 		}
+		else if (transformedName.equals("net.minecraft.entity.ai.EntityAIHarvestFarmland")) {
+			transformations++;
+			return patchEntityAIHarvestFarmland(basicClass);
+		}
 
 		return basicClass;
 	}
@@ -1642,6 +1646,82 @@ public class ClassTransformer implements IClassTransformer
 		}
 
 		CustomClassWriter writer = new CustomClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+		classNode.accept(writer);
+
+		return writer.toByteArray();
+	}
+
+	private byte[] patchEntityAIHarvestFarmland(byte[] basicClass) {
+		ClassNode classNode = new ClassNode();
+		ClassReader classReader = new ClassReader(basicClass);
+		classReader.accept(classNode, 0);
+		logger.log(Level.DEBUG, "Found EntityAIHarvestFarmland Class: " + classNode.name);
+
+		MethodNode shouldMoveTo = null;
+
+		for (MethodNode mn : classNode.methods) {
+			if (mn.name.equals("shouldMoveTo")
+					|| mn.name.equals(MCPNames.method("func_179488_a"))) {
+				if (mn.desc.equals(
+						"(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)Z")) {
+					shouldMoveTo = mn;
+					break;
+				}
+			}
+		}
+
+		if (shouldMoveTo != null) {
+			logger.log(Level.DEBUG, " - Found shouldMoveTo method");
+
+			for (int i = 0; i < shouldMoveTo.instructions.size(); i++) {
+				AbstractInsnNode ain = shouldMoveTo.instructions.get(i);
+
+				if (ain instanceof FieldInsnNode) {
+					FieldInsnNode fin = (FieldInsnNode) ain;
+
+					if (fin.getOpcode() == GETSTATIC
+							&& fin.owner.equals("net/minecraft/init/Blocks")
+							&& (fin.name.equals("FARMLAND")
+									|| fin.name.equals("field_150458_ak"))) {
+
+						AbstractInsnNode current = ain.getNext();
+						int searchCount = 0;
+						while (current != null && searchCount < 5) {
+							if (current instanceof JumpInsnNode) {
+								JumpInsnNode jin = (JumpInsnNode) current;
+								if (jin.getOpcode() == Opcodes.IF_ACMPEQ
+										|| jin.getOpcode() == Opcodes.IF_ACMPNE) {
+									boolean isIfNotEqual = jin.getOpcode() == Opcodes.IF_ACMPNE;
+
+									InsnList toInsert = new InsnList();
+
+									toInsert.add(new MethodInsnNode(INVOKESTATIC, asmHandler,
+											"isValidFarmland", "(Lnet/minecraft/block/Block;)Z",
+											false));
+
+									LabelNode label = jin.label;
+									toInsert.add(new JumpInsnNode(
+											isIfNotEqual ? Opcodes.IFEQ : Opcodes.IFNE, label));
+
+									shouldMoveTo.instructions.insertBefore(ain, toInsert);
+									shouldMoveTo.instructions.remove(ain);
+									shouldMoveTo.instructions.remove(jin);
+
+									logger.log(Level.DEBUG, " - Patched shouldMoveTo");
+									break;
+								}
+							}
+							current = current.getNext();
+							searchCount++;
+						}
+						break;
+					}
+				}
+			}
+		}
+
+		CustomClassWriter writer =
+				new CustomClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 		classNode.accept(writer);
 
 		return writer.toByteArray();
