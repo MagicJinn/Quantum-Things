@@ -22,4 +22,4 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 - Fixed Spectre Illuminator [smelting full snow blocks](https://bugs.mojang.com/browse/MC/issues/MC-88097).
 - Fixed Nature Core being able to spawn underwater.
 - Fixed Nature and Water Chest not having breaking particles.
-- 
+- Fixed Magic Beans growing infinitely in Cubic Chunks worlds (limited to 512).
