@@ -12,6 +12,7 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 - Added the ability to configure values concerning the Lotus.
 - Added the ability to enable, disable, and add custom Divining Rods, and adjust the range.
 - Added Divining Rod support for NetherEnding Ores, Silent's Gems, Galacticraft, Galacticraft Planets and Advent of Ascension
+- Added Divining Rod sleeper support for Silent Gear and More Planets. (Sleeper Support is for mods lacking oreDict. Does nothing by default, can be enabled by modpacks).
 
 ### Fixes
 
