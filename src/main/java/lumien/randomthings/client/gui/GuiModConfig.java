@@ -38,7 +38,12 @@ public class GuiModConfig extends GuiConfig {
 
         for (String category : categories) {
             if (config.hasCategory(category)) {
-                list.add(new ConfigElement(config.getCategory(category)));
+                net.minecraftforge.common.config.ConfigCategory configCategory =
+                        config.getCategory(category);
+                // Only add categories that have properties (non-empty categories)
+                if (configCategory != null && !configCategory.getValues().isEmpty()) {
+                    list.add(new ConfigElement(configCategory));
+                }
             }
         }
 
