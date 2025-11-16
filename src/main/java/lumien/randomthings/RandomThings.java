@@ -104,6 +104,7 @@ public class RandomThings implements LoadingCallback
 		ModEnchantments.preInit(event);
 		ModBiomes.preInit(event);
 		ModSounds.preInit(event);
+		ItemDiviningRod.preInit();
 		proxy.registerModels();
 
 		RTEventHandler eventHandler = new RTEventHandler();

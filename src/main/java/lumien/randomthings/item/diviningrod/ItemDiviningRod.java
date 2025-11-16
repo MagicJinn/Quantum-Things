@@ -6,72 +6,300 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.apache.logging.log4j.Level;
+import lumien.randomthings.RandomThings;
+import lumien.randomthings.config.DiviningRods;
 import lumien.randomthings.handler.DiviningRodHandler;
 import lumien.randomthings.item.ItemBase;
+import lumien.randomthings.item.ModItems;
 import lumien.randomthings.lib.IRTItemColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemDiviningRod extends ItemBase implements IRTItemColor
 {
 	public static List<RodType> types;
 	public static Map<RodType, Boolean> availableTypes;
+	public static CombinedRodType universalRod;
 
 	static
 	{
 		types = new ArrayList<RodType>();
 		availableTypes = new LinkedHashMap<RodType, Boolean>();
-
-		types.add(new OreRodType("coal", "oreCoal", new Color(20, 20, 20, 50)));
-		types.add(new OreRodType("iron", "oreIron", new Color(211, 180, 159, 50)));
-		types.add(new OreRodType("gold", "oreGold", new Color(246, 233, 80, 50)));
-		types.add(new OreRodType("lapis", "oreLapis", new Color(5, 45, 150, 50)));
-		types.add(new OreRodType("redstone", "oreRedstone", new Color(211, 1, 1, 50)));
-		types.add(new OreRodType("emerald", "oreEmerald", new Color(0, 220, 0, 50)));
-		types.add(new OreRodType("diamond", "oreDiamond", new Color(87, 221, 229, 50)));
-		types.add(new CombinedRodType("universal", types.toArray(new RodType[0])));
-
-		// Thermal Foundation
-		types.add(new OreRodType("copper", "oreCopper", new Color(252, 113, 21, 50)));
-		types.add(new OreRodType("tin", "oreTin", new Color(150, 184, 217, 50)));
-		types.add(new OreRodType("silver", "oreSilver", new Color(205, 231, 246, 50)));
-		types.add(new OreRodType("lead", "oreLead", new Color(117, 133, 187, 50)));
-		types.add(new OreRodType("aluminum", "oreAluminum", new Color(197, 197, 202, 50)));
-		types.add(new OreRodType("nickel", "oreNickel", new Color(208, 206, 163, 50)));
-		types.add(new OreRodType("platinum", "orePlatinum", new Color(42, 183, 252, 50)));
-		types.add(new OreRodType("iridium", "oreIridium", new Color(176, 176, 202, 50)));
-		types.add(new OreRodType("mithril", "oreMithril", new Color(97, 207, 252, 50)));
-
-		// Draconic
-		types.add(new OreRodType("draconium", "oreDraconium", new Color(75, 38, 107, 50)));
-
-		// Tinkers
-		types.add(new OreRodType("cobalt", "oreCobalt", new Color(5, 18, 64, 50)));
-		types.add(new OreRodType("ardite", "oreArdite", new Color(138, 104, 38, 50)));
-		
-		// Actually Additions
-		types.add(new OreRodType("blackquartz", "oreQuartzBlack", new Color(10, 10, 10, 50)));
-		
-		// Applied Energistics
-		types.add(new OreRodType("certus", "oreCertusQuartz", new Color(136, 166, 193, 50)));
 	}
 
-	public ItemDiviningRod()
-	{
+	public ItemDiviningRod() {
 		super("diviningRod");
 
 		this.setHasSubtypes(true);
 		this.setMaxStackSize(1);
 	}
 
-	public static void postInit()
-	{
+	public static void preInit() {
+		// Load all divining rods from config (needed before model registration)
+		loadConfigRods();
+
+		// Create universal rod with all non-universal rods (needed before model registration)
+		List<RodType> rods = new ArrayList<RodType>();
+		for (RodType type : types) {
+			if (!(type instanceof CombinedRodType) && !type.getName().equals("universal")) {
+				rods.add(type);
+			}
+		}
+		universalRod = new CombinedRodType("universal", rods.toArray(new RodType[0]));
+		types.add(universalRod);
+	}
+
+	public static void postInit() {
+		// Check availability for all types
 		types.stream().forEach((t) -> availableTypes.put(t, t.shouldBeAvailable()));
+
+		// Register recipes for all divining rods
+		registerRecipes();
+	}
+
+	private static void registerRecipes() {
+		for (int i = 0; i < types.size(); i++) {
+			RodType type = types.get(i);
+
+			// Skip universal rod - it has a special recipe
+			if (type.getName().equals("universal")) {
+				registerUniversalRecipe();
+				continue;
+			}
+
+			// Skip if not available
+			if (!availableTypes.get(type)) {
+				continue;
+			}
+
+			if (type instanceof OreRodType) {
+				OreRodType oreType = (OreRodType) type;
+				registerRodRecipe(oreType, i);
+			}
+		}
+	}
+
+	private static void registerRodRecipe(OreRodType rodType, int metadata) {
+		String recipeItem = rodType.getRecipeItem();
+		Object ingredient;
+
+		// Check if it's an item string (contains colon) or an ore dict entry
+		if (recipeItem.contains(":")) {
+			// Parse item string (format: modid:itemname or modid:itemname:metadata)
+			String[] itemParts = recipeItem.split(":");
+			if (itemParts.length < 2) {
+				RandomThings.logger.log(Level.WARN, "Invalid recipe item format for divining rod "
+						+ rodType.getName() + ": " + recipeItem);
+				return;
+			}
+
+			net.minecraft.item.Item item = net.minecraft.item.Item.getByNameOrId(recipeItem);
+			if (item == null) {
+				RandomThings.logger.log(Level.WARN, "Could not find item for divining rod "
+						+ rodType.getName() + ": " + recipeItem);
+				return;
+			}
+
+			int itemMeta = 0;
+			if (itemParts.length > 2) {
+				try {
+					itemMeta = Integer.parseInt(itemParts[2]);
+				} catch (NumberFormatException e) {
+					RandomThings.logger.log(Level.WARN,
+							"Invalid metadata in recipe item for divining rod " + rodType.getName()
+									+ ": " + recipeItem);
+				}
+			}
+
+			ingredient = new net.minecraft.item.ItemStack(item, 1, itemMeta);
+		} else {
+			// Use ore dictionary
+			ingredient = recipeItem;
+		}
+
+		net.minecraft.item.ItemStack stick =
+				new net.minecraft.item.ItemStack(net.minecraft.init.Items.STICK);
+		net.minecraft.item.ItemStack spiderEye =
+				new net.minecraft.item.ItemStack(net.minecraft.init.Items.SPIDER_EYE);
+		net.minecraft.item.ItemStack result =
+				new net.minecraft.item.ItemStack(ModItems.diviningRod, 1, metadata);
+
+		net.minecraft.util.ResourceLocation recipeName = new net.minecraft.util.ResourceLocation(
+				"randomthings", "diviningrod_" + rodType.getName());
+		net.minecraftforge.oredict.ShapedOreRecipe recipe =
+				new net.minecraftforge.oredict.ShapedOreRecipe(recipeName, result, "RSR", "SES",
+						"S S", 'R', ingredient, 'S', stick, 'E', spiderEye);
+		recipe.setRegistryName(recipeName);
+		net.minecraftforge.fml.common.registry.ForgeRegistries.RECIPES.register(recipe);
+	}
+
+	private static void registerUniversalRecipe() {
+		// Universal rod recipe uses the first 8 valid rods in a 3x3 pattern
+		List<net.minecraft.item.ItemStack> rodStacks =
+				new ArrayList<net.minecraft.item.ItemStack>();
+		for (int i = 0; i < types.size(); i++) {
+			RodType type = types.get(i);
+			if (!(type instanceof CombinedRodType) && !type.getName().equals("universal")
+					&& availableTypes.get(type)) {
+				rodStacks.add(new net.minecraft.item.ItemStack(ModItems.diviningRod, 1, i));
+				if (rodStacks.size() >= 8) {
+					break; // Only need first 8
+				}
+			}
+		}
+
+		// Find universal rod index
+		int universalIndex = -1;
+		for (int i = 0; i < types.size(); i++) {
+			if (types.get(i).getName().equals("universal")) {
+				universalIndex = i;
+				break;
+			}
+		}
+
+		if (universalIndex == -1) {
+			return;
+		}
+
+		net.minecraft.item.ItemStack result =
+				new net.minecraft.item.ItemStack(ModItems.diviningRod, 1, universalIndex);
+		net.minecraft.item.ItemStack stick =
+				new net.minecraft.item.ItemStack(net.minecraft.init.Items.STICK);
+		net.minecraft.item.ItemStack slimeBall =
+				new net.minecraft.item.ItemStack(net.minecraft.init.Items.SLIME_BALL);
+
+		// Pattern: CSD, IBE, GLR (8 rod positions: C, I, G, L, R, E, D, S)
+		// S can be a rod (8th) or stick if less than 8 rods available
+		// B=slimeBall (center)
+		net.minecraft.util.ResourceLocation recipeName =
+				new net.minecraft.util.ResourceLocation("randomthings", "diviningrod_universal");
+
+		// Get ingredients - use rods if available, otherwise use sticks
+		Object c = rodStacks.size() > 0 ? rodStacks.get(0) : stick;
+		Object s = rodStacks.size() > 1 ? rodStacks.get(1) : stick; // S position (top center)
+		Object d = rodStacks.size() > 2 ? rodStacks.get(2) : stick;
+		Object i = rodStacks.size() > 3 ? rodStacks.get(3) : stick;
+		Object e = rodStacks.size() > 4 ? rodStacks.get(4) : stick;
+		Object g = rodStacks.size() > 5 ? rodStacks.get(5) : stick;
+		Object l = rodStacks.size() > 6 ? rodStacks.get(6) : stick;
+		Object r = rodStacks.size() > 7 ? rodStacks.get(7) : stick;
+
+		// Create recipe with pattern: CSD, IBE, GLR
+		// C, S, D, I, E, G, L, R are rod positions (or sticks if not enough rods)
+		// B is slimeBall (center)
+		net.minecraftforge.oredict.ShapedOreRecipe recipe =
+				new net.minecraftforge.oredict.ShapedOreRecipe(recipeName, result, "CSD", "IBE",
+						"GLR", 'C', c, 'S', s, 'D', d, 'I', i, 'B', slimeBall, 'E', e, 'G', g, 'L',
+						l, 'R', r);
+		recipe.setRegistryName(recipeName);
+		net.minecraftforge.fml.common.registry.ForgeRegistries.RECIPES.register(recipe);
+	}
+
+	private static void loadConfigRods() {
+		Configuration config = RandomThings.instance.configuration.getConfiguration();
+		if (config == null) {
+			return;
+		}
+
+		String[] configRods = config.getStringList("Divining Rods", "Divining Rods",
+				DiviningRods.DEFAULT_RODS,
+				"Divining rods. Format: oreDictionaryName,recipeItem,red,green,blue. "
+						+ "Example: oreQuartz,minecraft:quartz,245,245,245. Recipe item can be an item (minecraft:quartz) or ore dict entry (ingotCopper). Name is auto-generated from recipe item. To disable a rod, simply remove its entry.");
+
+		for (String rodEntry : configRods) {
+			if (rodEntry == null || rodEntry.trim().isEmpty()) {
+				continue;
+			}
+
+			String[] parts = rodEntry.split(",");
+			if (parts.length != 5) {
+				RandomThings.logger.log(Level.WARN, "Invalid divining rod entry: " + rodEntry
+						+ ". Expected format: oreDictionaryName,recipeItem,red,green,blue");
+				continue;
+			}
+
+			try {
+				String oreName = parts[0].trim();
+				String recipeItem = parts[1].trim();
+				int red = Integer.parseInt(parts[2].trim());
+				int green = Integer.parseInt(parts[3].trim());
+				int blue = Integer.parseInt(parts[4].trim());
+
+				// Generate name from recipe item
+				String name = generateNameFromRecipeItem(recipeItem);
+
+				// Clamp color values to the valid 0-255 range instead of skipping
+				if (red < 0 || red > 255 || green < 0 || green > 255 || blue < 0 || blue > 255) {
+					RandomThings.logger.log(Level.WARN, "Clamping color values for divining rod "
+							+ name + ". Values must be between 0 and 255.");
+					red = Math.max(0, Math.min(255, red));
+					green = Math.max(0, Math.min(255, green));
+					blue = Math.max(0, Math.min(255, blue));
+				}
+
+				// Check if rod with this name already exists
+				boolean exists = false;
+				for (RodType type : types) {
+					if (type.getName().equals(name)) {
+						exists = true;
+						break;
+					}
+				}
+
+				if (exists) {
+					RandomThings.logger.log(Level.WARN,
+							"Divining rod with name " + name + " already exists. Skipping.");
+					continue;
+				}
+
+				Color color = new Color(red, green, blue, 50);
+				types.add(new OreRodType(name, oreName, recipeItem, color));
+				RandomThings.logger.log(Level.INFO,
+						"Added divining rod: " + name + " for " + oreName);
+			} catch (NumberFormatException e) {
+				RandomThings.logger.log(Level.WARN,
+						"Invalid number format in divining rod entry: " + rodEntry);
+			}
+		}
+	}
+
+	private static String generateNameFromRecipeItem(String recipeItem) {
+		// If it's an item string (contains colon), extract the item name
+		if (recipeItem.contains(":")) {
+			String[] parts = recipeItem.split(":");
+			if (parts.length >= 2) {
+				String itemName = parts[1];
+				// Remove common suffixes like "_ingot", "_gem", etc. and use the base name
+				itemName =
+						itemName.replace("_ingot", "").replace("_gem", "").replace("_crystal", "");
+				return itemName.toLowerCase();
+			}
+		}
+		// If it's an ore dict entry, remove common prefixes
+		String name = recipeItem;
+		if (name.startsWith("ingot")) {
+			name = name.substring(5); // Remove "ingot"
+		} else if (name.startsWith("gem")) {
+			name = name.substring(3); // Remove "gem"
+		} else if (name.startsWith("crystal")) {
+			name = name.substring(7); // Remove "crystal"
+		} else if (name.startsWith("ore")) {
+			name = name.substring(3); // Remove "ore"
+		} else if (name.startsWith("dust")) {
+			name = name.substring(4); // Remove "dust"
+		} else if (name.startsWith("nugget")) {
+			name = name.substring(6); // Remove "nugget"
+		}
+		return name.toLowerCase();
 	}
 
 	@Override
@@ -94,7 +322,44 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		return super.getUnlocalizedName(stack) + "." + types.get(stack.getItemDamage()).name;
+		RodType type = types.get(stack.getItemDamage());
+		if (type.getName().equals("universal")) {
+			return "item.diviningRodUniversal";
+		}
+		return "item.diviningRod";
+	}
+
+	@Override
+	public String getItemStackDisplayName(ItemStack stack) {
+		RodType type = types.get(stack.getItemDamage());
+
+		if (type.getName().equals("universal")) {
+			String universalName = I18n.translateToLocal("item.diviningRodUniversal.name");
+			String rodName = I18n.translateToLocal("item.diviningRod.name");
+			return universalName + " " + rodName;
+		}
+
+		if (type instanceof OreRodType) {
+			OreRodType oreType = (OreRodType) type;
+			List<net.minecraft.item.ItemStack> ores = OreDictionary.getOres(oreType.oreName);
+
+			if (!ores.isEmpty()) {
+				// Get the first ore's display name
+				net.minecraft.item.ItemStack firstOre = ores.get(0);
+				String oreDisplayName = firstOre.getDisplayName();
+
+				// Remove any existing " Ore" suffix if present
+				if (oreDisplayName.endsWith(" Ore")) {
+					oreDisplayName = oreDisplayName.substring(0, oreDisplayName.length() - 4);
+				}
+
+				String rodName = I18n.translateToLocal("item.diviningRod.name");
+				return oreDisplayName + " " + rodName;
+			}
+		}
+
+		// Fallback to default
+		return super.getItemStackDisplayName(stack);
 	}
 
 	@Override

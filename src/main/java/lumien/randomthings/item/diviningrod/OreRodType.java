@@ -13,17 +13,24 @@ import net.minecraftforge.oredict.OreDictionary;
 public class OreRodType extends RodType
 {
 	String oreName;
+	String recipeItem;
 
 	int oreID;
 	Color color;
 
-	public OreRodType(String name, String ore, Color color)
+	public OreRodType(String name, String ore, String recipeItem, Color color)
 	{
 		super(name);
 
 		this.oreName = ore;
+		this.recipeItem = recipeItem;
 		this.oreID = OreDictionary.getOreID(ore);
 		this.color = color;
+	}
+
+	public String getRecipeItem()
+	{
+		return recipeItem;
 	}
 
 	@Override

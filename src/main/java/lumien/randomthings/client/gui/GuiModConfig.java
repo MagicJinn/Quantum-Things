@@ -32,7 +32,8 @@ public class GuiModConfig extends GuiConfig {
         RandomThings.instance.configuration.ensurePropertiesRegistered();
 
         // Add all categories (alphabetically sorted for consistency)
-        String[] categories = {"Features", "Internals", "Lotus", "Nature Core", "Numbers", "Visual",
+        String[] categories = {"Divining Rods", "Features", "Internals", "Lotus", "Nature Core",
+                "Numbers", "Visual",
                 "Voxel Projector", "Worldgen Features", "Worldgen Loot", "Worldgen Plants"};
 
         for (String category : categories) {

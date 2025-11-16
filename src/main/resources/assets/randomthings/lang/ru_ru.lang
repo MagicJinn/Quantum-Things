@@ -261,33 +261,8 @@ item.timeInABottle.name=Время в бутылке
 item.spectreIlluminator.name=Призрачный иллюминатор
 item.eclipsedClock.name=Затмеваемые часы
 
-item.diviningRod.coal.name=Угольный предсказывающий стержень
-item.diviningRod.iron.name=Железный предсказывающий стержень
-item.diviningRod.gold.name=Золотой предсказывающий стержень
-item.diviningRod.lapis.name=Лазуритовый предсказывающий стержень
-item.diviningRod.redstone.name=Редстоуновый предсказывающий стержень
-item.diviningRod.emerald.name=Изумрудный предсказывающий стержень
-item.diviningRod.diamond.name=Алмазный предсказывающий стержень
-item.diviningRod.universal.name=Универсальный предсказывающий стержень
-
-item.diviningRod.copper.name=Медный предсказывающий стержень
-item.diviningRod.tin.name=Оловянный предсказывающий стержень
-item.diviningRod.silver.name=Серебряный предсказывающий стержень
-item.diviningRod.lead.name=Свинцовый предсказывающий стержень
-item.diviningRod.aluminum.name=Алюминиевый предсказывающий стержень
-item.diviningRod.nickel.name=Никелевый предсказывающий стержень
-item.diviningRod.platinum.name=Платиновый предсказывающий стержень
-item.diviningRod.iridium.name=Иридиевый предсказывающий стержень
-item.diviningRod.mithril.name=Мифриловый предсказывающий стержень
-
-item.diviningRod.draconium.name=Дракониевый предсказывающий стержень
-
-item.diviningRod.cobalt.name=Кобальтовый предсказывающий стержень
-item.diviningRod.ardite.name=Ардитовый предсказывающий стержень
-
-item.diviningRod.blackquartz.name=Черно-кварцевый предсказывающий стержень
-
-item.diviningRod.certus.name=Заряженно-кварцевый предсказывающий стержень
+item.diviningRod.name=Предсказывающий стержень
+item.diviningRodUniversal.name=Универсальный
 
 item.spectreCharger.normal.name=Призрачное зарядное устройство
 item.spectreCharger.redstone.name=Редстоуновое призрачное зарядное устройство

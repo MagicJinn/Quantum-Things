@@ -39,6 +39,7 @@ public class ModConfiguration
 
 		// Force load NatureCore class to ensure it's included in ASM scanning
 		NatureCore.class.getName();
+		DiviningRods.class.getName();
 
 		// Load and process configuration
 		reloadConfig();
@@ -62,6 +63,12 @@ public class ModConfiguration
 
 		if (configuration.hasCategory("Lotus")) {
 			configuration.getCategory("Lotus").setComment("Configure Lotus plant behavior");
+		}
+
+		if (configuration.hasCategory("Divining Rods")) {
+			configuration.getCategory("Divining Rods").setComment(
+					"Divining rods. Format: oreDictionaryName,recipeItem,red,green,blue. "
+							+ "Example: oreQuartz,minecraft:quartz,245,245,245. Recipe item can be an item (minecraft:quartz) or ore dict entry (ingotCopper). Name is auto-generated from recipe item. To disable a rod, simply remove its entry.");
 		}
 
 		if (configuration.hasChanged()) {
