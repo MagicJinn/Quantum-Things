@@ -34,6 +34,7 @@ public class ModConfiguration
 			// Ensure divining rods list property is registered
 			configuration.getStringList("Divining Rods", "Divining Rods", DiviningRods.DEFAULT_RODS,
 					DiviningRods.PROPERTY_COMMENT);
+			markDiviningRodsRequiresRestart();
 		}
 	}
 
@@ -52,6 +53,7 @@ public class ModConfiguration
 		// This must be done here so the property is registered before the config is saved
 		configuration.getStringList("Divining Rods", "Divining Rods", DiviningRods.DEFAULT_RODS,
 				DiviningRods.PROPERTY_COMMENT);
+		markDiviningRodsRequiresRestart();
 
 		// Set category comments after loading (only needed on initial setup)
 		if (configuration.hasCategory("Worldgen Plants")) {
@@ -186,6 +188,20 @@ public class ModConfiguration
 				RandomThings.logger.log(Level.ERROR, "Error loading config option: "
 						+ data.getClassName() + "." + data.getObjectName());
 				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Marks the divining rods configuration property as requiring a Minecraft restart. This is
+	 * necessary because divining rods affect item registration and recipes.
+	 */
+	private void markDiviningRodsRequiresRestart() {
+		if (configuration != null && configuration.hasCategory("Divining Rods")) {
+			Property diviningRodsProp =
+					configuration.getCategory("Divining Rods").get("Divining Rods");
+			if (diviningRodsProp != null) {
+				diviningRodsProp.setRequiresMcRestart(true);
 			}
 		}
 	}
