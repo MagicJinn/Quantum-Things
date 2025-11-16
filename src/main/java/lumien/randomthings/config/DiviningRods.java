@@ -2,8 +2,7 @@ package lumien.randomthings.config;
 
 public class DiviningRods {
         public static final String CONFIG_COMMENT =
-                        "Divining Rods. Format: oreDictionaryName,recipeItem,red,green,blue. Values must be between 0 and 254. "
-                                        + "Example: oreQuartz,minecraft:quartz,245,245,245. Recipe item can be an item (minecraft:quartz) or ore dict entry (ingotCopper). Name is auto-generated from recipe item. To disable a rod, simply remove its entry.";
+                        "Allows you to add divining rods to the game, or disable/remove existing ones.";
 
         public static String[] DEFAULT_RODS = {
                         // Vanilla ores
@@ -17,9 +16,9 @@ public class DiviningRods {
                         "oreAluminum,ingotAluminum,197,197,202",
                         "oreNickel,ingotNickel,208,206,163", "orePlatinum,ingotPlatinum,42,183,252",
                         "oreIridium,ingotIridium,176,176,202", "oreMithril,ingotMithril,97,207,252",
-                        // Draconic
+                        // Draconic Evolution
                         "oreDraconium,ingotDraconium,75,38,107",
-                        // Tinkers
+                        // Tinkers' Construct
                         "oreCobalt,ingotCobalt,5,18,64", "oreArdite,ingotArdite,138,104,38",
                         // Actually Additions
                         "oreQuartzBlack,gemQuartzBlack,10,10,10",
@@ -57,6 +56,26 @@ public class DiviningRods {
                         // Silent Gear
                         // Non functional until it has an oredict entry (modpacks can add it
                         // themselves).
-                        "oreCrimsonIron,ingotCrimsonIron,214,107,137",};
+                        "oreCrimsonIron,ingotCrimsonIron,214,107,137",
+                        // Galacticraft
+                        "oreSilicon,itemSilicon,102,95,104", "oreCheese,foodCheese,255,216,107",
+                        // Galacticraft Planets
+                        "oreDesh,ingotDesh,57,57,57", "oreIlmenite, ingotTitanium,53,66,97",
+                        "oreSolar,ingotSolar,255,255,255", // No functionality, added just in case
+                        // Advent of Ascension
+                        "oreAmethyst,gemAmethyst,142,48,206", "oreBaronyte,ingotBaronyte,156,30,30",
+                        "oreBlazium,ingotBlazium,175,68,0", "oreBloodstone,gemBloodstone,159,17,0",
+                        "oreCrystallite,gemCrystallite,242,145,3",
+                        "oreElecanium,ingotElecanium,124,232,228",
+                        "oreEmberstone,ingotEmberstone,128,0,0", "oreGemenyte,gemGemenyte,9,160,8",
+                        "oreGhastly,ingotGhastly,181,206,162",
+                        "oreGhoulish,ingotGhoulish,146,114,255", "oreJade,gemJade,102,197,107",
+                        "oreJewelyte,gemJewelyte,33,142,9", "oreLimonite,ingotLimonite,208,127,29",
+                        "oreLunar,ingotLunar,249,158,203", "oreLyon,ingotLyon,195,128,3",
+                        "oreMystite,ingotMystite,178,231,200",
+                        "oreOrnamyte,gemOrnamyte,115,115,115", "oreRosite,ingotRosite,210,28,48",
+                        "oreSapphire,gemSapphire,29,71,208", "oreShyregem,gemShyregem,0,231,251",
+                        "oreShyrestone,ingotShyrestone,0,170,227",
+                        "oreVarsium,ingotVarsium,157,103,40",};
 
 }
