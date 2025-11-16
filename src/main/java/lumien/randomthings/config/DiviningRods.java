@@ -53,6 +53,10 @@ public class DiviningRods {
                         "oreTanzanite,gemTanzanite,75,0,128", "oreTektite,gemTektite,123,104,87",
                         "oreTopaz,gemTopaz,202,101,28", "oreTurquoise,gemTurquoise,0,128,107",
                         "oreVioletSapphire,gemVioletSapphire,118,0,128",
-                        "oreZircon,gemZircon,195,195,65"};
+                        "oreZircon,gemZircon,195,195,65",
+                        // Silent Gear
+                        // Non functional until it has an oredict entry (modpacks can add it
+                        // themselves).
+                        "oreCrimsonIron,ingotCrimsonIron,214,107,137",};
 
 }
