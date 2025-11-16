@@ -239,13 +239,13 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 				// Generate name from recipe item
 				String name = generateNameFromRecipeItem(recipeItem);
 
-				// Clamp color values to the valid 0-255 range instead of skipping
-				if (red < 0 || red > 255 || green < 0 || green > 255 || blue < 0 || blue > 255) {
+				// Clamp color values to the valid 0-254 range instead of skipping
+				if (red < 0 || red > 254 || green < 0 || green > 254 || blue < 0 || blue > 254) {
 					RandomThings.logger.log(Level.WARN, "Clamping color values for divining rod "
-							+ name + ". Values must be between 0 and 255.");
-					red = Math.max(0, Math.min(255, red));
-					green = Math.max(0, Math.min(255, green));
-					blue = Math.max(0, Math.min(255, blue));
+							+ name + ". Values must be between 0 and 254.");
+					red = Math.max(0, Math.min(254, red));
+					green = Math.max(0, Math.min(254, green));
+					blue = Math.max(0, Math.min(254, blue));
 				}
 
 				// Check if rod with this name already exists
