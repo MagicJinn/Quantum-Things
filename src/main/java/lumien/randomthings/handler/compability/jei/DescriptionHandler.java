@@ -14,7 +14,9 @@ import lumien.randomthings.enchantment.ModEnchantments;
 import lumien.randomthings.item.ItemBase;
 import lumien.randomthings.item.ItemIngredient;
 import lumien.randomthings.item.ModItems;
+import lumien.randomthings.config.Numbers;
 import lumien.randomthings.item.diviningrod.ItemDiviningRod;
+import lumien.randomthings.item.diviningrod.RodType;
 import mezz.jei.api.IModRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentData;
@@ -22,6 +24,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class DescriptionHandler
@@ -58,10 +61,24 @@ public class DescriptionHandler
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.PRECIOUS_EMERALD.id));
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.SPECTRE_STRING.id));
 
-		for (int i = 8; i < ItemDiviningRod.types.size(); i++)
+		for (int i = 0; i < ItemDiviningRod.types.size(); i++)
 		{
 			stackBlackList.add(new ItemStack(ModItems.diviningRod, 1, i));
-			registry.addDescription(new ItemStack(ModItems.diviningRod, 1, i), "item.diviningRod.general.info");
+			RodType rodType = ItemDiviningRod.types.get(i);
+			boolean isUniversal = rodType.getName().equals("universal");
+			String formattedOreName = formatOreName(rodType.getOreName());
+			String oreKey = "item.diviningRod.ore";
+			String oreTranslation = I18n.translateToLocal(oreKey);
+			if (!isUniversal && !oreTranslation.isEmpty()) {
+				oreTranslation =
+						oreTranslation.substring(0, 1).toUpperCase() + oreTranslation.substring(1);
+			}
+			String oreName = formattedOreName + " " + oreTranslation;
+			int range = Numbers.DIVINING_ROD_RANGE;
+			String rangeString = range + " x " + range;
+			registry.addDescription(new ItemStack(ModItems.diviningRod, 1, i),
+					I18n.translateToLocalFormatted("item.diviningRod.info", oreName.trim(),
+							rangeString));
 		}
 
 
@@ -164,5 +181,22 @@ public class DescriptionHandler
 		{
 			overrideMap.put(o, null);
 		}
+	}
+
+	private static String formatOreName(String oreName) {
+		String formatted = oreName.toLowerCase();
+
+		// Remove "ore" prefix if present
+		if (formatted.startsWith("ore")) {
+			formatted = formatted.substring(3);
+		}
+
+		// Capitalize first letter and replace underscores with spaces
+		if (!formatted.isEmpty()) {
+			formatted = formatted.substring(0, 1).toUpperCase() + formatted.substring(1);
+			formatted = formatted.replace("_", " ");
+		}
+
+		return formatted;
 	}
 }

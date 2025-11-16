@@ -10,6 +10,7 @@ import net.minecraftforge.client.model.animation.Animation;
 
 public class CombinedRodType extends RodType
 {
+	// All rods in the combined rod (which is all of them)
 	RodType[] parts;
 
 	public CombinedRodType(String name, RodType... parts)
@@ -45,6 +46,11 @@ public class CombinedRodType extends RodType
 		}
 		
 		return Color.BLACK;
+	}
+
+	@Override
+	public String getOreName() {
+		return "";
 	}
 
 	@Override
