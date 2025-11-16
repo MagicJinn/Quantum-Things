@@ -85,9 +85,10 @@ public class BlockBeanStalk extends BlockBase
 	{
 		if (!worldIn.isRemote)
 		{
+			int height = Math.min(512, worldIn.getHeight());
 			if (strongMagic)
 			{
-				if (pos.getY() == worldIn.getHeight() - 2)
+				if (pos.getY() >= height - 2)
 				{
 					IBlockState podReplace = worldIn.getBlockState(pos.up());
 
@@ -100,7 +101,7 @@ public class BlockBeanStalk extends BlockBase
 			}
 			else
 			{
-				if (pos.getY() == worldIn.getHeight() || !worldIn.isAirBlock(pos.up()))
+				if (pos.getY() >= height || !worldIn.isAirBlock(pos.up()))
 				{
 					return;
 				}
