@@ -54,14 +54,14 @@ public class OreRodType extends RodType
 
 			if (foundDimension != null) {
 				// This is a dimension-specific ore (e.g., "oreNetherEmerald")
-				// Also check the base overworld variant
+				// Also check the base variant
 				String baseOreName = ORE_PREFIX + baseSuffix;
 				int baseOreID = OreDictionary.getOreID(baseOreName);
 				if (baseOreID != -1) {
 					oreIDList.add(baseOreID);
 				}
 			} else {
-				// This is a base overworld ore (e.g., "oreEmerald")
+				// This is a base ore (e.g., "oreEmerald")
 				// Check all dimension variants
 				for (String dimension : DIMENSION_PREFIXES) {
 					String dimensionOreName = ORE_PREFIX + dimension + baseSuffix;
