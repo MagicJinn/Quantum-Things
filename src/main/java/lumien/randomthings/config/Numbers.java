@@ -36,4 +36,8 @@ public class Numbers
 	
 	@ConfigOption(category = "Numbers", name = "TimeInABottlePerSecond", comment = "How many ticks have to pass for a Time in a Bottle to gain 1 second (20 = 1 Second)")
 	public static int TIME_IN_A_BOTTLE_SECOND = 20;
+
+	@ConfigOption(category = "Numbers", name = "DiviningRodRange",
+			comment = "The range (in blocks) that a Divining Rod searches in each direction from the player. A range of 5 means it searches an 11x11x11 cube centered on the player.") public static int DIVINING_ROD_RANGE =
+					5;
 }

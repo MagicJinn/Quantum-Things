@@ -10,6 +10,7 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 - Added the ability to configure the chances of certain plants, features and loot to occur.
 - Added the ability to configure values concerning the Nature Core.
 - Added the ability to configure values concerning the Lotus.
+- Added the ability to enable, disable, and add custom divining rods, and adjust the range.
 
 ### Fixes
 

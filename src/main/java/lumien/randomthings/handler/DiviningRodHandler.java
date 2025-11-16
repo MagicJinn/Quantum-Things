@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import lumien.randomthings.config.Numbers;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.item.diviningrod.ItemDiviningRod;
 import lumien.randomthings.item.diviningrod.RodType;
@@ -122,23 +123,37 @@ public class DiviningRodHandler
 					BlockPos playerPos = player.getPosition();
 					RodType type = ItemDiviningRod.getRodType(rod);
 
-					for (int i = 0; i < 60; i++)
+					int range = Numbers.DIVINING_ROD_RANGE;
+					int maxCoord = range + 1; // +1 because we go from -range to +range inclusive
+					int totalBlocks = (range * 2 + 1) * (range * 2 + 1) * (range * 2 + 1);
+					int blocksPerTick = Math.max(1, totalBlocks / 20); // Check all blocks over 20
+																		// ticks
+
+					// Initialize modX, modY, modZ to start at -range if they're out of bounds
+					if (modX < -range || modX > range || modY < -range || modY > range
+							|| modZ < -range || modZ > range) {
+						modX = -range - 1; // Start one before so first increment makes it -range
+						modY = -range;
+						modZ = -range;
+					}
+
+					for (int i = 0; i < blocksPerTick; i++)
 					{
 						modX++;
 
-						if (modX == 6)
+						if (modX == maxCoord)
 						{
-							modX = -5;
+							modX = -range;
 							modZ++;
 
-							if (modZ == 6)
+							if (modZ == maxCoord)
 							{
-								modZ = -5;
+								modZ = -range;
 								modY++;
 
-								if (modY == 6)
+								if (modY == maxCoord)
 								{
-									modY = -5;
+									modY = -range;
 								}
 							}
 						}

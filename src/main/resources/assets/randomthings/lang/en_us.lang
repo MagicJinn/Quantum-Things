@@ -261,33 +261,8 @@ item.timeInABottle.name=Time in a bottle
 item.spectreIlluminator.name=Spectre Illuminator
 item.eclipsedClock.name=Eclipsed Clock
 
-item.diviningRod.coal.name=Coal Divining Rod
-item.diviningRod.iron.name=Iron Divining Rod
-item.diviningRod.gold.name=Gold Divining Rod
-item.diviningRod.lapis.name=Lapis Divining Rod
-item.diviningRod.redstone.name=Redstone Divining Rod
-item.diviningRod.emerald.name=Emerald Divining Rod
-item.diviningRod.diamond.name=Diamond Divining Rod
-item.diviningRod.universal.name=Vanilla Divining Rod
-
-item.diviningRod.copper.name=Copper Divining Rod
-item.diviningRod.tin.name=Tin Divining Rod
-item.diviningRod.silver.name=Silver Divining Rod
-item.diviningRod.lead.name=Lead Divining Rod
-item.diviningRod.aluminum.name=Aluminum Divining Rod
-item.diviningRod.nickel.name=Nickel Divining Rod
-item.diviningRod.platinum.name=Platinum Divining Rod
-item.diviningRod.iridium.name=Iridium Divining Rod
-item.diviningRod.mithril.name=Mithril Divining Rod
-
-item.diviningRod.draconium.name=Draconium Divining Rod
-
-item.diviningRod.cobalt.name=Cobalt Divining Rod
-item.diviningRod.ardite.name=Ardite Divining Rod
-
-item.diviningRod.blackquartz.name=Black Quartz Divining Rod
-
-item.diviningRod.certus.name=Certus Quartz Divining Rod
+item.diviningRod.name=Divining Rod
+item.diviningRodUniversal.name=Universal
 
 item.spectreCharger.normal.name=Spectre Charger
 item.spectreCharger.redstone.name=Redstone Spectre Charger

@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import akka.io.Tcp.Register;
 import lumien.randomthings.RandomThings;
 import lumien.randomthings.block.BlockBase;
 import lumien.randomthings.block.ModBlocks;

@@ -256,6 +256,9 @@ item.soundPattern.name=音乐模块
 item.portableSoundDampener.name=便携式隔音器
 item.escapeRope.name=逃生绳
 
+item.diviningRod.name=占卜棒
+item.diviningRodUniversal.name=通用
+
 item.bean.name=豆
 item.lesserMagicBean.name=次级魔豆
 item.magicBean.name=魔豆
