@@ -63,27 +63,13 @@ public class DescriptionHandler
 
 		for (int i = 0; i < ItemDiviningRod.types.size(); i++)
 		{
-			stackBlackList.add(new ItemStack(ModItems.diviningRod, 1, i));
-			RodType rodType = ItemDiviningRod.types.get(i);
-			boolean isUniversal = rodType.getName().equals("universal");
-			String formattedOreName = formatOreName(rodType.getOreName());
-			String oreKey = "item.diviningRod.ore";
-			String oreTranslation = I18n.translateToLocal(oreKey);
-			if (!isUniversal && !oreTranslation.isEmpty()) {
-				oreTranslation =
-						oreTranslation.substring(0, 1).toUpperCase() + oreTranslation.substring(1);
-			}
-			String oreName = formattedOreName + " " + oreTranslation;
-			int range = Numbers.DIVINING_ROD_RANGE;
-			String rangeString = range + " x " + range;
-			registry.addDescription(new ItemStack(ModItems.diviningRod, 1, i),
-					I18n.translateToLocalFormatted("item.diviningRod.info", oreName.trim(),
-							rangeString));
+			ItemStack stack = new ItemStack(ModItems.diviningRod, 1, i);
+			stackBlackList.add(stack);
+			String description = getDiviningRodDescription(ItemDiviningRod.types.get(i));
+			registry.addDescription(stack, description);
 		}
 
-
 		removeDes(overrideMap, ModBlocks.spectreLeaf, ModBlocks.natureCore, ModBlocks.spectreLog, ModBlocks.spectrePlank, ModBlocks.specialChest, ModBlocks.superLubricentPlatform, ModBlocks.filteredSuperLubricentPlatform);
-
 
 		// Manually Add
 		registry.addDescription(new ItemStack(ModBlocks.blockDiaphanous, 1, OreDictionary.WILDCARD_VALUE), "tile.diaphanousBlock.info");
@@ -198,5 +184,22 @@ public class DescriptionHandler
 		}
 
 		return formatted;
+	}
+
+	public static String getDiviningRodDescription(RodType rodType) {
+		boolean isUniversal = rodType.getName().equals("universal");
+		String formattedOreName = formatOreName(rodType.getOreName());
+		String oreKey = "item.diviningRod.ore";
+		String oreTranslation = I18n.translateToLocal(oreKey);
+		if (!isUniversal && !oreTranslation.isEmpty()) {
+			oreTranslation =
+					oreTranslation.substring(0, 1).toUpperCase() + oreTranslation.substring(1);
+		}
+		String oreName = formattedOreName + " " + oreTranslation;
+		int range = Numbers.DIVINING_ROD_RANGE;
+		String rangeString = range + " x " + range;
+		String description = I18n.translateToLocalFormatted("item.diviningRod.info", oreName.trim(),
+				rangeString);
+		return description;
 	}
 }
