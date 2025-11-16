@@ -25,4 +25,5 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 - Fixed Nature Core being able to spawn underwater.
 - Fixed Nature and Water Chest not having breaking particles.
 - Fixed Magic Beans growing infinitely in Cubic Chunks worlds (limited to 512).
-- Fixes Divining Rods not having proper descriptions.
+- Fixed Divining Rods not having proper descriptions.
+- Fixed rare ConcurrentModificationException when using Redstone Interfaces.
