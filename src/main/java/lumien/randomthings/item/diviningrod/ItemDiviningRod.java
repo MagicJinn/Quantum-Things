@@ -211,9 +211,7 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 		}
 
 		String[] configRods = config.getStringList("Divining Rods", "Divining Rods",
-				DiviningRods.DEFAULT_RODS,
-				"Divining rods. Format: oreDictionaryName,recipeItem,red,green,blue. "
-						+ "Example: oreQuartz,minecraft:quartz,245,245,245. Recipe item can be an item (minecraft:quartz) or ore dict entry (ingotCopper). Name is auto-generated from recipe item. To disable a rod, simply remove its entry.");
+				DiviningRods.DEFAULT_RODS, DiviningRods.CONFIG_COMMENT);
 
 		for (String rodEntry : configRods) {
 			if (rodEntry == null || rodEntry.trim().isEmpty()) {
