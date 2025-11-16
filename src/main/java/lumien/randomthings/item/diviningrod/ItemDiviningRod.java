@@ -9,16 +9,20 @@ import java.util.Map.Entry;
 import org.apache.logging.log4j.Level;
 import lumien.randomthings.RandomThings;
 import lumien.randomthings.config.DiviningRods;
+import lumien.randomthings.config.Numbers;
 import lumien.randomthings.handler.DiviningRodHandler;
+import lumien.randomthings.handler.compability.jei.DescriptionHandler;
 import lumien.randomthings.item.ItemBase;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.lib.IRTItemColor;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -401,5 +405,21 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 		{
 			return Color.WHITE.getRGB();
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip,
+			ITooltipFlag flagIn) {
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+
+		int meta = stack.getItemDamage();
+		if (meta >= types.size()) {
+			return;
+		}
+
+		RodType rodType = types.get(meta);
+		String description = DescriptionHandler.getDiviningRodDescription(rodType);
+		tooltip.add(description);
 	}
 }
