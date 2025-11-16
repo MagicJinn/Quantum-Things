@@ -30,6 +30,10 @@ public class ModConfiguration
 			// This will register all properties by calling configuration.get() for each annotated
 			// field
 			doAnnoations(configuration);
+
+			// Ensure divining rods list property is registered
+			configuration.getStringList("Divining Rods", "Divining Rods", DiviningRods.DEFAULT_RODS,
+					DiviningRods.CONFIG_COMMENT);
 		}
 	}
 
@@ -43,6 +47,11 @@ public class ModConfiguration
 
 		// Load and process configuration
 		reloadConfig();
+
+		// Register divining rods list property to ensure it's in the config file on startup
+		// This must be done here so the property is registered before the config is saved
+		configuration.getStringList("Divining Rods", "Divining Rods", DiviningRods.DEFAULT_RODS,
+				DiviningRods.CONFIG_COMMENT);
 
 		// Set category comments after loading (only needed on initial setup)
 		if (configuration.hasCategory("Worldgen Plants")) {
@@ -66,9 +75,7 @@ public class ModConfiguration
 		}
 
 		if (configuration.hasCategory("Divining Rods")) {
-			configuration.getCategory("Divining Rods").setComment(
-					"Divining rods. Format: oreDictionaryName,recipeItem,red,green,blue. "
-							+ "Example: oreQuartz,minecraft:quartz,245,245,245. Recipe item can be an item (minecraft:quartz) or ore dict entry (ingotCopper). Name is auto-generated from recipe item. To disable a rod, simply remove its entry.");
+			configuration.getCategory("Divining Rods").setComment(DiviningRods.CONFIG_COMMENT);
 		}
 
 		if (configuration.hasChanged()) {
