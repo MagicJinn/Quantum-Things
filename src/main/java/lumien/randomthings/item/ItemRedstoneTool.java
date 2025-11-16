@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -81,9 +82,12 @@ public class ItemRedstoneTool extends ItemBase
 				}
 				else if (linkingState.getBlock() == ModBlocks.redstoneObserver)
 				{
-					TileEntityRedstoneObserver redstoneObserver = (TileEntityRedstoneObserver) worldIn.getTileEntity(linkingTo);
-
-					redstoneObserver.setTarget(pos);
+					TileEntity te = worldIn.getTileEntity(linkingTo);
+					if (te instanceof TileEntityRedstoneObserver) {
+						TileEntityRedstoneObserver redstoneObserver =
+								(TileEntityRedstoneObserver) te;
+						redstoneObserver.setTarget(pos);
+					}
 				}
 			}
 			compound.setBoolean("linking", false);

@@ -6,6 +6,7 @@ import lumien.randomthings.container.ContainerEmptyContainer;
 import lumien.randomthings.tileentity.TileEntityRedstoneObserver;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -22,13 +23,22 @@ public class GuiRedstoneObserver extends GuiContainerBase
 
 		this.xSize = 136;
 		this.ySize = 54;
-		this.te = (TileEntityRedstoneObserver) world.getTileEntity(new BlockPos(x, y, z));
+		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+		if (te instanceof TileEntityRedstoneObserver) {
+			this.te = (TileEntityRedstoneObserver) te;
+		} else {
+			this.te = null;
+		}
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
 		fontRenderer.drawString(I18n.format("tile.redstoneObserver.name", new Object[0]), 4, 6, 13107220);
+
+		if (te == null) {
+			return;
+		}
 
 		BlockPos target = te.getTarget();
 

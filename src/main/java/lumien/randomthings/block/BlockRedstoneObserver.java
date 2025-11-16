@@ -40,13 +40,23 @@ public class BlockRedstoneObserver extends BlockContainerBase
 	@Override
 	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
-		return ((TileEntityRedstoneObserver) blockAccess.getTileEntity(pos)).getWeakPower(blockState, blockAccess, pos, side);
+		TileEntity te = blockAccess.getTileEntity(pos);
+		if (te instanceof TileEntityRedstoneObserver) {
+			return ((TileEntityRedstoneObserver) te).getWeakPower(blockState, blockAccess, pos,
+					side);
+		}
+		return 0;
 	}
 
 	@Override
 	public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
-		return ((TileEntityRedstoneObserver) blockAccess.getTileEntity(pos)).getStrongPower(blockState, blockAccess, pos, side);
+		TileEntity te = blockAccess.getTileEntity(pos);
+		if (te instanceof TileEntityRedstoneObserver) {
+			return ((TileEntityRedstoneObserver) te).getStrongPower(blockState, blockAccess, pos,
+					side);
+		}
+		return 0;
 	}
 
 	@Override

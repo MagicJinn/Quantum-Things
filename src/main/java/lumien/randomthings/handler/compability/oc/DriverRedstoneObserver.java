@@ -6,6 +6,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import lumien.randomthings.tileentity.TileEntityRedstoneObserver;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -16,7 +17,11 @@ public class DriverRedstoneObserver extends DriverSidedTileEntity
 	@Override
 	public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing side)
 	{
-		return new Environment((TileEntityRedstoneObserver) world.getTileEntity(pos));
+		TileEntity te = world.getTileEntity(pos);
+		if (te instanceof TileEntityRedstoneObserver) {
+			return new Environment((TileEntityRedstoneObserver) te);
+		}
+		return null;
 	}
 
 	@Override
