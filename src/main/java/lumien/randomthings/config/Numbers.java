@@ -28,9 +28,6 @@ public class Numbers
 	@ConfigOption(category = "Numbers", name = "BlockDestabilizerLimit", comment = "How many blocks the Block Destabilizer can destabilize at once (0 = Unlimited)")
 	public static int BLOCK_DESTABILIZER_LIMIT = 50;
 
-	@ConfigOption(category = "VoxelProjector", name = "ModelTransferBandwidth", comment = "The amount of bytes that can be used to transfer models to clients per tick (The default 1000 Byte equal 20 kbyte/sec)")
-	public static int MODEL_TRANSFER_BANDWIDTH = 1000;
-
 	@ConfigOption(category = "Numbers", name = "AncientFurnaceLimit", comment = "How many blocks an Ancient Furnace can transform before stopping")
 	public static int ANCIENT_FURNACE_LIMIT = 10000;
 	

@@ -10,7 +10,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.primitives.Ints;
 
 import lumien.randomthings.block.BlockRuneBase;
-import lumien.randomthings.config.Features;
+import lumien.randomthings.config.Visual;
 import lumien.randomthings.lib.AtlasSprite;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -119,7 +119,9 @@ public class ModelRune implements IBakedModel
 	{
 		float part = 1F / 16F;
 
-		return createSidedBakedQuad(part + x * (part), part + x * (part) + part * width, part + z * (part), part + z * (part) + part * height, 0.2F * part, u, v, u + width, v + height, rune, Features.FLAT_RUNES ? runeBaseFlat : runeBase, EnumFacing.UP);
+		return createSidedBakedQuad(part + x * (part), part + x * (part) + part * width,
+				part + z * (part), part + z * (part) + part * height, 0.2F * part, u, v, u + width,
+				v + height, rune, Visual.FLAT_RUNES ? runeBaseFlat : runeBase, EnumFacing.UP);
 	}
 
 	private BakedQuad createSidedBakedQuad(float x1, float x2, float z1, float z2, float y, float u1, float v1, float u2, float v2, int tintIndex, TextureAtlasSprite texture, EnumFacing side)
@@ -176,7 +178,7 @@ public class ModelRune implements IBakedModel
 	@Override
 	public TextureAtlasSprite getParticleTexture()
 	{
-		return Features.FLAT_RUNES ? runeBaseFlat : runeBase;
+		return Visual.FLAT_RUNES ? runeBaseFlat : runeBase;
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
-import lumien.randomthings.config.Features;
+import lumien.randomthings.config.Visual;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +26,7 @@ public class ItemPositionFilter extends ItemBase
 	@Override
 	public void addInformation(ItemStack par1ItemStack, World world, List par3List, ITooltipFlag par4)
 	{
-		if (!Features.HIDE_CORDS)
+		if (!Visual.HIDE_CORDS)
 		{
 			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
 			{

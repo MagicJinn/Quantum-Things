@@ -1490,4 +1490,12 @@ public class RTEventHandler
 
 		DiviningRodHandler.get().render();
 	}
+
+	@SubscribeEvent
+	public void onConfigChanged(
+			net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent event) {
+		if (event.getModID().equals(lumien.randomthings.lib.Reference.MOD_ID)) {
+			RandomThings.instance.configuration.reloadConfig();
+		}
+	}
 }

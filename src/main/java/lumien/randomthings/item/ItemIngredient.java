@@ -7,6 +7,7 @@ import com.google.common.base.Predicates;
 
 import lumien.randomthings.block.ModBlocks;
 import lumien.randomthings.config.Features;
+import lumien.randomthings.config.Lotus;
 import lumien.randomthings.entitys.EntityArtificialEndPortal;
 import lumien.randomthings.entitys.EntityGoldenEgg;
 import lumien.randomthings.entitys.EntitySpectreIlluminator;
@@ -238,13 +239,18 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 
 				if (!worldIn.isRemote)
 				{
-					int i = 3 + worldIn.rand.nextInt(5) + worldIn.rand.nextInt(5);
-
-					while (i > 0)
+					int xpBase = Lotus.XP_AMOUNT;
+					int xpSpread = (int) (xpBase * 0.625f); // random spread based on 3-13
+					int xpAmount =
+							Math.max(1, xpBase + (itemRand.nextInt(xpSpread * 2 + 1) - xpSpread));
+					if (xpAmount > 0)
 					{
-						int j = EntityXPOrb.getXPSplit(i);
-						i -= j;
-						worldIn.spawnEntity(new EntityXPOrb(worldIn, entityplayer.posX, entityplayer.posY, entityplayer.posZ, j));
+						while (xpAmount > 0) {
+							int j = EntityXPOrb.getXPSplit(xpAmount);
+							xpAmount -= j;
+							worldIn.spawnEntity(new EntityXPOrb(worldIn, entityplayer.posX,
+									entityplayer.posY, entityplayer.posZ, j));
+						}
 					}
 				}
 			}

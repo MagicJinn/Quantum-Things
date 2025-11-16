@@ -2,7 +2,7 @@ package lumien.randomthings.item;
 
 import java.util.List;
 
-import lumien.randomthings.config.Features;
+import lumien.randomthings.config.Visual;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -33,7 +33,7 @@ public class ItemPortKey extends ItemBase
 
 		if (targetCompound != null)
 		{
-			if (!Features.HIDE_CORDS)
+			if (!Visual.HIDE_CORDS)
 			{
 				int dimension = targetCompound.getInteger("dimension");
 				int posX = targetCompound.getInteger("posX");
@@ -80,7 +80,7 @@ public class ItemPortKey extends ItemBase
 	{
 		NBTTagCompound target = item.getSubCompound("target");
 
-		if (target != null && !Features.HIDE_CORDS)
+		if (target != null && !Visual.HIDE_CORDS)
 		{
 			int dimension = target.getInteger("dimension");
 			int posX = target.getInteger("posX");

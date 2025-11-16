@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Level;
 import lumien.randomthings.RandomThings;
 import lumien.randomthings.lib.ConfigOption;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -16,33 +17,85 @@ public class ModConfiguration
 {
 	Configuration configuration;
 
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
+	/**
+	 * Ensures all config properties are registered in the Configuration object. This should be
+	 * called before creating the config GUI to ensure all properties exist.
+	 */
+	public void ensurePropertiesRegistered() {
+		if (configuration != null) {
+			// This will register all properties by calling configuration.get() for each annotated
+			// field
+			doAnnoations(configuration);
+		}
+	}
+
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		configuration = new Configuration(event.getSuggestedConfigurationFile());
-		configuration.load();
 
-		Features.removeAirBubble = configuration.getBoolean("RemoveUnderwaterTexture", "Features", false, "TRIES to remove the weird water texture showing around ALL non full blocks. This might look weird when you, for example, are on a ladder underwater.");
-
-		configuration.getCategory("worldgen-plants").setComment(
-				"Enable or disable generation of plants, or change their frequency");
-		configuration.getCategory("worldgen-features").setComment(
-				"Enable or disable generation of structures and special blocks, or change their frequency");
-		configuration.getCategory("worldgen-loot").setComment(
-				"Enable or disable generation of loot items in chests and structures, or change their frequency");
-		configuration.getCategory("nature-core").setComment("Configure Nature Core behavior");
-
-		// ??
 		// Force load NatureCore class to ensure it's included in ASM scanning
 		NatureCore.class.getName();
 
-		// Annotation Based Config
-		doAnnoations(configuration);
+		// Load and process configuration
+		reloadConfig();
 
-		checkWorldGenChanceValid();
+		// Set category comments after loading (only needed on initial setup)
+		if (configuration.hasCategory("Worldgen Plants")) {
+			configuration.getCategory("Worldgen Plants").setComment(
+					"Enable or disable generation of plants, or change their frequency");
+		}
+		if (configuration.hasCategory("Worldgen Features")) {
+			configuration.getCategory("Worldgen Features").setComment(
+					"Enable or disable generation of structures and special blocks, or change their frequency");
+		}
+		if (configuration.hasCategory("Worldgen Loot")) {
+			configuration.getCategory("Worldgen Loot").setComment(
+					"Enable or disable generation of loot items in chests and structures, or change their frequency");
+		}
+		if (configuration.hasCategory("Nature Core")) {
+			configuration.getCategory("Nature Core").setComment("Configure Nature Core behavior");
+		}
 
-		if (configuration.hasChanged())
-		{
+		if (configuration.hasCategory("Lotus")) {
+			configuration.getCategory("Lotus").setComment("Configure Lotus plant behavior");
+		}
+
+		if (configuration.hasChanged()) {
 			configuration.save();
+		}
+	}
+
+	public void reloadConfig() {
+		if (configuration != null) {
+			// Load the configuration from disk
+			configuration.load();
+
+			// Reload annotation-based config - this reads from config and sets static fields
+			doAnnoations(configuration);
+
+			// Validate worldgen chances
+			checkWorldGenChanceValid();
+		}
+	}
+
+	/**
+	 * Syncs static fields from the Configuration object without reloading from disk. Use this after
+	 * the GUI saves changes, as the Configuration already has the updated values.
+	 */
+	public void syncStaticFields() {
+		if (configuration != null) {
+			// Sync annotation-based config - this reads from the Configuration object and sets
+			// static fields
+			// without calling configuration.load(), since the Configuration already has the updated
+			// values
+			doAnnoations(configuration);
+
+			// Validate worldgen chances
+			checkWorldGenChanceValid();
 		}
 	}
 
@@ -50,12 +103,19 @@ public class ModConfiguration
 	{
 		ASMDataTable asmData = RandomThings.instance.getASMData();
 
+		if (asmData == null) {
+			RandomThings.logger.log(Level.WARN,
+					"ASMDataTable is null, cannot load config annotations");
+			return;
+		}
+
 		Set<ASMData> atlasSet = asmData.getAll(ConfigOption.class.getName());
 
 		for (ASMData data : atlasSet)
 		{
 			try
 			{
+				@SuppressWarnings("rawtypes")
 				Class clazz = Class.forName(data.getClassName());
 				Field f = clazz.getDeclaredField(data.getObjectName());
 				f.setAccessible(true);
@@ -64,37 +124,56 @@ public class ModConfiguration
 				String category = (String) data.getAnnotationInfo().get("category");
 				String comment = (String) data.getAnnotationInfo().get("comment");
 
-				Object result = null;
+				if (comment == null) {
+					comment = "";
+				}
 
+				Object result = null;
+				Object defaultValue = null;
+
+				// Get the default value from the static field
+				// Get or create the Property object - this ensures we're using the same Property
+				// that the GUI edits
+				Property prop = null;
 				if (f.getType() == boolean.class)
 				{
-					result = configuration.get(category, name, f.getBoolean(null), comment).getBoolean();
+					defaultValue = f.getBoolean(null);
+					prop = configuration.get(category, name, (Boolean) defaultValue, comment);
+					result = prop.getBoolean();
 				}
 				else if (f.getType() == double.class)
 				{
-					result = configuration.get(category, name, f.getDouble(null), comment).getDouble();
+					defaultValue = f.getDouble(null);
+					prop = configuration.get(category, name, (Double) defaultValue, comment);
+					result = prop.getDouble();
 				}
 				else if (f.getType() == int.class)
 				{
-					result = configuration.get(category, name, f.getInt(null), comment).getInt();
+					defaultValue = f.getInt(null);
+					prop = configuration.get(category, name, (Integer) defaultValue, comment);
+					result = prop.getInt();
+				} else {
+					RandomThings.logger.log(Level.ERROR,
+							"Invalid Data Type for Config annotation: " + f.getType()
+									+ " for field " + clazz.getName() + "." + data.getObjectName());
+					continue;
 				}
 
+				// Set the static field with the value from config Property
+				// This reads the CURRENT value from the Property object, which may have been
+				// updated by the GUI
 				if (result != null)
 				{
 					f.set(null, result);
 				}
-				else
-				{
-					throw new RuntimeException("Invalid Data Type for Config annotation: " + f.getType());
-				}
 			}
 			catch (Exception e)
 			{
-				RandomThings.instance.logger.log(Level.ERROR, "Error stitching extra textures");
+				RandomThings.logger.log(Level.ERROR, "Error loading config option: "
+						+ data.getClassName() + "." + data.getObjectName());
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	private void checkWorldGenChanceValid() {
