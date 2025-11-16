@@ -37,22 +37,6 @@ public class EntitySpectreIlluminator extends Entity
 
 		setRenderDistanceWeight(0.1D);
 	}
-	
-	@Override
-	public void onKillCommand()
-	{
-		super.onKillCommand();
-		
-		if (!world.isRemote)
-		{
-			SpectreIlluminationHandler handler = SpectreIlluminationHandler.get(this.world);
-
-			BlockPos myPosition = this.getPosition();
-
-			if (handler.isIlluminated(myPosition))
-				handler.toggleChunk(this.world, myPosition);
-		}
-	}
 
 	public EntitySpectreIlluminator(World worldIn, double x, double y, double z)
 	{
@@ -76,19 +60,27 @@ public class EntitySpectreIlluminator extends Entity
 		{
 			// Prevent duplication of items
 			if (!isDead) {
-				this.setDead();
+				setDead();
 
 				player.world.spawnEntity(new EntityItem(player.world, this.posX, this.posY,
 						this.posZ, new ItemStack(ModItems.spectreIlluminator)));
-
-				SpectreIlluminationHandler handler = SpectreIlluminationHandler.get(this.world);
-				BlockPos pos = this.getPosition();
-				if (handler.isIlluminated(pos)) {
-					handler.toggleChunk(this.world, pos);
-				}
+			}
 		}
-	}
 		return EnumActionResult.SUCCESS;
+	}
+
+	@Override
+	public void setDead() {
+		super.setDead();
+
+		if (!world.isRemote) {
+			SpectreIlluminationHandler handler = SpectreIlluminationHandler.get(this.world);
+
+			BlockPos myPosition = this.getPosition();
+
+			if (handler.isIlluminated(myPosition))
+				handler.toggleChunk(this.world, myPosition);
+		}
 	}
 
 	@Override
