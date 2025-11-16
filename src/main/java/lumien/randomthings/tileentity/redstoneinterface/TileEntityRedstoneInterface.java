@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -20,7 +19,8 @@ import net.minecraft.world.World;
 
 public abstract class TileEntityRedstoneInterface extends TileEntityBase implements ITickable
 {
-	public static Set<TileEntityRedstoneInterface> interfaces = Collections.newSetFromMap(new WeakHashMap());
+	public static Set<TileEntityRedstoneInterface> interfaces =
+			Collections.newSetFromMap(new WeakHashMap<TileEntityRedstoneInterface, Boolean>());
 
 	public static Object lock = new Object();
 
@@ -107,12 +107,9 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
 
 			BlockPos checkingBlock = pos.offset(facing.getOpposite());
 
-			Iterator<TileEntityRedstoneInterface> iterator = interfaces.iterator();
-
-			while (iterator.hasNext())
+			// Create a snapshot copy to avoid ConcurrentModificationException
+			for (TileEntityRedstoneInterface redstoneInterface : new ArrayList<>(interfaces))
 			{
-				TileEntityRedstoneInterface redstoneInterface = iterator.next();
-
 				if (!redstoneInterface.isInvalid() && redstoneInterface.world == blockWorld && redstoneInterface.isTargeting(checkingBlock))
 				{
 					int remotePower = redstoneInterface.weakPower.get(facing);
@@ -136,12 +133,9 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
 
 			BlockPos checkingBlock = pos.offset(facing.getOpposite());
 
-			Iterator<TileEntityRedstoneInterface> iterator = interfaces.iterator();
-
-			while (iterator.hasNext())
+			// Create a snapshot copy to avoid ConcurrentModificationException
+			for (TileEntityRedstoneInterface redstoneInterface : new ArrayList<>(interfaces))
 			{
-				TileEntityRedstoneInterface redstoneInterface = iterator.next();
-				
 				if (!redstoneInterface.isInvalid() && redstoneInterface.world == blockWorld && redstoneInterface.isTargeting(checkingBlock))
 				{
 					int remotePower = redstoneInterface.strongPower.get(facing);
