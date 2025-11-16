@@ -359,6 +359,10 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 					oreDisplayName = oreDisplayName.substring(0, oreDisplayName.length() - 4);
 				}
 
+				// Remove dimension prefixes (Overworld, Nether, End) from display name
+				oreDisplayName = oreDisplayName.replace("Overworld", "").replace("Nether", "")
+						.replace("End", "").trim();
+
 				String rodName = I18n.translateToLocal("item.diviningRod.name");
 				return oreDisplayName + " " + rodName;
 			}
