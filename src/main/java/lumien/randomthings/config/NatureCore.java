@@ -3,7 +3,7 @@ package lumien.randomthings.config;
 import lumien.randomthings.lib.ConfigOption;
 
 public class NatureCore {
-    private static final String CATEGORY = "nature-core";
+        private static final String CATEGORY = "Nature Core";
 
     // Sand Replacement
     @ConfigOption(category = CATEGORY, name = "SandReplacementChance",
@@ -29,7 +29,7 @@ public class NatureCore {
 
     // Tree Spawning
     @ConfigOption(category = CATEGORY, name = "TreeChance",
-            comment = "Chance for tree spawning (Default = 600, lower is more common). Radius range (Default = 20). Y offset range is fixed at 5.") public static int TREE_CHANCE =
+                    comment = "Chance for tree spawning (Default = 600, lower is more common).") public static int TREE_CHANCE =
                     600;
 
     @ConfigOption(category = CATEGORY,

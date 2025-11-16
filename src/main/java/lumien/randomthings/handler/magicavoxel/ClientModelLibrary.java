@@ -17,7 +17,7 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 
 import lumien.randomthings.RandomThings;
-import lumien.randomthings.config.Features;
+import lumien.randomthings.config.VoxelProjector;
 import lumien.randomthings.handler.magicavoxel.ClientModelRequest.STATE;
 import lumien.randomthings.network.PacketHandler;
 import lumien.randomthings.network.messages.magicavoxel.MessageModelRequest;
@@ -134,7 +134,7 @@ public class ClientModelLibrary
 						return null;
 					}
 
-					if (Features.MODEL_CLIENT_SAVING)
+					if (VoxelProjector.MODEL_CLIENT_SAVING)
 					{
 						File modelFolder = new File(Minecraft.getMinecraft().mcDataDir, "voxmodels");
 

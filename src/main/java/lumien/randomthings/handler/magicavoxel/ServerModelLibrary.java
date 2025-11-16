@@ -17,7 +17,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.Level;
 
 import lumien.randomthings.RandomThings;
-import lumien.randomthings.config.Numbers;
+import lumien.randomthings.config.VoxelProjector;
 import lumien.randomthings.network.PacketHandler;
 import lumien.randomthings.network.messages.magicavoxel.MessageModelData;
 import lumien.randomthings.network.messages.magicavoxel.MessageModelRequestUpdate;
@@ -58,7 +58,7 @@ public class ServerModelLibrary
 	{
 		Iterator<ServerModelRequest> iterator = modelRequests.values().iterator();
 
-		int bytesAllowed = Numbers.MODEL_TRANSFER_BANDWIDTH;
+		int bytesAllowed = VoxelProjector.MODEL_TRANSFER_BANDWIDTH;
 
 		if (!modelRequests.isEmpty())
 		{

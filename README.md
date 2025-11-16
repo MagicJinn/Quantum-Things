@@ -6,8 +6,10 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 
 ### Changes
 
+- Added an ingame config menu.
 - Added the ability to configure the chances of certain plants, features and loot to occur.
 - Added the ability to configure values concerning the Nature Core.
+- Added the ability to configure values concerning the Lotus.
 
 ### Fixes
 

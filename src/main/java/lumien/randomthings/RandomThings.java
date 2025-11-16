@@ -56,7 +56,11 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.MOD_VERSION, acceptedMinecraftVersions = "[1.12,1.13)", certificateFingerprint = Reference.MOD_FINGERPRINT, dependencies = "after:jei@[4.7.11.100,);")
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.MOD_VERSION,
+		acceptedMinecraftVersions = "[1.12,1.13)",
+		certificateFingerprint = Reference.MOD_FINGERPRINT,
+		dependencies = "after:jei@[4.7.11.100,);",
+		guiFactory = "lumien.randomthings.client.ModGuiFactory")
 public class RandomThings implements LoadingCallback
 {
 	@Instance(Reference.MOD_ID)
@@ -104,6 +108,7 @@ public class RandomThings implements LoadingCallback
 
 		RTEventHandler eventHandler = new RTEventHandler();
 		MinecraftForge.EVENT_BUS.register(eventHandler);
+		net.minecraftforge.fml.common.FMLCommonHandler.instance().bus().register(eventHandler);
 
 		WorldGenEventHandler worldGenEventHandler = new WorldGenEventHandler();
 		MinecraftForge.TERRAIN_GEN_BUS.register(worldGenEventHandler);

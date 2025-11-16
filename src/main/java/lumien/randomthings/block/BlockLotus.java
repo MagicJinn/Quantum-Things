@@ -4,9 +4,9 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import lumien.randomthings.config.Lotus;
 import lumien.randomthings.item.ItemIngredient;
 import lumien.randomthings.item.ModItems;
-import lumien.randomthings.lib.INoItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.SoundType;
@@ -222,11 +222,16 @@ public class BlockLotus extends BlockBase implements IPlantable, IGrowable
 	@Override
 	public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, IBlockState state)
 	{
-		return false;
+		return Lotus.CAN_BONEMEAL;
 	}
 
+	// Grow by bonemeal
 	@Override
 	public void grow(World worldIn, Random rand, BlockPos pos, IBlockState state)
 	{
+		int i = state.getValue(AGE);
+		if (i < 3) {
+			worldIn.setBlockState(pos, state.withProperty(AGE, i + 1), 2);
+		}
 	}
 }
