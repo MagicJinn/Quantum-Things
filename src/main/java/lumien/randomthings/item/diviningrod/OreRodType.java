@@ -33,6 +33,10 @@ public class OreRodType extends RodType
 		return recipeItem;
 	}
 
+	public String getOreName() {
+		return oreName;
+	}
+
 	@Override
 	public boolean matches(World worldObj, BlockPos pos, IBlockState state)
 	{

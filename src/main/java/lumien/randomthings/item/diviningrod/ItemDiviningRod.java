@@ -271,31 +271,35 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 	}
 
 	private static String generateNameFromRecipeItem(String recipeItem) {
-		// If it's an item string (contains colon), extract the item name
+		// List of common suffixes/prefixes to remove
+		String[] list = {"ingot", "gem", "crystal", "ore", "dust", "nugget", "block"};
+		String name;
 		if (recipeItem.contains(":")) {
 			String[] parts = recipeItem.split(":");
 			if (parts.length >= 2) {
-				String itemName = parts[1];
-				// Remove common suffixes like "_ingot", "_gem", etc. and use the base name
-				itemName =
-						itemName.replace("_ingot", "").replace("_gem", "").replace("_crystal", "");
-				return itemName.toLowerCase();
+				name = parts[1];
+			} else {
+				name = recipeItem;
+			}
+		} else {
+			name = recipeItem;
+		}
+		// Always remove underscores
+		name = name.replace("_", "");
+		// Remove any prefix or suffix in the list
+		// Remove prefix
+		for (String s : list) {
+			if (name.startsWith(s)) {
+				name = name.substring(s.length());
+				break;
 			}
 		}
-		// If it's an ore dict entry, remove common prefixes
-		String name = recipeItem;
-		if (name.startsWith("ingot")) {
-			name = name.substring(5); // Remove "ingot"
-		} else if (name.startsWith("gem")) {
-			name = name.substring(3); // Remove "gem"
-		} else if (name.startsWith("crystal")) {
-			name = name.substring(7); // Remove "crystal"
-		} else if (name.startsWith("ore")) {
-			name = name.substring(3); // Remove "ore"
-		} else if (name.startsWith("dust")) {
-			name = name.substring(4); // Remove "dust"
-		} else if (name.startsWith("nugget")) {
-			name = name.substring(6); // Remove "nugget"
+		// Remove suffix
+		for (String s : list) {
+			if (name.endsWith(s)) {
+				name = name.substring(0, name.length() - s.length());
+				break;
+			}
 		}
 		return name.toLowerCase();
 	}

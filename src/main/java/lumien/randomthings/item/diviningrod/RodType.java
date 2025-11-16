@@ -26,7 +26,9 @@ public abstract class RodType
 	{
 		return getItemColor();
 	}
-	
+
+	public abstract String getOreName();
+
 	public abstract Color getItemColor();
 	
 	public abstract boolean shouldBeAvailable();

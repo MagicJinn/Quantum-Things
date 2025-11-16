@@ -589,3 +589,5 @@ item.weatherEgg_rain.info=投掷后会生成一片云朵，其会慢慢上升。
 item.weatherEgg_storm.info=投掷后会生成一片云朵，其会慢慢上升。一旦到达天空，它便会改变天气至雷暴天。
 item.enderBucket.info=末影桶的功能类似原版的桶，但不完全是。当你手持其右击流动的流体（非源头）时，它会自动盛装该流体的源头。
 item.reinforcedEnderBucket.info=强化末影桶的功能类似末影桶。值得注意的是，它至多能盛装10桶相同类似的流体。
+item.diviningRod.info=在主手或副手持有此物品时，会高亮显示以你为中心的%s立方体中的每个%s
+item.diviningRod.ore=矿石
