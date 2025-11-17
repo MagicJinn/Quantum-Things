@@ -1,11 +1,14 @@
 package lumien.randomthings.handler.spectre;
 
+import javax.annotation.Nonnull;
+
 import lumien.randomthings.biomes.ModBiomes;
 import lumien.randomthings.handler.ModDimensions;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeProviderSingle;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -92,5 +95,10 @@ public class SpectreWorldProvider extends WorldProvider
 	public DimensionType getDimensionType()
 	{
 		return ModDimensions.SPECTRE_TYPE;
+	}
+
+	@Override
+	public boolean canDoRainSnowIce(@Nonnull Chunk chunk) {
+		return false;
 	}
 }

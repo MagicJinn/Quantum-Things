@@ -3,6 +3,8 @@ package lumien.randomthings.item;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.base.Predicates;
 
 import lumien.randomthings.block.ModBlocks;
@@ -48,25 +50,26 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemIngredient extends ItemBase implements IRTItemColor
 {
-	static int counter = 0;
-
+	// Manually assign IDs to ensure they stay consistent across updates.
 	public enum INGREDIENT
 	{
-		EVIL_TEAR("evilTear"), ECTO_PLASM("ectoPlasm"), SPECTRE_INGOT("spectreIngot"), BIOME_SENSOR(
-				"biomeSensor"), LUMINOUS_POWDER("luminousPowder"), SUPERLUBRICENT_TINCTURE(
-						"superLubricentTincture"), FLOO_POWDER("flooPowder"), PLATE_BASE(
-								"plateBase"), PRECIOUS_EMERALD("preciousEmerald"), LOTUS_BLOSSOM(
-										"lotusBlossom"), GOLDEN_EGG("goldenEgg"), SPECTRE_STRING(
-												"spectreString"), BLACKOUT_POWDER("blackoutPowder");
+		EVIL_TEAR("evilTear", 1), ECTO_PLASM("ectoPlasm", 2), SPECTRE_INGOT("spectreIngot",
+				3), BIOME_SENSOR("biomeSensor", 4), LUMINOUS_POWDER("luminousPowder",
+						5), SUPERLUBRICENT_TINCTURE("superLubricentTincture", 6), FLOO_POWDER(
+								"flooPowder",
+								7), PLATE_BASE("plateBase", 8), PRECIOUS_EMERALD("preciousEmerald",
+										9), LOTUS_BLOSSOM("lotusBlossom", 10), GOLDEN_EGG(
+												"goldenEgg", 11), SPECTRE_STRING("spectreString",
+														12), BLACKOUT_POWDER("blackoutPowder", 13);
 
 		public String name;
 
 		public int id;
 
-		INGREDIENT(String name)
+		INGREDIENT(String name, int id)
 		{
 			this.name = name;
-			this.id = counter++;
+			this.id = id;
 		}
 	}
 
@@ -80,7 +83,8 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 		{
 
 			@Override
-			protected IProjectile getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn)
+			protected IProjectile getProjectileEntity(@Nonnull World worldIn,
+					@Nonnull IPosition position, @Nonnull ItemStack stackIn)
 			{
 				return new EntityGoldenEgg(worldIn, position.getX(), position.getY(), position.getZ());
 			}
@@ -92,7 +96,7 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 		{
 
 			@Override
-			public ItemStack dispense(IBlockSource source, ItemStack stack)
+			public ItemStack dispense(@Nonnull IBlockSource source, @Nonnull ItemStack stack)
 			{
 				if (stack.getItemDamage() != INGREDIENT.GOLDEN_EGG.id)
 				{
@@ -108,13 +112,13 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 	}
 
 	@Override
-	public boolean hasEffect(ItemStack stack)
+	public boolean hasEffect(@Nonnull ItemStack stack)
 	{
 		return stack.getItemDamage() == INGREDIENT.PRECIOUS_EMERALD.id;
 	}
 
 	@Override
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
+	public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> subItems)
 	{
 		if (this.isInCreativeTab(tab))
 		{
@@ -126,13 +130,14 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
+	public String getUnlocalizedName(@Nonnull ItemStack stack)
 	{
 		int id = stack.getItemDamage();
+		INGREDIENT ingredient = getIngredientById(id);
 
-		if (id >= 0 && id < INGREDIENT.values().length)
+		if (ingredient != null)
 		{
-			return "item.ingredient." + INGREDIENT.values()[id].name;
+			return "item.ingredient." + ingredient.name;
 		}
 		else
 		{
@@ -142,11 +147,22 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 
 	public INGREDIENT getIngredient(ItemStack stack)
 	{
-		return INGREDIENT.values()[stack.getItemDamage()];
+		return getIngredientById(stack.getItemDamage());
+	}
+
+	private INGREDIENT getIngredientById(int id) {
+		for (INGREDIENT ingredient : INGREDIENT.values()) {
+			if (ingredient.id == id) {
+				return ingredient;
+			}
+		}
+		return null;
 	}
 
 	@Override
-	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(@Nonnull EntityPlayer playerIn, @Nonnull World worldIn,
+			@Nonnull BlockPos pos, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX,
+			float hitY, float hitZ)
 	{
 		ItemStack stack = playerIn.getHeldItem(hand);
 
@@ -229,7 +245,8 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 	}
 
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
+	public ItemStack onItemUseFinish(@Nonnull ItemStack stack, @Nonnull World worldIn,
+			@Nonnull EntityLivingBase entityLiving)
 	{
 		if (getIngredient(stack) == ItemIngredient.INGREDIENT.LOTUS_BLOSSOM)
 		{
@@ -264,7 +281,7 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack stack)
+	public int getMaxItemUseDuration(@Nonnull ItemStack stack)
 	{
 		if (getIngredient(stack) == ItemIngredient.INGREDIENT.LOTUS_BLOSSOM)
 		{
@@ -275,7 +292,7 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack stack)
+	public EnumAction getItemUseAction(@Nonnull ItemStack stack)
 	{
 
 		if (getIngredient(stack) == ItemIngredient.INGREDIENT.LOTUS_BLOSSOM)
@@ -287,7 +304,8 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
+	public ActionResult<ItemStack> onItemRightClick(@Nonnull World worldIn,
+			@Nonnull EntityPlayer playerIn, @Nonnull EnumHand handIn)
 	{
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
 
