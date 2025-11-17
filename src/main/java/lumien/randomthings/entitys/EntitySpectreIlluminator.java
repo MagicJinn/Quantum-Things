@@ -34,8 +34,6 @@ public class EntitySpectreIlluminator extends Entity
 		this.illuminated = false;
 
 		this.setSize(0.5F, 0.5F);
-
-		setRenderDistanceWeight(0.1D);
 	}
 
 	public EntitySpectreIlluminator(World worldIn, double x, double y, double z) {
@@ -100,7 +98,7 @@ public class EntitySpectreIlluminator extends Entity
 
 			// Stagger update of targetY to prevent lag
 			// Using entity ID as offset to distribute updates semi evenly
-			if ((this.world.getTotalWorldTime() + this.getEntityId()) % 100 == 0) {
+			if ((this.world.getTotalWorldTime() + this.getEntityId()) % 100 == 0 || targetY == 0) {
 				// Get highest block in chunk
 				targetY = 0;
 				for (int y : thisChunk.getHeightMap()) {
