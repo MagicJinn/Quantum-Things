@@ -1,7 +1,6 @@
 package lumien.randomthings.client.render;
 
 import java.awt.Color;
-import java.util.Random;
 
 import lumien.randomthings.client.render.magiccircles.ColorFunctions;
 import lumien.randomthings.client.render.magiccircles.IColorFunction;
@@ -14,6 +13,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -56,18 +56,38 @@ public class RenderSpectreIlluminator extends Render<EntitySpectreIlluminator>
 			return (i + 2) % 3 == 0;
 		}));
 
+		// Calculate loop count based on distance to player (performance optimization)
+		// Reduce by 1 for every 32 blocks of distance
+		int loopCount = 5; // Default for close range
+		if (entity != null) {
+			EntityPlayer player = Minecraft.getMinecraft().player;
+			if (player != null) {
+				double dx = entity.posX - player.posX;
+				double dy = entity.posY - player.posY;
+				double dz = entity.posZ - player.posZ;
+				double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-		Random rng = new Random(5000);
+				// Reduce by 1 for every 32 blocks, minimum of 1
+				loopCount = Math.max(1, 5 - (int) (distance / 16));
+			}
+		}
 
-		for (int c = 0; c < 5; c++)
+		for (int c = 0; c < loopCount; c++)
 		{
-			float rotX = rng.nextInt(360) + progress / (rng.nextInt(4) + 1);
-			float rotZ = rng.nextInt(360) + progress / (rng.nextInt(4) + 1);
-
-			float radius = rng.nextFloat() * 0.5F + 0.07F;
+			float baseRotX = (c * 72.0F) % 360.0F;
+			float baseRotZ = (c * 72.0F + 45.0F) % 360.0F;
 
 
-			// x - Axis
+			float speedDivisorX = (c % 3) + 2;
+			float speedDivisorZ = ((c + 2) % 3) + 2;
+
+			float rotX = baseRotX + progress / speedDivisorX;
+			float rotZ = baseRotZ + progress / speedDivisorZ;
+
+			float base = 0.15f + 0.06f * c;
+			float osc = (0.005f + 0.004f * c) * (float) Math.sin(progress * 0.012 + c);
+			float radius = base + osc;
+
 			GlStateManager.pushMatrix();
 			GlStateManager.rotate(rotX, 1, 0, 0);
 			GlStateManager.rotate(rotZ, 0, 0, 1);
@@ -79,7 +99,9 @@ public class RenderSpectreIlluminator extends Render<EntitySpectreIlluminator>
 			}, 33, (i) -> {
 				return 3;
 			});
-			MKRRenderUtil.renderCircleDecTriPart3Tri(radius, 0.04, outerFunction.next(ColorFunctions.flicker(rng.nextInt(1000), 40)).tt(progress), 30);
+			int flickerOffset = c * 200;
+			MKRRenderUtil.renderCircleDecTriPart3Tri(radius, 0.04,
+					outerFunction.next(ColorFunctions.flicker(flickerOffset, 40)).tt(progress), 30);
 			GlStateManager.popMatrix();
 		}
 

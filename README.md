@@ -13,6 +13,7 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 - Added the ability to enable, disable, and add custom Divining Rods, and adjust the range.
 - Added Divining Rod support for NetherEnding Ores, Silent's Gems, Galacticraft, Galacticraft Planets and Advent of Ascension
 - Added Divining Rod sleeper support for Silent Gear and More Planets. (Sleeper Support is for mods lacking oreDict. Does nothing by default, can be enabled by modpacks).
+- Gave Spectre Illuminator LOD levels. 
 
 ### Fixes
 
@@ -22,6 +23,8 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 - Fixed teleporting survival mode players to the Spectre dimension on servers could leave the player stalled out in the void ([courtesy of UniversalTweaks](https://github.com/ACGaming/UniversalTweaks/blob/main/src/main/java/mod/acgaming/universaltweaks/mods/randomthings/teleport/mixin/UTSpectreHandlerMixin.java)).
 - Fixed Spectre Illuminator duplication.
 - Fixed Spectre Illuminator [smelting full snow blocks](https://bugs.mojang.com/browse/MC/issues/MC-88097).
+- Fixed Spectre Illuminator hitbox accuracy.
+- Improved Spectre Illuminator position finding performance.
 - Fixed Nature Core being able to spawn underwater.
 - Fixed Nature and Water Chest not having breaking particles.
 - Fixed Magic Beans growing infinitely in Cubic Chunks worlds (limited to 512).
