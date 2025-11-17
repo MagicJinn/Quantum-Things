@@ -40,11 +40,18 @@ public class RenderSpectreIlluminator extends Render<EntitySpectreIlluminator>
 		GlStateManager.disableCull();
 
 		GlStateManager.pushMatrix();
+
+		// Shift rendering up by half the entity height to align visual with hitbox
+		// Only apply offset when rendering as entity (not as item in hand)
+		if (entity != null)
+			y += 0.25;
+
 		GlStateManager.translate(x, y, z);
 
 		float progress = (2) * (RTEventHandler.clientAnimationCounter + partialTicks);
 
-		IColorFunction innerFunction = ColorFunctions.alternate(new Color(100, 100, 100, 0), new Color(50, 150, 255, 255));
+		// IColorFunction innerFunction = ColorFunctions.alternate(new Color(100, 100, 100, 0), new
+		// Color(50, 150, 255, 255));
 		IColorFunction outerFunction = ColorFunctions.alternate(new Color(100, 100, 100, 0), new Color(0, 150, 200, 100)).next(ColorFunctions.limit(ColorFunctions.constant(new Color(0, 0, 0, 0)), (i) -> {
 			return (i + 2) % 3 == 0;
 		}));
