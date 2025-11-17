@@ -62,10 +62,10 @@ public class DiviningRods {
                         "oreVioletSapphire,gemVioletSapphire,118,0,128",
                         "oreZircon,gemZircon,195,195,65",
                         // Galacticraft
-                        "oreSilicon,itemSilicon,102,95,104", "oreCheese,foodCheese,255,216,107",
+                        "oreSilicon,itemSilicon,102,95,104", "oreCheese,foodCheese,254,216,107",
                         // Galacticraft Planets
                         "oreDesh,ingotDesh,57,57,57", "oreIlmenite, ingotTitanium,53,66,97",
-                        "oreSolar,ingotSolar,255,255,255", // No functionality, added just in case
+                        "oreSolar,ingotSolar,254,254,254", // No functionality, added just in case
                         // Advent of Ascension
                         "oreAmethyst,gemAmethyst,142,48,206", "oreBaronyte,ingotBaronyte,156,30,30",
                         "oreBlazium,ingotBlazium,175,68,0", "oreBloodstone,gemBloodstone,159,17,0",
@@ -73,7 +73,7 @@ public class DiviningRods {
                         "oreElecanium,ingotElecanium,124,232,228",
                         "oreEmberstone,ingotEmberstone,128,0,0", "oreGemenyte,gemGemenyte,9,160,8",
                         "oreGhastly,ingotGhastly,181,206,162",
-                        "oreGhoulish,ingotGhoulish,146,114,255", "oreJade,gemJade,102,197,107",
+                        "oreGhoulish,ingotGhoulish,146,114,254", "oreJade,gemJade,102,197,107",
                         "oreJewelyte,gemJewelyte,33,142,9", "oreLimonite,ingotLimonite,208,127,29",
                         "oreLunar,ingotLunar,249,158,203", "oreLyon,ingotLyon,195,128,3",
                         "oreMystite,ingotMystite,178,231,200",

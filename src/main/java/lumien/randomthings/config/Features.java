@@ -23,4 +23,8 @@ public class Features
 	@ConfigOption(category = "Features", name = "MagneticEnchantment",
 			comment = "Whether the magnetic enchantment should be available.")
 	public static boolean MAGNETIC_ENCHANTMENT = true;
+
+	@ConfigOption(category = "Features", name = "SpectreDimension",
+			comment = "Whether the Spectre dimension should be enabled. If disabled, you will not be able to enter the dimension.") public static boolean SPECTRE_DIMENSION =
+					true;
 }

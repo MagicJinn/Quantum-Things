@@ -5,6 +5,7 @@ import java.util.Random;
 import lumien.randomthings.tileentity.TileEntityRainShield;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -37,17 +38,10 @@ public class BlockRainShield extends BlockContainerBase
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
-		this.checkForDrop(worldIn, pos, state);
-
 		TileEntityRainShield te = (TileEntityRainShield) worldIn.getTileEntity(pos);
 		te.onBlockAdded(worldIn, pos, state);
 	}
 
-	@Override
-	public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
-	{
-		return canPlaceOn(worldIn, pos.down());
-	}
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state)
@@ -72,6 +66,20 @@ public class BlockRainShield extends BlockContainerBase
 	public boolean isFullCube(IBlockState state)
 	{
 		return false;
+	}
+
+	@Override
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos,
+			EnumFacing side) {
+		// Rain shield is a thin pole, no sides are solid
+		return false;
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos,
+			EnumFacing face) {
+		// Return UNDEFINED for all faces to prevent torches and other blocks from attaching
+		return BlockFaceShape.UNDEFINED;
 	}
 
 	@Override
@@ -103,30 +111,7 @@ public class BlockRainShield extends BlockContainerBase
 		{
 			((TileEntityRainShield) te).neighborChanged(state, worldIn, pos, neighborBlock, changedPos);
 		}
-
-		checkForDrop(worldIn, pos, state);
 	}
 
-	private boolean canPlaceOn(World worldIn, BlockPos pos)
-	{
-		return worldIn.isSideSolid(pos, EnumFacing.UP);
-	}
 
-	protected boolean checkForDrop(World worldIn, BlockPos pos, IBlockState state)
-	{
-		if (state.getBlock() == this && this.canPlaceOn(worldIn, pos.down()))
-		{
-			return true;
-		}
-		else
-		{
-			if (worldIn.getBlockState(pos).getBlock() == this)
-			{
-				this.dropBlockAsItem(worldIn, pos, state, 0);
-				worldIn.setBlockToAir(pos);
-			}
-
-			return false;
-		}
-	}
 }

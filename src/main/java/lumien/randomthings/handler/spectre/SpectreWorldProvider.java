@@ -96,9 +96,4 @@ public class SpectreWorldProvider extends WorldProvider
 	{
 		return ModDimensions.SPECTRE_TYPE;
 	}
-
-	@Override
-	public boolean canDoRainSnowIce(@Nonnull Chunk chunk) {
-		return false;
-	}
 }
