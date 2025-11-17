@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import org.apache.logging.log4j.Level;
 import lumien.randomthings.RandomThings;
 import lumien.randomthings.config.DiviningRods;
-import lumien.randomthings.config.Numbers;
 import lumien.randomthings.handler.DiviningRodHandler;
 import lumien.randomthings.handler.compability.jei.DescriptionHandler;
 import lumien.randomthings.item.ItemBase;
@@ -311,16 +309,22 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
 	{
-		if (tab == this.getCreativeTab())
+		if (this.isInCreativeTab(tab))
 		{
-			int i = 0;
-			for (Entry<RodType, Boolean> e : availableTypes.entrySet())
+			if (types == null || availableTypes == null)
 			{
-				if (e.getValue())
+				return;
+			}
+			for (int i = 0; i < types.size(); i++) {
+				RodType type = types.get(i);
+				if (type == null) {
+					continue;
+				}
+				Boolean available = availableTypes.get(type);
+				if (available != null && available)
 				{
 					items.add(new ItemStack(this, 1, i));
 				}
-				i++;
 			}
 		}
 	}
