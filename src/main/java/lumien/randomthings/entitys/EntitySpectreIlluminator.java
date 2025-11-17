@@ -1,6 +1,7 @@
 package lumien.randomthings.entitys;
 
 import javax.annotation.Nonnull;
+import lumien.randomthings.RandomThings;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationHandler;
 import lumien.randomthings.item.ModItems;
 import net.minecraft.entity.Entity;
@@ -19,45 +20,47 @@ import net.minecraft.world.chunk.Chunk;
 
 public class EntitySpectreIlluminator extends Entity
 {
-	int actionTimer;
 	boolean illuminated;
-	boolean inPosition;
 
-	public EntitySpectreIlluminator(World worldIn)
-	{
+	double targetX = -1;
+	int targetY;
+	double targetZ = -1;
+
+	public EntitySpectreIlluminator(World worldIn) {
 		super(worldIn);
 
 		this.noClip = true;
 
 		this.illuminated = false;
 
-		this.inPosition = false;
-
 		this.setSize(0.5F, 0.5F);
 
 		setRenderDistanceWeight(0.1D);
 	}
 
-	public EntitySpectreIlluminator(World worldIn, double x, double y, double z)
-	{
+	public EntitySpectreIlluminator(World worldIn, double x, double y, double z) {
 		this(worldIn);
 
 		this.setPosition(x, y, z);
 	}
 
-	@Override
+	public void setTarget(BlockPos bPos) {
+		ChunkPos cPos = new ChunkPos(bPos);
+
+		targetX = (cPos.getXStart() + cPos.getXEnd()) / 2D;
+		targetZ = (cPos.getZStart() + cPos.getZEnd()) / 2D;
+	}
+
 	// Mark as collidable so that the player can pick up the illuminator
-	public boolean canBeCollidedWith()
-	{
+	@Override
+	public boolean canBeCollidedWith() {
 		return true;
 	}
 
 	@Override
 	public EnumActionResult applyPlayerInteraction(@Nonnull EntityPlayer player, @Nonnull Vec3d vec,
-			@Nonnull EnumHand hand)
-	{
-		if (!player.world.isRemote)
-		{
+			@Nonnull EnumHand hand) {
+		if (!player.world.isRemote) {
 			// Prevent duplication of items
 			if (!isDead) {
 				setDead();
@@ -84,104 +87,82 @@ public class EntitySpectreIlluminator extends Entity
 	}
 
 	@Override
-	public void onEntityUpdate()
-	{
+	public void onEntityUpdate() {
 		super.onEntityUpdate();
 
-		long worldTick = this.world.getTotalWorldTime();
-		int uuid = this.getEntityId(); // Use uuid as offset
-		// When in position, only update every x ticks (staggered with entity ID)
-		// This allows continuous position tracking while reducing server load
-		if (inPosition && (worldTick + uuid) % 20 != 0) {
-			this.motionX = 0;
-			this.motionY = 0;
-			this.motionZ = 0;
-			return;
-		}
-
-		if (!this.world.isRemote)
-		{
+		if (!this.world.isRemote) {
 			BlockPos myPosition = this.getPosition();
+
+			if (targetX == -1 || targetZ == -1)
+				setTarget(myPosition);
 
 			Chunk thisChunk = world.getChunkFromBlockCoords(myPosition);
 
-			// Efficient way to get the highest block in the chunk
-			int heighestBlockInChunk = 0;
-			for (int y : thisChunk.getHeightMap()) {
-				if (y > heighestBlockInChunk) {
-					heighestBlockInChunk = y;
+			// Stagger update of targetY to prevent lag
+			// Using entity ID as offset to distribute updates semi evenly
+			if ((this.world.getTotalWorldTime() + this.getEntityId()) % 100 == 0) {
+				// Get highest block in chunk
+				targetY = 0;
+				for (int y : thisChunk.getHeightMap()) {
+					if (y > targetY)
+						targetY = y;
 				}
+				targetY += 3;
 			}
-			heighestBlockInChunk += 5; // 5 blocks above the ground
-
-			ChunkPos pos = new ChunkPos(myPosition);
-
-			double chunkX = (pos.getXStart() + pos.getXEnd()) / 2D;
-			double chunkZ = (pos.getZStart() + pos.getZEnd()) / 2D;
 
 			// Calculate distances
-			double distX = chunkX - this.posX;
-			double distY = heighestBlockInChunk - this.posY;
-			double distZ = chunkZ - this.posZ;
+			double distX = targetX - this.posX;
+			double distY = targetY - this.posY;
+			double distZ = targetZ - this.posZ;
 
-			// Use smoother movement with interpolation
-			double speed = 0.05;
 			double threshold = 0.01;
+			double speed = 0.08;
 
-			// X movement
-			this.motionX = 0;
-			if (Math.abs(distX) > threshold)
+			if (Math.abs(distX) > threshold) {
 				this.motionX = Math.max(-speed, Math.min(speed, distX * 0.1));
-			else
-				this.posX = chunkX;
+			} else {
+				this.motionX = 0;
+				this.posX = targetX;
+			}
 
-
-			// Y movement
-			this.motionY = 0;
-			if (Math.abs(distY) > threshold)
+			if (Math.abs(distY) > threshold) {
 				this.motionY = Math.max(-speed, Math.min(speed, distY * 0.1));
-			else
-				this.posY = heighestBlockInChunk;
+			} else {
+				this.motionY = 0;
+				this.posY = targetY;
+			}
 
-			// Z movement
-			this.motionZ = 0;
-			if (Math.abs(distZ) > threshold)
+			if (Math.abs(distZ) > threshold) {
 				this.motionZ = Math.max(-speed, Math.min(speed, distZ * 0.1));
-			else
-				this.posZ = chunkZ;
+			} else {
+				this.motionZ = 0;
+				this.posZ = targetZ;
+			}
 
-
+			// Check if in position and illuminate
 			if (Math.abs(distX) < threshold && Math.abs(distY) < threshold
-					&& Math.abs(distZ) < threshold)
-			{
+					&& Math.abs(distZ) < threshold) {
 				if (!illuminated
 						&& !SpectreIlluminationHandler.get(this.world).isIlluminated(myPosition)) {
 					SpectreIlluminationHandler.get(this.world).toggleChunk(this.world, myPosition);
 					this.illuminated = true;
-					inPosition = true;
 				}
 			}
 		}
-		if (motionX != 0 || motionY != 0 || motionZ != 0) {
-			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
-		}
+
+		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 	}
 
 	@Override
-	protected void entityInit()
-	{
-	}
+	protected void entityInit() {}
 
 	@Override
-	protected void readEntityFromNBT(@Nonnull NBTTagCompound compound)
-	{
+	protected void readEntityFromNBT(@Nonnull NBTTagCompound compound) {
 		this.illuminated = compound.getBoolean("illuminated");
 	}
 
 	@Override
-	protected void writeEntityToNBT(@Nonnull NBTTagCompound compound)
-	{
+	protected void writeEntityToNBT(@Nonnull NBTTagCompound compound) {
 		compound.setBoolean("illuminated", illuminated);
 	}
-
 }
