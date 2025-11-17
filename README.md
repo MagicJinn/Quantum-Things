@@ -36,3 +36,4 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 - Fixed Fertilized Dirt not being recognized as farmland by villagers.
 - Fixed a crash where the Block Breaker tried to incorrectly access a block state that was not a Block Breaker.
 - Fixed an issue where it would rain in the Spectre dimension.
+- Fixed Divining Rods not showing up in Creative search.
