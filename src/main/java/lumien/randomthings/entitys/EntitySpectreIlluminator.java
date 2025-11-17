@@ -1,7 +1,6 @@
 package lumien.randomthings.entitys;
 
 import javax.annotation.Nonnull;
-import lumien.randomthings.RandomThings;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationHandler;
 import lumien.randomthings.item.ModItems;
 import net.minecraft.entity.Entity;
