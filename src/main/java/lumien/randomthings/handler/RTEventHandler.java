@@ -455,7 +455,8 @@ public class RTEventHandler
 						}
 						else
 						{
-							RandomThings.instance.logger.log(Level.INFO, "Couldn't keep Anchored Item in the Inventory");
+							RandomThings.logger.log(Level.INFO,
+									"Couldn't keep Anchored Item in the Inventory");
 							WorldUtil.spawnItemStack(oldPlayer.world, oldPlayer.posX, oldPlayer.posY, oldPlayer.posZ, is);
 						}
 					}
@@ -728,7 +729,7 @@ public class RTEventHandler
 		}
 		catch (Exception e)
 		{
-			RandomThings.instance.logger.log(Level.ERROR, "Error stitching extra textures");
+			RandomThings.logger.log(Level.ERROR, "Error stitching extra textures");
 			e.printStackTrace();
 		}
 	}

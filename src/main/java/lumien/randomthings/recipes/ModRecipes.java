@@ -89,12 +89,14 @@ public class ModRecipes
 				}
 			}
 
-			RandomThings.instance.logger.log(Level.DEBUG, "Added " + toAdd.size() + " Glowing Mushroom Recipes");
+			RandomThings.logger.log(Level.DEBUG,
+					"Added " + toAdd.size() + " Glowing Mushroom Recipes");
 			conversionList.addAll(toAdd);
 		}
 		catch (Exception e)
 		{
-			RandomThings.instance.logger.log(Level.ERROR, "Couldn't add glowing mushroom potion recipes, please report this as a bug");
+			RandomThings.logger.log(Level.ERROR,
+					"Couldn't add glowing mushroom potion recipes, please report this as a bug");
 			e.printStackTrace();
 		}
 	}

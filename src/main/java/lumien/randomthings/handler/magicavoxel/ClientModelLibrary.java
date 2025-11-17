@@ -88,7 +88,8 @@ public class ClientModelLibrary
 				}
 				catch (Exception e)
 				{
-					RandomThings.instance.logger.log(Level.ERROR, "Error loading model from file: " + modelName);
+					RandomThings.logger.log(Level.ERROR,
+							"Error loading model from file: " + modelName);
 					e.printStackTrace();
 				}
 			}
@@ -119,7 +120,8 @@ public class ClientModelLibrary
 					}
 					catch (Exception e)
 					{
-						RandomThings.instance.logger.log(Level.ERROR, "Error loading model from server: " + modelName);
+						RandomThings.logger.log(Level.ERROR,
+								"Error loading model from server: " + modelName);
 						e.printStackTrace();
 
 						if (model != null)
@@ -166,7 +168,8 @@ public class ClientModelLibrary
 							}
 							catch (Exception e)
 							{
-								RandomThings.instance.logger.log(Level.ERROR, "Error saving " + modelName + " to File");
+								RandomThings.logger.log(Level.ERROR,
+										"Error saving " + modelName + " to File");
 								e.printStackTrace();
 							}
 						}
@@ -188,14 +191,15 @@ public class ClientModelLibrary
 						modelRequests.remove(modelName);
 					}
 
-					RandomThings.instance.logger.log(Level.DEBUG, "Loaded " + modelName + " from File");
+					RandomThings.logger.log(Level.DEBUG, "Loaded " + modelName + " from File");
 
 					modelCache.put(modelName, model);
 					return model;
 				}
 				else
 				{
-					RandomThings.instance.logger.log(Level.DEBUG, "Requesting " + modelName + " from Server");
+					RandomThings.logger.log(Level.DEBUG,
+							"Requesting " + modelName + " from Server");
 
 					ClientModelRequest request = new ClientModelRequest();
 					request.setState(STATE.SEND_REQUEST);
@@ -246,7 +250,8 @@ public class ClientModelLibrary
 
 			if (request.getState() != STATE.RECEIVING)
 			{
-				RandomThings.instance.logger.log(Level.ERROR, "Receiving data for invalid request state: " + request.getState());
+				RandomThings.logger.log(Level.ERROR,
+						"Receiving data for invalid request state: " + request.getState());
 			}
 			int progress = request.bytesReceived;
 

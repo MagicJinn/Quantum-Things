@@ -54,7 +54,7 @@ public class SyncHandler
 			}
 			catch (Exception e)
 			{
-				RandomThings.instance.logger.log(Level.ERROR, "Error stitching extra textures");
+				RandomThings.logger.log(Level.ERROR, "Error stitching extra textures");
 				e.printStackTrace();
 			}
 		}

@@ -20,7 +20,7 @@ public class ThermalExpansionComp
 	{
 		if (Loader.isModLoaded(TE_MODID))
 		{
-			RandomThings.instance.logger.log(Level.INFO,
+			RandomThings.logger.log(Level.INFO,
 					"Adding Thermal Expansion Insolator Recipe for Spectre Saplings.");
 			try
 			{
@@ -35,7 +35,8 @@ public class ThermalExpansionComp
 			}
 			catch (Exception e)
 			{
-				RandomThings.instance.logger.log(Level.ERROR, "Couldn't find Insolator Recipe Handler, you won't be able to use Spectre Saplings in the Phytogenic Insolator, please report this as a bug.");
+				RandomThings.logger.log(Level.ERROR,
+						"Couldn't find Insolator Recipe Handler, you won't be able to use Spectre Saplings in the Phytogenic Insolator, please report this as a bug.");
 			}
 		}
 	}

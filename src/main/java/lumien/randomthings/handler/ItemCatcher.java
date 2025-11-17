@@ -33,7 +33,7 @@ public class ItemCatcher
 	{
 		if (catchingDrops)
 		{
-			RandomThings.instance.logger.log(Level.WARN, "Already catching drops, unexpected!");
+			RandomThings.logger.log(Level.WARN, "Already catching drops, unexpected!");
 		}
 
 		catchingDrops = true;
@@ -43,7 +43,7 @@ public class ItemCatcher
 	{
 		if (!catchingDrops)
 		{
-			RandomThings.instance.logger.log(Level.WARN, "Not catching drops, unexpected!");
+			RandomThings.logger.log(Level.WARN, "Not catching drops, unexpected!");
 		}
 
 		ArrayList<ItemStack> copy = new ArrayList<>(catchedDrops);

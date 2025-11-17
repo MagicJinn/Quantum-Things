@@ -66,7 +66,8 @@ public class ServerModelLibrary
 
 			if (bytesPerRequest <= 0)
 			{
-				RandomThings.instance.logger.log(Level.ERROR, "I have 1000 model requests? Probably a bug so please report! :)");
+				RandomThings.logger.log(Level.ERROR,
+						"I have 1000 model requests? Probably a bug so please report! :)");
 			}
 
 			while (iterator.hasNext())
@@ -82,7 +83,8 @@ public class ServerModelLibrary
 					if (modelFile == null)
 					{
 						iterator.remove();
-						RandomThings.instance.logger.log(Level.ERROR, "Expected Model request for " + request.modelName + " to exist on the server");
+						RandomThings.logger.log(Level.ERROR, "Expected Model request for "
+								+ request.modelName + " to exist on the server");
 					}
 					else
 					{
@@ -187,12 +189,15 @@ public class ServerModelLibrary
 					}
 					else
 					{
-						RandomThings.instance.logger.log(Level.ERROR, "Model file too large (Has to be smaller than 2mb) " + modelFile.getName());
+						RandomThings.logger.log(Level.ERROR,
+								"Model file too large (Has to be smaller than 2mb) "
+										+ modelFile.getName());
 					}
 				}
 				catch (Exception e)
 				{
-					RandomThings.instance.logger.log(Level.ERROR, "Error loading magica voxel model " + modelFile.getName());
+					RandomThings.logger.log(Level.ERROR,
+							"Error loading magica voxel model " + modelFile.getName());
 					e.printStackTrace();
 				}
 			}
