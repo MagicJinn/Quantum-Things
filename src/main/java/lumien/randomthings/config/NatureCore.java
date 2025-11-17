@@ -6,7 +6,7 @@ public class NatureCore {
         private static final String CATEGORY = "Nature Core";
 
     // Sand Replacement
-    @ConfigOption(category = CATEGORY, name = "SandReplacementChance",
+    @ConfigOption(category = CATEGORY, name = "SandChance",
             comment = "Chance for sand replacement (Default = 40, lower is more common)") public static int SAND_REPLACEMENT_CHANCE =
                     40;
 
