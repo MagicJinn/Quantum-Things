@@ -15,6 +15,7 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 - Added Divining Rod support for NetherEnding Ores, Silent's Gems, Galacticraft, Galacticraft Planets and Advent of Ascension
 - Added Divining Rod sleeper support for Silent Gear and More Planets. (Sleeper Support is for mods lacking oreDict. Does nothing by default, can be enabled by modpacks).
 - Gave Spectre Illuminator LOD levels.
+- Made Rain Shields be able to be placed on any block, similar to an end rod.
 
 ### Fixes
 
@@ -37,3 +38,4 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 - Fixed a crash where the Block Breaker tried to incorrectly access a block state that was not a Block Breaker.
 - Fixed an issue where it would rain in the Spectre dimension.
 - Fixed Divining Rods not showing up in Creative search.
+- Fixed torches and other attachable blocks being able to be placed on the side of the Rain Shield.

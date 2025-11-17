@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import lumien.randomthings.config.Internals;
-import lumien.randomthings.handler.ModDimensions;
 import lumien.randomthings.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;

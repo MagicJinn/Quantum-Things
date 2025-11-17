@@ -103,7 +103,10 @@ public class RandomThings implements LoadingCallback
 		ModEntitys.init();
 		ModPotions.preInit(event);
 		ModEnchantments.preInit(event);
-		ModBiomes.preInit(event);
+		// Register Spectre biome if Spectre dimension is enabled
+		if (Features.SPECTRE_DIMENSION)
+			ModBiomes.preInit(event);
+
 		ModSounds.preInit(event);
 		ItemDiviningRod.preInit();
 		proxy.registerModels();
@@ -131,7 +134,10 @@ public class RandomThings implements LoadingCallback
 	public void init(FMLInitializationEvent event)
 	{
 		ModRecipes.register();
-		ModDimensions.register();
+
+		// Register Spectre dimension if enabled
+		if (Features.SPECTRE_DIMENSION)
+			ModDimensions.register();
 
 		GameRegistry.registerWorldGenerator(new WorldGenCores(), 1000);
 		GameRegistry.registerWorldGenerator(new WorldGenAncientFurnace(), 1000);

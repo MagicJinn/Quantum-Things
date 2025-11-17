@@ -15,6 +15,7 @@ import lumien.randomthings.asm.MCPNames;
 import lumien.randomthings.block.BlockTriggerGlass;
 import lumien.randomthings.block.ModBlocks;
 import lumien.randomthings.enchantment.ModEnchantments;
+import lumien.randomthings.config.Internals;
 import lumien.randomthings.handler.redstonesignal.RedstoneSignalHandler;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationClientHandler;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationHandler;
@@ -323,11 +324,19 @@ public class AsmHandler
 
 	public static boolean shouldRain(World worldObj, BlockPos pos)
 	{
-		return TileEntityRainShield.shouldRain(worldObj, pos.add(0, -pos.getY(), 0));
+		return shouldPreventDownfall(worldObj, pos);
 	}
 
 	public static boolean canSnowAt(World worldObj, BlockPos pos)
 	{
+		return shouldPreventDownfall(worldObj, pos);
+	}
+
+	public static boolean shouldPreventDownfall(World worldObj, BlockPos pos) {
+		// Prevent downfall in Spectre dimension
+		if (worldObj.provider.getDimension() == Internals.SPECTRE_ID)
+			return false;
+
 		return TileEntityRainShield.shouldRain(worldObj, pos.add(0, -pos.getY(), 0));
 	}
 

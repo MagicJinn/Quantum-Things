@@ -17,7 +17,6 @@ public class BiomeSpectral extends Biome
 		this.spawnableCreatureList.clear();
 		this.spawnableMonsterList.clear();
 		this.spawnableWaterCreatureList.clear();
-
 	}
 
 	@Override
