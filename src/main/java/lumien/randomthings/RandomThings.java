@@ -19,6 +19,7 @@ import lumien.randomthings.entitys.ModEntitys;
 import lumien.randomthings.handler.ModDimensions;
 import lumien.randomthings.handler.RTEventHandler;
 import lumien.randomthings.handler.compability.oc.OCComp;
+import lumien.randomthings.handler.compability.te.ThermalExpansionComp;
 import lumien.randomthings.handler.magicavoxel.ServerModelLibrary;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.item.diviningrod.ItemDiviningRod;
@@ -168,7 +169,7 @@ public class RandomThings implements LoadingCallback
 
 		ModRecipes.addGlowingMushroomRecipes();
 
-		// ThermalExpansionComp.postInit(event); NU
+		ThermalExpansionComp.postInit(event);
 
 		ItemDiviningRod.postInit();
 	}

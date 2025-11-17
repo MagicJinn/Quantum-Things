@@ -20,15 +20,18 @@ public class ThermalExpansionComp
 	{
 		if (Loader.isModLoaded(TE_MODID))
 		{
-			RandomThings.instance.logger.log(Level.INFO, "TE_COMP");
+			RandomThings.instance.logger.log(Level.INFO,
+					"Adding Thermal Expansion Insolator Recipe for Spectre Saplings.");
 			try
 			{
 				Class insolatorManager = Class.forName("cofh.thermalexpansion.util.managers.machine.InsolatorManager");
-				Class typeEnum = Class.forName("cofh.thermalexpansion.util.managers.machine.InsolatorManager$Type");
-				Object treeType = typeEnum.getEnumConstants()[4];
-				Method addMethod = insolatorManager.getMethod("addDefaultTreeRecipe", ItemStack.class, ItemStack.class, ItemStack.class, int.class, boolean.class, typeEnum);
+				Method addMethod = insolatorManager.getMethod("addDefaultTreeRecipe", int.class,
+						ItemStack.class, ItemStack.class, ItemStack.class, int.class);
 
-				addMethod.invoke(null, new ItemStack(ModBlocks.spectreSapling), new ItemStack(ModBlocks.spectreLog, 4), new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.ECTO_PLASM.id), 10, false, treeType);
+				addMethod.invoke(null, 4800, new ItemStack(ModBlocks.spectreSapling),
+						new ItemStack(ModBlocks.spectreLog, 4), new ItemStack(ModItems.ingredients,
+								1, ItemIngredient.INGREDIENT.ECTO_PLASM.id),
+						10);
 			}
 			catch (Exception e)
 			{
