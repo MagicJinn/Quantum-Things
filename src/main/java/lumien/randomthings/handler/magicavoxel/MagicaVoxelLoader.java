@@ -61,7 +61,7 @@ public class MagicaVoxelLoader
 
 		int voxVersion = Ints.fromBytes(versionBytes[3], versionBytes[2], versionBytes[1], versionBytes[0]);
 
-		RandomThings.instance.logger.log(Level.DEBUG, "VOX File Version: " + voxVersion);
+		RandomThings.logger.log(Level.DEBUG, "VOX File Version: " + voxVersion);
 
 		MagicaVoxelModel model = new MagicaVoxelModel(palette);
 
@@ -73,7 +73,7 @@ public class MagicaVoxelLoader
 		{
 			String chunkID = "" + (char) chunkIDBytes[0] + (char) chunkIDBytes[1] + (char) chunkIDBytes[2] + (char) chunkIDBytes[3];
 
-			RandomThings.instance.logger.log(Level.DEBUG, " - CHUNK: " + chunkID);
+			RandomThings.logger.log(Level.DEBUG, " - CHUNK: " + chunkID);
 			modelInputStream.read(contentSizeBytes);
 			modelInputStream.read(childrenSizeBytes);
 
@@ -102,7 +102,7 @@ public class MagicaVoxelLoader
 
 					model.setSize(x, z, y);
 
-					RandomThings.instance.logger.log(Level.DEBUG, " - Set Size: " + x + ":" + z + ":" + y);
+					RandomThings.logger.log(Level.DEBUG, " - Set Size: " + x + ":" + z + ":" + y);
 				}
 				else if (chunkID.equals("XYZI"))
 				{
@@ -110,7 +110,7 @@ public class MagicaVoxelLoader
 					contentStream.read(numVoxelsBytes);
 					int numVoxels = Ints.fromBytes(numVoxelsBytes[3], numVoxelsBytes[2], numVoxelsBytes[1], numVoxelsBytes[0]);
 
-					RandomThings.instance.logger.log(Level.DEBUG, " - Added " + numVoxels + " Voxels");
+					RandomThings.logger.log(Level.DEBUG, " - Added " + numVoxels + " Voxels");
 
 					for (int i = 0; i < numVoxels; i++)
 					{

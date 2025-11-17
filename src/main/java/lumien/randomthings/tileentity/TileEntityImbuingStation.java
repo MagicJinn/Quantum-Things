@@ -62,7 +62,7 @@ public class TileEntityImbuingStation extends TileEntityBase implements ITickabl
 				((ItemStackHandler) this.getItemHandler()).setStackInSlot(slot, inventory.getStackInSlot(slot));
 			}
 
-			RandomThings.instance.logger.log(Level.DEBUG, "Switching Imbuing Station to Item Handler...");
+			RandomThings.logger.log(Level.DEBUG, "Switching Imbuing Station to Item Handler...");
 		}
 
 		if (nbt.hasKey("output"))

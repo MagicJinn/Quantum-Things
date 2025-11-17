@@ -45,7 +45,8 @@ public class TileEntityBlockBreaker extends TileEntityBase implements ITickable
 
 	static
 	{
-		RandomThings.instance.logger.log(Level.DEBUG, "BlockBreakerUUID: " + breakerProfile.getId().toString());
+		RandomThings.logger.log(Level.DEBUG,
+				"BlockBreakerUUID: " + breakerProfile.getId().toString());
 	}
 
 	UUID uuid;
@@ -200,11 +201,18 @@ public class TileEntityBlockBreaker extends TileEntityBase implements ITickable
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block neighborBlock, BlockPos changedPos)
 	{
-		BlockPos targetPos = pos.offset(state.getValue(BlockBlockBreaker.FACING));
+		// Get the actual block state from the world to ensure it's the correct block type
+		IBlockState actualState = worldIn.getBlockState(pos);
+
+		// Verify the block is actually a BlockBlockBreaker before accessing its property
+		if (!(actualState.getBlock() instanceof BlockBlockBreaker))
+			return;
+
+		BlockPos targetPos = pos.offset(actualState.getValue(BlockBlockBreaker.FACING));
 
 		canMine = !(worldIn.isBlockIndirectlyGettingPowered(pos) > 0);
 
-		IBlockState targetState = worldIn.getBlockState(targetPos);
+		// IBlockState targetState = worldIn.getBlockState(targetPos);
 
 		if (canMine)
 		{
@@ -250,8 +258,14 @@ public class TileEntityBlockBreaker extends TileEntityBase implements ITickable
 	{
 		if (uuid != null)
 		{
-			BlockPos targetPos = pos.offset(state.getValue(BlockBlockBreaker.FACING));
-			world.sendBlockBreakProgress(uuid.hashCode(), targetPos, -1);
+			// Get the actual block state from the world to ensure it's the correct block type
+			IBlockState actualState = world.getBlockState(pos);
+
+			// Verify the block is actually a BlockBlockBreaker before accessing its property
+			if (actualState.getBlock() instanceof BlockBlockBreaker) {
+				BlockPos targetPos = pos.offset(actualState.getValue(BlockBlockBreaker.FACING));
+				world.sendBlockBreakProgress(uuid.hashCode(), targetPos, -1);
+			}
 
 			curBlockDamage = 0;
 		}
