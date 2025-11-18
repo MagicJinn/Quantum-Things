@@ -11,6 +11,14 @@
 
 **The majority of the credit goes to Lumien231, who created the absolutely monolithic Random Things (MIT). Additional credit goes to UniversalTweaks (MIT) for 3 of the bug fixes.**
 
+## About Random Things
+
+Random Things is a miscellaneous mod that adds a diverse collection of utility items, blocks, and gameplay enhancements. It includes features such as automated item collection, crop growth acceleration with Fertilized Dirt, a personal pocket dimension called the Spectre Dimension, Spectre Coils for wireless energy transfer, Divining Rods for locating ores, various redstone utilities, decorative blocks, and numerous quality-of-life improvements. The mod is designed to complement other mods by adding convenience features and new gameplay without adhering to a specific theme. To put it in Lumien's words:
+
+> Random Things is a collection of features that i thought would be neat. The mod doesn't really have a central topic so it's best played alongside other mods.
+
+The goal of Quantum Things is to provide continued support for Random Things, such as new features, bug and crash fixes, and compatibility with other mods, while saying true to the original design goal and intent of the mod.
+
 ## Changes and fixes
 
 ### Changes
