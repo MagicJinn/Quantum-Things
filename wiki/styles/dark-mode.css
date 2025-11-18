@@ -26,6 +26,11 @@ body.dark-mode #container_content a {
 body.dark-mode #container_content a:hover {
   color: #F7AE61 !important;
 }
+body.dark-mode #container_content blockquote {
+  border-left-color: #9C53E8 !important;
+  background-color: #2A232F !important;
+  color: #CCCCCC !important;
+}
 body.dark-mode #container_navigation {
   background-color: #2A232F !important;
 }
