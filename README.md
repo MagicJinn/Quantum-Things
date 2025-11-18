@@ -12,8 +12,8 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 - Added the ability to configure values concerning the Lotus.
 - Added Thermal Expansion Insolator support for Spectre Saplings.
 - Added the ability to enable, disable, and add custom Divining Rods, and adjust the range.
-- Added Divining Rod support for NetherEnding Ores, Silent's Gems, Galacticraft, Galacticraft Planets and Advent of Ascension
-- Added Divining Rod sleeper support for Silent Gear and More Planets. (Sleeper Support is for mods lacking oreDict. Does nothing by default, can be enabled by modpacks).
+- Added Divining Rod support for NetherEnding Ores, Silent's Gems, Galacticraft, Galacticraft Planets, Advent of Ascension and Aether.
+- Added Divining Rod sleeper support for Silent Gear, More Planets, Aether and Aether II. (Sleeper Support is for mods lacking oreDict. Does nothing by default, can be enabled by modpacks).
 - Gave Spectre Illuminator LOD levels.
 - Made Rain Shields be able to be placed on any block, similar to an end rod.
 - Added the ability to enable or disable the Spectre Sapling.

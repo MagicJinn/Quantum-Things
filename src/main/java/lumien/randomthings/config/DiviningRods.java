@@ -81,6 +81,9 @@ public class DiviningRods {
                         "oreSapphire,gemSapphire,29,71,208", "oreShyregem,gemShyregem,0,231,251",
                         "oreShyrestone,ingotShyrestone,0,170,227",
                         "oreVarsium,ingotVarsium,157,103,40",
+                        // Aether
+                        "oreGravitite,blockEnchantedGravitite,127,51,105",
+                        "oreZanite,gemZanite,46,28,93",
 
                         // Sleepers are non functional until it has an oredict entry
                         // (modpacks can add it themselves, I won't).
@@ -91,6 +94,12 @@ public class DiviningRods {
                         "oreExtraIlonite,ingotExtraIlonite,60,163,103",
                         "oreIllenium,ingotIllenium,129,116,157",
                         "oreZyptorium,ingotZyptorium,78,109,201",
-                        "oreSetrorium,gemSetrorium,88,160,180"};
+                        "oreSetrorium,gemSetrorium,88,160,180",
+                        // Aether
+                        "oreAmbrosium,shardAmbrosium,197,184,105",
+                        // Aether II
+                        "oreAmbrosium,shardAmbrosium,197,184,105",
+                        "oreGravitite,ingotGravitite,127,51,105",
+                        "oreArkenium,ingotArkenium,150,150,150", "oreZanite,gemZanite,46,28,93"};
 
 }
