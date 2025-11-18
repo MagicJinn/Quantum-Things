@@ -10,6 +10,7 @@
 !/icon.png
 !/gallery/
 !/wiki/
+!/.github/
 .gradle
 Thumbs.db
 Update.bat
