@@ -1,12 +1,12 @@
 # Quantum Things
 
-Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://github.com/lumien231/Random-Things)
+## Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://github.com/lumien231/Random-Things).
 
-## WARNING: When upgrading from Random Things, make sure to delete the randomthings.cfg file, and re-check all config options. Some may have changed, been reset, removed or added
+### WARNING: When upgrading from Random Things, make sure to delete the randomthings.cfg file, and re-check all config options. Some may have changed, been reset, removed or added
 
 ![Quantum Things](icon.png)
 
-The majority of the credit goes to Lumien231, who created the absolutely monolithic Random Things (MIT). Additional credit goes to UniversalTweaks (MIT) for 3 of the bug fixes.
+**The majority of the credit goes to Lumien231, who created the absolutely monolithic Random Things (MIT). Additional credit goes to UniversalTweaks (MIT) for 3 of the bug fixes.**
 
 ## Changes and fixes
 
@@ -50,3 +50,7 @@ The majority of the credit goes to Lumien231, who created the absolutely monolit
 - Fixed torches and other attachable blocks being able to be placed on the side of the Rain Shield.
 - Fixed Rain Shield duplication.
 - Fixed a crash when Biome Stone tried to access a biome that was not registered with BiomeDictionary.
+
+### Reporting Issues
+
+If you encounter any issues, please report them to the [issue tracker](https://github.com/MagicJinn/Quantum-Things/issues). Do **not** report issues to the original Random Things repository. Lumien231 is no longer actively developing Random Things, and new issues on the original repository are unlikely to be addressed.

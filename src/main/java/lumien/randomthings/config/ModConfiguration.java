@@ -96,7 +96,7 @@ public class ModConfiguration
 			doAnnoations(configuration);
 
 			// Validate worldgen chances
-			checkWorldGenChanceValid();
+			checkSettingsValid();
 		}
 	}
 
@@ -113,7 +113,7 @@ public class ModConfiguration
 			doAnnoations(configuration);
 
 			// Validate worldgen chances
-			checkWorldGenChanceValid();
+			checkSettingsValid();
 		}
 	}
 
@@ -222,39 +222,63 @@ public class ModConfiguration
 		}
 	}
 
-	private void checkWorldGenChanceValid() {
+	private void checkSettingsValid() {
 		// Plants
-		if (Worldgen.BEANS_CHANCE == 0)
+		if (Worldgen.BEANS_CHANCE <= 0)
 			Worldgen.BEANS = false;
-		if (Worldgen.PITCHER_PLANTS_CHANCE == 0)
+		if (Worldgen.PITCHER_PLANTS_CHANCE <= 0)
 			Worldgen.PITCHER_PLANTS = false;
-		if (Worldgen.LOTUS_CHANCE == 0)
+		if (Worldgen.LOTUS_CHANCE <= 0)
 			Worldgen.LOTUS = false;
-		if (Worldgen.GLOWING_MUSHROOM_CHANCE == 0)
+		if (Worldgen.GLOWING_MUSHROOM_CHANCE <= 0)
 			Worldgen.GLOWING_MUSHROOM = false;
 
 		// Features
-		if (Worldgen.NATURE_CORE_CHANCE == 0)
+		if (Worldgen.NATURE_CORE_CHANCE <= 0)
 			Worldgen.NATURE_CORE = false;
-		if (Worldgen.WATER_CHEST_CHANCE == 0)
+		if (Worldgen.WATER_CHEST_CHANCE <= 0)
 			Worldgen.WATER_CHEST = false;
-		if (Worldgen.PEACE_CANDLE_CHANCE == 0)
+		if (Worldgen.PEACE_CANDLE_CHANCE <= 0)
 			Worldgen.PEACE_CANDLE = false;
-		if (Worldgen.ANCIENT_FURNACE_CHANCE == 0)
+		if (Worldgen.ANCIENT_FURNACE_CHANCE <= 0)
 			Worldgen.ANCIENT_FURNACE = false;
 
 		// Loot
-		if (Worldgen.MAGIC_HOOD_CHANCE == 0)
+		if (Worldgen.MAGIC_HOOD_CHANCE <= 0)
 			Worldgen.MAGIC_HOOD = false;
-		if (Worldgen.SUMMONING_PENDULUM_CHANCE == 0)
+		if (Worldgen.SUMMONING_PENDULUM_CHANCE <= 0)
 			Worldgen.SUMMONING_PENDULUM = false;
-		if (Worldgen.BIOME_CRYSTAL_CHANCE == 0)
+		if (Worldgen.BIOME_CRYSTAL_CHANCE <= 0)
 			Worldgen.BIOME_CRYSTAL = false;
-		if (Worldgen.LAVA_CHARM_CHANCE == 0)
+		if (Worldgen.LAVA_CHARM_CHANCE <= 0)
 			Worldgen.LAVA_CHARM = false;
-		if (Worldgen.SLIME_CUBE_CHANCE == 0)
+		if (Worldgen.SLIME_CUBE_CHANCE <= 0)
 			Worldgen.SLIME_CUBE = false;
-		if (Worldgen.NUMBERED_COILS_CHANCE == 0)
+		if (Worldgen.NUMBERED_COILS_CHANCE <= 0)
 			Worldgen.NUMBERED_COILS = false;
+
+		// Clamp NatureCore range values used in rand.nextInt() to minimum 1
+		// These are used for range calculations, not chance, so clamp instead of disable
+		if (NatureCore.SAND_RANGE <= 0)
+			NatureCore.SAND_RANGE = 1;
+		if (NatureCore.ANIMAL_RANGE <= 0)
+			NatureCore.ANIMAL_RANGE = 1;
+		if (NatureCore.BONEMEAL_RANGE <= 0)
+			NatureCore.BONEMEAL_RANGE = 1;
+		if (NatureCore.TREE_RADIUS_RANGE <= 0)
+			NatureCore.TREE_RADIUS_RANGE = 1;
+
+		// Clamp NatureCore chance values used in rand.nextInt() to minimum 1
+		// These are used directly in nextInt(), so must be at least 1
+		if (NatureCore.SAND_REPLACEMENT_CHANCE <= 0)
+			NatureCore.SAND_REPLACEMENT_CHANCE = 1;
+		if (NatureCore.ANIMAL_CHANCE <= 0)
+			NatureCore.ANIMAL_CHANCE = 1;
+		if (NatureCore.BONEMEAL_CHANCE <= 0)
+			NatureCore.BONEMEAL_CHANCE = 1;
+		if (NatureCore.TREE_CHANCE <= 0)
+			NatureCore.TREE_CHANCE = 1;
+		if (NatureCore.SHELL_REGENERATION_CHANCE <= 0)
+			NatureCore.SHELL_REGENERATION_CHANCE = 1;
 	}
 }
