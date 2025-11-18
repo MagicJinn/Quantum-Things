@@ -8,6 +8,7 @@
 !/*.gradle
 !/*.md
 !/icon.png
+!/gallery/
 .gradle
 Thumbs.db
 Update.bat
