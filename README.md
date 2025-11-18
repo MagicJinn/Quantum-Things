@@ -2,6 +2,12 @@
 
 Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://github.com/lumien231/Random-Things)
 
+## WARNING: When upgrading from Random Things, make sure to delete the randomthings.cfg file, and re-check all config options. Some may have changed, been reset, removed or added
+
+![Quantum Things](icon.png)
+
+The majority of the credit goes to Lumien231, who created the absolutely monolithic Random Things (MIT). Additional credit goes to UniversalTweaks (MIT) for 3 of the bug fixes.
+
 ## Changes and fixes
 
 ### Changes
@@ -10,14 +16,15 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 - Added the ability to configure the chances of certain plants, features and loot to occur.
 - Added the ability to configure values concerning the Nature Core.
 - Added the ability to configure values concerning the Lotus.
+- Added the ability to enable or disable the Spectre Sapling.
+- Added the ability to enable or disable the Spectre Dimension.
 - Added Thermal Expansion Insolator support for Spectre Saplings.
+- Added Bonsai Trees support for Fertilized Dirt as a Bonsai Pot soil.
 - Added the ability to enable, disable, and add custom Divining Rods, and adjust the range.
-- Added Divining Rod support for NetherEnding Ores, Silent's Gems, Galacticraft, Galacticraft Planets, Advent of Ascension and Aether.
+- Added Divining Rod support for NetherEnding Ores, Silent's Gems, Galacticraft, Galacticraft Planets, Advent of Ascension, Aether and DivineRPG.
 - Added Divining Rod sleeper support for Silent Gear, More Planets, Aether and Aether II. (Sleeper Support is for mods lacking oreDict. Does nothing by default, can be enabled by modpacks).
 - Gave Spectre Illuminator LOD levels.
 - Made Rain Shields be able to be placed on any block, similar to an end rod.
-- Added the ability to enable or disable the Spectre Sapling.
-- Added Fertilized Dirt as a Bonsai Trees Bonsai Pot soil.
 
 ### Fixes
 

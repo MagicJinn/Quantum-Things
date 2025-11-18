@@ -84,6 +84,16 @@ public class DiviningRods {
                         // Aether
                         "oreGravitite,blockEnchantedGravitite,127,51,105",
                         "oreZanite,gemZanite,46,28,93",
+                        // DivineRPG
+                        "oreApalachia,fragmentsApalachia,143,0,159",
+                        "oreWildwood,fragmentsWildwood,10,123,157",
+                        "oreArlemite,ingotArlemite,63,164,27",
+                        "oreRealmite,ingotRealmite,216,152,59",
+                        "oreNetherite,ingotNetherite,238,64,44",
+                        "oreMortum,fragmentsMortum,64,64,64", "oreRupee,ingotRupee,23,92,183",
+                        "oreEden,fragmentsEden,162,54,0", "oreBloodgem,gemBlood,162,31,95",
+                        "oreSkythern,fragmentsSkythern,160,160,160",
+
 
                         // Sleepers are non functional until it has an oredict entry
                         // (modpacks can add it themselves, I won't).
