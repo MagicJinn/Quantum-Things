@@ -17,6 +17,7 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 - Gave Spectre Illuminator LOD levels.
 - Made Rain Shields be able to be placed on any block, similar to an end rod.
 - Added the ability to enable or disable the Spectre Sapling.
+- Added Fertilized Dirt as a Bonsai Trees Bonsai Pot soil.
 
 ### Fixes
 
