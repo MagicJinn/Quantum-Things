@@ -1,4 +1,4 @@
-itemGroup.rt.name=Random Things
+itemGroup.rt.name=Quantum Things
 
 tile.fertilizedDirt.name=Fertilized Dirt
 tile.playerInterface.name=Player Interface
@@ -625,6 +625,6 @@ item.spectreCharger.normal.info=When toggled on by right clicking this item will
 item.spectreCharger.redstone.info=When toggled on by right clicking this item will transfer 4096 RF/t from your spectre energy buffer into any item in your inventory that can accept energy.
 item.spectreCharger.ender.info=When toggled on by right clicking this item will transfer 20480 RF/t from your spectre energy buffer into any item in your inventory that can accept energy.
 item.spectreCharger.genesis.info=When toggled on by right clicking this item will transfer as much RF/t as possible into any item in your inventory that can accept energy.
-item.diviningRod.info=Holding this in your main or off-hand will highlight every %s in a %s cube centered on you
+item.diviningRod.info=Holding this in your main or off-hand will highlight every %s in a %s cube centered on you.
 item.diviningRod.ore=ore
 item.eclipsedClock.info=An eclipsed clock allows you to change the time of day. After you hang it on a wall you can (shift) right click it to decrease and increase its target time. Hovering over it with a Time in a Bottle in your hand will display the time necessary to fast forward to the set time. Right clicking it with the Time in a Bottle will consume that amount of time from the bottle and set the time of day to that of the clock.
