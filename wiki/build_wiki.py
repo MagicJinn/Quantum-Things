@@ -23,6 +23,9 @@ class WikiBuilder:
         self.wiki_dir = wiki_dir
         self.source_dir = wiki_dir / "wiki_md"  # Markdown files are in wiki_md/
         self.output_dir = wiki_dir / output_dir  # Output relative to wiki dir
+        self.templates_dir = wiki_dir / "templates"
+        self.styles_dir = wiki_dir / "styles"
+        self.scripts_dir = wiki_dir / "scripts"
         
         # Create output directories
         self.output_dir.mkdir(exist_ok=True)
@@ -31,6 +34,12 @@ class WikiBuilder:
         
         # Copy assets from wiki folder
         self._copy_assets()
+        
+        # Copy CSS and JS files to assets
+        self._copy_styles_and_scripts()
+        
+        # Load templates
+        self._load_templates()
         
         # Load page metadata
         self.pages = self._load_pages()
@@ -50,6 +59,35 @@ class WikiBuilder:
                 }
             }
         )
+    
+    def _load_templates(self):
+        """Load HTML templates from files."""
+        self.page_template = (self.templates_dir / "page.html").read_text(encoding='utf-8')
+        self.index_template = (self.templates_dir / "index.html").read_text(encoding='utf-8')
+        self.index_content_template = (self.templates_dir / "index-content.html").read_text(encoding='utf-8')
+        self.category_index_template = (self.templates_dir / "category-index.html").read_text(encoding='utf-8')
+    
+    def _copy_styles_and_scripts(self):
+        """Copy CSS and JavaScript files to output assets directory."""
+        import shutil
+        
+        assets_dest = self.output_dir / "assets"
+        
+        # Copy CSS files
+        if self.styles_dir.exists():
+            for css_file in self.styles_dir.glob("*.css"):
+                dest = assets_dest / css_file.name
+                if not dest.exists() or dest.stat().st_mtime < css_file.stat().st_mtime:
+                    shutil.copy2(css_file, dest)
+                    print(f"Copied CSS: {css_file.name}")
+        
+        # Copy JS files
+        if self.scripts_dir.exists():
+            for js_file in self.scripts_dir.glob("*.js"):
+                dest = assets_dest / js_file.name
+                if not dest.exists() or dest.stat().st_mtime < js_file.stat().st_mtime:
+                    shutil.copy2(js_file, dest)
+                    print(f"Copied JS: {js_file.name}")
     
     def _copy_assets(self):
         """Copy CSS and favicon from wiki folder to output assets."""
@@ -183,106 +221,6 @@ class WikiBuilder:
         )
         return html_content
     
-    def _get_dark_mode_css(self):
-        """Get dark mode CSS styles."""
-        return """
-<style id="dark-mode-styles">
-  body.dark-mode {
-    background-color: #251F29 !important;
-    color: #CCCCCC !important;
-  }
-  body.dark-mode #container_content {
-    background-color: #251F29 !important;
-    color: #CCCCCC !important;
-  }
-  body.dark-mode #container_content h1,
-  body.dark-mode #container_content h2,
-  body.dark-mode #container_content h3,
-  body.dark-mode #container_content h4,
-  body.dark-mode #container_content h5,
-  body.dark-mode #container_content h6 {
-    color: #CCCCCC !important;
-  }
-  body.dark-mode #container_content p,
-  body.dark-mode #container_content li,
-  body.dark-mode #container_content td,
-  body.dark-mode #container_content th {
-    color: #CCCCCC !important;
-  }
-  body.dark-mode #container_content a {
-    color: #9C53E8 !important;
-  }
-  body.dark-mode #container_content a:hover {
-    color: #F7AE61 !important;
-  }
-  body.dark-mode #container_navigation {
-    background-color: #2A232F !important;
-  }
-  body.dark-mode #container_navigation a {
-    color: #CCCCCC !important;
-  }
-  body.dark-mode #container_navigation a:hover {
-    color: #F7AE61 !important;
-  }
-  #dark-mode-toggle {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background-color: #9C53E8;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  }
-  #dark-mode-toggle:hover {
-    background-color: #F7AE61;
-  }
-  body.dark-mode #dark-mode-toggle {
-    background-color: #F7AE61;
-  }
-  body.dark-mode #dark-mode-toggle:hover {
-    background-color: #9C53E8;
-  }
-</style>
-"""
-    
-    def _get_dark_mode_script(self):
-        """Get dark mode toggle JavaScript."""
-        return """
-<script>
-  // Dark mode functionality
-  (function() {
-    // Check localStorage or default to dark mode ON
-    const darkModeKey = 'wiki-dark-mode';
-    let isDarkMode = localStorage.getItem(darkModeKey);
-    if (isDarkMode === null) {
-      isDarkMode = 'true'; // Default to dark mode ON
-      localStorage.setItem(darkModeKey, 'true');
-    }
-    
-    // Apply dark mode on page load
-    if (isDarkMode === 'true') {
-      document.body.classList.add('dark-mode');
-    }
-    
-    // Create toggle button
-    const toggle = document.createElement('button');
-    toggle.id = 'dark-mode-toggle';
-    toggle.textContent = isDarkMode === 'true' ? 'Light' : 'Dark';
-    toggle.onclick = function() {
-      const isDark = document.body.classList.toggle('dark-mode');
-      localStorage.setItem(darkModeKey, isDark ? 'true' : 'false');
-      toggle.textContent = isDark ? 'Light' : 'Dark';
-    };
-    document.body.appendChild(toggle);
-  })();
-</script>
-"""
-    
     def _build_page(self, category, page_info):
         """Build a single HTML page."""
         md_file = self.source_dir / category / page_info['file']
@@ -300,35 +238,13 @@ class WikiBuilder:
         # Build navigation
         nav_html = self._build_navigation(page_info['slug'], category)
         
-        # Build full HTML page
-        html = f"""<!DOCTYPE html>
-<html>
-<head>
-  <title>{page_info['title']} - Random Things</title>
-  <meta charset="utf-8"/>
-  <link href="../assets/rtwiki_css_main.css" rel="stylesheet"/>
-  <link href="../assets/rtwiki_favicon.ico" rel="shortcut icon" type="image/x-icon"/>
-  {self._get_dark_mode_css()}
-</head>
-<body>
-  <div id="wrapper">
-    <script>
-      var observer=new MutationObserver(function(e){{e.forEach(function(e){{if(e.addedNodes)for(var o=0;o<e.addedNodes.length;o++){{var t=e.addedNodes[o];if("container_navigation"===t.id){{var r=sessionStorage.getItem("scroll");r&&(t.scrollTop=r,sessionStorage.removeItem("scroll")),observer.disconnect()}}}}}})}});observer.observe(document.body,{{childList:!0,subtree:!0,attributes:!1,characterData:!1}}),document.body.onclick=function(e){{if(e.target&&e.target.tagName&&"a"===e.target.tagName.toLowerCase()){{var o=document.getElementById("container_navigation");sessionStorage.setItem("scroll",o.scrollTop)}}}};
-    </script>
-    {self._get_dark_mode_script()}
-    <div id="container_navigation">
-      <div id="logo">
-        <span style="color: #F7AE61;">R</span>andom
-        <span style="color: #9C53E8;">T</span>hings
-      </div>
-      {nav_html}
-    </div>
-    <div id="container_content">
-      {content_html}
-    </div>
-  </div>
-</body>
-</html>"""
+        # Build full HTML page using template
+        html = self.page_template.format(
+            title=page_info['title'],
+            assets_path="../assets/",
+            navigation=nav_html,
+            content=content_html
+        )
         
         return html
     
@@ -336,95 +252,14 @@ class WikiBuilder:
         """Build the main index page."""
         nav_html = self._build_navigation(base_path='')
         
-        content_html = """<div id="main-header-wrapper">
-  <div id="container1">
-    <div id="container2">
-      <div id="container3">
-        <p id="ih">Random Things</p>
-        <p id="desc">This Wiki contains information about the <a href="https://github.com/MagicJinn/Quantum-Things" target="_blank" rel="noopener">Random Things</a> Minecraft Mod</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<style>
-#main-header-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 100px);
-  width: 100%;
-}
-#container1 {
-  background-image: linear-gradient(45deg, #F7AE61 33%, #9C53E8 67%);
-  padding: 2px;
-  display: inline-block;
-}
-#container2 {
-  background: #251f29;
-  color: #ccc;
-  text-align: center;
-  width: auto;
-  height: auto;
-}
-#container3 {
-  padding: 20px 40px;
-}
-#ih {
-  font-size: 4em;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-#desc {
-  margin-bottom: 0px;
-  font-size: 2em;
-}
-#desc > a:link {
-  text-decoration: none;
-  color: white;
-}
-#desc > a:visited {
-  text-decoration: none;
-  color: white;
-}
-#desc > a:hover {
-  text-decoration: none;
-  color: darkorange;
-}
-body.dark-mode #container2 {
-  background: #251f29;
-  color: #ccc;
-}
-</style>"""
+        # Load index content from template
+        content_html = self.index_content_template
         
-        html = f"""<!DOCTYPE html>
-<html>
-<head>
-  <title>Random Things Wiki</title>
-  <meta charset="utf-8"/>
-  <link href="assets/rtwiki_css_main.css" rel="stylesheet"/>
-  <link href="assets/rtwiki_favicon.ico" rel="shortcut icon" type="image/x-icon"/>
-  {self._get_dark_mode_css()}
-</head>
-<body>
-  <div id="wrapper">
-    <script>
-      var observer=new MutationObserver(function(e){{e.forEach(function(e){{if(e.addedNodes)for(var o=0;o<e.addedNodes.length;o++){{var t=e.addedNodes[o];if("container_navigation"===t.id){{var r=sessionStorage.getItem("scroll");r&&(t.scrollTop=r,sessionStorage.removeItem("scroll")),observer.disconnect()}}}}}})}});observer.observe(document.body,{{childList:!0,subtree:!0,attributes:!1,characterData:!1}}),document.body.onclick=function(e){{if(e.target&&e.target.tagName&&"a"===e.target.tagName.toLowerCase()){{var o=document.getElementById("container_navigation");sessionStorage.setItem("scroll",o.scrollTop)}}}};
-    </script>
-    {self._get_dark_mode_script()}
-    <div id="container_navigation">
-      <div id="logo">
-        <span style="color: #F7AE61;">R</span>andom
-        <span style="color: #9C53E8;">T</span>hings
-      </div>
-      {nav_html}
-    </div>
-    <div id="container_content">
-      {content_html}
-    </div>
-  </div>
-</body>
-</html>"""
+        # Build HTML using template
+        html = self.index_template.format(
+            navigation=nav_html,
+            content=content_html
+        )
         
         return html
     
@@ -444,34 +279,12 @@ body.dark-mode #container2 {
 {pages_list}
 </ul>"""
         
-        html = f"""<!DOCTYPE html>
-<html>
-<head>
-  <title>{category.title()} - Random Things Wiki</title>
-  <meta charset="utf-8"/>
-  <link href="../assets/rtwiki_css_main.css" rel="stylesheet"/>
-  <link href="../assets/rtwiki_favicon.ico" rel="shortcut icon" type="image/x-icon"/>
-  {self._get_dark_mode_css()}
-</head>
-<body>
-  <div id="wrapper">
-    <script>
-      var observer=new MutationObserver(function(e){{e.forEach(function(e){{if(e.addedNodes)for(var o=0;o<e.addedNodes.length;o++){{var t=e.addedNodes[o];if("container_navigation"===t.id){{var r=sessionStorage.getItem("scroll");r&&(t.scrollTop=r,sessionStorage.removeItem("scroll")),observer.disconnect()}}}}}})}});observer.observe(document.body,{{childList:!0,subtree:!0,attributes:!1,characterData:!1}}),document.body.onclick=function(e){{if(e.target&&e.target.tagName&&"a"===e.target.tagName.toLowerCase()){{var o=document.getElementById("container_navigation");sessionStorage.setItem("scroll",o.scrollTop)}}}};
-    </script>
-    {self._get_dark_mode_script()}
-    <div id="container_navigation">
-      <div id="logo">
-        <span style="color: #F7AE61;">R</span>andom
-        <span style="color: #9C53E8;">T</span>hings
-      </div>
-      {nav_html}
-    </div>
-    <div id="container_content">
-      {content_html}
-    </div>
-  </div>
-</body>
-</html>"""
+        # Build HTML using template
+        html = self.category_index_template.format(
+            category_title=category.title(),
+            navigation=nav_html,
+            content=content_html
+        )
         
         return html
     

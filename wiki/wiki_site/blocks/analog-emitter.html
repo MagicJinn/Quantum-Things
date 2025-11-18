@@ -5,109 +5,15 @@
   <meta charset="utf-8"/>
   <link href="../assets/rtwiki_css_main.css" rel="stylesheet"/>
   <link href="../assets/rtwiki_favicon.ico" rel="shortcut icon" type="image/x-icon"/>
-  
-<style id="dark-mode-styles">
-  body.dark-mode {
-    background-color: #251F29 !important;
-    color: #CCCCCC !important;
-  }
-  body.dark-mode #container_content {
-    background-color: #251F29 !important;
-    color: #CCCCCC !important;
-  }
-  body.dark-mode #container_content h1,
-  body.dark-mode #container_content h2,
-  body.dark-mode #container_content h3,
-  body.dark-mode #container_content h4,
-  body.dark-mode #container_content h5,
-  body.dark-mode #container_content h6 {
-    color: #CCCCCC !important;
-  }
-  body.dark-mode #container_content p,
-  body.dark-mode #container_content li,
-  body.dark-mode #container_content td,
-  body.dark-mode #container_content th {
-    color: #CCCCCC !important;
-  }
-  body.dark-mode #container_content a {
-    color: #9C53E8 !important;
-  }
-  body.dark-mode #container_content a:hover {
-    color: #F7AE61 !important;
-  }
-  body.dark-mode #container_navigation {
-    background-color: #2A232F !important;
-  }
-  body.dark-mode #container_navigation a {
-    color: #CCCCCC !important;
-  }
-  body.dark-mode #container_navigation a:hover {
-    color: #F7AE61 !important;
-  }
-  #dark-mode-toggle {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background-color: #9C53E8;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  }
-  #dark-mode-toggle:hover {
-    background-color: #F7AE61;
-  }
-  body.dark-mode #dark-mode-toggle {
-    background-color: #F7AE61;
-  }
-  body.dark-mode #dark-mode-toggle:hover {
-    background-color: #9C53E8;
-  }
-</style>
-
+  <link href="../assets/dark-mode.css" rel="stylesheet"/>
 </head>
 <body>
   <div id="wrapper">
-    <script>
-      var observer=new MutationObserver(function(e){e.forEach(function(e){if(e.addedNodes)for(var o=0;o<e.addedNodes.length;o++){var t=e.addedNodes[o];if("container_navigation"===t.id){var r=sessionStorage.getItem("scroll");r&&(t.scrollTop=r,sessionStorage.removeItem("scroll")),observer.disconnect()}}})});observer.observe(document.body,{childList:!0,subtree:!0,attributes:!1,characterData:!1}),document.body.onclick=function(e){if(e.target&&e.target.tagName&&"a"===e.target.tagName.toLowerCase()){var o=document.getElementById("container_navigation");sessionStorage.setItem("scroll",o.scrollTop)}};
-    </script>
-    
-<script>
-  // Dark mode functionality
-  (function() {
-    // Check localStorage or default to dark mode ON
-    const darkModeKey = 'wiki-dark-mode';
-    let isDarkMode = localStorage.getItem(darkModeKey);
-    if (isDarkMode === null) {
-      isDarkMode = 'true'; // Default to dark mode ON
-      localStorage.setItem(darkModeKey, 'true');
-    }
-    
-    // Apply dark mode on page load
-    if (isDarkMode === 'true') {
-      document.body.classList.add('dark-mode');
-    }
-    
-    // Create toggle button
-    const toggle = document.createElement('button');
-    toggle.id = 'dark-mode-toggle';
-    toggle.textContent = isDarkMode === 'true' ? 'Light' : 'Dark';
-    toggle.onclick = function() {
-      const isDark = document.body.classList.toggle('dark-mode');
-      localStorage.setItem(darkModeKey, isDark ? 'true' : 'false');
-      toggle.textContent = isDark ? 'Light' : 'Dark';
-    };
-    document.body.appendChild(toggle);
-  })();
-</script>
-
+    <script src="../assets/navigation.js"></script>
+    <script src="../assets/dark-mode.js"></script>
     <div id="container_navigation">
       <div id="logo">
-        <span style="color: #F7AE61;">R</span>andom
+        <span style="color: #5EAF20;">Q</span>uantum
         <span style="color: #9C53E8;">T</span>hings
       </div>
       <nav id="nav" role="navigation">
@@ -436,3 +342,4 @@ Other
   </div>
 </body>
 </html>
+
