@@ -170,6 +170,10 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 
 		if (ingredient == INGREDIENT.ECTO_PLASM)
 		{
+			if (!Features.ENABLE_SPECTRE_SAPLING) {
+				return EnumActionResult.PASS;
+			}
+
 			IBlockState state = worldIn.getBlockState(pos);
 
 			int saplingID = OreDictionary.getOreID("treeSapling");

@@ -3,6 +3,7 @@ package lumien.randomthings.block.spectretree;
 import java.util.Random;
 
 import lumien.randomthings.block.BlockBase;
+import lumien.randomthings.config.Features;
 import lumien.randomthings.worldgen.WorldGenSpectreTree;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
@@ -53,7 +54,7 @@ public class BlockSpectreSapling extends BlockBush
 		{
 			super.updateTick(worldIn, pos, state, rand);
 
-			if (worldIn.getLightFromNeighbors(pos.up()) >= 9 && rand.nextInt(14) == 0)
+			if (Features.ENABLE_SPECTRE_SAPLING && worldIn.getLightFromNeighbors(pos.up()) >= 9 && rand.nextInt(14) == 0)
 			{
 				this.grow(worldIn, pos, state, rand);
 			}
@@ -62,6 +63,8 @@ public class BlockSpectreSapling extends BlockBush
 
 	public void grow(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
+		if (!Features.ENABLE_SPECTRE_SAPLING)
+			return;
 		if (state.getValue(STAGE).intValue() == 0)
 		{
 			worldIn.setBlockState(pos, state.cycleProperty(STAGE), 4);
@@ -74,6 +77,8 @@ public class BlockSpectreSapling extends BlockBush
 
 	public void generateTree(World worldIn, BlockPos pos, IBlockState state, Random rand)
 	{
+		if (!Features.ENABLE_SPECTRE_SAPLING)
+			return;
 		if (!net.minecraftforge.event.terraingen.TerrainGen.saplingGrowTree(worldIn, rand, pos))
 			return;
 		WorldGenerator worldgenerator = new WorldGenSpectreTree(true);

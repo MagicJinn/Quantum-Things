@@ -35,6 +35,7 @@ public class ModConfiguration
 			configuration.getStringList("Divining Rods", "Divining Rods", DiviningRods.DEFAULT_RODS,
 					DiviningRods.PROPERTY_COMMENT);
 			markDiviningRodsRequiresRestart();
+			markSpectreDimensionRequiresRestart();
 		}
 	}
 
@@ -54,6 +55,7 @@ public class ModConfiguration
 		configuration.getStringList("Divining Rods", "Divining Rods", DiviningRods.DEFAULT_RODS,
 				DiviningRods.PROPERTY_COMMENT);
 		markDiviningRodsRequiresRestart();
+		markSpectreDimensionRequiresRestart();
 
 		// Set category comments after loading (only needed on initial setup)
 		if (configuration.hasCategory("Worldgen Plants")) {
@@ -202,6 +204,20 @@ public class ModConfiguration
 					configuration.getCategory("Divining Rods").get("Divining Rods");
 			if (diviningRodsProp != null) {
 				diviningRodsProp.setRequiresMcRestart(true);
+			}
+		}
+	}
+
+	/**
+	 * Marks the Spectre Dimension configuration property as requiring a Minecraft restart. This is
+	 * necessary because the dimension affects world registration and initialization.
+	 */
+	private void markSpectreDimensionRequiresRestart() {
+		if (configuration != null && configuration.hasCategory("Features")) {
+			Property spectreDimensionProp =
+					configuration.getCategory("Features").get("SpectreDimension");
+			if (spectreDimensionProp != null) {
+				spectreDimensionProp.setRequiresMcRestart(true);
 			}
 		}
 	}

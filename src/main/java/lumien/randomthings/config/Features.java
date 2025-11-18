@@ -27,4 +27,8 @@ public class Features
 	@ConfigOption(category = "Features", name = "SpectreDimension",
 			comment = "Whether the Spectre dimension should be enabled. If disabled, you will not be able to enter the dimension.") public static boolean SPECTRE_DIMENSION =
 					true;
+
+	@ConfigOption(category = "Features", name = "EnableSpectreSapling",
+			comment = "Whether the Spectre Sapling should be enabled. If disabled, the sapling will not grow and cannot be created from regular saplings.") public static boolean ENABLE_SPECTRE_SAPLING =
+					true;
 }
