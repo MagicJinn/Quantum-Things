@@ -156,36 +156,36 @@ public class ServerModelLibrary
 
 					File paletteFile = new File(modelFolder, modelName + ".act");
 
-					InputStream modelInputStream;
-					InputStream paletteInputStream;
-
 					if (modelFile.length() <= 2000 * 1000 && (!paletteFile.isFile() || paletteFile.length() <= 2000 * 1000))
 					{
-						modelInputStream = new FileInputStream(modelFile);
-
-						if (paletteFile.isFile())
+						try (InputStream modelInputStream = new FileInputStream(modelFile))
 						{
-							paletteInputStream = new FileInputStream(paletteFile);
-						}
-						else
-						{
-							paletteInputStream = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("randomthings:voxmodels/default_palette.act")).getInputStream();
+							if (!paletteFile.isFile()) {
+								try (InputStream resourcePaletteInputStream = Minecraft
+										.getMinecraft().getResourceManager()
+										.getResource(new ResourceLocation(
+												"randomthings:voxmodels/default_palette.act"))
+										.getInputStream();
+										FileOutputStream paletteOutput =
+												new FileOutputStream(paletteFile)) {
+									int currentByte = -1;
 
-							FileOutputStream paletteOutput = new FileOutputStream(paletteFile);
-
-							int currentByte = -1;
-
-							while ((currentByte = paletteInputStream.read()) != -1)
-							{
-								paletteOutput.write(currentByte);
+									while ((currentByte =
+											resourcePaletteInputStream.read()) != -1) {
+										paletteOutput.write(currentByte);
+									}
+								}
 							}
 
-							paletteOutput.close();
+							try (InputStream paletteInputStream =
+									new FileInputStream(paletteFile)) {
+								LoadedModelFile loadedFile =
+										new LoadedModelFile(IOUtils.toByteArray(modelInputStream),
+												IOUtils.toByteArray(paletteInputStream));
+
+								loadedModels.put(modelName, loadedFile);
+							}
 						}
-
-						LoadedModelFile loadedFile = new LoadedModelFile(IOUtils.toByteArray(modelInputStream), IOUtils.toByteArray(paletteInputStream));
-
-						loadedModels.put(modelName, loadedFile);
 					}
 					else
 					{
