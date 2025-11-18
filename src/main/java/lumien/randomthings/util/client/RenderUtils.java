@@ -81,7 +81,7 @@ public class RenderUtils
 						@Override
 						public Integer call() throws Exception
 						{
-							Set<Type> types = BiomeDictionary.getTypes(biomeA);
+							Set<Type> types = tryGetBiomeTypesSafely(biomeA);
 
 							Color foliageColor = new Color(biomeA.getFoliageColorAtPos(blockpos$mutableblockpos));
 							Color waterColorMultiplier = new Color(biomeA.getWaterColorMultiplier());
@@ -210,7 +210,7 @@ public class RenderUtils
 					@Override
 					public Integer call() throws Exception
 					{
-						Set<Type> types = BiomeDictionary.getTypes(biome);
+						Set<Type> types = tryGetBiomeTypesSafely(biome);
 
 						Color foliageColor = new Color(biome.getFoliageColorAtPos(pos));
 						Color waterColorMultiplier = new Color(biome.getWaterColorMultiplier());
@@ -684,6 +684,14 @@ public class RenderUtils
 			}
 
 			buffer.putPosition(d0, d1, d2);
+		}
+	}
+
+	private static Set<Type> tryGetBiomeTypesSafely(Biome biome) {
+		try {
+			return BiomeDictionary.getTypes(biome);
+		} catch (IllegalArgumentException e) {
+			return java.util.Collections.emptySet();
 		}
 	}
 }
