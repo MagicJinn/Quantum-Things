@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Biome Radar - Random Things</title>
+  <meta charset="utf-8"/>
+  <link href="../assets/rtwiki_css_main.css" rel="stylesheet"/>
+  <link href="../assets/rtwiki_favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+  
+<style id="dark-mode-styles">
+  body.dark-mode {
+    background-color: #251F29 !important;
+    color: #CCCCCC !important;
+  }
+  body.dark-mode #container_content {
+    background-color: #251F29 !important;
+    color: #CCCCCC !important;
+  }
+  body.dark-mode #container_content h1,
+  body.dark-mode #container_content h2,
+  body.dark-mode #container_content h3,
+  body.dark-mode #container_content h4,
+  body.dark-mode #container_content h5,
+  body.dark-mode #container_content h6 {
+    color: #CCCCCC !important;
+  }
+  body.dark-mode #container_content p,
+  body.dark-mode #container_content li,
+  body.dark-mode #container_content td,
+  body.dark-mode #container_content th {
+    color: #CCCCCC !important;
+  }
+  body.dark-mode #container_content a {
+    color: #9C53E8 !important;
+  }
+  body.dark-mode #container_content a:hover {
+    color: #F7AE61 !important;
+  }
+  body.dark-mode #container_navigation {
+    background-color: #2A232F !important;
+  }
+  body.dark-mode #container_navigation a {
+    color: #CCCCCC !important;
+  }
+  body.dark-mode #container_navigation a:hover {
+    color: #F7AE61 !important;
+  }
+  #dark-mode-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #9C53E8;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+  #dark-mode-toggle:hover {
+    background-color: #F7AE61;
+  }
+  body.dark-mode #dark-mode-toggle {
+    background-color: #F7AE61;
+  }
+  body.dark-mode #dark-mode-toggle:hover {
+    background-color: #9C53E8;
+  }
+</style>
+
+</head>
+<body>
+  <div id="wrapper">
+    <script>
+      var observer=new MutationObserver(function(e){e.forEach(function(e){if(e.addedNodes)for(var o=0;o<e.addedNodes.length;o++){var t=e.addedNodes[o];if("container_navigation"===t.id){var r=sessionStorage.getItem("scroll");r&&(t.scrollTop=r,sessionStorage.removeItem("scroll")),observer.disconnect()}}})});observer.observe(document.body,{childList:!0,subtree:!0,attributes:!1,characterData:!1}),document.body.onclick=function(e){if(e.target&&e.target.tagName&&"a"===e.target.tagName.toLowerCase()){var o=document.getElementById("container_navigation");sessionStorage.setItem("scroll",o.scrollTop)}};
+    </script>
+    
+<script>
+  // Dark mode functionality
+  (function() {
+    // Check localStorage or default to dark mode ON
+    const darkModeKey = 'wiki-dark-mode';
+    let isDarkMode = localStorage.getItem(darkModeKey);
+    if (isDarkMode === null) {
+      isDarkMode = 'true'; // Default to dark mode ON
+      localStorage.setItem(darkModeKey, 'true');
+    }
+    
+    // Apply dark mode on page load
+    if (isDarkMode === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+    
+    // Create toggle button
+    const toggle = document.createElement('button');
+    toggle.id = 'dark-mode-toggle';
+    toggle.textContent = isDarkMode === 'true' ? 'Light' : 'Dark';
+    toggle.onclick = function() {
+      const isDark = document.body.classList.toggle('dark-mode');
+      localStorage.setItem(darkModeKey, isDark ? 'true' : 'false');
+      toggle.textContent = isDark ? 'Light' : 'Dark';
+    };
+    document.body.appendChild(toggle);
+  })();
+</script>
+
+    <div id="container_navigation">
+      <div id="logo">
+        <span style="color: #F7AE61;">R</span>andom
+        <span style="color: #9C53E8;">T</span>hings
+      </div>
+      <nav id="nav" role="navigation">
+<ul>
+<li class="section">
+Blocks
+<ul>
+<li class="page">
+<a href="advanced-redstone-interface.html">Advanced Redstone Interface</a>
+</li>
+<li class="page">
+<a href="advanced-redstone-repeater.html">Advanced Redstone Repeater</a>
+</li>
+<li class="page">
+<a href="advanced-redstone-torch.html">Advanced Redstone Torch</a>
+</li>
+<li class="page">
+<a href="analog-emitter.html">Analog Emitter</a>
+</li>
+<li class="page">
+<a href="biome-blocks.html">Biome Blocks</a>
+</li>
+<li class="page">
+<a href="biome-radar.html" class="active">Biome Radar</a>
+</li>
+<li class="page">
+<a href="block-breaker.html">Block Breaker</a>
+</li>
+<li class="page">
+<a href="block-destabilizer.html">Block Destabilizer</a>
+</li>
+<li class="page">
+<a href="block-of-sticks.html">Block of Sticks</a>
+</li>
+<li class="page">
+<a href="chat-detector.html">Chat Detector</a>
+</li>
+<li class="page">
+<a href="colored-grass.html">Colored Grass</a>
+</li>
+<li class="page">
+<a href="compressed-slime-block.html">Compressed Slime Block</a>
+</li>
+<li class="page">
+<a href="contact-button--lever.html">Contact Button & Lever</a>
+</li>
+<li class="page">
+<a href="creative-player-interface.html">Creative Player Interface</a>
+</li>
+<li class="page">
+<a href="custom-crafting-tables.html">Custom Crafting Tables</a>
+</li>
+<li class="page">
+<a href="diaphanous-blocks.html">Diaphanous Blocks</a>
+</li>
+<li class="page">
+<a href="dyeing-machine.html">Dyeing Machine</a>
+</li>
+<li class="page">
+<a href="ender-bridge.html">Ender Bridge</a>
+</li>
+<li class="page">
+<a href="entity-detector.html">Entity Detector</a>
+</li>
+<li class="page">
+<a href="fertilized-dirt.html">Fertilized Dirt</a>
+</li>
+<li class="page">
+<a href="fluid-display.html">Fluid Display</a>
+</li>
+<li class="page">
+<a href="igniter.html">Igniter</a>
+</li>
+<li class="page">
+<a href="imbuing-station.html">Imbuing Station</a>
+</li>
+<li class="page">
+<a href="inventory-rerouter.html">Inventory Rerouter</a>
+</li>
+<li class="page">
+<a href="inventory-tester.html">Inventory Tester</a>
+</li>
+<li class="page">
+<a href="iron-dropper.html">Iron Dropper</a>
+</li>
+<li class="page">
+<a href="item-collector.html">Item Collector</a>
+</li>
+<li class="page">
+<a href="lapis-glass.html">Lapis Glass</a>
+</li>
+<li class="page">
+<a href="lapis-lamp.html">Lapis Lamp</a>
+</li>
+<li class="page">
+<a href="light-redirector.html">Light Redirector</a>
+</li>
+<li class="page">
+<a href="lotus.html">Lotus</a>
+</li>
+<li class="page">
+<a href="luminous-blocks.html">Luminous Blocks</a>
+</li>
+<li class="page">
+<a href="notification-interface.html">Notification Interface</a>
+</li>
+<li class="page">
+<a href="online-detector.html">Online Detector</a>
+</li>
+<li class="page">
+<a href="peace-candle.html">Peace Candle</a>
+</li>
+<li class="page">
+<a href="pitcher-plant.html">Pitcher Plant</a>
+</li>
+<li class="page">
+<a href="platforms.html">Platforms</a>
+</li>
+<li class="page">
+<a href="player-interface.html">Player Interface</a>
+</li>
+<li class="page">
+<a href="potion-vaporizer.html">Potion Vaporizer</a>
+</li>
+<li class="page">
+<a href="quartz-glass.html">Quartz Glass</a>
+</li>
+<li class="page">
+<a href="quartz-lamp.html">Quartz Lamp</a>
+</li>
+<li class="page">
+<a href="rain-shield.html">Rain Shield</a>
+</li>
+<li class="page">
+<a href="rainbow-lamp.html">Rainbow Lamp</a>
+</li>
+<li class="page">
+<a href="redstone-interface.html">Redstone Interface</a>
+</li>
+<li class="page">
+<a href="redstone-observer.html">Redstone Observer</a>
+</li>
+<li class="page">
+<a href="sided-redstone.html">Sided Block of Redstone</a>
+</li>
+<li class="page">
+<a href="slime-cube.html">Slime Cube</a>
+</li>
+<li class="page">
+<a href="sound-box.html">Sound Box</a>
+</li>
+<li class="page">
+<a href="sound-dampener.html">Sound Dampener</a>
+</li>
+<li class="page">
+<a href="spectre-coils.html">Spectre Coils</a>
+</li>
+<li class="page">
+<a href="spectre-lens.html">Spectre Lens</a>
+</li>
+<li class="page">
+<a href="spectre-sapling.html">Spectre Sapling</a>
+</li>
+<li class="page">
+<a href="stained-bricks.html">Stained Bricks</a>
+</li>
+<li class="page">
+<a href="trigger-glass.html">Trigger Glass</a>
+</li>
+</ul>
+</li>
+<li class="section">
+Items
+<ul>
+<li class="page">
+<a href="../items/beans.html">Beans</a>
+</li>
+<li class="page">
+<a href="../items/blaze-and-steel.html">Blaze and Steel</a>
+</li>
+<li class="page">
+<a href="../items/chunk-analyzer.html">Chunk Analyzer</a>
+</li>
+<li class="page">
+<a href="../items/divining-rods.html">Divining Rods</a>
+</li>
+<li class="page">
+<a href="../items/eclipsed-clock.html">Eclipsed Clock</a>
+</li>
+<li class="page">
+<a href="../items/ectoplasm.html">Ectoplasm</a>
+</li>
+<li class="page">
+<a href="../items/emerald-compass.html">Emerald Compass</a>
+</li>
+<li class="page">
+<a href="../items/ender-bucket.html">Ender Bucket</a>
+</li>
+<li class="page">
+<a href="../items/ender-letter.html">Ender Letter</a>
+</li>
+<li class="page">
+<a href="../items/entity-filter.html">Entity Filter</a>
+</li>
+<li class="page">
+<a href="../items/escape-rope.html">Escape Rope</a>
+</li>
+<li class="page">
+<a href="../items/glowing-mushrooms.html">Glowing Mushrooms</a>
+</li>
+<li class="page">
+<a href="../items/golden-compass.html">Golden Compass</a>
+</li>
+<li class="page">
+<a href="../items/golden-egg.html">Golden Egg</a>
+</li>
+<li class="page">
+<a href="../items/item-filter.html">Item Filter</a>
+</li>
+<li class="page">
+<a href="../items/lava-charm.html">Lava Charm</a>
+</li>
+<li class="page">
+<a href="../items/lava-waders.html">Lava Waders</a>
+</li>
+<li class="page">
+<a href="../items/luminous-powder.html">Luminous Powder</a>
+</li>
+<li class="page">
+<a href="../items/magic-hood.html">Magic Hood</a>
+</li>
+<li class="page">
+<a href="../items/obsidian-skull.html">Obsidian Skull</a>
+</li>
+<li class="page">
+<a href="../items/obsidian-water-walking-boots.html">Obsidian Water Walking Boots</a>
+</li>
+<li class="page">
+<a href="../items/portable-sound-dampener.html">Portable Sound Dampener</a>
+</li>
+<li class="page">
+<a href="../items/portkey.html">Portkey</a>
+</li>
+<li class="page">
+<a href="../items/position-filter.html">Position Filter</a>
+</li>
+<li class="page">
+<a href="../items/redstone-activator.html">Redstone Activator</a>
+</li>
+<li class="page">
+<a href="../items/redstone-remote.html">Redstone Remote</a>
+</li>
+<li class="page">
+<a href="../items/runic-dust.html">Runic Dust</a>
+</li>
+<li class="page">
+<a href="../items/sound-pattern.html">Sound Pattern</a>
+</li>
+<li class="page">
+<a href="../items/sound-recorder.html">Sound Recorder</a>
+</li>
+<li class="page">
+<a href="../items/spectre-anchor.html">Spectre Anchor</a>
+</li>
+<li class="page">
+<a href="../items/spectre-charger.html">Spectre Charger</a>
+</li>
+<li class="page">
+<a href="../items/spectre-illuminator.html">Spectre Illuminator</a>
+</li>
+<li class="page">
+<a href="../items/spectre-key.html">Spectre Key</a>
+</li>
+<li class="page">
+<a href="../items/spectre-tools.html">Spectre Tools</a>
+</li>
+<li class="page">
+<a href="../items/stable-ender-pearl.html">Stable Ender Pearl</a>
+</li>
+<li class="page">
+<a href="../items/summoning-pendulum.html">Summoning Pendulum</a>
+</li>
+<li class="page">
+<a href="../items/super-lubricent-boots.html">Super Lubricent Boots</a>
+</li>
+<li class="page">
+<a href="../items/time-in-a-bottle.html">Time in a Bottle</a>
+</li>
+<li class="page">
+<a href="../items/water-walking-boots.html">Water Walking Boots</a>
+</li>
+<li class="page">
+<a href="../items/weather-eggs.html">Weather Eggs</a>
+</li>
+</ul>
+</li>
+<li class="section">
+Other
+<ul>
+<li class="page">
+<a href="../other/ancient-furnace.html">Ancient Furnace</a>
+</li>
+<li class="page">
+<a href="../other/artificial-end-portal.html">Artificial End Portal</a>
+</li>
+<li class="page">
+<a href="../other/floo-teleportation.html">Floo Teleportation</a>
+</li>
+<li class="page">
+<a href="../other/magnetic-enchantment.html">Magnetic Enchantment</a>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+    </div>
+    <div id="container_content">
+      <h1 id="biome-radar">Biome Radar</h1>
+<h2 id="description">Description</h2>
+<hr />
+<p>In Dungeon Chests around the world you will find Biome Crystals that “represent” a random biome, using the Biome Radar you can search for biomes in your world. After you place it down you have to put an antenna made out of Iron Bars on top of it (Screenshot 1). Without that antenna it won’t work. If you rightclick the Biome Radar with a Biome Crystal in your hand the Biome Crystal will be inserted into the radar, by right clicking it with an empty hand you can take it out again. With a Biome Crystal in the radar you have to apply a redstone signal to it with something like a lever to start the search. While searching colored smoke will emit from the antenna, once the biome is found a fifth line of smoke will appear in the middle of the antenna. You can now get a position filter of the position the biome was found at by right clicking the biome radar with a piece of paper.</p>
+<h2 id="crafting">Crafting</h2>
+<hr />
+<p><img alt="" src="../images/rtwiki_images_crafting_biome-radar.png" /></p>
+<h2 id="screenshots">Screenshots</h2>
+<hr />
+<p><img alt="" src="../images/rtwiki_images_screenshots_biome-radar.png" /></p>
+    </div>
+  </div>
+</body>
+</html>

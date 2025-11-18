@@ -1,0 +1,24 @@
+---
+title: Portable Sound Dampener
+category: items
+---
+
+# Portable Sound Dampener
+
+## Description
+
+---
+
+Portable Sound Dampeners will prevent the sounds from the [Sound Pattern](sound-pattern.html) inside of it from being played for the player that has one in their inventory.
+
+## Crafting
+
+---
+
+![](../images/rtwiki_images_crafting_portable-sound-dampener.png)
+
+## Screenshots
+
+---
+
+![](../images/rtwiki_images_screenshots_portable-sound-dampener.png)

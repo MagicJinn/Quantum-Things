@@ -1,0 +1,26 @@
+---
+title: Trigger Glass
+category: blocks
+---
+
+# Trigger Glass
+
+## Description
+
+---
+
+When powered by redstone Trigger Glass will loose its collision box for 3 seconds so entities will fall through it. Adjacent Trigger Glass will also be activated so it’s enough to power one block of connected Trigger Glass.
+
+## Crafting
+
+---
+
+![](../images/rtwiki_images_crafting_trigger-glass.png)
+
+## Screenshots
+
+---
+
+<video controls>
+  <source src="https://lumien.net/rtwiki/images/screenshots/trigger-glass.mp4" type="video/mp4">
+</video>
