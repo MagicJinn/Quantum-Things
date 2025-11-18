@@ -9,24 +9,19 @@ import lumien.randomthings.item.ModItems;
 import lumien.randomthings.util.client.MKRRenderUtil;
 import lumien.randomthings.util.client.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ModelManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.storage.MapData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -46,6 +41,7 @@ public class RenderEclipsedClock extends Render<EntityEclipsedClock>
 	/**
 	 * Renders the desired {@code T} type Entity.
 	 */
+	@SuppressWarnings("null")
 	public void doRender(EntityEclipsedClock entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
 		GlStateManager.pushMatrix();
@@ -57,8 +53,9 @@ public class RenderEclipsedClock extends Render<EntityEclipsedClock>
 		GlStateManager.rotate(180.0F - entity.rotationYaw, 0.0F, 1.0F, 0.0F);
 
 		this.renderManager.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		BlockRendererDispatcher blockrendererdispatcher = this.mc.getBlockRendererDispatcher();
-		ModelManager modelmanager = blockrendererdispatcher.getBlockModelShapes().getModelManager();
+		// BlockRendererDispatcher blockrendererdispatcher = this.mc.getBlockRendererDispatcher();
+		// ModelManager modelmanager =
+		// blockrendererdispatcher.getBlockModelShapes().getModelManager();
 		GlStateManager.translate(0.0F, 0.0F, 0.4375F);
 		this.renderItem(entity);
 
@@ -112,7 +109,20 @@ public class RenderEclipsedClock extends Render<EntityEclipsedClock>
 
 
 		if (entity.shouldDisplayTime())
-			EntityRenderer.drawNameplate(this.getFontRendererFromRenderManager(), entity.getStringTargetTime(), (float) x, (float) ((float) y + 0.45), (float) z, 0, (entity.facingDirection.getHorizontalIndex() - 2) % 4 * 90, 0, false, false);
+		{
+			net.minecraft.client.gui.FontRenderer fontRenderer =
+					this.getFontRendererFromRenderManager();
+			// Try fallback
+			if (fontRenderer == null) {
+				fontRenderer = this.mc.fontRenderer;
+			}
+			if (fontRenderer != null && entity.facingDirection != null) {
+				EntityRenderer.drawNameplate(fontRenderer, entity.getStringTargetTime(), (float) x,
+						(float) ((float) y + 0.45), (float) z, 0,
+						(entity.facingDirection.getHorizontalIndex() - 2) % 4 * 90, 0, false,
+						false);
+			}
+		}
 	}
 
 	/**
