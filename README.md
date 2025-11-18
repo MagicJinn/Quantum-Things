@@ -39,3 +39,5 @@ Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://git
 - Fixed an issue where it would rain in the Spectre dimension.
 - Fixed Divining Rods not showing up in Creative search.
 - Fixed torches and other attachable blocks being able to be placed on the side of the Rain Shield.
+- Fixed Rain Shield duplication.
+- Fixed a crash when Biome Stone tried to access a biome that was not registered with BiomeDictionary.
