@@ -5,53 +5,32 @@ category: other
 
 # Changelog
 
-This page documents the changes and fixes made in Quantum Things compared to the original Random Things mod.
+This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
+
+## v1.0.1
+
+### Fixes
+
+- **Fixed a crash when the Eclipsed Clock tried to access a font renderer that was not available**.
 
 ## v1.0.0
 
 ### Changes
 
-#### Configuration
-
-- **Added an ingame config menu** - Access all configuration options directly from the game without editing config files manually.
-- **Added the ability to configure the chances of certain plants, features and loot to occur** - Fine-tune world generation to your preferences.
-- **Added the ability to configure values concerning the Nature Core** - Customize Nature Core behavior and generation.
-- **Added the ability to configure values concerning the Lotus** - Adjust Lotus generation and properties.
-- **Added the ability to enable or disable the Spectre Sapling** - Control whether Spectre Saplings can be created and grown.
-- **Added the ability to enable or disable the Spectre Dimension** - Toggle the entire Spectre Dimension feature on or off.
-
-#### Mod Compatibility
-
-- **Added Thermal Expansion Insolator support for Spectre Saplings** - Grow Spectre Saplings using Thermal Expansion's Insolator.
-- **Added Bonsai Trees support for Fertilized Dirt** - Use Fertilized Dirt as a Bonsai Pot soil in Bonsai Trees mods.
-- **Added Divining Rod support for multiple mods:**
-  - NetherEnding Ores
-  - Silent's Gems
-  - Galacticraft
-  - Galacticraft Planets
-  - Advent of Ascension
-  - Aether (partial)
-  - DivineRPG
-- **Added Divining Rod sleeper support for:**
-  - Silent Gear
-  - More Planets
-  - Aether (partial)
-  - Aether II
-  
-  <sup>Sleeper Support: For mods that don't provide oreDict entries. This feature is disabled by default and can be enabled by modpacks as needed.</sup>
-
-  <sup>Aether Support: Only partial, as some Aether items do not have oreDict entries.</sup>
-
-#### Divining Rods
-
-- **Added a Quartz Divining Rod** - A divining rod that detects Quartz ores.
-- **Added the ability to enable, disable, and add custom Divining Rods** - Full control over which rods are available in your game.
-- **Added the ability to adjust the range** - Configure the detection range of Divining Rods.
-
-#### Blocks and Items
-
-- **Gave Spectre Illuminator LOD levels** - Improved performance and visual quality with Level of Detail support.
-- **Made Rain Shields be able to be placed on any block** - Rain Shields can now be placed similar to an end rod, on any surface.
+- Added an ingame config menu.
+- Added the ability to configure the chances of certain plants, features and loot to occur.
+- Added the ability to configure values concerning the Nature Core.
+- Added the ability to configure values concerning the Lotus.
+- Added the ability to enable or disable the Spectre Sapling.
+- Added the ability to enable or disable the Spectre Dimension.
+- Added Thermal Expansion Insolator support for Spectre Saplings.
+- Added Bonsai Trees support for Fertilized Dirt as a Bonsai Pot soil.
+- Added a Quartz Divining Rod.
+- Added the ability to enable, disable, and add custom Divining Rods, and adjust the range.
+- Added Divining Rod support for NetherEnding Ores, Silent's Gems, Galacticraft, Galacticraft Planets, Advent of Ascension, Aether and DivineRPG.
+- Added Divining Rod sleeper support for Silent Gear, More Planets, Aether and Aether II. (Sleeper Support is for mods lacking oreDict. Does nothing by default, can be enabled by modpacks).
+- Gave Spectre Illuminator LOD levels.
+- Made Rain Shields be able to be placed on any block, similar to an end rod.
 
 ### Fixes
 
