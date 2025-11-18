@@ -62,6 +62,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed torches and other attachable blocks being able to be placed on the side of the Rain Shield.
 - Fixed Rain Shield duplication.
 - Fixed a crash when Biome Stone tried to access a biome that was not registered with BiomeDictionary.
+- Fixed a crash when the Eclipsed Clock tried to access a font renderer that was not available.
 
 ### Reporting Issues
 
