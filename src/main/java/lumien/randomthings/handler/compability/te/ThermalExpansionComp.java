@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Level;
 
 import lumien.randomthings.RandomThings;
 import lumien.randomthings.block.ModBlocks;
+import lumien.randomthings.config.Features;
 import lumien.randomthings.item.ItemIngredient;
 import lumien.randomthings.item.ModItems;
 import net.minecraft.item.ItemStack;
@@ -18,7 +19,7 @@ public class ThermalExpansionComp
 
 	public static void postInit(FMLPostInitializationEvent event)
 	{
-		if (Loader.isModLoaded(TE_MODID))
+		if (Loader.isModLoaded(TE_MODID) && Features.ENABLE_SPECTRE_SAPLING)
 		{
 			RandomThings.logger.log(Level.INFO,
 					"Adding Thermal Expansion Insolator Recipe for Spectre Saplings.");
