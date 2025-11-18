@@ -42,7 +42,7 @@ The majority of the credit goes to Lumien231, who created the absolutely monolit
 - Fixed Magic Beans growing infinitely in Cubic Chunks worlds (limited to 512).
 - Fixed Divining Rods not having proper descriptions.
 - Fixed ConcurrentModificationException crash when using Redstone Interfaces.
-- Fixed `cannot be cast to TileEntityRedstoneObserver` crash.
+- Fixed a crash where the Redstone Observer tried to incorrectly access a block state that was not a Redstone Observer.
 - Fixed Fertilized Dirt not being recognized as farmland by villagers.
 - Fixed a crash where the Block Breaker tried to incorrectly access a block state that was not a Block Breaker.
 - Fixed an issue where it would rain in the Spectre dimension.
