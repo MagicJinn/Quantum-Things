@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Floo Teleportation - Random Things</title>
+  <title>Changelog - Random Things</title>
   <meta charset="utf-8"/>
   <link href="../assets/rtwiki_css_main.css" rel="stylesheet"/>
   <link href="../assets/rtwiki_favicon.ico" rel="shortcut icon" type="image/x-icon"/>
@@ -323,10 +323,10 @@ Other
 <a href="artificial-end-portal.html">Artificial End Portal</a>
 </li>
 <li class="page">
-<a href="changelog.html">Changelog</a>
+<a href="changelog.html" class="active">Changelog</a>
 </li>
 <li class="page">
-<a href="floo-teleportation.html" class="active">Floo Teleportation</a>
+<a href="floo-teleportation.html">Floo Teleportation</a>
 </li>
 <li class="page">
 <a href="magnetic-enchantment.html">Magnetic Enchantment</a>
@@ -337,18 +337,97 @@ Other
 </nav>
     </div>
     <div id="container_content">
-      <h1 id="floo-teleportation">Floo Teleportation</h1>
-<h2 id="description">Description</h2>
-<hr />
-<p>Right clicking a connected line of bricks with a Floo Sign will turn them into Floo Bricks and create a Floo Fireplace. When you are holding Floo Dust while standing on top of Floo Bricks &amp; type a message in chat you will be teleported to the fireplace which name is closest to the message you typed. The name of a fireplace is defined by the name of the Floo Sign used to create it (Rename it in an Anvil). Fireplaces without a name can still be used to teleport but can’t be teleported to. Players will arrrive facing the opposite direction you were facing while creating the fireplace.</p>
-<p>You can also craft Floo Tokens which allow you to use the Floo Network on the go without a Fireplace, simply throw them on the ground and wait a bit. A “temporary fireplace” will appear that you can use like a normal brick fireplace.</p>
-<p>Instead of having Floo Powder in your hand you can also have a floo pouch anywhere in your inventory. It holds 128 Floo Powder and is filled with floo powder from your inventory when you shift right click it.</p>
-<h2 id="crafting">Crafting</h2>
-<hr />
-<p><img alt="" src="../images/rtwiki_images_crafting_floo-teleportation-1.png" /><img alt="" src="../images/rtwiki_images_crafting_floo-teleportation-2.png" /><img alt="" src="../images/rtwiki_images_crafting_floo-teleportation-3.png" /><img alt="" src="../images/rtwiki_images_crafting_floo-pouch.png" /></p>
-<h2 id="screenshots">Screenshots</h2>
-<hr />
-<p><img alt="" src="../images/rtwiki_images_screenshots_floo-teleportation-1.png" /><img alt="" src="../images/rtwiki_images_screenshots_floo-teleportation-2.png" /><img alt="" src="../images/rtwiki_images_screenshots_floo-teleportation-3.png" /></p>
+      <h1 id="changelog">Changelog</h1>
+<p>This page documents the changes and fixes made in Quantum Things compared to the original Random Things mod.</p>
+<h2 id="v100">v1.0.0</h2>
+<h3 id="changes">Changes</h3>
+<h4 id="configuration">Configuration</h4>
+<ul>
+<li><strong>Added an ingame config menu</strong> - Access all configuration options directly from the game without editing config files manually.</li>
+<li><strong>Added the ability to configure the chances of certain plants, features and loot to occur</strong> - Fine-tune world generation to your preferences.</li>
+<li><strong>Added the ability to configure values concerning the Nature Core</strong> - Customize Nature Core behavior and generation.</li>
+<li><strong>Added the ability to configure values concerning the Lotus</strong> - Adjust Lotus generation and properties.</li>
+<li><strong>Added the ability to enable or disable the Spectre Sapling</strong> - Control whether Spectre Saplings can be created and grown.</li>
+<li><strong>Added the ability to enable or disable the Spectre Dimension</strong> - Toggle the entire Spectre Dimension feature on or off.</li>
+</ul>
+<h4 id="mod-compatibility">Mod Compatibility</h4>
+<ul>
+<li><strong>Added Thermal Expansion Insolator support for Spectre Saplings</strong> - Grow Spectre Saplings using Thermal Expansion's Insolator.</li>
+<li><strong>Added Bonsai Trees support for Fertilized Dirt</strong> - Use Fertilized Dirt as a Bonsai Pot soil in Bonsai Trees mods.</li>
+<li><strong>Added Divining Rod support for multiple mods:</strong></li>
+<li>NetherEnding Ores</li>
+<li>Silent's Gems</li>
+<li>Galacticraft</li>
+<li>Galacticraft Planets</li>
+<li>Advent of Ascension</li>
+<li>Aether (partial)</li>
+<li>DivineRPG</li>
+<li><strong>Added Divining Rod sleeper support for:</strong></li>
+<li>Silent Gear</li>
+<li>More Planets</li>
+<li>Aether (partial)</li>
+<li>Aether II</li>
+</ul>
+<p><sup>Sleeper Support: For mods that don't provide oreDict entries. This feature is disabled by default and can be enabled by modpacks as needed.</sup></p>
+<p><sup>Aether Support: Only partial, as some Aether items do not have oreDict entries.</sup></p>
+<h4 id="divining-rods">Divining Rods</h4>
+<ul>
+<li><strong>Added a Quartz Divining Rod</strong> - A divining rod that detects Quartz ores.</li>
+<li><strong>Added the ability to enable, disable, and add custom Divining Rods</strong> - Full control over which rods are available in your game.</li>
+<li><strong>Added the ability to adjust the range</strong> - Configure the detection range of Divining Rods.</li>
+</ul>
+<h4 id="blocks-and-items">Blocks and Items</h4>
+<ul>
+<li><strong>Gave Spectre Illuminator LOD levels</strong> - Improved performance and visual quality with Level of Detail support.</li>
+<li><strong>Made Rain Shields be able to be placed on any block</strong> - Rain Shields can now be placed similar to an end rod, on any surface.</li>
+</ul>
+<h3 id="fixes">Fixes</h3>
+<h4 id="world-generation">World Generation</h4>
+<ul>
+<li><strong>Removed the unimplemented and unfinished Sekenada from worldgen</strong> - Cleaned up incomplete features.</li>
+</ul>
+<h4 id="item-collection">Item Collection</h4>
+<ul>
+<li><strong>Fixed item duplication using the advanced item collector</strong> - Prevents exploits with the advanced item collector. <em>(Courtesy of UniversalTweaks)</em></li>
+<li><strong>Fixed anvil crafting voiding items</strong> - Items are no longer lost when using anvil crafting. <em>(Courtesy of UniversalTweaks)</em></li>
+</ul>
+<h4 id="spectre-dimension">Spectre Dimension</h4>
+<ul>
+<li><strong>Fixed teleporting survival mode players to the Spectre dimension on servers could leave the player stalled out in the void</strong> - Improved teleportation reliability. <em>(Courtesy of UniversalTweaks)</em></li>
+<li><strong>Fixed an issue where it would rain in the Spectre dimension</strong> - The Spectre Dimension now properly prevents weather.</li>
+</ul>
+<h4 id="spectre-illuminator">Spectre Illuminator</h4>
+<ul>
+<li><strong>Fixed Spectre Illuminator duplication</strong> - Prevents duplication exploits.</li>
+<li><strong>Fixed Spectre Illuminator smelting full snow blocks</strong> - Resolves <a href="https://bugs.mojang.com/browse/MC/issues/MC-88097">MC-88097</a>.</li>
+<li><strong>Fixed Spectre Illuminator hitbox being inaccurate</strong> - Improved interaction accuracy.</li>
+<li><strong>Improved Spectre Illuminator animation performance</strong> - Better frame rates when using Spectre Illuminators.</li>
+<li><strong>Improved Spectre Illuminator position finding performance</strong> - Faster chunk lighting calculations.</li>
+</ul>
+<h4 id="nature-core">Nature Core</h4>
+<ul>
+<li><strong>Fixed Nature Core being able to spawn underwater</strong> - Nature Cores now only spawn in appropriate locations.</li>
+</ul>
+<h4 id="blocks">Blocks</h4>
+<ul>
+<li><strong>Fixed Nature and Water Chest not having breaking particles</strong> - Visual feedback when breaking these chests.</li>
+<li><strong>Fixed Fertilized Dirt not being recognized as farmland by villagers</strong> - Villagers can now properly recognize and use Fertilized Dirt.</li>
+<li><strong>Fixed torches and other attachable blocks being able to be placed on the side of the Rain Shield</strong> - Rain Shields now have proper collision detection.</li>
+<li><strong>Fixed Rain Shield duplication</strong> - Prevents duplication exploits.</li>
+</ul>
+<h4 id="redstone">Redstone</h4>
+<ul>
+<li><strong>Fixed ConcurrentModificationException crash when using Redstone Interfaces</strong> - Improved thread safety.</li>
+<li><strong>Fixed a crash where the Redstone Observer tried to incorrectly access a block state that was not a Redstone Observer</strong> - Better error handling.</li>
+</ul>
+<h4 id="other">Other</h4>
+<ul>
+<li><strong>Fixed Magic Beans growing infinitely in Cubic Chunks worlds</strong> - Limited growth to 512 blocks to prevent performance issues.</li>
+<li><strong>Fixed Divining Rods not having proper descriptions</strong> - Improved item tooltips.</li>
+<li><strong>Fixed Divining Rods not showing up in Creative search</strong> - All rods are now searchable in Creative mode.</li>
+<li><strong>Fixed a crash where the Block Breaker tried to incorrectly access a block state that was not a Block Breaker</strong> - Better error handling.</li>
+<li><strong>Fixed a crash when Biome Stone tried to access a biome that was not registered with BiomeDictionary</strong> - Improved compatibility with custom biomes.</li>
+</ul>
     </div>
   </div>
 </body>

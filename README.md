@@ -31,6 +31,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Added the ability to enable or disable the Spectre Dimension.
 - Added Thermal Expansion Insolator support for Spectre Saplings.
 - Added Bonsai Trees support for Fertilized Dirt as a Bonsai Pot soil.
+- Added a Quartz Divining Rod.
 - Added the ability to enable, disable, and add custom Divining Rods, and adjust the range.
 - Added Divining Rod support for NetherEnding Ores, Silent's Gems, Galacticraft, Galacticraft Planets, Advent of Ascension, Aether and DivineRPG.
 - Added Divining Rod sleeper support for Silent Gear, More Planets, Aether and Aether II. (Sleeper Support is for mods lacking oreDict. Does nothing by default, can be enabled by modpacks).

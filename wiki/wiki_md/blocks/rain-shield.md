@@ -9,7 +9,7 @@ category: blocks
 
 ---
 
-The Rain Shield shields block in its range (5 Chunks by default, configurable) from rain. In its radius there will be no rain particles / sounds & stuff like fire that would normally react to rain will act as if it wasn’t raining.
+The Rain Shield shields block in its range (80 blocks by default, configurable) from rain. In its radius there will be no rain particles / sounds & stuff like fire that would normally react to rain will act as if it wasn't raining.
 By applying a redstone signal to it you can disable its effect. There will also be no snow forming on top of blocks in snowy biomes.
 
 ## Crafting
@@ -18,7 +18,7 @@ By applying a redstone signal to it you can disable its effect. There will also 
 
 ![](../images/rtwiki_images_crafting_rain-shield.png)
 
-## Screenshots
+## Videos
 
 ---
 
