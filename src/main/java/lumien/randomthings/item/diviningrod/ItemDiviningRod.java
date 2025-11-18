@@ -256,8 +256,7 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 				}
 
 				if (exists) {
-					RandomThings.logger.log(Level.WARN,
-							"Divining rod with name " + name + " already exists. Skipping.");
+					// No log, since duplicate rods are allowed by design
 					continue;
 				}
 
