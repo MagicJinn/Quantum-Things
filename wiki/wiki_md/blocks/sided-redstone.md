@@ -15,7 +15,7 @@ Works like a normal Block of Redstone except it only outputs power on one side.
 
 ---
 
-![](../images/crafting_sided-redstone.png)
+![](../images/crafting_sided-redstone.webp)
 
 ## Videos
 

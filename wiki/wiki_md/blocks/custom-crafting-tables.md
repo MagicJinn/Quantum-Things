@@ -15,10 +15,10 @@ Quantum Things allows you to craft Crafting Tables out of **any** wood planks in
 
 ---
 
-![](../images/crafting_custom-crafting-tables-1.png)![](../images/crafting_custom-crafting-tables-2.png)![](../images/crafting_custom-crafting-tables-3.png)
+![](../images/crafting_custom-crafting-tables-1.webp)![](../images/crafting_custom-crafting-tables-2.webp)![](../images/crafting_custom-crafting-tables-3.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_custom-crafting-tables.png)
+![](../images/screenshots_custom-crafting-tables.webp)

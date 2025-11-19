@@ -26,4 +26,4 @@ You can only have one imbue active at a time. Drinking another one while one is 
 
 ---
 
-![](../images/crafting_imbuing-station.png)
+![](../images/crafting_imbuing-station.webp)

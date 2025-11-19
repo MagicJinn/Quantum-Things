@@ -40,15 +40,15 @@ Some mods (Silent Gear, More Planets, Aether, Aether II) have sleeper support fo
 
 ---
 
-![](../images/crafting_divining-rods-coal.png)
-![](../images/crafting_divining-rods-iron.png)
-![](../images/crafting_divining-rods-gold.png)
-![](../images/crafting_divining-rods-diamond.png)
-![](../images/crafting_divining-rods-emerald.png)
-![](../images/crafting_divining-rods-lapis.png)
-![](../images/crafting_divining-rods-redstone.png)
-![](../images/crafting_divining-rods-quartz.png)
-![](../images/crafting_divining-rods-universal.png)
+![](../images/crafting_divining-rods-coal.webp)
+![](../images/crafting_divining-rods-iron.webp)
+![](../images/crafting_divining-rods-gold.webp)
+![](../images/crafting_divining-rods-diamond.webp)
+![](../images/crafting_divining-rods-emerald.webp)
+![](../images/crafting_divining-rods-lapis.webp)
+![](../images/crafting_divining-rods-redstone.webp)
+![](../images/crafting_divining-rods-quartz.webp)
+![](../images/crafting_divining-rods-universal.webp)
 
 ## Videos
 

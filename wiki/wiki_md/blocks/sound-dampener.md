@@ -15,10 +15,10 @@ Sound Dampeners will prevent the sounds from the [Sound Pattern](../items/sound-
 
 ---
 
-![](../images/crafting_sound-dampener.png)
+![](../images/crafting_sound-dampener.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_sound-dampener.png)
+![](../images/screenshots_sound-dampener.webp)

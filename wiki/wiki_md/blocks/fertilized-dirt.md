@@ -17,4 +17,4 @@ Fertilized Dirt can be used as a Bonsai Pot soil in the Bonsai Trees mods, allow
 
 ---
 
-![](../images/crafting_fertilized-dirt.png)
+![](../images/crafting_fertilized-dirt.webp)

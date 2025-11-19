@@ -15,4 +15,4 @@ When thrown a Chicken with a Golden Wattle will hatch that lays gold ingots inst
 
 ---
 
-![](../images/screenshots_golden-egg.png)
+![](../images/screenshots_golden-egg.webp)

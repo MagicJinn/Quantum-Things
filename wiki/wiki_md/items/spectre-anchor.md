@@ -17,10 +17,10 @@ To anchor an item you just have to combine it with a spectre anchor in a craftin
 
 ---
 
-![](../images/crafting_spectre-anchor.png)
+![](../images/crafting_spectre-anchor.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_spectre-anchor.png)
+![](../images/screenshots_spectre-anchor.webp)

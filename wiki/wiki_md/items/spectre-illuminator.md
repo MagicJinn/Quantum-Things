@@ -17,7 +17,7 @@ If you can't reach the spectre illuminator you can also craft a piece of blackou
 
 ---
 
-![](../images/crafting_spectre-illuminator.png)![](../images/crafting_blackout-powder.png)
+![](../images/crafting_spectre-illuminator.webp)![](../images/crafting_blackout-powder.webp)
 
 ## Videos
 

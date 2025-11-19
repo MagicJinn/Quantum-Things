@@ -18,7 +18,7 @@ If it’s not bound to anyone it will instead teleport a random entity in a 10 b
 
 ---
 
-![](../images/crafting_stable-ender-pearl.png)
+![](../images/crafting_stable-ender-pearl.webp)
 
 ## Videos
 

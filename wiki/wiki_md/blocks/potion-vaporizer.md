@@ -15,10 +15,10 @@ The Potion Vaporizer is a block that fills rooms with potion vapor, applying pot
 
 ---
 
-![](../images/crafting_potion-vaporizer.png)
+![](../images/crafting_potion-vaporizer.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_potion-vaporizer.png)
+![](../images/screenshots_potion-vaporizer.webp)

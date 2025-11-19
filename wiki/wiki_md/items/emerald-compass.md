@@ -15,4 +15,4 @@ The Emerald Compass is a compass that points to a specific player. You can chang
 
 ---
 
-![](../images/crafting_emerald-compass.png)
+![](../images/crafting_emerald-compass.webp)

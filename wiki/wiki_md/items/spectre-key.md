@@ -17,10 +17,10 @@ You can place anything you want in your spectre cube, it will be easily accessib
 
 ---
 
-![](../images/crafting_spectre-key.png)
+![](../images/crafting_spectre-key.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_spectre-key.png)
+![](../images/screenshots_spectre-key.webp)

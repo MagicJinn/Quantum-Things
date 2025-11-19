@@ -15,10 +15,10 @@ A Sound Box will play the sound represented by the [Sound Pattern](../items/soun
 
 ---
 
-![](../images/crafting_sound-box.png)
+![](../images/crafting_sound-box.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_sound-box.png)
+![](../images/screenshots_sound-box.webp)

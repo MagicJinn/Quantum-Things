@@ -15,10 +15,10 @@ The Entity Detector is a block that emits a redstone signal if it detects a cert
 
 ---
 
-![](../images/crafting_entity-detector.png)
+![](../images/crafting_entity-detector.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_entity-detector.png)
+![](../images/screenshots_entity-detector.webp)

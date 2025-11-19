@@ -15,7 +15,7 @@ The Advanced Redstone Repeater is a redstone repeater with configurable turn on 
 
 ---
 
-![](../images/crafting_advanced-redstone-repeater.png)
+![](../images/crafting_advanced-redstone-repeater.webp)
 
 ## Videos
 

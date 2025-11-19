@@ -15,7 +15,7 @@ This item allows you to accelerate the rate at which blocks tick. It passively c
 
 ---
 
-![](../images/crafting_time-in-a-bottle.png)
+![](../images/crafting_time-in-a-bottle.webp)
 
 ## Videos
 

@@ -15,4 +15,4 @@ The Lapis Lamp emits a light level of 15. However the light of this lamp does no
 
 ---
 
-![](../images/crafting_lapis-lamp.png)
+![](../images/crafting_lapis-lamp.webp)

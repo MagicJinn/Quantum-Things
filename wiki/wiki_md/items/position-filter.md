@@ -15,4 +15,4 @@ Position Filters can store the position of a block. Right clicking on a block se
 
 ---
 
-![](../images/crafting_position-filter.png)
+![](../images/crafting_position-filter.webp)

@@ -15,10 +15,10 @@ With Quantum Things installed you no longer have to run to the nearest Fortress 
 
 ---
 
-![](../images/crafting_artificial-end-portal.png)
+![](../images/crafting_artificial-end-portal.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_artificial-end-portal-1.png)![](../images/screenshots_artificial-end-portal-2.png)
+![](../images/screenshots_artificial-end-portal-1.webp)![](../images/screenshots_artificial-end-portal-2.webp)

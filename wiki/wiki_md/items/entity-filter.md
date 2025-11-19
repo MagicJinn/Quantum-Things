@@ -15,4 +15,4 @@ A Filter that allows you to filter by entity type. Right clicking on an entity w
 
 ---
 
-![](../images/crafting_entity-filter.png)
+![](../images/crafting_entity-filter.webp)

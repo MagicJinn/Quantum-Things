@@ -17,4 +17,4 @@ The Reinforced version can hold 10 Buckets of Fluid instead of just one. Also wh
 
 ---
 
-![](../images/crafting_ender-bucket.png)![](../images/crafting_ender-bucket-reinforced.png)
+![](../images/crafting_ender-bucket.webp)![](../images/crafting_ender-bucket-reinforced.webp)

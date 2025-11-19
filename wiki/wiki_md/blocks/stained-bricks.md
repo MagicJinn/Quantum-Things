@@ -15,10 +15,10 @@ Stained Bricks are colored versions of the vanilla bricks. They are also availab
 
 ---
 
-![](../images/crafting_stained-bricks-1.png)![](../images/crafting_stained-bricks-2.png)
+![](../images/crafting_stained-bricks-1.webp)![](../images/crafting_stained-bricks-2.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_stained-bricks-1.png)![](../images/screenshots_stained-bricks-2.png)
+![](../images/screenshots_stained-bricks-1.webp)![](../images/screenshots_stained-bricks-2.webp)
