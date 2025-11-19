@@ -63,8 +63,7 @@ class WikiBuilder:
     
     def _load_templates(self):
         """Load HTML templates from files."""
-        self.page_template = (self.templates_dir / "page.html").read_text(encoding='utf-8')
-        self.index_template = (self.templates_dir / "index.html").read_text(encoding='utf-8')
+        self.base_template = (self.templates_dir / "base.html").read_text(encoding='utf-8')
         self.index_content_template = (self.templates_dir / "index-content.html").read_text(encoding='utf-8')
     
     def _copy_styles_and_scripts(self):
@@ -271,9 +270,10 @@ class WikiBuilder:
         nav_html = self._build_navigation(page_info['slug'], category)
         
         # Build full HTML page using template
-        html = self.page_template.format(
-            title=page_info['title'],
+        html = self.base_template.format(
+            title=f"{page_info['title']} - Random Things",
             assets_path="../../assets/",
+            extra_css="",
             navigation=nav_html,
             content=content_html
         )
@@ -288,7 +288,10 @@ class WikiBuilder:
         content_html = self.index_content_template
         
         # Build HTML using template
-        html = self.index_template.format(
+        html = self.base_template.format(
+            title="Quantum Things Wiki",
+            assets_path="assets/",
+            extra_css='<link href="assets/index-header.css" rel="stylesheet"/>',
             navigation=nav_html,
             content=content_html
         )
