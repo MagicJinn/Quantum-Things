@@ -17,12 +17,12 @@ You can change the duration of the signal between 2 / 20 / 100 Ticks by (shift)-
 
 ---
 
-![](../images/rtwiki_images_crafting_redstone-activator.png)
+![](../images/crafting_redstone-activator.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/redstone-activator.mp4" type="video/mp4">
+  <source src="../videos/redstone-activator.mp4" type="video/mp4">
 </video>

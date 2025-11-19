@@ -16,4 +16,4 @@ Powered by Redstone this block instead prevents slimes from spawning through van
 
 ---
 
-![](../images/rtwiki_images_crafting_slime-cube.png)
+![](../images/crafting_slime-cube.png)

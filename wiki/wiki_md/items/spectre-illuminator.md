@@ -17,12 +17,12 @@ If you can't reach the spectre illuminator you can also craft a piece of blackou
 
 ---
 
-![](../images/rtwiki_images_crafting_spectre-illuminator.png)![](../images/rtwiki_images_crafting_blackout-powder.png)
+![](../images/crafting_spectre-illuminator.png)![](../images/crafting_blackout-powder.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/spectre-illuminator.mp4" type="video/mp4">
+  <source src="../videos/spectre-illuminator.mp4" type="video/mp4">
 </video>

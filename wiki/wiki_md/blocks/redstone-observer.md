@@ -15,10 +15,10 @@ The Redstone Observer emits redstone based on whether the block it's linked to e
 
 ---
 
-![](../images/rtwiki_images_crafting_redstone-observer.png)
+![](../images/crafting_redstone-observer.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_redstone-observer.png)
+![](../images/screenshots_redstone-observer.png)

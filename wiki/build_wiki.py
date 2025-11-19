@@ -95,20 +95,20 @@ class WikiBuilder:
         assets_dest = self.output_dir / "assets"
         
         # Copy CSS file from wiki root
-        css_file = self.wiki_dir / "rtwiki_css_main.css"
+        css_file = self.wiki_dir / "css_main.css"
         if css_file.exists():
-            dest = assets_dest / "rtwiki_css_main.css"
+            dest = assets_dest / "css_main.css"
             if not dest.exists() or dest.stat().st_mtime < css_file.stat().st_mtime:
                 shutil.copy2(css_file, dest)
-                print(f"Copied CSS: rtwiki_css_main.css")
+                print(f"Copied CSS: css_main.css")
         
         # Copy favicon from wiki root
-        favicon_file = self.wiki_dir / "rtwiki_favicon.ico"
+        favicon_file = self.wiki_dir / "favicon.ico"
         if favicon_file.exists():
-            dest = assets_dest / "rtwiki_favicon.ico"
+            dest = assets_dest / "favicon.ico"
             if not dest.exists() or dest.stat().st_mtime < favicon_file.stat().st_mtime:
                 shutil.copy2(favicon_file, dest)
-                print(f"Copied favicon: rtwiki_favicon.ico")
+                print(f"Copied favicon: favicon.ico")
         
         # Copy images from wiki_md/images/ to wiki_site/images/
         images_source = self.source_dir / "images"

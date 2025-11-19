@@ -19,4 +19,4 @@ For the Advanced Item Collector right click on it to bring up the GUI to configu
 
 ---
 
-![](../images/rtwiki_images_crafting_item-collector-1.png)![](../images/rtwiki_images_crafting_item-collector-2.png)
+![](../images/crafting_item-collector-1.png)![](../images/crafting_item-collector-2.png)

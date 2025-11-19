@@ -20,4 +20,4 @@ When Open Computers is installed it also provides a component called “online_d
 
 ---
 
-![](../images/rtwiki_images_crafting_online-detector.png)
+![](../images/crafting_online-detector.png)

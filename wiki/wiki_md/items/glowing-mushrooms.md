@@ -15,4 +15,4 @@ Glowing Mushrooms can be found in caves, they can be used as a replacement for g
 
 ---
 
-![](../images/rtwiki_images_screenshots_glowing-mushrooms.png)
+![](../images/screenshots_glowing-mushrooms.png)

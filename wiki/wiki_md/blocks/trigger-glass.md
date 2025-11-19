@@ -15,12 +15,12 @@ When powered by redstone Trigger Glass will loose its collision box for 3 second
 
 ---
 
-![](../images/rtwiki_images_crafting_trigger-glass.png)
+![](../images/crafting_trigger-glass.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/trigger-glass.mp4" type="video/mp4">
+  <source src="../videos/trigger-glass.mp4" type="video/mp4">
 </video>

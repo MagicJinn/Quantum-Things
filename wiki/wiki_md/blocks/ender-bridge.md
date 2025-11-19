@@ -19,10 +19,10 @@ The Bridges start to “search” for an ender anchor once a redstone signal is 
 
 ---
 
-![](../images/rtwiki_images_crafting_ender-bridge-1.png)![](../images/rtwiki_images_crafting_ender-bridge-2.png)![](../images/rtwiki_images_crafting_ender-bridge-3.png)
+![](../images/crafting_ender-bridge-1.png)![](../images/crafting_ender-bridge-2.png)![](../images/crafting_ender-bridge-3.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_ender-bridge.png)
+![](../images/screenshots_ender-bridge.png)

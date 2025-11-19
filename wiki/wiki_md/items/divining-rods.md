@@ -40,20 +40,20 @@ Some mods (Silent Gear, More Planets, Aether, Aether II) have sleeper support fo
 
 ---
 
-![](../images/rtwiki_images_crafting_divining-rods-coal.png)
-![](../images/rtwiki_images_crafting_divining-rods-iron.png)
-![](../images/rtwiki_images_crafting_divining-rods-gold.png)
-![](../images/rtwiki_images_crafting_divining-rods-diamond.png)
-![](../images/rtwiki_images_crafting_divining-rods-emerald.png)
-![](../images/rtwiki_images_crafting_divining-rods-lapis.png)
-![](../images/rtwiki_images_crafting_divining-rods-redstone.png)
-![](../images/rtwiki_images_crafting_divining-rods-quartz.png)
-![](../images/rtwiki_images_crafting_divining-rods-universal.png)
+![](../images/crafting_divining-rods-coal.png)
+![](../images/crafting_divining-rods-iron.png)
+![](../images/crafting_divining-rods-gold.png)
+![](../images/crafting_divining-rods-diamond.png)
+![](../images/crafting_divining-rods-emerald.png)
+![](../images/crafting_divining-rods-lapis.png)
+![](../images/crafting_divining-rods-redstone.png)
+![](../images/crafting_divining-rods-quartz.png)
+![](../images/crafting_divining-rods-universal.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/divining-rods.mp4" type="video/mp4">
+  <source src="../videos/divining-rods.mp4" type="video/mp4">
 </video>

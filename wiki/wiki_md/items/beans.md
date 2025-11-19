@@ -17,12 +17,12 @@ If you find a Nature Core on your way the plant chest next to it will always con
 
 ---
 
-![](../images/rtwiki_images_crafting_beans-1.png)![](../images/rtwiki_images_crafting_beans-2.png)
+![](../images/crafting_beans-1.png)![](../images/crafting_beans-2.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/beans.mp4" type="video/mp4">
+  <source src="../videos/beans.mp4" type="video/mp4">
 </video>

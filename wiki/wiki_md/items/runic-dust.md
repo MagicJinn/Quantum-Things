@@ -17,18 +17,18 @@ Right clicking Runic Dust on the ground with a piece of paper will create a Runi
 
 ---
 
-![](../images/rtwiki_images_crafting_runic-dust.png)
+![](../images/crafting_runic-dust.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_runic-dust-1.png)
+![](../images/screenshots_runic-dust-1.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/runic-dust-2.mp4" type="video/mp4">
+  <source src="../videos/runic-dust-2.mp4" type="video/mp4">
 </video>

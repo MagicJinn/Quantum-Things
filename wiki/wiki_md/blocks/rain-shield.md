@@ -16,12 +16,12 @@ By applying a redstone signal to it you can disable its effect. There will also 
 
 ---
 
-![](../images/rtwiki_images_crafting_rain-shield.png)
+![](../images/crafting_rain-shield.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/rain-shield.mp4" type="video/mp4">
+  <source src="../videos/rain-shield.mp4" type="video/mp4">
 </video>

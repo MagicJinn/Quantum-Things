@@ -15,10 +15,10 @@ Represents a specific sound effect. Used for the [Sound Box](../blocks/sound-box
 
 ---
 
-![](../images/rtwiki_images_crafting_sound-pattern.png)
+![](../images/crafting_sound-pattern.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_sound-pattern.png)
+![](../images/screenshots_sound-pattern.png)

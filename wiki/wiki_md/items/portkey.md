@@ -15,10 +15,10 @@ You set the target of a portkey by right clicking a block with it. When thrown o
 
 ---
 
-![](../images/rtwiki_images_crafting_portkey.png)
+![](../images/crafting_portkey.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_portkey.png)
+![](../images/screenshots_portkey.png)

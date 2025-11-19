@@ -15,4 +15,4 @@ The Analog Emitter is a block that allows you to easily produce analog redstone 
 
 ---
 
-![](../images/rtwiki_images_crafting_analog-emitter.png)
+![](../images/crafting_analog-emitter.png)

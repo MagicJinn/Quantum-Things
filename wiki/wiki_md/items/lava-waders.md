@@ -15,4 +15,4 @@ The Lava Waders combine the effects of the [Obsidian Water Walking Boots](obsidi
 
 ---
 
-![](../images/rtwiki_images_crafting_lava-waders.png)
+![](../images/crafting_lava-waders.png)

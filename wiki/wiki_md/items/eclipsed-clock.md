@@ -15,10 +15,10 @@ An eclipsed clock allows you to change the time of day. After you hang it on a w
 
 ---
 
-![](../images/rtwiki_images_crafting_eclipsed-clock.png)
+![](../images/crafting_eclipsed-clock.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_eclipsed-clock.png)
+![](../images/screenshots_eclipsed-clock.png)

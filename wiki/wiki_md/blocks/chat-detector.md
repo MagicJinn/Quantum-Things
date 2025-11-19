@@ -18,10 +18,10 @@ The Global Chat Detector isn’t limited to the player that placed it, instead i
 
 ---
 
-![](../images/rtwiki_images_crafting_chat-detector-1.png)![](../images/rtwiki_images_crafting_chat-detector-2.png)
+![](../images/crafting_chat-detector-1.png)![](../images/crafting_chat-detector-2.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_chat-detector-1.png)![](../images/rtwiki_images_screenshots_chat-detector-2.png)
+![](../images/screenshots_chat-detector-1.png)![](../images/screenshots_chat-detector-2.png)

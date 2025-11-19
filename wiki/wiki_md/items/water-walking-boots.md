@@ -18,5 +18,5 @@ Water Walking Boots allow you to… walk on water. Pressing shift disables this 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/water-walking-boots.mp4" type="video/mp4">
+  <source src="../videos/water-walking-boots.mp4" type="video/mp4">
 </video>

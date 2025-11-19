@@ -15,4 +15,4 @@ Lapis Glass is a block that is solid for players and not solid for every other e
 
 ---
 
-![](../images/rtwiki_images_crafting_lapis-glass.png)
+![](../images/crafting_lapis-glass.png)

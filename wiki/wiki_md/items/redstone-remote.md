@@ -15,4 +15,4 @@ The Redstone Remote is the remote / advanced version of the [Redstone Activator]
 
 ---
 
-![](../images/rtwiki_images_crafting_redstone-remote.png)
+![](../images/crafting_redstone-remote.png)

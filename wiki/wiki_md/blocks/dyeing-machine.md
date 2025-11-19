@@ -17,10 +17,10 @@ The Dyeing Machine can be used to dye the enchantment glow of items & the items 
 
 ---
 
-![](../images/rtwiki_images_crafting_dyeing-machine.png)
+![](../images/crafting_dyeing-machine.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_dyeing-machine-1.png)![](../images/rtwiki_images_screenshots_dyeing-machine-2.png)
+![](../images/screenshots_dyeing-machine-1.png)![](../images/screenshots_dyeing-machine-2.png)

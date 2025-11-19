@@ -15,4 +15,4 @@ Right clicking a Pitcher Plant with a fluid container will fill the fluid contai
 
 ---
 
-![](../images/rtwiki_images_screenshots_pitcher-plant.png)
+![](../images/screenshots_pitcher-plant.png)

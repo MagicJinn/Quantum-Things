@@ -15,12 +15,12 @@ This item allows you to accelerate the rate at which blocks tick. It passively c
 
 ---
 
-![](../images/rtwiki_images_crafting_time-in-a-bottle.png)
+![](../images/crafting_time-in-a-bottle.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/time-in-a-bottle.mp4" type="video/mp4">
+  <source src="../videos/time-in-a-bottle.mp4" type="video/mp4">
 </video>

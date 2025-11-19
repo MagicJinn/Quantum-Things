@@ -15,10 +15,10 @@ The Chunk Analyzer allows you to check what blocks a chunk contains. Open its gu
 
 ---
 
-![](../images/rtwiki_images_crafting_chunk-analyzer.png)
+![](../images/crafting_chunk-analyzer.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_chunk-analyzer.png)
+![](../images/screenshots_chunk-analyzer.png)

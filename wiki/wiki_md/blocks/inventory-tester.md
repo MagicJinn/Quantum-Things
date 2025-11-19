@@ -15,10 +15,10 @@ The Inventory Tester has to be placed against an inventory and will continuously
 
 ---
 
-![](../images/rtwiki_images_crafting_inventory-tester.png)
+![](../images/crafting_inventory-tester.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_inventory-tester.png)
+![](../images/screenshots_inventory-tester.png)

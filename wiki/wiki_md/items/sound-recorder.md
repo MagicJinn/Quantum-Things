@@ -15,10 +15,10 @@ A Sound Recorder allows you to record and save sounds in [Sound Pattern](sound-p
 
 ---
 
-![](../images/rtwiki_images_crafting_sound-recorder.png)
+![](../images/crafting_sound-recorder.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_sound-recorder.png)
+![](../images/screenshots_sound-recorder.png)
