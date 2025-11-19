@@ -22,6 +22,11 @@ Unlike a normal redstone torch which just emits either a redstone signal of 15 o
 ---
 
 ![](../images/rtwiki_images_screenshots_advanced-redstone-torch-1.png)
+
+## Videos
+
+---
+
 <video controls>
   <source src="https://lumien.net/rtwiki/images/screenshots/advanced-redstone-torch-2.mp4" type="video/mp4">
 </video>

@@ -17,7 +17,7 @@ The Block Destabilizer will make blocks connected to its front fall down when po
 
 ![](../images/rtwiki_images_crafting_block-destabilizer.png)
 
-## Screenshots
+## Videos
 
 ---
 

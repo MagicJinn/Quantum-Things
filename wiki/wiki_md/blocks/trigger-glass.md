@@ -17,7 +17,7 @@ When powered by redstone Trigger Glass will loose its collision box for 3 second
 
 ![](../images/rtwiki_images_crafting_trigger-glass.png)
 
-## Screenshots
+## Videos
 
 ---
 

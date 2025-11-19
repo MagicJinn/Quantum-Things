@@ -17,7 +17,7 @@ Holding right click with an Escape Rope in your hand while in a cave will make i
 
 ![](../images/rtwiki_images_crafting_escape-rope.png)
 
-## Screenshots
+## Videos
 
 ---
 

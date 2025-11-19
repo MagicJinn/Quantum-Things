@@ -50,7 +50,7 @@ Some mods (Silent Gear, More Planets, Aether, Aether II) have sleeper support fo
 ![](../images/rtwiki_images_crafting_divining-rods-quartz.png)
 ![](../images/rtwiki_images_crafting_divining-rods-universal.png)
 
-## Screenshots
+## Videos
 
 ---
 
