@@ -65,7 +65,6 @@ class WikiBuilder:
         self.page_template = (self.templates_dir / "page.html").read_text(encoding='utf-8')
         self.index_template = (self.templates_dir / "index.html").read_text(encoding='utf-8')
         self.index_content_template = (self.templates_dir / "index-content.html").read_text(encoding='utf-8')
-        self.category_index_template = (self.templates_dir / "category-index.html").read_text(encoding='utf-8')
     
     def _copy_styles_and_scripts(self):
         """Copy CSS and JavaScript files to output assets directory."""
@@ -274,31 +273,6 @@ class WikiBuilder:
         
         return html
     
-    def _build_category_index(self, category):
-        """Build category index page."""
-        nav_html = self._build_navigation(base_path=category)
-        
-        pages_list = ""
-        for page in self.pages[category]:
-            pages_list += f'<li><a href="{page["slug"]}/index.html">{page["title"]}</a></li>\n'
-        
-        content_html = f"""<h1>{category.title()}</h1>
-<p>All {category} in Random Things.</p>
-
-<h2>Pages</h2>
-<ul>
-{pages_list}
-</ul>"""
-        
-        # Build HTML using template
-        html = self.category_index_template.format(
-            category_title=category.title(),
-            navigation=nav_html,
-            content=content_html
-        )
-        
-        return html
-    
     def build(self):
         """Build the entire wiki site."""
         print("Building wiki site...")
@@ -313,11 +287,6 @@ class WikiBuilder:
         for category in ['about', 'blocks', 'items', 'other']:
             cat_dir = self.output_dir / category
             cat_dir.mkdir(exist_ok=True)
-            
-            # Build category index
-            print(f"Building {category} index...")
-            cat_index_html = self._build_category_index(category)
-            (cat_dir / "README.html").write_text(cat_index_html, encoding='utf-8')
             
             # Build individual pages
             for page_info in self.pages[category]:
