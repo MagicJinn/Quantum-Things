@@ -15,10 +15,10 @@ Portable Sound Dampeners will prevent the sounds from the [Sound Pattern](sound-
 
 ---
 
-![](../images/rtwiki_images_crafting_portable-sound-dampener.png)
+![](../images/crafting_portable-sound-dampener.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_portable-sound-dampener.png)
+![](../images/screenshots_portable-sound-dampener.png)

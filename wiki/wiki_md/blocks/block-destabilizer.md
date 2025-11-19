@@ -15,12 +15,12 @@ The Block Destabilizer will make blocks connected to its front fall down when po
 
 ---
 
-![](../images/rtwiki_images_crafting_block-destabilizer.png)
+![](../images/crafting_block-destabilizer.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/block-destabilizer.mp4" type="video/mp4">
+  <source src="../videos/block-destabilizer.mp4" type="video/mp4">
 </video>

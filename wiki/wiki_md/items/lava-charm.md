@@ -20,4 +20,4 @@ You can find lava charms in dungeon chests but they have a higher chance of spaw
 
 ---
 
-![](../images/rtwiki_images_screenshots_lava-charm.png)
+![](../images/screenshots_lava-charm.png)

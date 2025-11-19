@@ -15,10 +15,10 @@ The Block Breaker is a block that breaks the block in front of it. It acts as if
 
 ---
 
-![](../images/rtwiki_images_crafting_block-breaker.png)
+![](../images/crafting_block-breaker.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_block-breaker.png)
+![](../images/screenshots_block-breaker.png)

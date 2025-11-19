@@ -22,4 +22,4 @@ Therefore in total after defeating the ender dragon & being under a full moon th
 
 ---
 
-![](../images/rtwiki_images_crafting_ectoplasm.png)
+![](../images/crafting_ectoplasm.png)

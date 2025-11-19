@@ -15,10 +15,10 @@ Item Filters are used to filter items. If you open them you can specify the item
 
 ---
 
-![](../images/rtwiki_images_crafting_item-filter.png)
+![](../images/crafting_item-filter.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_item-filter.png)
+![](../images/screenshots_item-filter.png)

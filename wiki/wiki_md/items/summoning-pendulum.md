@@ -16,5 +16,5 @@ The Summoning Pendulum allows you move entities (excluding monsters) around. You
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/summoning-pendulum.mp4" type="video/mp4">
+  <source src="../videos/summoning-pendulum.mp4" type="video/mp4">
 </video>

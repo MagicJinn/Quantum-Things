@@ -15,4 +15,4 @@ The Quartz Lamp is kinda the opposite of the [Lapis Lamp](lapis-lamp.html). The 
 
 ---
 
-![](../images/rtwiki_images_crafting_quartz-lamp.png)
+![](../images/crafting_quartz-lamp.png)

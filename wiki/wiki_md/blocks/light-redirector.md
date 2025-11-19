@@ -15,16 +15,16 @@ The Light Redirector switches the model of a block placed next to it with the mo
 
 ---
 
-![](../images/rtwiki_images_crafting_light-redirector.png)
+![](../images/crafting_light-redirector.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/light-redirector-1.mp4" type="video/mp4">
+  <source src="../videos/light-redirector-1.mp4" type="video/mp4">
 </video>
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/light-redirector-2.mp4" type="video/mp4">
+  <source src="../videos/light-redirector-2.mp4" type="video/mp4">
 </video>

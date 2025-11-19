@@ -15,4 +15,4 @@ Contact Buttons & Contact Levers act like normal buttons / levers except that th
 
 ---
 
-![](../images/rtwiki_images_crafting_contact-button-&-lever-1.png)![](../images/rtwiki_images_crafting_contact-button-&-lever-2.png)
+![](../images/crafting_contact-button-&-lever-1.png)![](../images/crafting_contact-button-&-lever-2.png)

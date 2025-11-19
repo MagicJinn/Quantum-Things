@@ -15,12 +15,12 @@ Holding right click with an Escape Rope in your hand while in a cave will make i
 
 ---
 
-![](../images/rtwiki_images_crafting_escape-rope.png)
+![](../images/crafting_escape-rope.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/escape-rope.mp4" type="video/mp4">
+  <source src="../videos/escape-rope.mp4" type="video/mp4">
 </video>

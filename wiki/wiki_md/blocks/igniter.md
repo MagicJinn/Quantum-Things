@@ -21,4 +21,4 @@ In its GUI you can switch between 3 modes:
 
 ---
 
-![](../images/rtwiki_images_crafting_igniter.png)
+![](../images/crafting_igniter.png)

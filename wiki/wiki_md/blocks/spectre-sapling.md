@@ -19,12 +19,12 @@ Spectre Saplings can be grown using Thermal Expansion's Insolator, providing an 
 
 ---
 
-![](../images/rtwiki_images_screenshots_spectre-sapling-2.png)
+![](../images/screenshots_spectre-sapling-2.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/spectre-sapling-1.mp4" type="video/mp4">
+  <source src="../videos/spectre-sapling-1.mp4" type="video/mp4">
 </video>

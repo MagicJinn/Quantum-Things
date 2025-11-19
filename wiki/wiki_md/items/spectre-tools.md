@@ -15,4 +15,4 @@ Using [Ectoplasm](ectoplasm.html) you can craft Spectre versions of vanilla tool
 
 ---
 
-![](../images/rtwiki_images_crafting_spectre-tools-1.png)![](../images/rtwiki_images_crafting_spectre-tools-2.png)![](../images/rtwiki_images_crafting_spectre-tools-3.png)![](../images/rtwiki_images_crafting_spectre-tools-4.png)
+![](../images/crafting_spectre-tools-1.png)![](../images/crafting_spectre-tools-2.png)![](../images/crafting_spectre-tools-3.png)![](../images/crafting_spectre-tools-4.png)

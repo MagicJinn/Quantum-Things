@@ -15,4 +15,4 @@ All of these Biome Blocks change their color depending on the biome they are in.
 
 ---
 
-![](../images/rtwiki_images_crafting_biome-blocks-1.png)![](../images/rtwiki_images_crafting_biome-blocks-2.png)![](../images/rtwiki_images_crafting_biome-blocks-3.png)![](../images/rtwiki_images_crafting_biome-blocks-4.png)![](../images/rtwiki_images_crafting_biome-blocks-5.png)![](../images/rtwiki_images_crafting_biome-blocks-6.png)
+![](../images/crafting_biome-blocks-1.png)![](../images/crafting_biome-blocks-2.png)![](../images/crafting_biome-blocks-3.png)![](../images/crafting_biome-blocks-4.png)![](../images/crafting_biome-blocks-5.png)![](../images/crafting_biome-blocks-6.png)

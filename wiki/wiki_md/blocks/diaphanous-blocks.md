@@ -16,18 +16,18 @@ Diaphanous Blocks change their opacity depending on the distance to the player. 
 ---
 
 Crafting
-![](../images/rtwiki_images_crafting_diaphanous-blocks-3.png)
+![](../images/crafting_diaphanous-blocks-3.png)
 
 Changing Appeareance
-![](../images/rtwiki_images_crafting_diaphanous-blocks-2.png)
+![](../images/crafting_diaphanous-blocks-2.png)
 
 Inverting
-![](../images/rtwiki_images_crafting_diaphanous-blocks-1.png)
+![](../images/crafting_diaphanous-blocks-1.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/diaphanous-blocks.mp4" type="video/mp4">
+  <source src="../videos/diaphanous-blocks.mp4" type="video/mp4">
 </video>

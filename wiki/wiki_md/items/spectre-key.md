@@ -17,10 +17,10 @@ You can place anything you want in your spectre cube, it will be easily accessib
 
 ---
 
-![](../images/rtwiki_images_crafting_spectre-key.png)
+![](../images/crafting_spectre-key.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_spectre-key.png)
+![](../images/screenshots_spectre-key.png)

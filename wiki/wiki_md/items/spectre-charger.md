@@ -23,4 +23,4 @@ The Genesis Charger is creative only and basically charges the items as fast as 
 
 ---
 
-![](../images/rtwiki_images_crafting_spectre-charger.png)![](../images/rtwiki_images_crafting_spectre-charger-redstone.png)![](../images/rtwiki_images_crafting_spectre-charger-ender.png)
+![](../images/crafting_spectre-charger.png)![](../images/crafting_spectre-charger-redstone.png)![](../images/crafting_spectre-charger-ender.png)

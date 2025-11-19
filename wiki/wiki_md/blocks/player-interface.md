@@ -15,10 +15,10 @@ Looking at the block after you placed it down you can see that it has 4 differen
 
 | Side | Slots |
 |------|-------|
-| ![](../images/rtwiki_images_screenshots_player-interface-1.png) | Hotbar  |
-| ![](../images/rtwiki_images_screenshots_player-interface-2.png) | Storage |
-| ![](../images/rtwiki_images_screenshots_player-interface-3.png) | Armor |
-| ![](../images/rtwiki_images_screenshots_player-interface-4.png) | Off-hand |
+| ![](../images/screenshots_player-interface-1.png) | Hotbar  |
+| ![](../images/screenshots_player-interface-2.png) | Storage |
+| ![](../images/screenshots_player-interface-3.png) | Armor |
+| ![](../images/screenshots_player-interface-4.png) | Off-hand |
 
 There also is the [Creative Player Interface](creative-player-interface.html) which provides an Open Computers component to set the target player.
 
@@ -26,4 +26,4 @@ There also is the [Creative Player Interface](creative-player-interface.html) wh
 
 ---
 
-![](../images/rtwiki_images_crafting_player-interface.png)
+![](../images/crafting_player-interface.png)

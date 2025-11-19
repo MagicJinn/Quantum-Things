@@ -18,12 +18,12 @@ If it’s not bound to anyone it will instead teleport a random entity in a 10 b
 
 ---
 
-![](../images/rtwiki_images_crafting_stable-ender-pearl.png)
+![](../images/crafting_stable-ender-pearl.png)
 
 ## Videos
 
 ---
 
 <video controls>
-  <source src="https://lumien.net/rtwiki/images/screenshots/stable-ender-pearl.mp4" type="video/mp4">
+  <source src="../videos/stable-ender-pearl.mp4" type="video/mp4">
 </video>

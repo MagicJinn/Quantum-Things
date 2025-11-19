@@ -15,11 +15,11 @@ Luminous Blocks are bright single colored blocks that glow in the dark. Transluc
 
 ---
 
-![](../images/rtwiki_images_crafting_luminous-blocks-1.png)![](../images/rtwiki_images_crafting_luminous-blocks-2.png)
+![](../images/crafting_luminous-blocks-1.png)![](../images/crafting_luminous-blocks-2.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_luminous-blocks-1.png)
-![](../images/rtwiki_images_screenshots_luminous-blocks-2.png)
+![](../images/screenshots_luminous-blocks-1.png)
+![](../images/screenshots_luminous-blocks-2.png)

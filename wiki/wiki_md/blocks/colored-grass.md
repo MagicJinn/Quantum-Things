@@ -16,4 +16,4 @@ Colored Grass spreads like normal grass but will not grow over normal grass.
 
 ---
 
-![](../images/rtwiki_images_crafting_colored-grass-1.png)![](../images/rtwiki_images_crafting_colored-grass-2.png)
+![](../images/crafting_colored-grass-1.png)![](../images/crafting_colored-grass-2.png)

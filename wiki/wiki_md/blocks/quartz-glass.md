@@ -15,4 +15,4 @@ Quartz Glass is a block that is not solid for players and solid for every other 
 
 ---
 
-![](../images/rtwiki_images_crafting_quartz-glass.png)
+![](../images/crafting_quartz-glass.png)

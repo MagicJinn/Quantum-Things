@@ -15,10 +15,10 @@ The Fluid Display is a decorative block that can take on the textures of fluids.
 
 ---
 
-![](../images/rtwiki_images_crafting_fluid-display.png)
+![](../images/crafting_fluid-display.png)
 
 ## Screenshots
 
 ---
 
-![](../images/rtwiki_images_screenshots_fluid-display.png)
+![](../images/screenshots_fluid-display.png)
