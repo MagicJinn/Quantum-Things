@@ -11,6 +11,7 @@
 !/gallery/
 !/wiki/
 !/.github/
+!/.markdownlint.jsonc
 .gradle
 Thumbs.db
 Update.bat
