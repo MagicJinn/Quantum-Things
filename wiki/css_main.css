@@ -110,24 +110,13 @@ nav a:hover {
   padding: 4px 16px;
 }
 
-#search {
-  text-align: center;
-  width: 300px;
-}
 
-input[name="searchterm"] {
-  background: black;
-  width: 280px;
-  font-size: 20px;
-  border: 1px solid #423749;
-  color: #ccc;
-  margin-bottom: 10px;
-}
+
 
 #wiki-search {
-  width: 280px;
+  width: 250px;
   padding: 8px 10px;
-  margin: 10px auto;
+  margin: 10px;
   display: block;
   background: #1a151f;
   border: 1px solid #423749;
