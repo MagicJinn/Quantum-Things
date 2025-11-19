@@ -15,4 +15,4 @@ The Obsidian Water Walking Boots combine the effects of the [Obsidian Skull](obs
 
 ---
 
-![](../images/crafting_obsidian-water-walking-boots.png)
+![](../images/crafting_obsidian-water-walking-boots.webp)

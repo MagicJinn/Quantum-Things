@@ -15,7 +15,7 @@ Wearing Super Lubricent Boots has the same effect as walking on Super Lubricent 
 
 ---
 
-![](../images/crafting_super-lubricent-boots.png)
+![](../images/crafting_super-lubricent-boots.webp)
 
 ## Videos
 

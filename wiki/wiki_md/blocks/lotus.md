@@ -16,4 +16,4 @@ You can find Lotus plants in biomes with the “Snowy” tag. When fully grown y
 ---
 
 Fully grown lotus
-![](../images/screenshots_lotus.png)
+![](../images/screenshots_lotus.webp)

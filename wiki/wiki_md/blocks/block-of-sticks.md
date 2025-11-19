@@ -16,4 +16,4 @@ The Returning Block of Sticks don’t just break but return to the inventory of 
 
 ---
 
-![](../images/crafting_block-of-sticks-1.png)![](../images/crafting_block-of-sticks-2.png)
+![](../images/crafting_block-of-sticks-1.webp)![](../images/crafting_block-of-sticks-2.webp)

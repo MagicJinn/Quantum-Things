@@ -19,7 +19,7 @@ Spectre Saplings can be grown using Thermal Expansion's Insolator, providing an 
 
 ---
 
-![](../images/screenshots_spectre-sapling-2.png)
+![](../images/screenshots_spectre-sapling-2.webp)
 
 ## Videos
 

@@ -15,10 +15,10 @@ In Dungeon Chests around the world you will find Biome Crystals that “represen
 
 ---
 
-![](../images/crafting_biome-radar.png)
+![](../images/crafting_biome-radar.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_biome-radar.png)
+![](../images/screenshots_biome-radar.webp)

@@ -15,4 +15,4 @@ The Golden Compass is a Compass whose target you can set using a position filter
 
 ---
 
-![](../images/crafting_golden-compass.png)
+![](../images/crafting_golden-compass.webp)

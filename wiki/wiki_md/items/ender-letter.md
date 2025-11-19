@@ -20,4 +20,4 @@ To send / receive letters you need an Ender Mailbox. To send a letter you simply
 
 ---
 
-![](../images/crafting_ender-letter-1.png)![](../images/crafting_ender-letter-2.png)
+![](../images/crafting_ender-letter-1.webp)![](../images/crafting_ender-letter-2.webp)

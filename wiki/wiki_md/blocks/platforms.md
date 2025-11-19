@@ -15,4 +15,4 @@ Platforms are special blocks that are solid from the top and not solid from all 
 
 ---
 
-![](../images/crafting_platforms-1.png)![](../images/crafting_platforms-2.png)![](../images/crafting_platforms-3.png)![](../images/crafting_platforms-4.png)![](../images/crafting_platforms-5.png)![](../images/crafting_platforms-6.png)
+![](../images/crafting_platforms-1.webp)![](../images/crafting_platforms-2.webp)![](../images/crafting_platforms-3.webp)![](../images/crafting_platforms-4.webp)![](../images/crafting_platforms-5.webp)![](../images/crafting_platforms-6.webp)

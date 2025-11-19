@@ -17,4 +17,4 @@ The Obsidian Skull basically grants you immunity to low fire damage. As long as 
 
 ---
 
-![](../images/crafting_obsidian-skull-1.png)![](../images/crafting_obsidian-skull-2.png)
+![](../images/crafting_obsidian-skull-1.webp)![](../images/crafting_obsidian-skull-2.webp)

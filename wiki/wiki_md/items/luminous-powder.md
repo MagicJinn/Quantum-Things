@@ -15,10 +15,10 @@ Luminous Powder is primarily a crafting ingredient used in making [Luminous Bloc
 
 ---
 
-![](../images/crafting_luminous-powder.png)
+![](../images/crafting_luminous-powder.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_luminous-powder.png)
+![](../images/screenshots_luminous-powder.webp)

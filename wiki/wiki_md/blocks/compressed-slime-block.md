@@ -15,4 +15,4 @@ You make compressed slime blocks by right clicking vanilla slime blocks with a s
 
 ---
 
-![](../images/screenshots_compressed-slime-block.png)
+![](../images/screenshots_compressed-slime-block.webp)

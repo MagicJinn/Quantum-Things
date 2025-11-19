@@ -15,13 +15,13 @@ Unlike a normal redstone torch which just emits either a redstone signal of 15 o
 
 ---
 
-![](../images/crafting_advanced-redstone-torch.png)
+![](../images/crafting_advanced-redstone-torch.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_advanced-redstone-torch-1.png)
+![](../images/screenshots_advanced-redstone-torch-1.webp)
 
 ## Videos
 

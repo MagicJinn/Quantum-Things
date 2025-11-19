@@ -19,10 +19,10 @@ When Open Computers is installed it also provides a component called “notifica
 
 ---
 
-![](../images/crafting_notification-interface.png)
+![](../images/crafting_notification-interface.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_notification-interface.png)
+![](../images/screenshots_notification-interface.webp)

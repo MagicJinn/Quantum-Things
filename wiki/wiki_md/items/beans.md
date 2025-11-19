@@ -17,7 +17,7 @@ If you find a Nature Core on your way the plant chest next to it will always con
 
 ---
 
-![](../images/crafting_beans-1.png)![](../images/crafting_beans-2.png)
+![](../images/crafting_beans-1.webp)![](../images/crafting_beans-2.webp)
 
 ## Videos
 

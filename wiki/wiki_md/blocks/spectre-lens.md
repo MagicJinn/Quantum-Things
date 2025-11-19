@@ -16,10 +16,10 @@ You can only use 1 Spectre Lens per dimension at once, having multiple ones will
 
 ---
 
-![](../images/crafting_spectre-lens.png)
+![](../images/crafting_spectre-lens.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_spectre-lens.png)
+![](../images/screenshots_spectre-lens.webp)

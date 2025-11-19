@@ -19,10 +19,10 @@ Instead of having Floo Powder in your hand you can also have a floo pouch anywhe
 
 ---
 
-![](../images/crafting_floo-teleportation-1.png)![](../images/crafting_floo-teleportation-2.png)![](../images/crafting_floo-teleportation-3.png)![](../images/crafting_floo-pouch.png)
+![](../images/crafting_floo-teleportation-1.webp)![](../images/crafting_floo-teleportation-2.webp)![](../images/crafting_floo-teleportation-3.webp)![](../images/crafting_floo-pouch.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_floo-teleportation-1.png)![](../images/screenshots_floo-teleportation-2.png)![](../images/screenshots_floo-teleportation-3.png)
+![](../images/screenshots_floo-teleportation-1.webp)![](../images/screenshots_floo-teleportation-2.webp)![](../images/screenshots_floo-teleportation-3.webp)

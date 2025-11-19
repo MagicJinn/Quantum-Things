@@ -15,10 +15,10 @@ When thrown Weather Eggs will spawn a small cloud that will start to slowly go u
 
 ---
 
-![](../images/crafting_weather-eggs-sun.png)![](../images/crafting_weather-eggs-rain.png)![](../images/crafting_weather-eggs-storm.png)
+![](../images/crafting_weather-eggs-sun.webp)![](../images/crafting_weather-eggs-rain.webp)![](../images/crafting_weather-eggs-storm.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_weather-eggs.png)
+![](../images/screenshots_weather-eggs.webp)

@@ -15,4 +15,4 @@ Peace Candles prevent Natural Mob Spawning in a 3 Chunk Radius around them. By d
 
 ---
 
-![](../images/screenshots_peace-candle.png)
+![](../images/screenshots_peace-candle.webp)

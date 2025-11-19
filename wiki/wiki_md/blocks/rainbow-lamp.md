@@ -15,10 +15,10 @@ The Rainbow Lamp is a Redstone Lamp that is always on but changes color dependin
 
 ---
 
-![](../images/crafting_rainbow-lamp.png)
+![](../images/crafting_rainbow-lamp.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_rainbow-lamp.png)
+![](../images/screenshots_rainbow-lamp.webp)

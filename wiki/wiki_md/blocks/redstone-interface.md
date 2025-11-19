@@ -24,10 +24,10 @@ There is also an [advanced](advanced-redstone-interface.html) version of this bl
 
 ---
 
-![](../images/crafting_redstone-interface-1.png)![](../images/crafting_redstone-interface-2.png)
+![](../images/crafting_redstone-interface-1.webp)![](../images/crafting_redstone-interface-2.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_redstone-interface-1.png)![](../images/screenshots_redstone-interface-2.png)
+![](../images/screenshots_redstone-interface-1.webp)![](../images/screenshots_redstone-interface-2.webp)

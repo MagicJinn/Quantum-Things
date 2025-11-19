@@ -24,10 +24,10 @@ In addition there are also Numbered & Genesis Coils. Numbered Coils can be found
 
 ---
 
-![](../images/crafting_spectre-energy-injector.png)![](../images/crafting_spectre-coils-normal.png)![](../images/crafting_spectre-coils-redstone.png)![](../images/crafting_spectre-coils-ender.png)
+![](../images/crafting_spectre-energy-injector.webp)![](../images/crafting_spectre-coils-normal.webp)![](../images/crafting_spectre-coils-redstone.webp)![](../images/crafting_spectre-coils-ender.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_spectre-coils.png)
+![](../images/screenshots_spectre-coils.webp)

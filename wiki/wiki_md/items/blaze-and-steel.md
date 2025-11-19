@@ -15,4 +15,4 @@ The Fire created by this item burns and spreads significantly faster than vanill
 
 ---
 
-![](../images/crafting_blaze-and-steel.png)
+![](../images/crafting_blaze-and-steel.webp)

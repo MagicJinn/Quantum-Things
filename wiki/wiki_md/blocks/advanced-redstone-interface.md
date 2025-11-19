@@ -15,10 +15,10 @@ Compared to the basic Redstone Interface the advanced one can be linked to a tot
 
 ---
 
-![](../images/crafting_advanced-redstone-interface.png)
+![](../images/crafting_advanced-redstone-interface.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_advanced-redstone-interface.png)
+![](../images/screenshots_advanced-redstone-interface.webp)

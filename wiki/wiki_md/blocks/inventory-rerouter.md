@@ -15,10 +15,10 @@ Each side of the inventory rerouter is connected to a side of the block in front
 
 ---
 
-![](../images/crafting_inventory-rerouter.png)
+![](../images/crafting_inventory-rerouter.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_inventory-rerouter.png)
+![](../images/screenshots_inventory-rerouter.webp)

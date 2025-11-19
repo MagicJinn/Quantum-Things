@@ -16,7 +16,7 @@ By applying a redstone signal to it you can disable its effect. There will also 
 
 ---
 
-![](../images/crafting_rain-shield.png)
+![](../images/crafting_rain-shield.webp)
 
 ## Videos
 

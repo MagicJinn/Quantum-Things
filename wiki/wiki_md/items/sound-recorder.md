@@ -15,10 +15,10 @@ A Sound Recorder allows you to record and save sounds in [Sound Pattern](sound-p
 
 ---
 
-![](../images/crafting_sound-recorder.png)
+![](../images/crafting_sound-recorder.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_sound-recorder.png)
+![](../images/screenshots_sound-recorder.webp)

@@ -15,4 +15,4 @@ You can rarely find Ancient Furnaces in cold biomes. Right clicking the opening 
 
 ---
 
-![](../images/screenshots_ancient-furnace.png)
+![](../images/screenshots_ancient-furnace.webp)

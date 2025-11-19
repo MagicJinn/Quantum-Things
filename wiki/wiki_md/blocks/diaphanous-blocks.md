@@ -16,13 +16,16 @@ Diaphanous Blocks change their opacity depending on the distance to the player. 
 ---
 
 Crafting
-![](../images/crafting_diaphanous-blocks-3.png)
+
+![](../images/crafting_diaphanous-blocks-3.webp)
 
 Changing Appeareance
-![](../images/crafting_diaphanous-blocks-2.png)
+
+![](../images/crafting_diaphanous-blocks-2.webp)
 
 Inverting
-![](../images/crafting_diaphanous-blocks-1.png)
+
+![](../images/crafting_diaphanous-blocks-1.webp)
 
 ## Videos
 

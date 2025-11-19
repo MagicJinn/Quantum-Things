@@ -15,10 +15,10 @@ The Iron Dropper is an advanced configurable Dropper. You can change the pickup 
 
 ---
 
-![](../images/crafting_iron-dropper.png)
+![](../images/crafting_iron-dropper.webp)
 
 ## Screenshots
 
 ---
 
-![](../images/screenshots_iron-dropper.png)
+![](../images/screenshots_iron-dropper.webp)
