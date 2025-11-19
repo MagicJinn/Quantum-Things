@@ -1,3 +1,7 @@
+html{
+  background: #251f29;
+}
+
 #main-header-wrapper {
   display: flex;
   justify-content: center;

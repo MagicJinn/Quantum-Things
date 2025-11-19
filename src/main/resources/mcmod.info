@@ -1,16 +1,14 @@
-[
-{
-  "modid": "randomthings",
-  "name": "Quantum Things",
-  "description": "Quantum Things, a 1.12.2 continuation of Random Things.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "https://github.com/MagicJinn/Quantum-Things",
-  "updateUrl": "",
-  "authorList": ["MagicJinn", "Lumien"],
-  "credits": "MagicJinn; Lumien (Original Mod); Drakeflame13 (Soul Texture); benzrf,CaptainMalone (Too Many Plants Content); Lorc (Biome Crystal)",
-  "logoFile": "icon.png",
-  "screenshots": [],
-  "dependencies": []
-}
-]
+[{
+    "modid": "randomthings",
+    "name": "Quantum Things",
+    "description": "Quantum Things, a 1.12.2 continuation of Random Things.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/MagicJinn/Quantum-Things",
+    "updateUrl": "",
+    "authorList": ["MagicJinn", "Lumien"],
+    "credits": "MagicJinn; Lumien (Original Mod); Drakeflame13 (Soul Texture); benzrf,CaptainMalone (Too Many Plants Content); Lorc (Biome Crystal)",
+    "logoFile": "icon.png",
+    "screenshots": [],
+    "dependencies": []
+}]
