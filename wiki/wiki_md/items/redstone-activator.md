@@ -9,7 +9,7 @@ category: items
 
 ---
 
-The Redstone Activator temporarily powers blocks with redstone when you right click them. For example Doors open, tnt ignites, lamps / redstone turns on.
+The Redstone Activator temporarily powers blocks with redstone when you right click them. For example, doors open, TNT ignites, lamps / redstone turns on.
 
 You can change the duration of the signal between 2 / 20 / 100 Ticks by (shift)-right clicking into the air with it.
 

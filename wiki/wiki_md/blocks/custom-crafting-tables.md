@@ -9,7 +9,7 @@ category: blocks
 
 ---
 
-Quantum Things allows you to craft Crafting Tables out of**any**wood planks in the ore dictionary.
+Quantum Things allows you to craft Crafting Tables out of **any** wood planks in the ore dictionary.
 
 ## Crafting
 
