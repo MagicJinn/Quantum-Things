@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Quantum Things Wiki</title>
+  <title>{title}</title>
   <meta charset="utf-8"/>
   <style>
     html, body {{
@@ -9,20 +9,22 @@
       color: #CCCCCC !important;
     }}
   </style>
-  <link href="assets/css_main.css" rel="stylesheet"/>
-  <link href="assets/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
-  <link href="assets/dark-mode.css" rel="stylesheet"/>
-  <link href="assets/index-header.css" rel="stylesheet"/>
+  <link href="{assets_path}css_main.css" rel="stylesheet"/>
+  <link href="{assets_path}favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+  <link href="{assets_path}dark-mode.css" rel="stylesheet"/>
+  {extra_css}
 </head>
 <body>
   <div id="wrapper">
-    <script src="assets/navigation.js"></script>
-    <script src="assets/dark-mode.js"></script>
+    <script src="{assets_path}navigation.js"></script>
+    <script src="{assets_path}dark-mode.js"></script>
+    <script src="{assets_path}search.js"></script>
     <div id="container_navigation">
       <div id="logo">
         <span style="color: #5EAF20;">Q</span>uantum
         <span style="color: #9C53E8;">T</span>hings
       </div>
+      <input type="text" id="wiki-search" placeholder="Search...">
       {navigation}
     </div>
     <div id="container_content">
