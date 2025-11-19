@@ -45,7 +45,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Removed the unimplemented and unfinished Sekenada from worldgen.
 - Fixed item duplication using the advanced item collector ([courtesy of UniversalTweaks](https://github.com/ACGaming/UniversalTweaks/blob/main/src/main/java/mod/acgaming/universaltweaks/mods/randomthings/anvil/mixin/UTAnvilCraftFixMixin.java)).
 - Fixed anvil crafting voiding items ([courtesy of UniversalTweaks](https://github.com/ACGaming/UniversalTweaks/blob/main/src/main/java/mod/acgaming/universaltweaks/mods/randomthings/anvil/mixin/UTAnvilCraftFixMixin.java)).
-- Fixed teleporting survival mode players to the Spectre dimension on servers could leave the player stalled out in the void ([courtesy of UniversalTweaks](https://github.com/ACGaming/UniversalTweaks/blob/main/src/main/java/mod/acgaming/universaltweaks/mods/randomthings/teleport/mixin/UTSpectreHandlerMixin.java)).
+- Fixed teleporting survival mode players to the Spectre Dimension on servers could leave the player stalled out in the void ([courtesy of UniversalTweaks](https://github.com/ACGaming/UniversalTweaks/blob/main/src/main/java/mod/acgaming/universaltweaks/mods/randomthings/teleport/mixin/UTSpectreHandlerMixin.java)).
 - Fixed Spectre Illuminator duplication.
 - Fixed Spectre Illuminator [smelting full snow blocks](https://bugs.mojang.com/browse/MC/issues/MC-88097).
 - Fixed Spectre Illuminator hitbox being inaccurate.
@@ -59,12 +59,13 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed a crash where the Redstone Observer tried to incorrectly access a block state that was not a Redstone Observer.
 - Fixed Fertilized Dirt not being recognized as farmland by villagers.
 - Fixed a crash where the Block Breaker tried to incorrectly access a block state that was not a Block Breaker.
-- Fixed an issue where it would rain in the Spectre dimension.
+- Fixed an issue where it would rain in the Spectre Dimension.
 - Fixed Divining Rods not showing up in Creative search.
 - Fixed torches and other attachable blocks being able to be placed on the side of the Rain Shield.
 - Fixed Rain Shield duplication.
 - Fixed a crash when Biome Stone tried to access a biome that was not registered with BiomeDictionary.
 - Fixed a crash when the Eclipsed Clock tried to access a font renderer that was not available.
+- Fixed Biome Sensor not working when held in off-hand.
 
 ### Reporting Issues
 
