@@ -27,20 +27,8 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Added Bonsai Trees support for Fertilized Dirt as a Bonsai Pot soil.
 - Added a Quartz Divining Rod.
 - Added the ability to enable, disable, and add custom Divining Rods, and adjust the range.
-- Added Divining Rod support for:
-  - NetherEnding Ores
-  - Silent's Gems
-  - Galacticraft
-  - Galacticraft Planets
-  - Advent of Ascension
-  - Aether
-  - DivineRPG
-- Added Divining Rod sleeper support for:
-  - Silent Gear
-  - More Planets
-  - Aether
-  - Aether II
-  (Sleeper Support is for mods lacking oreDict. Does nothing by default, can be enabled by modpacks).
+- Added Divining Rod support for NetherEnding Ores, Silent's Gems, Galacticraft, Galacticraft Planets, Advent of Ascension, Aether and DivineRPG.
+- Added Divining Rod sleeper support for Silent Gear, More Planets, Aether and Aether II. (Sleeper Support is for mods lacking oreDict. Does nothing by default, can be enabled by modpacks).
 - Gave Spectre Illuminator LOD levels.
 - Made Rain Shields be able to be placed on any block, similar to an end rod.
 
