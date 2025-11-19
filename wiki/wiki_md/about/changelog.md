@@ -7,11 +7,12 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
-## 1.0.2
+## 1.0.2 (in development)
 
 ### Fixes
 
 - Fixed Biome Sensor not working when held in off-hand.
+- Fixed Nature Core, Bonemealing and Animal Spawning not being centered on the Nature Core (introduced in 1.0.0).
 
 ## v1.0.1
 
