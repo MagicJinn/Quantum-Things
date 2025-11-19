@@ -7,6 +7,12 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.0.2
+
+### Fixes
+
+- Fixed Biome Sensor not working when held in off-hand.
+
 ## v1.0.1
 
 ### Fixes
@@ -45,8 +51,8 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 #### Spectre Dimension
 
-- Fixed teleporting survival mode players to the Spectre dimension on servers could leave the player stalled out in the void ([courtesy of UniversalTweaks](https://github.com/ACGaming/UniversalTweaks/blob/main/src/main/java/mod/acgaming/universaltweaks/mods/randomthings/teleport/mixin/UTSpectreHandlerMixin.java)).
-- Fixed an issue where it would rain in the Spectre dimension.
+- Fixed teleporting survival mode players to the Spectre Dimension on servers could leave the player stalled out in the void ([courtesy of UniversalTweaks](https://github.com/ACGaming/UniversalTweaks/blob/main/src/main/java/mod/acgaming/universaltweaks/mods/randomthings/teleport/mixin/UTSpectreHandlerMixin.java)).
+- Fixed an issue where it would rain in the Spectre Dimension.
 
 #### Spectre Illuminator
 
@@ -79,4 +85,3 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Fixed Divining Rods not showing up in Creative search.
 - Fixed a crash where the Block Breaker tried to incorrectly access a block state that was not a Block Breaker.
 - Fixed a crash when Biome Stone tried to access a biome that was not registered with BiomeDictionary.
-

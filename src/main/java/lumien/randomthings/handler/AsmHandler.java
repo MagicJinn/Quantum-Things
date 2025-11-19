@@ -333,7 +333,7 @@ public class AsmHandler
 	}
 
 	public static boolean shouldPreventDownfall(World worldObj, BlockPos pos) {
-		// Prevent downfall in Spectre dimension
+		// Prevent downfall in Spectre Dimension
 		if (worldObj.provider.getDimension() == Internals.SPECTRE_ID)
 			return false;
 

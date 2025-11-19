@@ -884,8 +884,10 @@ public class RTEventHandler
 	private void renderItemOverlay(RenderGameOverlayEvent event)
 	{
 		ItemStack equippedItem;
+		ItemStack offHandItem;
 
 		Minecraft minecraft = Minecraft.getMinecraft();
+
 
 		if (!(equippedItem = minecraft.player.getHeldItemMainhand()).isEmpty())
 		{
@@ -914,14 +916,7 @@ public class RTEventHandler
 			}
 			else if (equippedItem.getItem() == ModItems.ingredients && equippedItem.getItemDamage() == ItemIngredient.INGREDIENT.BIOME_SENSOR.id)
 			{
-				Biome b = minecraft.world.getBiome(minecraft.player.getPosition());
-				int width = event.getResolution().getScaledWidth();
-				int height = event.getResolution().getScaledHeight();
-
-				GlStateManager.disableBlend();
-				Minecraft.getMinecraft().fontRenderer.drawString(b.getBiomeName(), width / 2 + 5, height / 2 + 5, Colors.WHITE_INT);
-				GlStateManager.color(1, 1, 1, 1);
-				GlStateManager.enableBlend();
+				renderBiomeSensor(event, minecraft);
 			}
 			else
 			{
@@ -955,6 +950,25 @@ public class RTEventHandler
 				}
 			}
 		}
+		else if (!(offHandItem = minecraft.player.getHeldItemOffhand()).isEmpty()) {
+			// Check off-hand for biome sensor
+			if (offHandItem.getItem() == ModItems.ingredients
+					&& offHandItem.getItemDamage() == ItemIngredient.INGREDIENT.BIOME_SENSOR.id) {
+				renderBiomeSensor(event, minecraft);
+			}
+		}
+	}
+
+	private void renderBiomeSensor(RenderGameOverlayEvent event, Minecraft minecraft) {
+		Biome b = minecraft.world.getBiome(minecraft.player.getPosition());
+		int width = event.getResolution().getScaledWidth();
+		int height = event.getResolution().getScaledHeight();
+
+		GlStateManager.disableBlend();
+		Minecraft.getMinecraft().fontRenderer.drawString(b.getBiomeName(), width / 2 + 5,
+				height / 2 + 5, Colors.WHITE_INT);
+		GlStateManager.color(1, 1, 1, 1);
+		GlStateManager.enableBlend();
 	}
 
 	@SubscribeEvent

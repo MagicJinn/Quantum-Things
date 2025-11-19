@@ -37,9 +37,10 @@ public class TileEntityNatureCore extends TileEntityBase implements ITickable
 			// Replace Sand
 			if (rand.nextInt(NatureCore.SAND_REPLACEMENT_CHANCE) == 0)
 			{
-				int rX = this.pos.getX() + rand.nextInt(NatureCore.SAND_RANGE) - 5;
+				int offset = NatureCore.SAND_RANGE / 2;
+				int rX = this.pos.getX() + rand.nextInt(NatureCore.SAND_RANGE) - offset;
 				int rY = this.pos.getY() + rand.nextInt(5) - 3;
-				int rZ = this.pos.getZ() + rand.nextInt(NatureCore.SAND_RANGE) - 5;
+				int rZ = this.pos.getZ() + rand.nextInt(NatureCore.SAND_RANGE) - offset;
 
 				BlockPos target = new BlockPos(rX, rY, rZ);
 				IBlockState state = world.getBlockState(target);
@@ -62,9 +63,10 @@ public class TileEntityNatureCore extends TileEntityBase implements ITickable
 				List<EntityAnimal> closeAnimals = world.getEntitiesWithinAABB(EntityAnimal.class, new AxisAlignedBB(this.pos, this.pos).grow(5, 5, 5));
 				if (closeAnimals.size() < 2)
 				{
-					int rX = this.pos.getX() + rand.nextInt(NatureCore.ANIMAL_RANGE) - 5;
+					int offset = NatureCore.ANIMAL_RANGE / 2;
+					int rX = this.pos.getX() + rand.nextInt(NatureCore.ANIMAL_RANGE) - offset;
 					int rY = this.pos.getY() + rand.nextInt(5) - 2;
-					int rZ = this.pos.getZ() + rand.nextInt(NatureCore.ANIMAL_RANGE) - 5;
+					int rZ = this.pos.getZ() + rand.nextInt(NatureCore.ANIMAL_RANGE) - offset;
 
 					Biome.SpawnListEntry entry = ((WorldServer) world).getSpawnListEntryForTypeAt(EnumCreatureType.CREATURE, new BlockPos(rX, rY, rZ));
 					if (entry != null)
@@ -94,9 +96,10 @@ public class TileEntityNatureCore extends TileEntityBase implements ITickable
 			// Bonemealing
 			if (rand.nextInt(NatureCore.BONEMEAL_CHANCE) == 0)
 			{
-				int rX = this.pos.getX() + rand.nextInt(NatureCore.BONEMEAL_RANGE) - 5;
+				int offset = NatureCore.BONEMEAL_RANGE / 2;
+				int rX = this.pos.getX() + rand.nextInt(NatureCore.BONEMEAL_RANGE) - offset;
 				int rY = this.pos.getY() + rand.nextInt(5) - 3;
-				int rZ = this.pos.getZ() + rand.nextInt(NatureCore.BONEMEAL_RANGE) - 5;
+				int rZ = this.pos.getZ() + rand.nextInt(NatureCore.BONEMEAL_RANGE) - offset;
 
 				BlockPos target = new BlockPos(rX, rY, rZ);
 				IBlockState state = world.getBlockState(target);
