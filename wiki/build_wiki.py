@@ -31,6 +31,7 @@ class WikiBuilder:
         self.output_dir.mkdir(exist_ok=True)
         (self.output_dir / "assets").mkdir(exist_ok=True)
         (self.output_dir / "images").mkdir(exist_ok=True)
+        (self.output_dir / "videos").mkdir(exist_ok=True)
         
         # Copy assets from wiki folder
         self._copy_assets()
@@ -118,6 +119,16 @@ class WikiBuilder:
                     dest = self.output_dir / "images" / item.name
                     if not dest.exists() or dest.stat().st_mtime < item.stat().st_mtime:
                         shutil.copy2(item, dest)
+        
+        # Copy videos from wiki_md/videos/ to wiki_site/videos/
+        videos_source = self.source_dir / "videos"
+        if videos_source.exists():
+            for item in videos_source.iterdir():
+                if item.is_file():
+                    dest = self.output_dir / "videos" / item.name
+                    if not dest.exists() or dest.stat().st_mtime < item.stat().st_mtime:
+                        shutil.copy2(item, dest)
+                        print(f"Copied video: {item.name}")
     
     def _load_pages(self):
         """Load all page metadata from source directory."""
@@ -231,6 +242,16 @@ class WikiBuilder:
         )
         return html_content
     
+    def _fix_video_paths(self, html_content, category):
+        """Fix video paths in HTML content."""
+        # Videos should point to ../../videos/ from category/pagename/index.html
+        html_content = re.sub(
+            r'src="\.\./videos/([^"]+)"',
+            r'src="../../videos/\1"',
+            html_content
+        )
+        return html_content
+    
     def _build_page(self, category, page_info):
         """Build a single HTML page."""
         md_file = self.source_dir / category / page_info['file']
@@ -244,6 +265,7 @@ class WikiBuilder:
         # Convert to HTML
         content_html = self._convert_markdown_to_html(markdown_content)
         content_html = self._fix_image_paths(content_html, category)
+        content_html = self._fix_video_paths(content_html, category)
         
         # Build navigation
         nav_html = self._build_navigation(page_info['slug'], category)
