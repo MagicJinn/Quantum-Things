@@ -24,7 +24,7 @@ Changing Appeareance
 Inverting
 ![](../images/rtwiki_images_crafting_diaphanous-blocks-1.png)
 
-## Screenshots
+## Videos
 
 ---
 

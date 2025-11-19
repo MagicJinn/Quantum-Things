@@ -3,6 +3,8 @@
 [![Modrinth: Quantum Things](https://img.shields.io/badge/Modrinth-Quantum_Things-00ae5d?logo=modrinth)](https://modrinth.com/mod/quantum-things)
 [![CurseForge: Quantum Things](https://img.shields.io/badge/CurseForge-Quantum_Things-f16437?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/quantum-things)
 
+[![Wiki: Quantum Things](https://img.shields.io/badge/Wiki-Read_About_Quantum_Things'_Features-purple?style=for-the-badge)](https://quantumthings.magicjinn.net/)
+
 ## Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://github.com/lumien231/Random-Things).
 
 ### WARNING: When upgrading from Random Things, make sure to delete the randomthings.cfg file, and re-check all config options. Some may have changed, been reset, removed or added

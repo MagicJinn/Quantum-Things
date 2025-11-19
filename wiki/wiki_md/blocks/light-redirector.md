@@ -17,7 +17,7 @@ The Light Redirector switches the model of a block placed next to it with the mo
 
 ![](../images/rtwiki_images_crafting_light-redirector.png)
 
-## Screenshots
+## Videos
 
 ---
 

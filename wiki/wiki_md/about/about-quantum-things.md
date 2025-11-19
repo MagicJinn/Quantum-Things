@@ -1,6 +1,6 @@
 ---
 title: About Quantum Things
-category: other
+category: about
 ---
 
 # About Quantum Things

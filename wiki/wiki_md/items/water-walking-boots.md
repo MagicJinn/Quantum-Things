@@ -13,7 +13,7 @@ Water Walking Boots allow you to… walk on water. Pressing shift disables this 
 
 *They also allow you to “jump” out and back on top of the water.*
 
-## Screenshots
+## Videos
 
 ---
 

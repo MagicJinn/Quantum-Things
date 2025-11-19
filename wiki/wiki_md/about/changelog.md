@@ -1,6 +1,6 @@
 ---
 title: Changelog
-category: other
+category: about
 ---
 
 # Changelog

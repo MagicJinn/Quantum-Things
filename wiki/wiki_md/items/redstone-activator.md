@@ -19,7 +19,7 @@ You can change the duration of the signal between 2 / 20 / 100 Ticks by (shift)-
 
 ![](../images/rtwiki_images_crafting_redstone-activator.png)
 
-## Screenshots
+## Videos
 
 ---
 

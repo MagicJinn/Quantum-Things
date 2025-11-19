@@ -125,10 +125,11 @@ class WikiBuilder:
         pages = {
             'blocks': [],
             'items': [],
-            'other': []
+            'other': [],
+            'about': []
         }
         
-        for category in ['blocks', 'items', 'other']:
+        for category in ['blocks', 'items', 'other', 'about']:
             cat_dir = self.source_dir / category
             if cat_dir.exists():
                 for md_file in cat_dir.glob("*.md"):
@@ -172,7 +173,7 @@ class WikiBuilder:
         """Build the navigation sidebar HTML."""
         nav_html = '<nav id="nav" role="navigation">\n<ul>\n'
         
-        for category in ['blocks', 'items', 'other']:
+        for category in ['about', 'blocks', 'items', 'other']:
             nav_html += f'<li class="section">\n{category.title()}\n<ul>\n'
             
             for page in self.pages[category]:
@@ -180,13 +181,23 @@ class WikiBuilder:
                 # Adjust path based on current location
                 if base_path == '':
                     # From root
-                    href = f'{category}/{page["slug"]}.html'
+                    href = f'{category}/{page["slug"]}/'
                 elif base_path == category:
                     # From same category
-                    href = f'{page["slug"]}.html'
+                    # If current_page is set, we're in a page subdirectory, need to go up first
+                    if current_page:
+                        href = f'../{page["slug"]}/'
+                    else:
+                        # From category index, can use relative path
+                        href = f'{page["slug"]}/'
                 else:
                     # From different category
-                    href = f'../{category}/{page["slug"]}.html'
+                    # If current_page is set, we're in a page subdirectory, need to go up two levels
+                    if current_page:
+                        href = f'../../{category}/{page["slug"]}/'
+                    else:
+                        # From category index, go up one level to root
+                        href = f'../{category}/{page["slug"]}/'
                 
                 nav_html += f'<li class="page">\n'
                 nav_html += f'<a href="{href}"{active}>{page["title"]}</a>\n'
@@ -213,10 +224,10 @@ class WikiBuilder:
     
     def _fix_image_paths(self, html_content, category):
         """Fix image paths in HTML content."""
-        # Images should point to ../images/ from category pages
+        # Images should point to ../../images/ from category/pagename/index.html
         html_content = re.sub(
             r'src="\.\./images/([^"]+)"',
-            r'src="../images/\1"',
+            r'src="../../images/\1"',
             html_content
         )
         return html_content
@@ -241,7 +252,7 @@ class WikiBuilder:
         # Build full HTML page using template
         html = self.page_template.format(
             title=page_info['title'],
-            assets_path="../assets/",
+            assets_path="../../assets/",
             navigation=nav_html,
             content=content_html
         )
@@ -269,7 +280,7 @@ class WikiBuilder:
         
         pages_list = ""
         for page in self.pages[category]:
-            pages_list += f'<li><a href="{page["slug"]}.html">{page["title"]}</a></li>\n'
+            pages_list += f'<li><a href="{page["slug"]}/index.html">{page["title"]}</a></li>\n'
         
         content_html = f"""<h1>{category.title()}</h1>
 <p>All {category} in Random Things.</p>
@@ -299,7 +310,7 @@ class WikiBuilder:
         (self.output_dir / "index.html").write_text(index_html, encoding='utf-8')
         
         # Build category pages
-        for category in ['blocks', 'items', 'other']:
+        for category in ['about', 'blocks', 'items', 'other']:
             cat_dir = self.output_dir / category
             cat_dir.mkdir(exist_ok=True)
             
@@ -310,15 +321,17 @@ class WikiBuilder:
             
             # Build individual pages
             for page_info in self.pages[category]:
-                print(f"  Building {category}/{page_info['slug']}.html...")
+                print(f"  Building {category}/{page_info['slug']}/index.html...")
+                page_dir = cat_dir / page_info['slug']
+                page_dir.mkdir(exist_ok=True)
                 page_html = self._build_page(category, page_info)
                 if page_html:
-                    (cat_dir / f"{page_info['slug']}.html").write_text(page_html, encoding='utf-8')
+                    (page_dir / "index.html").write_text(page_html, encoding='utf-8')
         
         print("-" * 60)
         print(f"Build complete! Site saved to: {self.output_dir.absolute()}")
         print(f"\nTotal pages built:")
-        for category in ['blocks', 'items', 'other']:
+        for category in ['about', 'blocks', 'items', 'other']:
             print(f"  {category}: {len(self.pages[category])} pages")
 
 def main():

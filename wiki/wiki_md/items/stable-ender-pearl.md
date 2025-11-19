@@ -20,7 +20,7 @@ If it’s not bound to anyone it will instead teleport a random entity in a 10 b
 
 ![](../images/rtwiki_images_crafting_stable-ender-pearl.png)
 
-## Screenshots
+## Videos
 
 ---
 
