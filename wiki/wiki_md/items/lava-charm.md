@@ -14,15 +14,7 @@ You can find lava charms in dungeon chests but they have a higher chance of spaw
 
 *When you have Baubles installed you can also equip this as a ring instead of having it in your inventory*
 
-*Note that the Lava Charm
-
-       does not
-
-      safe you from being set on fire in the lava, if you want to take NO damage in lava you also need an
-
-       Obsidian Skull
-
-      .*
+*Note that the Lava Charm does not safe you from being set on fire in the lava, if you want to take NO damage in lava you also need an Obsidian Skull.*
 
 ## Screenshots
 

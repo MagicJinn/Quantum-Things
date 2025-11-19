@@ -9,7 +9,7 @@ category: blocks
 
 ---
 
-Peace Candles prevent Natural Mob Spawning in a 3 Chunk Radius around them. There is a chance of 33% for one to be in a village church.
+Peace Candles prevent Natural Mob Spawning in a 3 Chunk Radius around them. By default, there is a chance of 33% for one to be in a village church.
 
 ## Screenshots
 
