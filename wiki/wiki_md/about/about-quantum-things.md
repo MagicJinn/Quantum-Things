@@ -49,7 +49,7 @@ The goal of Quantum Things is to provide continued support for Random Things, in
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/quantum-things)
 - [Issue Tracker](https://github.com/MagicJinn/Quantum-Things/issues)
 
-## Important Note for Upgraders
+## Important Note for Migrators
 
 **⚠️ WARNING:** When upgrading from Random Things, make sure to delete the `randomthings.cfg` file, and re-check all config options. Some may have changed, been reset, removed or added.
 
