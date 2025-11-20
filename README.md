@@ -27,7 +27,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 
 - Added an ingame config menu.
 - Added the ability to configure the chances of certain plants, features and loot to occur.
-- Added the ability to configure values concerning the Nature Core.
+- Added the ability to configure Nature Core values (sand replacement, animal spawning, bonemealing, tree spawning, and shell regeneration chances/ranges).
 - Added the ability to configure values concerning the Lotus.
 - Added the ability to enable or disable the Spectre Sapling.
 - Added the ability to enable or disable the Spectre Dimension.
@@ -65,7 +65,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Rain Shield duplication.
 - Fixed a crash when Biome Stone tried to access a biome that was not registered with BiomeDictionary.
 - Fixed a crash when the Eclipsed Clock tried to access a font renderer that was not available.
-- Fixed Biome Sensor not working when held in off-hand. (in development)
+- Fixed Biome Sensor not working when held in off-hand.
 
 ### Reporting Issues
 
