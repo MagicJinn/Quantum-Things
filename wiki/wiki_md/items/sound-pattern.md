@@ -9,7 +9,7 @@ category: items
 
 ---
 
-Represents a specific sound effect. Used for the [Sound Box](../blocks/sound-box.html) / [Sound Recorder](sound-recorder.html) / ([Portable](portable-sound-dampener.html)) [Sound Dampener](../blocks/sound-dampener.html). Has the sound it “contains” in its name & tooltip.
+Represents a specific sound effect. Used for the [Sound Box](../blocks/sound-box) / [Sound Recorder](sound-recorder) / ([Portable](portable-sound-dampener)) [Sound Dampener](../blocks/sound-dampener). Has the sound it “contains” in its name & tooltip.
 
 ## Crafting
 

@@ -9,7 +9,7 @@ category: items
 
 ---
 
-Portable Sound Dampeners will prevent the sounds from the [Sound Pattern](sound-pattern.html) inside of it from being played for the player that has one in their inventory.
+Portable Sound Dampeners will prevent the sounds from the [Sound Pattern](sound-pattern) inside of it from being played for the player that has one in their inventory.
 
 ## Crafting
 
