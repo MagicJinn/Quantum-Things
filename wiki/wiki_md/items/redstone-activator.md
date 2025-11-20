@@ -9,20 +9,18 @@ category: items
 
 ---
 
-The Redstone Activator temporarily powers blocks with redstone when you right click them. For example, doors open, TNT ignites, lamps / redstone turns on.
+The Redstone Activator is a tool that can send temporary redstone signals to blocks. It has three duration settings: 2 ticks, 20 ticks (1 second), and 100 ticks (5 seconds). Right-clicking cycles through durations forward, and shift-right-clicking cycles backwards.
 
-You can change the duration of the signal between 2 / 20 / 100 Ticks by (shift)-right clicking into the air with it.
+Right-clicking a block with the activator sends a redstone signal of strength 15 to that block for the selected duration. The current duration is displayed in the item's tooltip. This is useful for testing redstone contraptions or triggering one-time events without needing permanent redstone setups.
 
 ## Crafting
 
 ---
 
-![](../images/crafting_redstone-activator.webp)
+![](../images/crafting_redstone-activator-1.webp)![](../images/crafting_redstone-activator-2.webp)
 
-## Videos
+## Screenshots
 
 ---
 
-<video controls>
-  <source src="../videos/redstone-activator.mp4" type="video/mp4">
-</video>
+![](../images/screenshots_redstone-activator-1.webp)![](../images/screenshots_redstone-activator-2.webp)
