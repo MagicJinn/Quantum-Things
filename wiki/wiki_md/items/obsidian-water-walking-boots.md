@@ -9,7 +9,7 @@ category: items
 
 ---
 
-The Obsidian Water Walking Boots combine the effects of the [Obsidian Skull](obsidian-skull.html) and the [Water Walking Boots](water-walking-boots.html). They grant you a chance to negate fire damage and allow you to walk on water.
+The Obsidian Water Walking Boots combine the effects of the [Obsidian Skull](obsidian-skull) and the [Water Walking Boots](water-walking-boots). They grant you a chance to negate fire damage and allow you to walk on water.
 
 ## Crafting
 

@@ -18,7 +18,7 @@ If you have Open Computers installed this block also provides a component called
 - setTarget(x,y,z) : Sets the target of the Redstone Interface
 - getTarget() : Returns the target of the Redstone Interface (nil if it doesn’t have one)
 
-There is also an [advanced](advanced-redstone-interface.html) version of this block which can be linked to up to 9 blocks at the same time.
+There is also an [advanced](advanced-redstone-interface) version of this block which can be linked to up to 9 blocks at the same time.
 
 ## Crafting
 

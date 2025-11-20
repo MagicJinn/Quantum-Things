@@ -20,7 +20,7 @@ Looking at the block after you placed it down you can see that it has 4 differen
 | ![](../images/screenshots_player-interface-3.webp) | Armor |
 | ![](../images/screenshots_player-interface-4.webp) | Off-hand |
 
-There also is the [Creative Player Interface](creative-player-interface.html) which provides an Open Computers component to set the target player.
+There also is the [Creative Player Interface](creative-player-interface) which provides an Open Computers component to set the target player.
 
 ## Crafting
 

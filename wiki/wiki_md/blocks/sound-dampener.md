@@ -9,7 +9,7 @@ category: blocks
 
 ---
 
-Sound Dampeners will prevent the sounds from the [Sound Pattern](../items/sound-pattern.html) inside of it from being played in a 20 block radius around it.
+Sound Dampeners will prevent the sounds from the [Sound Pattern](../items/sound-pattern) inside of it from being played in a 20 block radius around it.
 
 ## Crafting
 
