@@ -60,8 +60,11 @@ public class TileEntityNatureCore extends TileEntityBase implements ITickable
 			// Animal Spawning
 			if (rand.nextInt(NatureCore.ANIMAL_CHANCE) == 0)
 			{
-				List<EntityAnimal> closeAnimals = world.getEntitiesWithinAABB(EntityAnimal.class, new AxisAlignedBB(this.pos, this.pos).grow(5, 5, 5));
-				if (closeAnimals.size() < 2)
+				int checkRange = NatureCore.ANIMAL_RANGE / 2;
+				List<EntityAnimal> closeAnimals = world.getEntitiesWithinAABB(EntityAnimal.class,
+						new AxisAlignedBB(this.pos, this.pos).grow(checkRange, checkRange,
+								checkRange));
+				if (closeAnimals.size() < NatureCore.ANIMAL_MAX)
 				{
 					int offset = NatureCore.ANIMAL_RANGE / 2;
 					int rX = this.pos.getX() + rand.nextInt(NatureCore.ANIMAL_RANGE) - offset;

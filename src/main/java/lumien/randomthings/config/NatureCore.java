@@ -19,6 +19,10 @@ public class NatureCore {
 
     @ConfigOption(category = CATEGORY, name = "AnimalRange") public static int ANIMAL_RANGE = 11;
 
+    @ConfigOption(category = CATEGORY, name = "AnimalMax",
+                    comment = "Maximum number of animals allowed within AnimalRange/2 (Default = 2)") public static int ANIMAL_MAX =
+                                    2;
+
     // Bonemealing
     @ConfigOption(category = CATEGORY, name = "BonemealChance",
             comment = "Chance for bonemealing (Default = 100, lower is more common)") public static int BONEMEAL_CHANCE =

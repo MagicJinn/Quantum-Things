@@ -267,6 +267,8 @@ public class ModConfiguration
 			NatureCore.BONEMEAL_RANGE = 1;
 		if (NatureCore.TREE_RADIUS_RANGE <= 0)
 			NatureCore.TREE_RADIUS_RANGE = 1;
+		if (NatureCore.ANIMAL_MAX < 0)
+			NatureCore.ANIMAL_MAX = 0;
 
 		// Clamp NatureCore chance values used in rand.nextInt() to minimum 1
 		// These are used directly in nextInt(), so must be at least 1

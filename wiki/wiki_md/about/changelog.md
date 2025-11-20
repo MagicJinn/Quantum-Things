@@ -9,6 +9,10 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 ## 1.0.2 (in development)
 
+### Changes
+
+- Added a config option to configure the maximum number of animals allowed within the Nature Core's Animal Spawning radius.
+
 ### Fixes
 
 - Fixed Biome Sensor not working when held in off-hand.
