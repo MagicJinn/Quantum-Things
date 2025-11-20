@@ -1,3 +1,4 @@
+<!-- TODO: Verify teleportation speed and range mechanics -->
 ---
 title: Ender Bridge
 category: blocks
@@ -9,11 +10,11 @@ category: blocks
 
 ---
 
-The Ender Bridge theoretically allows you to teleport across your world with no distance limit. The only requirement is a line of air blocks between the ender bridge and the ender anchor. However the teleportation is not instant, the normal ender bridge takes 5 seconds to teleport you across 100 blocks (“Scans” 20 blocks per second). The Prismarine Ender Bridge is much faster and would only take half a second for the same distance (“Scans” 200 Blocks per second). Ender Bridges will only check loaded chunks for Ender Anchors, this however is not an issue as the Ender Anchors load the chunk they are in.
+Ender Bridges let you teleport across your entire world with no distance limit. All you need is a clear path of air blocks between the bridge and an Ender Anchor. The teleportation isn't instant though - the standard Ender Bridge takes about 5 seconds to travel 100 blocks, while the Prismarine Ender Bridge is much faster, covering the same distance in just half a second. Don't worry about unloaded chunks either - Ender Anchors automatically keep their chunk loaded so bridges can always find them.
 
-The Bridges start to “search” for an ender anchor once a redstone signal is applied to them, once they find one they will teleport every player in a 2 block radius around them to the ender anchor and then go into cooldown mode where they will stay till they no longer receive a redstone signal.
+To use a bridge, just power it with redstone. Once activated, it starts searching for the nearest Ender Anchor and will teleport anyone standing within 2 blocks of it. After teleporting, the bridge goes into cooldown and stays that way until you remove the redstone signal. This prevents accidental double-teleports and gives you control over when the bridge is active.
 
-*The Bridges ignore the block immediately in front of them so you can place a pressure plate on top of them and still let them face upwards.*
+*Handy tip: The bridges ignore the block right in front of them, so you can place a pressure plate on top and still have the bridge face upward for easy activation.*
 
 ## Crafting
 

@@ -1,3 +1,4 @@
+<!-- TODO: Verify air restoration mechanics -->
 ---
 title: Bottle of Air
 category: items
@@ -9,9 +10,9 @@ category: items
 
 ---
 
-The Bottle of Air is a rare item that allows you to breathe underwater. Right-clicking while underwater or when your air is low will gradually restore your air supply, preventing drowning.
+The Bottle of Air is a rare lifesaver that lets you breathe underwater. When you're running out of air or already underwater, just right-click with it and it'll gradually refill your air supply, keeping you from drowning.
 
-The bottle must be used while in water or when your air level is below 270. It provides a steady supply of air over a short period, making it essential for extended underwater exploration or construction projects.
+You need to be in water or have low air (below 270) to use it. It gives you a steady stream of air over a short time, making it perfect for those long underwater building projects or exploring deep ocean monuments without constantly worrying about drowning.
 
 ## Crafting
 

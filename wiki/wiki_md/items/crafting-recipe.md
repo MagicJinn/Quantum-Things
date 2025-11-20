@@ -1,3 +1,4 @@
+<!-- TODO: Verify recipe saving and loading mechanics -->
 ---
 title: Crafting Recipe
 category: items
@@ -9,9 +10,9 @@ category: items
 
 ---
 
-The Crafting Recipe is an item that can store a complete crafting recipe. Right-clicking opens a GUI where you can view and use the stored recipe. The recipe item displays the name of the resulting item in its tooltip.
+The Crafting Recipe is like a recipe card you can carry around. It stores a complete crafting recipe so you don't have to remember all the ingredients and where they go. Right-click it to open a menu where you can see the full recipe and use it.
 
-Crafting Recipes can be created by saving a recipe from a crafting table interface. They provide a convenient way to store and recall complex recipes without needing to remember all the ingredients and their positions.
+You can save recipes directly from a crafting table, then take the recipe item with you wherever you go. Super handy for those complex recipes with lots of ingredients - no more guessing or looking things up every time you want to craft something!
 
 ## Crafting
 

@@ -1,3 +1,4 @@
+<!-- TODO: Verify Baubles compatibility and protection effects -->
 ---
 title: Obsidian Skull Ring
 category: items
@@ -9,9 +10,9 @@ category: items
 
 ---
 
-The Obsidian Skull Ring is a Bauble that can be equipped in a ring slot (requires Baubles mod). It provides protection similar to the Obsidian Skull, offering resistance to various hazards.
+The Obsidian Skull Ring is a Bauble (requires the Baubles mod) that you can wear in a ring slot. It gives you the same protection as the Obsidian Skull, helping you resist various hazards.
 
-The ring functions as a wearable version of the Obsidian Skull, allowing you to benefit from its protective effects without taking up a main inventory slot. It must be equipped in a Baubles ring slot to function.
+Think of it as a wearable version of the Obsidian Skull - you get all the same protective benefits without using up a valuable inventory slot. Just equip it in your Baubles ring slot and you're good to go.
 
 ## Crafting
 

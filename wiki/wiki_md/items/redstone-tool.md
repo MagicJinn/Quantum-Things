@@ -1,3 +1,4 @@
+<!-- TODO: Verify linking mechanics and compatible blocks -->
 ---
 title: Redstone Tool
 category: items
@@ -9,9 +10,9 @@ category: items
 
 ---
 
-The Redstone Tool is used to link Redstone Interfaces and Redstone Observers together. Right-clicking a Redstone Interface or Redstone Observer enters linking mode, indicated by an enchantment glow. Right-clicking another compatible block while in linking mode creates a connection between them.
+The Redstone Tool lets you connect Redstone Interfaces and Redstone Observers together wirelessly. Right-click one of these blocks to enter linking mode - you'll see an enchantment glow when it's active. Then right-click another compatible block to create a connection between them.
 
-The tool allows you to set up remote redstone connections where one block can control or observe another block from a distance. This is essential for creating complex redstone systems that span large areas without needing physical redstone wire connections.
+This tool is perfect for building complex redstone systems that stretch across large areas. Instead of running redstone wire everywhere, you can just link blocks together and have one control or observe another from any distance. Super handy for those big automated builds!
 
 ## Crafting
 

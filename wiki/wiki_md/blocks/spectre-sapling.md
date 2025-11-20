@@ -1,3 +1,4 @@
+<!-- TODO: Verify ectoplasm drop rates and growth mechanics -->
 ---
 title: Spectre Sapling
 category: blocks
@@ -9,11 +10,15 @@ category: blocks
 
 ---
 
-Created by right clicking a vanilla sapling with ectoplasm this sapling grows into a spectre tree whose leaves might drop some ectoplasm when broken. While you should come out with a surplus of ectoplasm chance wise you might need a bunch of these to really get started farming Ectoplasm.
+Right-click any vanilla sapling with Ectoplasm to transform it into a Spectre Sapling. When it grows, it becomes a Spectre Tree with those beautiful see-through leaves that have a chance to drop Ectoplasm when you break them. While the drop rates are pretty good, you'll probably want to plant several of these to really get your Ectoplasm farming operation going.
 
-The Spectre Sapling can be enabled or disabled in the config menu. If disabled, the sapling will not grow and cannot be created from regular saplings.
+The Spectre Sapling can be turned on or off in the config. If it's disabled, saplings won't grow and you can't create new ones from regular saplings.
 
-Spectre Saplings can be grown using Thermal Expansion's Insolator, providing an automated way to farm ectoplasm, though you will lose the sapling in the process.
+When your Spectre Tree grows, you'll get Spectre Logs from the trunk. These logs can be crafted into Spectre Planks, which are essential for making Spectre tools, weapons, and other special items. Both the logs and planks have that same ethereal, translucent look that makes Spectre materials so distinctive.
+
+The Spectre Leaves are the real prize though - break them and you might get Ectoplasm. You can shear the leaves to collect them, and they'll naturally decay if you break the tree structure. These leaves are your main way to farm Ectoplasm, which you'll need for all sorts of Spectre-related crafting.
+
+If you have Thermal Expansion installed, you can use an Insolator to automatically grow Spectre Saplings, though it will consume the sapling in the process.
 
 ## Screenshots
 

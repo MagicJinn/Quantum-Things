@@ -1,3 +1,4 @@
+<!-- TODO: Verify all grass seed variants and conversion mechanics -->
 ---
 title: Grass Seeds
 category: items
@@ -9,9 +10,9 @@ category: items
 
 ---
 
-Grass Seeds are used to convert dirt blocks into grass blocks. They come in multiple variants: normal grass seeds and colored grass seeds for each dye color. Right-clicking a dirt block with grass seeds converts it to the corresponding grass type.
+Grass Seeds let you turn plain dirt into grass instantly. They come in regular green and colored versions for each dye color. Just right-click a dirt block with the seeds and watch it transform into grass.
 
-Normal grass seeds create regular grass blocks, while colored grass seeds create Colored Grass blocks matching the seed's color. This provides an easy way to create custom grass-covered areas with specific color schemes.
+Regular grass seeds make normal grass blocks, while the colored ones create Colored Grass that matches the seed's color. This makes it super easy to create custom grass-covered areas with whatever color scheme you want - perfect for themed builds or making your base stand out.
 
 ## Crafting
 

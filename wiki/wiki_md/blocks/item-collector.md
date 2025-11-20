@@ -1,3 +1,4 @@
+<!-- TODO: Verify range and configuration details -->
 ---
 title: Item Collector
 category: blocks
@@ -9,11 +10,9 @@ category: blocks
 
 ---
 
-The Item Collector is basically a hopper with a range. You can place it on any Inventory you want and it will start collecting items in a 3 block radius around the item collector.
-Simply (shift) place the item collector on the inventory the collected items are supposed to go into.
+The Item Collector works like a hopper, but it can grab items from a distance instead of just from above. Place it on any inventory block (like a chest or furnace) and it will automatically collect any items that drop within 3 blocks of it. Just shift-click to place it on the inventory where you want items to go.
 
-The Advanced Item Collector is the upgraded version of the Item Collector, its range can be configured to be between 0 and 10 for each direction and you can also insert an [Item Filter](../items/item-filter) to specify which items are / are not supposed to be picked up.
-For the Advanced Item Collector right click on it to bring up the GUI to configure its range and insert an [Item Filter](../items/item-filter).
+The Advanced Item Collector is the upgraded version that gives you much more control. You can set the collection range anywhere from 0 to 10 blocks in each direction, so you can make it grab items from a wide area or keep it tight. You can also add an [Item Filter](../items/item-filter) to tell it exactly which items to pick up and which to ignore. Right-click the Advanced Item Collector to open its configuration menu where you can adjust the range and set up your filters.
 
 ## Crafting
 

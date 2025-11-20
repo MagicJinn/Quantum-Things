@@ -1,3 +1,4 @@
+<!-- TODO: Verify biome transformation mechanics and explosion behavior -->
 ---
 title: Ancient Furnace
 category: other
@@ -9,9 +10,9 @@ category: other
 
 ---
 
-You can rarely find Ancient Furnaces in cold biomes. The furnace is constructed using Ancient Bricks, which come in several variants: runes, default, star empty, star full, and output. Ancient Bricks are unbreakable blocks that cannot be destroyed by explosions or entities, and they automatically melt snow that falls on them.
+You can rarely stumble upon Ancient Furnaces hidden away in cold biomes. These mysterious structures are built from Ancient Bricks, which come in several decorative variants: runes, default, star empty, star full, and output. Ancient Bricks are incredibly durable - nothing can destroy them, not even explosions or powerful entities. They're also smart enough to automatically melt any snow that falls on them.
 
-Right clicking an Ancient Brick with a star empty variant using a Nether Star will convert it to star full and activate any Ancient Furnace below it. After heating up, the furnace will turn an area of 10000 blocks (configurable) around it into a warmer biome, removing any surface snow in the process. It will explode once it's done.
+To activate an Ancient Furnace, you need to find an Ancient Brick with the star empty pattern and right-click it with a Nether Star. This converts it to star full and wakes up any Ancient Furnace sitting below it. Once activated, the furnace starts heating up and will transform a huge area (10,000 blocks by default, though this can be changed in the config) around it into a warmer biome, melting away all the surface snow in the process. Be warned - once it finishes its work, the furnace will explode, so make sure you're ready for that!
 
 ## Screenshots
 

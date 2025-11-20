@@ -1,3 +1,4 @@
+<!-- TODO: Verify signal strength and duration settings -->
 ---
 title: Redstone Activator
 category: items
@@ -9,9 +10,9 @@ category: items
 
 ---
 
-The Redstone Activator is a tool that can send temporary redstone signals to blocks. It has three duration settings: 2 ticks, 20 ticks (1 second), and 100 ticks (5 seconds). Right-clicking cycles through durations forward, and shift-right-clicking cycles backwards.
+The Redstone Activator is a handy tool for sending temporary redstone signals to blocks. It has three duration options: 2 ticks (super quick), 20 ticks (1 second), or 100 ticks (5 seconds). Right-click to cycle through the durations forward, or shift-right-click to go backwards.
 
-Right-clicking a block with the activator sends a redstone signal of strength 15 to that block for the selected duration. The current duration is displayed in the item's tooltip. This is useful for testing redstone contraptions or triggering one-time events without needing permanent redstone setups.
+To use it, just right-click any block and it'll send a full-strength redstone signal (strength 15) to that block for however long you've set it. The tooltip shows you which duration is currently selected. This is perfect for testing your redstone builds or triggering one-time events without having to set up permanent redstone wiring.
 
 ## Crafting
 

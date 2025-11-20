@@ -1,3 +1,4 @@
+<!-- TODO: Verify all biome block variants and crafting recipes -->
 ---
 title: Biome Blocks
 category: blocks
@@ -9,11 +10,11 @@ category: blocks
 
 ---
 
-All of these Biome Blocks change their color depending on the biome they are in. The Biome Crystals needed to craft them can be found in all dungeon chests.
+All of these Biome Blocks are chameleons - they automatically change their color to match whatever biome you place them in. To craft them, you'll need Biome Crystals, which you can find in dungeon chests scattered throughout the world.
 
-Biome Stone is a decorative block that automatically changes color to match the biome it is placed in. It comes in several variants including cobblestone, smooth stone, brick, cracked, and chiseled textures. The block's color dynamically updates based on the biome's grass color, making it perfect for creating builds that blend naturally with their environment.
+Biome Stone is a decorative block that blends right into its surroundings. It comes in several styles - cobblestone, smooth stone, brick, cracked, and chiseled - but they all share the same magical property: they match the grass color of whatever biome they're in. This makes them perfect for building structures that look like they naturally belong in the environment.
 
-Biome Glass is a translucent glass block that automatically changes color to match the biome it is placed in. Like Biome Stone, it uses the biome's grass color to create a natural, environment-blending appearance. The glass is transparent and can be used for windows, decorative elements, or any build where you want glass that matches the surrounding biome's color scheme.
+Biome Glass works the same way, but as a see-through block. It's great for windows or decorative elements where you want the glass to match the natural colors around your build. Just like Biome Stone, it automatically picks up the biome's grass color, so your builds will always look cohesive with the landscape.
 
 ## Crafting
 

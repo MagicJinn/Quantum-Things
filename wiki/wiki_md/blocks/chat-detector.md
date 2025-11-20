@@ -1,3 +1,4 @@
+<!-- TODO: Verify chat detection mechanics and ID Card requirements -->
 ---
 title: Chat Detector
 category: blocks
@@ -9,10 +10,11 @@ category: blocks
 
 ---
 
-The Chat Detector is a Block that outputs a redstone signal when the player it was placed by enters something in the chat. If you open up its gui you can enter the message its supposed to detect and also change the mode its in.
-By default the chat message its detecting will still be displayed in chat. However if you change the mode in the gui it will “consume” the message so it won’t appear in chat.
+The Chat Detector watches for specific messages in chat and sends out a redstone signal when it finds them. Right-click the block to open its menu where you can type in the exact message you want it to look for. You can also choose how it behaves when it finds a match.
 
-The Global Chat Detector isn’t limited to the player that placed it, instead it will react to chat messages from any player. However for the “consuming” mode to work it will require an ID Card of the player that typed the message.
+By default, when the Chat Detector spots the message you're looking for, it still lets the message show up in chat for everyone to see. But if you switch it to "consuming" mode, it will hide the message from chat entirely - perfect for secret commands or triggers you don't want others to see.
+
+The standard Chat Detector only watches for messages from the player who placed it. But there's also a Global Chat Detector that listens to everyone on the server. This makes it great for server-wide commands or events. Just keep in mind that if you want to use the consuming mode with the Global Chat Detector, you'll need an ID Card from the player who sent the message to make it work.
 
 ## Crafting
 

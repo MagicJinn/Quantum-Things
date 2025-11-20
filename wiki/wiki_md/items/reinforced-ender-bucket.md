@@ -1,3 +1,4 @@
+<!-- TODO: Verify fluid capacity and collection mechanics -->
 ---
 title: Reinforced Ender Bucket
 category: items
@@ -9,9 +10,9 @@ category: items
 
 ---
 
-The Reinforced Ender Bucket is an upgraded version of the Ender Bucket with a much larger capacity. It can hold up to 10,000 mB of fluid (10 buckets worth) compared to the standard Ender Bucket's 1,000 mB capacity.
+The Reinforced Ender Bucket is the big brother of the Ender Bucket - it can hold 10 times more fluid! While a regular Ender Bucket holds 1,000 mB (one bucket), this one holds 10,000 mB (ten buckets worth). Perfect for those big fluid-moving projects.
 
-The bucket can store any fluid and displays a durability bar that changes color based on the contained fluid. When sneaking, you can collect entire connected fluid sources at once, making it extremely efficient for large-scale fluid collection. Right-clicking places the stored fluid, and the bucket shows the fluid name in its tooltip when filled.
+It works just like the regular Ender Bucket but better. The durability bar changes color to match whatever fluid you've got stored - blue for water, orange for lava, and so on. When you're sneaking and right-click a fluid source, it'll grab the entire connected body of fluid at once instead of stopping after one block. This makes it super efficient for draining lakes or collecting huge amounts of fluid quickly. Right-click to place the stored fluid, and the tooltip will show you what's inside.
 
 ## Crafting
 

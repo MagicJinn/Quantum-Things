@@ -1,3 +1,4 @@
+<!-- TODO: Verify ID Card usage with Global Chat Detector -->
 ---
 title: ID Card
 category: items
@@ -9,9 +10,9 @@ category: items
 
 ---
 
-The ID Card is an item used to identify specific players. Right-clicking with an ID Card stores your player information (UUID and name) in the card. The card can then be used with various blocks and items that require player identification.
+The ID Card is like a player ID badge. Right-click with it to store your player information in the card. Once it's set up, you can use it with various blocks and systems that need to know who you are.
 
-ID Cards are essential for systems like the Global Chat Detector's consuming mode, where they verify the identity of players sending messages. The card displays the player's name in its tooltip and can be used as a filter in various player-based systems.
+These cards are really important for things like the Global Chat Detector's consuming mode - when someone sends a message, the system needs their ID Card to verify who they are before hiding the message. The card shows the player's name in its tooltip, and you can use it as a filter in any system that needs to identify specific players.
 
 ## Crafting
 

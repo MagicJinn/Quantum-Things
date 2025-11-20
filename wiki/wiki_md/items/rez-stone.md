@@ -1,3 +1,4 @@
+<!-- TODO: Verify resurrection mechanics and drop locations -->
 ---
 title: Rez Stone
 category: items
@@ -9,9 +10,9 @@ category: items
 
 ---
 
-The Rez Stone is a rare item that can be found in dungeon chests, mineshaft corridors, and Nether fortresses. It serves as a resurrection item that can be used to restore players or entities.
+The Rez Stone is a rare treasure you might find in dungeon chests, abandoned mineshafts, or Nether fortresses. It's a resurrection item that can bring players or entities back to life.
 
-The exact functionality of the Rez Stone depends on the context in which it is used. It is a valuable item due to its rarity and resurrection capabilities.
+How exactly it works depends on how you use it, but it's definitely valuable - these things are hard to come by and can save you from losing everything when things go wrong.
 
 ## Screenshots
 

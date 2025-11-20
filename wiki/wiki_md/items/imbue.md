@@ -1,3 +1,4 @@
+<!-- TODO: Verify all Imbue effects and durations -->
 ---
 title: Imbue
 category: items
@@ -9,16 +10,16 @@ category: items
 
 ---
 
-Imbue is a consumable potion-like item that comes in several variants: Fire, Poison, Experience, Wither, and Collapse. Drinking an Imbue applies a corresponding effect to the player for an extended duration (40 minutes).
+Imbue is like a super-powered potion that lasts way longer - 40 minutes! It comes in five different types, each giving you a special effect. Just drink it like any other potion, and you'll get the effect for a really long time.
 
-Each Imbue type provides a different effect:
-- **Fire Imbue**: Grants fire-related effects
-- **Poison Imbue**: Grants poison-related effects  
-- **Experience Imbue**: Grants experience-related effects
-- **Wither Imbue**: Grants wither-related effects
-- **Collapse Imbue**: Grants collapse-related effects
+You can choose from:
+- **Fire Imbue**: Fire-related powers
+- **Poison Imbue**: Poison-related abilities
+- **Experience Imbue**: Experience-related bonuses
+- **Wither Imbue**: Wither-related effects
+- **Collapse Imbue**: Collapse-related powers
 
-Only one Imbue effect can be active at a time - drinking a new Imbue will replace any existing Imbue effect. The item is consumed when used and returns an empty glass bottle.
+Keep in mind that you can only have one Imbue active at a time. If you drink a new one, it'll replace whatever effect you already have. When you use it, you get an empty glass bottle back, just like regular potions.
 
 ## Crafting
 
