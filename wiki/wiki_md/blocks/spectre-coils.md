@@ -18,7 +18,7 @@ Ender: 20480 per Tick
 
 Both the Coils and the Injector always access the buffer of the player that placed them. Since they are bound to your player they don’t have a range limitation and also work across dimensions.
 
-In addition there are also Numbered & Genesis Coils. Numbered Coils can be found in dungeon chests and generate 128 Energy per Tick on their own. Genesis Coils are creative mode only and generate 10000000 Energy per Tick.
+In addition there are also Numbered & Genesis Coils. Numbered Coils can be found in dungeon chests and generate 128 Energy per Tick on their own. Genesis Coils do not have a crafting recipe, and generate Infinite Energy, but can be configured to transfer Infinite energy instead of generating it. Numbered Coils generated Energy per tick, as well as regular Coils transfer rate can be configured in the config.
 
 ## Crafting
 

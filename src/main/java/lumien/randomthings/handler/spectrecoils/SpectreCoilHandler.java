@@ -20,12 +20,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import lumien.randomthings.config.SpectreCoils;
 
 public class SpectreCoilHandler extends WorldSavedData
 {
 	static final String ID = "rtSpectreCoilHandler";
-
-	static final int MAX_ENERGY = 1000000;
 
 	Map<UUID, Integer> coilEntries;
 
@@ -50,7 +49,8 @@ public class SpectreCoilHandler extends WorldSavedData
 			{
 				int currentEnergy = coilEntries.containsKey(owner) ? coilEntries.get(owner) : 0;
 
-				int newEnergy = Math.min(MAX_ENERGY, currentEnergy + maxReceive);
+				int newEnergy = Math.min(SpectreCoils.SPECTRE_ENERGY_INJECTOR_MAX_ENERGY,
+						currentEnergy + maxReceive);
 
 				if (!simulate)
 					coilEntries.put(owner, newEnergy);
@@ -61,7 +61,7 @@ public class SpectreCoilHandler extends WorldSavedData
 			@Override
 			public int getMaxEnergyStored()
 			{
-				return MAX_ENERGY;
+				return SpectreCoils.SPECTRE_ENERGY_INJECTOR_MAX_ENERGY;
 			}
 
 			@Override
@@ -155,7 +155,8 @@ public class SpectreCoilHandler extends WorldSavedData
 			{
 				int currentEnergy = coilEntries.containsKey(owner) ? coilEntries.get(owner) : 0;
 
-				int newEnergy = Math.min(MAX_ENERGY, currentEnergy + maxReceive);
+				int newEnergy = Math.min(SpectreCoils.SPECTRE_ENERGY_INJECTOR_MAX_ENERGY,
+						currentEnergy + maxReceive);
 
 				if (!simulate)
 					coilEntries.put(owner, newEnergy);
@@ -166,7 +167,7 @@ public class SpectreCoilHandler extends WorldSavedData
 			@Override
 			public int getMaxEnergyStored()
 			{
-				return MAX_ENERGY;
+				return SpectreCoils.SPECTRE_ENERGY_INJECTOR_MAX_ENERGY;
 			}
 
 			@Override

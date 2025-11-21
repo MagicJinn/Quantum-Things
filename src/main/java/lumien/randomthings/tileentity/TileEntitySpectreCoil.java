@@ -5,6 +5,7 @@ import java.util.UUID;
 import lumien.randomthings.block.BlockSpectreCoil;
 import lumien.randomthings.block.BlockSpectreCoil.CoilType;
 import lumien.randomthings.config.Numbers;
+import lumien.randomthings.config.SpectreCoils;
 import lumien.randomthings.handler.spectrecoils.SpectreCoilHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -155,9 +156,12 @@ public class TileEntitySpectreCoil extends TileEntityBase implements ITickable
 
 				if (targetStorage != null && targetStorage.canReceive())
 				{
-					if (this.coilType == CoilType.NUMBER || this.coilType == CoilType.GENESIS)
+					if (this.coilType == CoilType.NUMBER || (this.coilType == CoilType.GENESIS
+							&& SpectreCoils.GENESIS_SPECTRE_GENERATES_ENERGY))
 					{
-						int amount = coilType == CoilType.NUMBER ? Numbers.NUMBERED_SPECTRECOIL_ENERGY : 10000000;
+						int amount = coilType == CoilType.NUMBER
+								? SpectreCoils.NUMBERED_SPECTRECOIL_ENERGY
+								: 10000000;
 
 						targetStorage.receiveEnergy(amount, false);
 					}
@@ -178,7 +182,17 @@ public class TileEntitySpectreCoil extends TileEntityBase implements ITickable
 						else if (coilType == CoilType.ENDER)
 						{
 							rate = 20480;
+						} else if (coilType == CoilType.GENESIS
+								&& !SpectreCoils.GENESIS_SPECTRE_GENERATES_ENERGY) {
+							// If energy generation is disabled, transfer energy instead of
+							// generating it
+							rate = 10000000;
 						}
+
+						// Protect against integer overflow when multiplying rate
+						double multipliedRate = rate * SpectreCoils.ENERGY_TRANSFER_MULTIPLIER;
+						rate = multipliedRate > Integer.MAX_VALUE ? Integer.MAX_VALUE
+								: (int) multipliedRate;
 
 						int available = coilStorage.extractEnergy(rate, true);
 
