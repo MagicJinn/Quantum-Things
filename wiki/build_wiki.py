@@ -271,7 +271,7 @@ class WikiBuilder:
         
         # Build full HTML page using template
         html = self.base_template.format(
-            title=f"{page_info['title']} - Random Things",
+            title=f"{page_info['title']} - Quantum Things",
             assets_path="../../assets/",
             extra_css="",
             navigation=nav_html,
