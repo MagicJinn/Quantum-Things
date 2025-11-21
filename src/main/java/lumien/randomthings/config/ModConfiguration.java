@@ -46,6 +46,7 @@ public class ModConfiguration
 		// Force load NatureCore class to ensure it's included in ASM scanning
 		NatureCore.class.getName();
 		DiviningRods.class.getName();
+		SpectreCoils.class.getName();
 
 		// Load and process configuration
 		reloadConfig();
@@ -80,6 +81,11 @@ public class ModConfiguration
 
 		if (configuration.hasCategory("Divining Rods")) {
 			configuration.getCategory("Divining Rods").setComment(DiviningRods.CONFIG_COMMENT);
+		}
+
+		if (configuration.hasCategory("Spectre Coils")) {
+			configuration.getCategory("Spectre Coils")
+					.setComment("Configure Spectre Coils and Chargers behavior");
 		}
 
 		if (configuration.hasChanged()) {

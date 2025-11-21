@@ -33,7 +33,7 @@ public class GuiModConfig extends GuiConfig {
 
         // Add all categories (alphabetically sorted for consistency)
         String[] categories = {"Divining Rods", "Features", "Internals", "Lotus", "Nature Core",
-                "Numbers", "Visual",
+                "Numbers", "Spectre Coils", "Visual",
                 "Voxel Projector", "Worldgen Features", "Worldgen Loot", "Worldgen Plants"};
 
         for (String category : categories) {

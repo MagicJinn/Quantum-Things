@@ -6,6 +6,7 @@ import java.util.List;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import lumien.randomthings.config.Numbers;
+import lumien.randomthings.config.SpectreCoils;
 import lumien.randomthings.handler.spectrecoils.SpectreCoilHandler;
 import lumien.randomthings.lib.ILuminousItem;
 import lumien.randomthings.lib.IRTBlockColor;
@@ -69,13 +70,16 @@ public class ItemSpectreCharger extends ItemBase implements IRTItemColor, ILumin
 		switch (TIER.values()[stack.getItemDamage()])
 		{
 			case NORMAL:
-				display = I18n.format("item.spectreCharger.charge", "1024");
+				display = I18n.format("item.spectreCharger.charge",
+						String.valueOf((int) (1024 * SpectreCoils.ENERGY_TRANSFER_MULTIPLIER)));
 				break;
 			case REDSTONE:
-				display = I18n.format("item.spectreCharger.charge", "4096");
+				display = I18n.format("item.spectreCharger.charge",
+						String.valueOf((int) (4096 * SpectreCoils.ENERGY_TRANSFER_MULTIPLIER)));
 				break;
 			case ENDER:
-				display = I18n.format("item.spectreCharger.charge", "20480");
+				display = I18n.format("item.spectreCharger.charge",
+						String.valueOf((int) (20480 * SpectreCoils.ENERGY_TRANSFER_MULTIPLIER)));
 				break;
 			case GENESIS:
 				display = I18n.format("item.spectreCharger.charge", "Infinite");
@@ -140,11 +144,20 @@ public class ItemSpectreCharger extends ItemBase implements IRTItemColor, ILumin
 				else if (tier == TIER.ENDER)
 				{
 					rate = 20480;
+				} else if (tier == TIER.GENESIS && !SpectreCoils.GENESIS_SPECTRE_GENERATES_ENERGY) {
+					// If energy generation is disabled, transfer energy instead of generating it
+					rate = 10000000;
 				}
+
+				// Protect against integer overflow when multiplying rate
+				double multipliedRate = rate * SpectreCoils.ENERGY_TRANSFER_MULTIPLIER;
+				rate = multipliedRate > Integer.MAX_VALUE ? Integer.MAX_VALUE
+						: (int) multipliedRate;
 
 				for (int slot = 0; slot < player.inventory.getSizeInventory(); slot++)
 				{
-					if (storage.getEnergyStored() == 0 && tier != TIER.GENESIS)
+					if (storage.getEnergyStored() == 0 && (tier != TIER.GENESIS
+							|| !SpectreCoils.GENESIS_SPECTRE_GENERATES_ENERGY))
 					{
 						break;
 					}
@@ -157,9 +170,14 @@ public class ItemSpectreCharger extends ItemBase implements IRTItemColor, ILumin
 
 						if (itemStorage != null)
 						{
-							int missingEnergy = itemStorage.getMaxEnergyStored() - itemStorage.getEnergyStored();
+							// Calculate missing energy safely to prevent negative values
+							int currentEnergy = itemStorage.getEnergyStored();
+							int maxEnergy = itemStorage.getMaxEnergyStored();
+							int missingEnergy =
+									maxEnergy > currentEnergy ? maxEnergy - currentEnergy : 0;
 
-							if (tier == TIER.GENESIS)
+							if (tier == TIER.GENESIS
+									&& SpectreCoils.GENESIS_SPECTRE_GENERATES_ENERGY)
 							{
 								itemStorage.receiveEnergy(missingEnergy, false);
 								continue;
@@ -188,7 +206,7 @@ public class ItemSpectreCharger extends ItemBase implements IRTItemColor, ILumin
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
 	{
-		if (tab == this.getCreativeTab())
+		if (this.isInCreativeTab(tab))
 		{
 			for (TIER t : TIER.values())
 			{

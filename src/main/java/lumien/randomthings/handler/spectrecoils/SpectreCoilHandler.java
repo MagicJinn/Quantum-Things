@@ -25,7 +25,7 @@ public class SpectreCoilHandler extends WorldSavedData
 {
 	static final String ID = "rtSpectreCoilHandler";
 
-	static final int MAX_ENERGY = 1000000;
+	static final int MAX_ENERGY = SpectreCoils.SPECTRE_ENERGY_INJECTOR_MAX_ENERGY;
 
 	Map<UUID, Integer> coilEntries;
 

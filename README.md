@@ -39,6 +39,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Added Divining Rod sleeper support for Silent Gear, More Planets, Aether and Aether II. (Sleeper Support is for mods lacking oreDict. Does nothing by default, can be enabled by modpacks).
 - Gave Spectre Illuminator LOD levels.
 - Made Rain Shields be able to be placed on any block, similar to an end rod.
+- Added the ability to configure the Spectre Energy Injector capacity, Spectre Coil/Charger transfer rates, and whether the Genesis Spectre Coil generates energy or transfers it.
 
 ### Fixes
 

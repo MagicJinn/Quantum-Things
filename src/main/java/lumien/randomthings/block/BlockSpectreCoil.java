@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import com.mojang.authlib.GameProfile;
 
 import lumien.randomthings.config.Numbers;
+import lumien.randomthings.config.SpectreCoils;
 import lumien.randomthings.item.block.ItemBlockColored;
 import lumien.randomthings.item.block.ItemBlockSpectreCoil;
 import lumien.randomthings.lib.ILuminousBlock;
@@ -83,19 +84,27 @@ public class BlockSpectreCoil extends BlockContainerBase implements ILuminousBlo
 		switch (this.coilType)
 		{
 			case NORMAL:
-				display = I18n.format("tile.spectrecoil.transfer", "1024");
+				display = I18n.format("tile.spectrecoil.transfer",
+						String.valueOf((int) (1024 * SpectreCoils.ENERGY_TRANSFER_MULTIPLIER)));
 				break;
 			case REDSTONE:
-				display = I18n.format("tile.spectrecoil.transfer", "4096");
+				display = I18n.format("tile.spectrecoil.transfer",
+						String.valueOf((int) (4096 * SpectreCoils.ENERGY_TRANSFER_MULTIPLIER)));
 				break;
 			case ENDER:
-				display = I18n.format("tile.spectrecoil.transfer", "20480");
+				display = I18n.format("tile.spectrecoil.transfer",
+						String.valueOf((int) (20480 * SpectreCoils.ENERGY_TRANSFER_MULTIPLIER)));
 				break;
 			case GENESIS:
-				display = I18n.format("tile.spectrecoil.generate", "Infinite");
+				if (SpectreCoils.GENESIS_SPECTRE_GENERATES_ENERGY) {
+					display = I18n.format("tile.spectrecoil.generate", "Infinite");
+				} else {
+					display = I18n.format("tile.spectrecoil.transfer", "Infinite");
+				}
 				break;
 			case NUMBER:
-				display = I18n.format("tile.spectrecoil.generate", Numbers.NUMBERED_SPECTRECOIL_ENERGY + "");
+				display = I18n.format("tile.spectrecoil.generate",
+						SpectreCoils.NUMBERED_SPECTRECOIL_ENERGY + "");
 				break;
 			default:
 				display = I18n.format("tile.spectrecoil.transfer", "???");
