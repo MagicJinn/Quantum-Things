@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import lumien.randomthings.config.SpectreCoils;
 
 public class SpectreCoilHandler extends WorldSavedData
 {

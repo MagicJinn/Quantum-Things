@@ -306,7 +306,7 @@ public class DescriptionHandler
 			case GENESIS:
 				if (SpectreCoils.GENESIS_SPECTRE_GENERATES_ENERGY) {
 					actionKey = "tile.spectrecoil.generate";
-					amount = "10000000";
+					amount = "Infinite";
 					isTransfer = false;
 				} else {
 					actionKey = "tile.spectrecoil.transfer";
