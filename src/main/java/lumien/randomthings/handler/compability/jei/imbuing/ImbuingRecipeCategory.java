@@ -117,6 +117,6 @@ public class ImbuingRecipeCategory implements IRecipeCategory
 	@Override
 	public String getModName()
 	{
-		return "Random Things";
+		return "Quantum Things";
 	}
 }
