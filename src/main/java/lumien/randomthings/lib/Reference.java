@@ -1,12 +1,11 @@
 package lumien.randomthings.lib;
 
-public class Reference
-{
+public class Reference {
 	public static final String MOD_ID = "randomthings";
-	public static final String MOD_NAME = "Random Things";
+	public static final String MOD_NAME = "Quantum Things";
 	public static final String MOD_VERSION = "@VERSION@";
 
 	public static final String MOD_FINGERPRINT = "@FINGERPRINT@";
 
-	public static final String MOD_AUTHOR = "Lumien231";
+	public static final String MOD_AUTHOR = "MagicJinn, Lumien231";
 }

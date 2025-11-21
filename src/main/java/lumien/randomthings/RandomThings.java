@@ -104,7 +104,7 @@ public class RandomThings implements LoadingCallback
 		ModEntitys.init();
 		ModPotions.preInit(event);
 		ModEnchantments.preInit(event);
-		// Register Spectre biome if Spectre Dimension is enabled
+		// Register Spectre biome if Spectre dimension is enabled
 		if (Features.SPECTRE_DIMENSION)
 			ModBiomes.preInit(event);
 
@@ -136,7 +136,7 @@ public class RandomThings implements LoadingCallback
 	{
 		ModRecipes.register();
 
-		// Register Spectre Dimension if enabled
+		// Register Spectre dimension if enabled
 		if (Features.SPECTRE_DIMENSION)
 			ModDimensions.register();
 

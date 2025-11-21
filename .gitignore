@@ -19,3 +19,5 @@ Update.bat
 /libs/*
 /libs/
 gradle.properties
+.vscode/
+/wiki/wiki_site

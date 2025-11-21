@@ -1,4 +1,4 @@
-itemGroup.rt.name=随意作品
+itemGroup.rt.name=量子事物
 
 tile.fertilizedDirt.name=沃土
 tile.playerInterface.name=玩家接口
@@ -256,6 +256,9 @@ item.soundPattern.name=音乐模块
 item.portableSoundDampener.name=便携式隔音器
 item.escapeRope.name=逃生绳
 
+item.diviningRod.name=占卜棒
+item.diviningRodUniversal.name=通用
+
 item.bean.name=豆
 item.lesserMagicBean.name=次级魔豆
 item.magicBean.name=魔豆
@@ -455,7 +458,7 @@ tile.imbuingStation.info=激素药水酿造台主要用于酿造原版酿造台�
 tile.spectreBlock.info=搭建通灵空间中幽灵立方的不催方块。
 tile.analogEmitter.info=模拟信号发生器可以生成任意强度的红石信号。
 tile.fluidDisplay.info=液体伪装方块用于装饰使用，手持盛装流体的容器右击它即可伪装为对应流体的材质。
-tile.customWorkbench.info=随意作品（Random Things）模组允许你使用原版的木板制作各种材质的工作台。
+tile.customWorkbench.info=随意作品（Quantum Things）模组允许你使用原版的木板制作各种材质的工作台。
 tile.enderMailbox.info=末影邮箱用于向其他玩家发送/接收末影邮件。
 tile.pitcherPlant.info=猪笼草是一种植物，类似无限水源。可以使用液体容器右击它以收集水。
 tile.entityDetector.info=实体检测器可以检测以它为半径的指定实体并发出红石信号。
@@ -586,3 +589,5 @@ item.weatherEgg_rain.info=投掷后会生成一片云朵，其会慢慢上升。
 item.weatherEgg_storm.info=投掷后会生成一片云朵，其会慢慢上升。一旦到达天空，它便会改变天气至雷暴天。
 item.enderBucket.info=末影桶的功能类似原版的桶，但不完全是。当你手持其右击流动的流体（非源头）时，它会自动盛装该流体的源头。
 item.reinforcedEnderBucket.info=强化末影桶的功能类似末影桶。值得注意的是，它至多能盛装10桶相同类似的流体。
+item.diviningRod.info=在主手或副手持有此物品时，会高亮显示以你为中心的%s立方体中的每个%s。
+item.diviningRod.ore=矿石
