@@ -18,3 +18,4 @@ Update.bat
 *.psd
 /libs/*
 /libs/
+gradle.properties
