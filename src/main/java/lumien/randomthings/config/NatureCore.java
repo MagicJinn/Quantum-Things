@@ -3,7 +3,7 @@ package lumien.randomthings.config;
 import lumien.randomthings.lib.ConfigOption;
 
 public class NatureCore {
-        private static final String CATEGORY = "Nature Core";
+        public static final String CATEGORY = "Nature Core";
 
     // Sand Replacement
     @ConfigOption(category = CATEGORY, name = "SandChance",

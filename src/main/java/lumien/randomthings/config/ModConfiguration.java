@@ -58,34 +58,8 @@ public class ModConfiguration
 		markDiviningRodsRequiresRestart();
 		markSpectreDimensionRequiresRestart();
 
-		// Set category comments after loading (only needed on initial setup)
-		if (configuration.hasCategory("Worldgen Plants")) {
-			configuration.getCategory("Worldgen Plants").setComment(
-					"Enable or disable generation of plants, or change their frequency");
-		}
-		if (configuration.hasCategory("Worldgen Features")) {
-			configuration.getCategory("Worldgen Features").setComment(
-					"Enable or disable generation of structures and special blocks, or change their frequency");
-		}
-		if (configuration.hasCategory("Worldgen Loot")) {
-			configuration.getCategory("Worldgen Loot").setComment(
-					"Enable or disable generation of loot items in chests and structures, or change their frequency");
-		}
-		if (configuration.hasCategory("Nature Core")) {
-			configuration.getCategory("Nature Core").setComment("Configure Nature Core behavior");
-		}
-
-		if (configuration.hasCategory("Lotus")) {
-			configuration.getCategory("Lotus").setComment("Configure Lotus plant behavior");
-		}
-
 		if (configuration.hasCategory("Divining Rods")) {
 			configuration.getCategory("Divining Rods").setComment(DiviningRods.CONFIG_COMMENT);
-		}
-
-		if (configuration.hasCategory("Spectre Coils")) {
-			configuration.getCategory("Spectre Coils")
-					.setComment("Configure Spectre Coils and Chargers behavior");
 		}
 
 		if (configuration.hasChanged()) {
@@ -205,9 +179,9 @@ public class ModConfiguration
 	 * necessary because divining rods affect item registration and recipes.
 	 */
 	private void markDiviningRodsRequiresRestart() {
-		if (configuration != null && configuration.hasCategory("Divining Rods")) {
+		if (configuration != null && configuration.hasCategory(DiviningRods.CATEGORY)) {
 			Property diviningRodsProp =
-					configuration.getCategory("Divining Rods").get("Divining Rods");
+					configuration.getCategory(DiviningRods.CATEGORY).get("Divining Rods");
 			if (diviningRodsProp != null) {
 				diviningRodsProp.setRequiresMcRestart(true);
 			}
@@ -215,13 +189,22 @@ public class ModConfiguration
 	}
 
 	/**
-	 * Marks the Spectre Dimension configuration property as requiring a Minecraft restart. This is
-	 * necessary because the dimension affects world registration and initialization.
+	 * Marks the Features and Internals configuration properties as requiring a Minecraft restart.
+	 * This is necessary because the spectre dimension configs affect world registration and
+	 * initialization.
 	 */
 	private void markSpectreDimensionRequiresRestart() {
-		if (configuration != null && configuration.hasCategory("Features")) {
+		if (configuration != null && configuration.hasCategory(Features.CATEGORY)) {
 			Property spectreDimensionProp =
-					configuration.getCategory("Features").get("SpectreDimension");
+					configuration.getCategory(Features.CATEGORY).get("SpectreDimension");
+			if (spectreDimensionProp != null) {
+				spectreDimensionProp.setRequiresMcRestart(true);
+			}
+		}
+
+		if (configuration != null && configuration.hasCategory(Internals.CATEGORY)) {
+			Property spectreDimensionProp =
+					configuration.getCategory(Internals.CATEGORY).get("SpectreID");
 			if (spectreDimensionProp != null) {
 				spectreDimensionProp.setRequiresMcRestart(true);
 			}

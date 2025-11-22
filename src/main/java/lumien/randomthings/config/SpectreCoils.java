@@ -3,7 +3,7 @@ package lumien.randomthings.config;
 import lumien.randomthings.lib.ConfigOption;
 
 public class SpectreCoils {
-	private static final String CATEGORY = "Spectre Coils & Chargers";
+	public static final String CATEGORY = "Spectre Coils and Chargers";
 
 	@ConfigOption(category = CATEGORY, name = "NumberedSpectreCoilEnergy", comment = "How much Energy a Numbered Spectre Coil produces per Tick")
 	public static int NUMBERED_SPECTRECOIL_ENERGY = 128;

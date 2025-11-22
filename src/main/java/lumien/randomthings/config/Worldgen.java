@@ -4,9 +4,9 @@ import lumien.randomthings.lib.ConfigOption;
 
 public class Worldgen
 {
-	private static final String CATEGORY_PLANTS = "Worldgen Plants";
-	private static final String CATEGORY_FEATURES = "Worldgen Features";
-	private static final String CATEGORY_LOOT = "Worldgen Loot";
+	public static final String CATEGORY_PLANTS = "Worldgen Plants";
+	public static final String CATEGORY_FEATURES = "Worldgen Features";
+	public static final String CATEGORY_LOOT = "Worldgen Loot";
 
 	// Worldgen - Plants and natural generation
 	@ConfigOption(category = CATEGORY_PLANTS, name = "Beans",

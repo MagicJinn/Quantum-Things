@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lumien.randomthings.RandomThings;
+import lumien.randomthings.config.SpectreCoils;
 import lumien.randomthings.lib.Reference;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.config.DummyConfigElement.DummyCategoryElement;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
+import lumien.randomthings.config.*;
 
 public class GuiModConfig extends GuiConfig {
     public GuiModConfig(GuiScreen parent) {
@@ -31,10 +34,11 @@ public class GuiModConfig extends GuiConfig {
         // This ensures the Configuration object has all properties registered
         RandomThings.instance.configuration.ensurePropertiesRegistered();
 
-        // Add all categories (alphabetically sorted for consistency)
-        String[] categories = {"Divining Rods", "Features", "Internals", "Lotus", "Nature Core",
-                "Numbers", "Spectre Coils", "Visual",
-                "Voxel Projector", "Worldgen Features", "Worldgen Loot", "Worldgen Plants"};
+        // Add all categories
+        String[] categories = {DiviningRods.CATEGORY, Features.CATEGORY, Internals.CATEGORY,
+                Lotus.CATEGORY, NatureCore.CATEGORY, Numbers.CATEGORY, SpectreCoils.CATEGORY,
+                Visual.CATEGORY, VoxelProjector.CATEGORY, Worldgen.CATEGORY_FEATURES,
+                Worldgen.CATEGORY_LOOT, Worldgen.CATEGORY_PLANTS};
 
         for (String category : categories) {
             if (config.hasCategory(category)) {
@@ -42,7 +46,13 @@ public class GuiModConfig extends GuiConfig {
                         config.getCategory(category);
                 // Only add categories that have properties (non-empty categories)
                 if (configCategory != null && !configCategory.getValues().isEmpty()) {
-                    list.add(new ConfigElement(configCategory));
+                    // This somehow fixes the capitalization of the category names in the GUI.
+                    DummyCategoryElement element = new DummyCategoryElement(category, category,
+                            new ConfigElement(configCategory).getChildElements());
+
+                    element.setRequiresMcRestart(configCategory.requiresMcRestart());
+                    element.setRequiresWorldRestart(configCategory.requiresWorldRestart());
+                    list.add(element);
                 }
             }
         }

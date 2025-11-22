@@ -1,6 +1,7 @@
 package lumien.randomthings.config;
 
 public class DiviningRods {
+        public static final String CATEGORY = "Divining Rods";
         public static final String CONFIG_COMMENT =
                         "Allows you to add divining rods to the game, or disable/remove existing ones.";
 

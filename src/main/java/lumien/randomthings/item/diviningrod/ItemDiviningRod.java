@@ -262,13 +262,16 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 
 				Color color = new Color(red, green, blue, 50);
 				types.add(new OreRodType(name, oreName, recipeItem, color));
-				RandomThings.logger.log(Level.INFO,
-						"Added divining rod: " + name + " for " + oreName);
 			} catch (NumberFormatException e) {
 				RandomThings.logger.log(Level.WARN,
 						"Invalid number format in divining rod entry: " + rodEntry);
 			}
 		}
+		String addedRodPrint = "Added divining rods: ";
+		for (RodType type : types) {
+			addedRodPrint += type.getName() + ", ";
+		}
+		RandomThings.logger.log(Level.INFO, addedRodPrint.substring(0, addedRodPrint.length() - 2));
 	}
 
 	private static String generateNameFromRecipeItem(String recipeItem) {
