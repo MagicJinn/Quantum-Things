@@ -251,6 +251,68 @@ class WikiBuilder:
         )
         return html_content
     
+    def _fix_internal_links(self, html_content, category):
+        """Fix internal wiki links in HTML content."""
+        # Pages are at category/pagename/index.html, so need to go up one level for same-category,
+        # or two levels for cross-category links
+        
+        # Get all valid page slugs for checking same-category links
+        valid_slugs = {page['slug'] for page in self.pages[category]}
+        
+        # First, handle cross-category links: ../blocks/spectre-coils -> ../../blocks/spectre-coils/
+        def replace_cross_category_link(match):
+            link_category = match.group(1)
+            link_path = match.group(2)
+            # Split path and anchor if present
+            if '#' in link_path:
+                link_page, anchor = link_path.split('#', 1)
+                anchor = '#' + anchor
+            else:
+                link_page = link_path
+                anchor = ''
+            # Remove trailing .md or .html if present
+            link_page = re.sub(r'\.(md|html)$', '', link_page)
+            # Convert to proper HTML path: ../../category/pagename/ or ../../category/pagename/#anchor
+            if anchor:
+                return f'href="../../{link_category}/{link_page}/{anchor}"'
+            else:
+                return f'href="../../{link_category}/{link_page}/"'
+        
+        # Match href="../blocks/..." or href="../items/..." etc.
+        html_content = re.sub(
+            r'href="\.\./(blocks|items|other|about)/([^"]+)"',
+            replace_cross_category_link,
+            html_content
+        )
+        
+        # Then, handle same-category links: ender-anchor -> ../ender-anchor/
+        def replace_same_category_link(match):
+            full_match = match.group(0)  # The entire href="..." match
+            link_page = match.group(1)
+            anchor = match.group(2) if match.group(2) else ''
+            # Remove trailing .md or .html if present
+            link_page = re.sub(r'\.(md|html)$', '', link_page)
+            # Check if it's a valid page in the same category
+            if link_page in valid_slugs:
+                # Convert to proper HTML path: ../pagename/ or ../pagename/#anchor
+                if anchor:
+                    return f'href="../{link_page}/{anchor}"'
+                else:
+                    return f'href="../{link_page}/"'
+            # If not a valid page, return unchanged
+            return full_match
+        
+        # Match href="pagename" or href="pagename#anchor" (same category, no ../ prefix)
+        # Exclude external links (http://, https://, mailto:, etc.) and already processed links
+        # The pattern matches: href=" + (not external) + page_name + optional extension + optional anchor + "
+        html_content = re.sub(
+            r'href="(?!https?://|mailto:|\.\./|\./|/)([^"/#]+?)(?:\.(?:md|html))?(#[^"]*)?"',
+            replace_same_category_link,
+            html_content
+        )
+        
+        return html_content
+    
     def _build_page(self, category, page_info):
         """Build a single HTML page."""
         md_file = self.source_dir / category / page_info['file']
@@ -265,6 +327,7 @@ class WikiBuilder:
         content_html = self._convert_markdown_to_html(markdown_content)
         content_html = self._fix_image_paths(content_html, category)
         content_html = self._fix_video_paths(content_html, category)
+        content_html = self._fix_internal_links(content_html, category)
         
         # Build navigation
         nav_html = self._build_navigation(page_info['slug'], category)
