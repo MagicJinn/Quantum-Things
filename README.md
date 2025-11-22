@@ -67,6 +67,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed a crash when Biome Stone tried to access a biome that was not registered with BiomeDictionary.
 - Fixed a crash when the Eclipsed Clock tried to access a font renderer that was not available.
 - Fixed Biome Sensor not working when held in off-hand.
+- Fixed plate item entities being way too large when dropped as items.
 
 ### Reporting Issues
 

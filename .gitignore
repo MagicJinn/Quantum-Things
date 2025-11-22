@@ -1,24 +1,44 @@
-/*
-!/.gitignore
-!/gradle/
-!/gradle/*
-!/gradle*
-!/src/
-!/src/*
-!/*.gradle
-!/*.md
-!/icon.png
-!/gallery/
-!/wiki/
-!/.github/
-!/.markdownlint.jsonc
-!/unfuck_workspace.bat
-.gradle
-Thumbs.db
-Update.bat
-*.psd
-/libs/*
-/libs/
-gradle.properties
+.classpath
+.gitattributes
+
+# Build directories
+build/
+bin/
+out/
+.gradle/
+
+# IDE files
+.idea/
 .vscode/
+.project
+*.launch
+*.iml
+
+# Compiled classes
+*.class
+
+# JAR files
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# Run directories
+run/
+runs/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Eclipse
+.metadata/
+.recommenders/
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+gradle.properties
 /wiki/wiki_site
