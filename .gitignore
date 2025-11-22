@@ -12,6 +12,7 @@
 !/wiki/
 !/.github/
 !/.markdownlint.jsonc
+!/unfuck_workspace.bat
 .gradle
 Thumbs.db
 Update.bat
