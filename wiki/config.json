@@ -1,0 +1,42 @@
+{
+    "site": {
+        "name": "Quantum Things Wiki",
+        "alternate_name": "Random Things Wiki",
+        "base_url": "https://quantumthings.magicjinn.net",
+        "title_suffix": " - Quantum Things Wiki",
+        "game_name": "Minecraft"
+    },
+    "seo": {
+        "homepage": {
+            "title": "Quantum Things Wiki | Random Things Minecraft Mod Guide",
+            "keywords": "Quantum Things, Random Things, Minecraft, Minecraft mod, Quantum Things wiki, Random Things wiki, Minecraft wiki, mod guide, crafting recipes"
+        },
+        "base_keywords": [
+            "Quantum Things",
+            "Random Things",
+            "Minecraft",
+            "Minecraft mod",
+            "Quantum Things wiki",
+            "Random Things wiki",
+            "Minecraft wiki"
+        ],
+        "category_keywords": {
+            "blocks": ["blocks", "Minecraft blocks", "mod blocks"],
+            "items": ["items", "Minecraft items", "mod items"],
+            "about": ["about", "information", "guide"],
+            "other": ["features", "mechanics", "gameplay"]
+        }
+    },
+    "structured_data": {
+        "breadcrumb_home": "Home",
+        "game_type": "VideoGame",
+        "game_category": "Game"
+    },
+    "sitemap": {
+        "homepage_priority": "1.0",
+        "homepage_changefreq": "weekly",
+        "page_priority": "0.8",
+        "page_changefreq": "monthly"
+    },
+    "categories": ["about", "blocks", "items", "other"]
+}
