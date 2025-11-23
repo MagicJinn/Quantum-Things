@@ -10,7 +10,8 @@ public class DiviningRods {
                                         + "- oreDictionaryName: The ore dictionary name the rod detects (e.g., 'oreIron')\n"
                                         + "- recipeItem: The item used in the crafting recipe (ore dictionary name or 'minecraft:itemname' for vanilla items)\n"
                                         + "- red, green, blue: Color values (0-254) for the rod's visual appearance\n"
-                                        + "Note: For recipeItem in rod entries, only use 'minecraft:' prefix for vanilla items. Mod item prefixes (e.g., 'modname:item') do NOT work - use ore dictionary names instead.\n";
+                                        + "Note: For recipeItem in rod entries, only use 'minecraft:' prefix for vanilla items. Mod item prefixes (e.g., 'modname:item') do NOT work - use ore dictionary names instead.\n"
+                                        + "Note 2: When adding or removing a rod in an existing save, the indexes will shift, causing existing rods to change their type. A diamond rod could become a coal rod, for example.\n";
 
         public static String[] DEFAULT_RODS = {
                         // Vanilla ores
