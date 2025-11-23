@@ -79,6 +79,7 @@ public class ItemSpectreArmor extends ItemArmor {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
+        // TODO: Implement and remove WIP
         return super.getItemStackDisplayName(stack) + " (WIP)";
     }
 

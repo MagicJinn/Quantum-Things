@@ -74,6 +74,9 @@ public class ModItems
 
 	public static ItemRuneDust runeDust;
 
+	public static ItemBiomeCapsule biomeCapsule;
+	public static ItemBiomePainter biomePainter;
+
 	public static void load(FMLPreInitializationEvent event)
 	{
 		stableEnderpearl = new ItemStableEnderpearl();
@@ -139,5 +142,8 @@ public class ModItems
 		spectreBoots = new ItemSpectreArmor(net.minecraft.inventory.EntityEquipmentSlot.FEET);
 
 		runeDust = new ItemRuneDust();
+
+		biomeCapsule = new ItemBiomeCapsule();
+		biomePainter = new ItemBiomePainter();
 	}
 }

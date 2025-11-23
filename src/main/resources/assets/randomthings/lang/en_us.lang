@@ -326,6 +326,9 @@ item.spectreChestplate.name=Spectre Chestplate
 item.spectreLeggings.name=Spectre Leggings
 item.spectreBoots.name=Spectre Boots
 
+item.biomePainter.name=Biome Painter
+item.biomeCapsule.name=Biome Capsule
+
 item.runeDust.black.name=Black Runic Dust
 item.runeDust.red.name=Red Runic Dust
 item.runeDust.green.name=Green Runic Dust
@@ -629,3 +632,5 @@ item.spectreHelmet.info=WIP
 item.spectreChestplate.info=WIP
 item.spectreLeggings.info=WIP
 item.spectreBoots.info=WIP
+item.biomePainter.info=WIP
+item.biomeCapsule.info=WIP

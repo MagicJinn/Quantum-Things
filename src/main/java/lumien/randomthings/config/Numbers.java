@@ -48,4 +48,7 @@ public class Numbers
 	@ConfigOption(category = CATEGORY, name = "DiviningRodRange",
 			comment = "The range (in blocks) that a Divining Rod searches in each direction from the player. A range of 5 means it searches an 11x11x11 cube centered on the player. WARNING: Setting this value too high can cause significant lag while using the rod!") public static int DIVINING_ROD_RANGE =
 					5;
+
+	@ConfigOption(category = CATEGORY, name = "MaxBiomeCapsuleCapacity",
+			comment = "The maximum") public static int MAX_BIOME_CAPSULE_CAPACITY = 256;
 }

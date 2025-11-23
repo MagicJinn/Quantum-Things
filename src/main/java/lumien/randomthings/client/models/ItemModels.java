@@ -162,6 +162,9 @@ public class ItemModels
 		registerItem(ModItems.spectreLeggings);
 		registerItem(ModItems.spectreBoots);
 
+		registerItem(ModItems.biomeCapsule);
+		registerItem(ModItems.biomePainter);
+
 		registerSpectreCoils();
 		registerBricks();
 		registerBiomeStone();
