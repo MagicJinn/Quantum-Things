@@ -475,10 +475,6 @@ public class RTEventHandler
 		{
 
 		}
-		else if (event instanceof DecorateBiomeEvent.Post)
-		{
-			// Sakanade generation removed - block was unfinished and buggy
-		}
 	}
 
 	@SubscribeEvent

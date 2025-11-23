@@ -14,6 +14,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Added a config option to configure the maximum number of animals allowed within the Nature Core's Animal Spawning radius.
 - Added the ability to configure the Spectre Energy Injector capacity, Spectre Coil/Charger transfer rates, and whether the Genesis Spectre Coil generates energy or transfers it.
 - Made the ID Card crafting recipe shapeless.
+- Re-added Spectre Armor (WIP).
 
 ### Fixes
 

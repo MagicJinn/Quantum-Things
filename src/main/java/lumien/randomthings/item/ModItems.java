@@ -67,6 +67,10 @@ public class ModItems
 	public static ItemSpectrePickaxe spectrePickaxe;
 	public static ItemSpectreAxe spectreAxe;
 	public static ItemSpectreShovel spectreShovel;
+	public static ItemSpectreArmor spectreHelmet;
+	public static ItemSpectreArmor spectreChestplate;
+	public static ItemSpectreArmor spectreLeggings;
+	public static ItemSpectreArmor spectreBoots;
 
 	public static ItemRuneDust runeDust;
 
@@ -129,6 +133,10 @@ public class ModItems
 		spectrePickaxe = new ItemSpectrePickaxe();
 		spectreAxe = new ItemSpectreAxe();
 		spectreShovel = new ItemSpectreShovel();
+		spectreHelmet = new ItemSpectreArmor(net.minecraft.inventory.EntityEquipmentSlot.HEAD);
+		spectreChestplate = new ItemSpectreArmor(net.minecraft.inventory.EntityEquipmentSlot.CHEST);
+		spectreLeggings = new ItemSpectreArmor(net.minecraft.inventory.EntityEquipmentSlot.LEGS);
+		spectreBoots = new ItemSpectreArmor(net.minecraft.inventory.EntityEquipmentSlot.FEET);
 
 		runeDust = new ItemRuneDust();
 	}
