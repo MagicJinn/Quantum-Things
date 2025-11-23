@@ -18,7 +18,6 @@ public class EntityBiomeCapsule extends EntityItem {
 
     public EntityBiomeCapsule(World worldIn, double x, double y, double z, ItemStack stack) {
         super(worldIn, x, y, z, stack);
-        setNoDespawn();
     }
 
     @Override
