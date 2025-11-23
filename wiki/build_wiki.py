@@ -340,8 +340,19 @@ class WikiBuilder:
         """Extract plain text from HTML content for meta descriptions."""
         # Use BeautifulSoup to extract text
         soup = BeautifulSoup(html_content, 'html.parser')
-        # Get all text, removing extra whitespace
-        text = ' '.join(soup.stripped_strings)
+        
+        # Try to find the description paragraph first (id="desc")
+        desc_elem = soup.find(id='desc')
+        if desc_elem:
+            # Extract text from the description paragraph only
+            text = ' '.join(desc_elem.stripped_strings)
+        else:
+            # Fallback: get all text but exclude logo (id="ih")
+            logo_elem = soup.find(id='ih')
+            if logo_elem:
+                logo_elem.decompose()  # Remove logo from soup
+            text = ' '.join(soup.stripped_strings)
+        
         return text
     
     def _extract_meta_description(self, markdown_content, title, category):
@@ -352,6 +363,10 @@ class WikiBuilder:
             parts = content.split('---', 2)
             if len(parts) >= 3:
                 content = parts[2].strip()
+        
+        # If content is empty after removing frontmatter, return empty string
+        if not content:
+            return ""
         
         # Try to get first paragraph
         lines = content.split('\n')
