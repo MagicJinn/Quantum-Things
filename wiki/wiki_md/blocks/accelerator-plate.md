@@ -26,9 +26,4 @@ The Directional Accelerator Plate accelerates entities in a specific direction b
 TODO
 ![](../images/crafting_accelerator-plate.webp)
 
-## Screenshots
-
----
-
-TODO
-![](../images/screenshots_accelerator-plate.webp)
+![](../images/crafting_directional-accelerator-plate.webp)
