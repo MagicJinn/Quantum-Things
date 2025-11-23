@@ -125,6 +125,14 @@ class WikiBuilder:
                 shutil.copy2(favicon_file, dest)
                 print(f"Copied favicon: favicon.ico")
         
+        # Copy og-image.webp from wiki root to wiki_site root
+        og_image_file = self.wiki_dir / "og-image.webp"
+        if og_image_file.exists():
+            dest = self.output_dir / "og-image.webp"
+            if not dest.exists() or dest.stat().st_mtime < og_image_file.stat().st_mtime:
+                shutil.copy2(og_image_file, dest)
+                print(f"Copied og-image.webp")
+        
         # Copy images from wiki_md/images/ to wiki_site/images/
         images_source = self.source_dir / "images"
         if images_source.exists():
@@ -413,9 +421,9 @@ class WikiBuilder:
     def _generate_og_image(self):
         """Generate Open Graph image URL."""
         # Use a default OG image - should be 1200x630px for best results
-        # The image should be placed in wiki_site/assets/og-image.png
+        # The image should be placed in wiki_site/og-image.webp
         # For now, we'll use a consistent absolute URL
-        return f"{self.base_url}/assets/og-image.png"
+        return f"{self.base_url}/og-image.webp"
     
     def _generate_structured_data(self, title, description, category=None, slug=None, page_title=None, website_description=None):
         """Generate JSON-LD structured data for SEO.
@@ -532,6 +540,7 @@ class WikiBuilder:
         
         # Generate SEO metadata
         title = f"{page_info['title']}{self.config['site']['title_suffix']}"
+        og_title = page_info['title']  # Shorter title for OG (without suffix, since og:site_name is set)
         meta_description = self._extract_meta_description(markdown_content, page_info['title'], category)
         meta_keywords = self._generate_meta_keywords(page_info['title'], category)
         canonical_url = self._generate_canonical_url(category, page_info['slug'])
@@ -541,6 +550,7 @@ class WikiBuilder:
         # Build full HTML page using template
         html = self.base_template.format(
             title=title,
+            og_title=og_title,
             meta_description=meta_description,
             meta_keywords=meta_keywords,
             canonical_url=canonical_url,
@@ -570,6 +580,7 @@ class WikiBuilder:
         
         # Generate SEO metadata for homepage
         title = self.config['seo']['homepage']['title']
+        og_title = self.config['site']['name']  # Shorter title for OG (since og:site_name is set)
         meta_keywords = self.config['seo']['homepage']['keywords']
         canonical_url = self._generate_canonical_url()
         structured_data = self._generate_structured_data(
@@ -582,6 +593,7 @@ class WikiBuilder:
         # Build HTML using template
         html = self.base_template.format(
             title=title,
+            og_title=og_title,
             meta_description=meta_description,
             meta_keywords=meta_keywords,
             canonical_url=canonical_url,
