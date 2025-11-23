@@ -33,13 +33,10 @@ html, body{
   margin-bottom: 0px;
   font-size: 2em;
 }
-#desc > a:link {
-  text-decoration: none;
-  color: white;
-}
+#desc > a:link,
 #desc > a:visited {
   text-decoration: none;
-  color: white;
+  color: #8B5CF6;
 }
 #desc > a:hover {
   text-decoration: none;

@@ -616,7 +616,7 @@ class WikiBuilder:
             og_image=og_image,
             og_site_name=self.config['site']['name'],
             assets_path="assets/",
-            extra_css='<link href="assets/index-header.css" rel="stylesheet"/>',
+            extra_css='<link href="assets/index-header.css" rel="stylesheet" media="print" onload="this.media=\'all\'"/><noscript><link href="assets/index-header.css" rel="stylesheet"/></noscript>',
             navigation=nav_html,
             content=content_html
         )

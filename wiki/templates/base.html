@@ -34,16 +34,15 @@
       color: #CCCCCC !important;
     }}
   </style>
+  <link rel="preload" href="{assets_path}css_main.css" as="style"/>
   <link href="{assets_path}css_main.css" rel="stylesheet"/>
   <link href="{assets_path}favicon.ico" rel="shortcut icon" type="image/x-icon"/>
-  <link href="{assets_path}dark-mode.css" rel="stylesheet"/>
+  <link href="{assets_path}dark-mode.css" rel="stylesheet" media="print" onload="this.media='all'"/>
+  <noscript><link href="{assets_path}dark-mode.css" rel="stylesheet"/></noscript>
   {extra_css}
 </head>
 <body>
   <div id="wrapper">
-    <script src="{assets_path}navigation.js"></script>
-    <script src="{assets_path}dark-mode.js"></script>
-    <script src="{assets_path}search.js"></script>
     <div id="container_navigation">
       <div id="logo">
         <span style="color: #5EAF20;">Q</span>uantum
@@ -52,10 +51,13 @@
       <input type="text" id="wiki-search" placeholder="Search...">
       {navigation}
     </div>
-    <div id="container_content">
+    <main id="container_content">
       {content}
-    </div>
+    </main>
   </div>
+  <script src="{assets_path}navigation.js" defer></script>
+  <script src="{assets_path}dark-mode.js" defer></script>
+  <script src="{assets_path}search.js" defer></script>
 </body>
 </html>
 
