@@ -19,5 +19,4 @@ ID Cards are also used with the [Emerald Compass](emerald-compass) to track play
 
 ---
 
-TODO
 ![](../images/crafting_id-card.webp)

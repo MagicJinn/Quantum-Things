@@ -20,9 +20,3 @@ All Ender Mailboxes you place are linked together, so letters you receive will a
 ---
 
 ![](../images/crafting_ender-mailbox.webp)
-
-## Screenshots
-
----
-TODO
-![](../images/screenshots_ender-mailbox.webp)

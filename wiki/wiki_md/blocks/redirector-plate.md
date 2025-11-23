@@ -19,7 +19,12 @@ Both plates operate similarly to the [Redstone Plate](redstone-plate), but witho
 
 ---
 
-TODO
+![](../images/crafting_plate-base.webp)
+
+Redirector Plate:
+
 ![](../images/crafting_redirector-plate.webp)
+
+Filtered Redirector Plate:
 
 ![](../images/crafting_filtered-redirector-plate.webp)
