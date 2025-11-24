@@ -41,11 +41,8 @@ class WikiBuilder:
         (self.output_dir / "images").mkdir(exist_ok=True)
         (self.output_dir / "videos").mkdir(exist_ok=True)
         
-        # Copy assets from wiki folder
+        # Copy all assets
         self._copy_assets()
-        
-        # Copy CSS and JS files to assets
-        self._copy_styles_and_scripts()
         
         # Load templates
         self._load_templates()
@@ -81,76 +78,40 @@ class WikiBuilder:
         self.base_template = (self.templates_dir / "base.html").read_text(encoding='utf-8')
         self.index_content_template = (self.templates_dir / "index-content.html").read_text(encoding='utf-8')
     
-    def _copy_styles_and_scripts(self):
-        """Copy CSS and JavaScript files to output assets directory."""
+    def _copy_file(self, src, dest, name=""):
+        """Copy file if it doesn't exist or is outdated."""
         import shutil
-        
-        assets_dest = self.output_dir / "assets"
-        
-        # Copy CSS files
-        if self.styles_dir.exists():
-            for css_file in self.styles_dir.glob("*.css"):
-                dest = assets_dest / css_file.name
-                if not dest.exists() or dest.stat().st_mtime < css_file.stat().st_mtime:
-                    shutil.copy2(css_file, dest)
-                    print(f"Copied CSS: {css_file.name}")
-        
-        # Copy JS files
-        if self.scripts_dir.exists():
-            for js_file in self.scripts_dir.glob("*.js"):
-                dest = assets_dest / js_file.name
-                if not dest.exists() or dest.stat().st_mtime < js_file.stat().st_mtime:
-                    shutil.copy2(js_file, dest)
-                    print(f"Copied JS: {js_file.name}")
+        if src.exists() and (not dest.exists() or dest.stat().st_mtime < src.stat().st_mtime):
+            shutil.copy2(src, dest)
+            if name:
+                print(f"Copied: {name}")
     
     def _copy_assets(self):
-        """Copy CSS and favicon from wiki folder to output assets."""
+        """Copy all assets to output directory."""
         import shutil
-        
         assets_dest = self.output_dir / "assets"
         
-        # Copy CSS file from wiki root
-        css_file = self.wiki_dir / "css_main.css"
-        if css_file.exists():
-            dest = assets_dest / "css_main.css"
-            if not dest.exists() or dest.stat().st_mtime < css_file.stat().st_mtime:
-                shutil.copy2(css_file, dest)
-                print(f"Copied CSS: css_main.css")
+        # Copy CSS and JS files
+        if self.styles_dir.exists():
+            for file in self.styles_dir.glob("*.css"):
+                self._copy_file(file, assets_dest / file.name, f"CSS: {file.name}")
         
-        # Copy favicon from wiki root
-        favicon_file = self.wiki_dir / "favicon.ico"
-        if favicon_file.exists():
-            dest = assets_dest / "favicon.ico"
-            if not dest.exists() or dest.stat().st_mtime < favicon_file.stat().st_mtime:
-                shutil.copy2(favicon_file, dest)
-                print(f"Copied favicon: favicon.ico")
+        if self.scripts_dir.exists():
+            for file in self.scripts_dir.glob("*.js"):
+                self._copy_file(file, assets_dest / file.name, f"JS: {file.name}")
         
-        # Copy og-image.webp from wiki root to wiki_site root
-        og_image_file = self.wiki_dir / "og-image.webp"
-        if og_image_file.exists():
-            dest = self.output_dir / "og-image.webp"
-            if not dest.exists() or dest.stat().st_mtime < og_image_file.stat().st_mtime:
-                shutil.copy2(og_image_file, dest)
-                print(f"Copied og-image.webp")
+        # Copy root assets
+        self._copy_file(self.wiki_dir / "css_main.css", assets_dest / "css_main.css", "CSS: css_main.css")
+        self._copy_file(self.wiki_dir / "favicon.ico", assets_dest / "favicon.ico", "favicon.ico")
+        self._copy_file(self.wiki_dir / "og-image.webp", self.output_dir / "og-image.webp", "og-image.webp")
         
-        # Copy images from wiki_md/images/ to wiki_site/images/
-        images_source = self.source_dir / "images"
-        if images_source.exists():
-            for item in images_source.iterdir():
-                if item.is_file():
-                    dest = self.output_dir / "images" / item.name
-                    if not dest.exists() or dest.stat().st_mtime < item.stat().st_mtime:
-                        shutil.copy2(item, dest)
-        
-        # Copy videos from wiki_md/videos/ to wiki_site/videos/
-        videos_source = self.source_dir / "videos"
-        if videos_source.exists():
-            for item in videos_source.iterdir():
-                if item.is_file():
-                    dest = self.output_dir / "videos" / item.name
-                    if not dest.exists() or dest.stat().st_mtime < item.stat().st_mtime:
-                        shutil.copy2(item, dest)
-                        print(f"Copied video: {item.name}")
+        # Copy images and videos
+        for media_type in ["images", "videos"]:
+            src_dir = self.source_dir / media_type
+            if src_dir.exists():
+                for item in src_dir.iterdir():
+                    if item.is_file():
+                        self._copy_file(item, self.output_dir / media_type / item.name, f"{media_type}: {item.name}")
     
     def _load_pages(self):
         """Load all page metadata from source directory."""
@@ -173,16 +134,14 @@ class WikiBuilder:
                     title = md_file.stem.replace('-', ' ').title()
                     category_name = category
                     
-                    # Try to extract from frontmatter
+                    # Extract from frontmatter
                     if content.startswith('---'):
                         parts = content.split('---', 2)
                         if len(parts) >= 3:
-                            frontmatter = parts[1]
-                            for line in frontmatter.split('\n'):
+                            for line in parts[1].split('\n'):
                                 if ':' in line:
                                     key, value = line.split(':', 1)
-                                    key = key.strip()
-                                    value = value.strip()
+                                    key, value = key.strip(), value.strip()
                                     if key == 'title':
                                         title = value
                                     elif key == 'category':
@@ -203,75 +162,39 @@ class WikiBuilder:
     
     def _build_navigation(self, current_page=None, base_path=''):
         """Build the navigation sidebar HTML."""
-        nav_html = '<nav id="nav" role="navigation">\n<ul>\n'
+        nav_html = ['<nav id="nav" role="navigation">', '<ul>']
         
         for category in self.config['categories']:
-            nav_html += f'<li class="section">\n{category.title()}\n<ul>\n'
+            nav_html.append(f'<li class="section">{category.title()}<ul>')
             
             for page in self.pages[category]:
-                active = ' class="active"' if current_page == page['slug'] and current_page else ''
-                # Adjust path based on current location
+                active = ' class="active"' if current_page == page['slug'] else ''
+                
+                # Build href based on location
                 if base_path == '':
-                    # From root
                     href = f'{category}/{page["slug"]}/'
                 elif base_path == category:
-                    # From same category
-                    # If current_page is set, we're in a page subdirectory, need to go up first
-                    if current_page:
-                        href = f'../{page["slug"]}/'
-                    else:
-                        # From category index, can use relative path
-                        href = f'{page["slug"]}/'
+                    href = f'../{page["slug"]}/' if current_page else f'{page["slug"]}/'
                 else:
-                    # From different category
-                    # If current_page is set, we're in a page subdirectory, need to go up two levels
-                    if current_page:
-                        href = f'../../{category}/{page["slug"]}/'
-                    else:
-                        # From category index, go up one level to root
-                        href = f'../{category}/{page["slug"]}/'
+                    href = f'../../{category}/{page["slug"]}/' if current_page else f'../{category}/{page["slug"]}/'
                 
-                nav_html += f'<li class="page">\n'
-                nav_html += f'<a href="{href}"{active}>{page["title"]}</a>\n'
-                nav_html += f'</li>\n'
+                nav_html.append(f'<li class="page"><a href="{href}"{active}>{page["title"]}</a></li>')
             
-            nav_html += '</ul>\n</li>\n'
+            nav_html.append('</ul></li>')
         
-        nav_html += '</ul>\n</nav>'
-        return nav_html
+        nav_html.extend(['</ul>', '</nav>'])
+        return '\n'.join(nav_html)
     
     def _convert_markdown_to_html(self, markdown_content):
         """Convert Markdown content to HTML."""
-        # Remove frontmatter if present
-        if markdown_content.startswith('---'):
-            parts = markdown_content.split('---', 2)
-            if len(parts) >= 3:
-                markdown_content = parts[2].strip()
-        
-        # Convert to HTML
+        markdown_content = self._remove_frontmatter(markdown_content)
         html_content = self.md.convert(markdown_content)
         self.md.reset()
-        
         return html_content
     
-    def _fix_image_paths(self, html_content, category):
-        """Fix image paths in HTML content."""
-        # Images should point to ../../images/ from category/pagename/index.html
-        html_content = re.sub(
-            r'src="\.\./images/([^"]+)"',
-            r'src="../../images/\1"',
-            html_content
-        )
-        return html_content
-    
-    def _fix_video_paths(self, html_content, category):
-        """Fix video paths in HTML content."""
-        # Videos should point to ../../videos/ from category/pagename/index.html
-        html_content = re.sub(
-            r'src="\.\./videos/([^"]+)"',
-            r'src="../../videos/\1"',
-            html_content
-        )
+    def _fix_media_paths(self, html_content):
+        """Fix image and video paths in HTML content."""
+        html_content = re.sub(r'src="\.\./(images|videos)/([^"]+)"', r'src="../../\1/\2"', html_content)
         return html_content
     
     def _fix_internal_links(self, html_content, category):
@@ -282,24 +205,13 @@ class WikiBuilder:
         # Get all valid page slugs for checking same-category links
         valid_slugs = {page['slug'] for page in self.pages[category]}
         
-        # First, handle cross-category links: ../blocks/spectre-coils -> ../../blocks/spectre-coils/
         def replace_cross_category_link(match):
             link_category = match.group(1)
             link_path = match.group(2)
-            # Split path and anchor if present
-            if '#' in link_path:
-                link_page, anchor = link_path.split('#', 1)
-                anchor = '#' + anchor
-            else:
-                link_page = link_path
-                anchor = ''
-            # Remove trailing .md or .html if present
+            link_page, anchor = (link_path.split('#', 1) + [''])[:2]
             link_page = re.sub(r'\.(md|html)$', '', link_page)
-            # Convert to proper HTML path: ../../category/pagename/ or ../../category/pagename/#anchor
-            if anchor:
-                return f'href="../../{link_category}/{link_page}/{anchor}"'
-            else:
-                return f'href="../../{link_category}/{link_page}/"'
+            anchor = f'#{anchor}' if anchor else ''
+            return f'href="../../{link_category}/{link_page}/{anchor}"'
         
         # Match href="../blocks/..." or href="../items/..." etc.
         html_content = re.sub(
@@ -308,22 +220,12 @@ class WikiBuilder:
             html_content
         )
         
-        # Then, handle same-category links: ender-anchor -> ../ender-anchor/
         def replace_same_category_link(match):
-            full_match = match.group(0)  # The entire href="..." match
-            link_page = match.group(1)
-            anchor = match.group(2) if match.group(2) else ''
-            # Remove trailing .md or .html if present
-            link_page = re.sub(r'\.(md|html)$', '', link_page)
-            # Check if it's a valid page in the same category
+            link_page = re.sub(r'\.(md|html)$', '', match.group(1))
+            anchor = match.group(2) or ''
             if link_page in valid_slugs:
-                # Convert to proper HTML path: ../pagename/ or ../pagename/#anchor
-                if anchor:
-                    return f'href="../{link_page}/{anchor}"'
-                else:
-                    return f'href="../{link_page}/"'
-            # If not a valid page, return unchanged
-            return full_match
+                return f'href="../{link_page}/{anchor}"'
+            return match.group(0)
         
         # Match href="pagename" or href="pagename#anchor" (same category, no ../ prefix)
         # Exclude external links (http://, https://, mailto:, etc.) and already processed links
@@ -355,62 +257,40 @@ class WikiBuilder:
         
         return text
     
-    def _extract_meta_description(self, markdown_content, title, category):
-        """Extract or generate a meta description from page content."""
-        # Remove frontmatter if present
-        content = markdown_content
+    def _remove_frontmatter(self, content):
+        """Remove frontmatter from markdown content."""
         if content.startswith('---'):
             parts = content.split('---', 2)
             if len(parts) >= 3:
-                content = parts[2].strip()
-        
-        # If content is empty after removing frontmatter, return empty string
+                return parts[2].strip()
+        return content
+    
+    def _extract_meta_description(self, markdown_content, title, category):
+        """Extract or generate a meta description from page content."""
+        content = self._remove_frontmatter(markdown_content)
         if not content:
             return ""
         
-        # Try to get first paragraph
-        lines = content.split('\n')
-        description = ""
-        for line in lines:
+        # Get first paragraph
+        for line in content.split('\n'):
             line = line.strip()
-            # Skip headers, code blocks, images, and link-only lines
-            if line and not line.startswith('#') and not line.startswith('```') and not line.startswith('!['):
-                # Skip if it's a link-only line (e.g., [text](url) with nothing else)
-                if re.match(r'^\[.+\]\(.+\)$', line):
-                    continue
+            if line and not line.startswith(('#', '```', '![')) and not re.match(r'^\[.+\]\(.+\)$', line):
                 # Remove markdown formatting
-                line = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', line)  # Remove links
-                line = re.sub(r'\*\*([^\*]+)\*\*', r'\1', line)  # Remove bold
-                line = re.sub(r'\*([^\*]+)\*', r'\1', line)  # Remove italic
-                description = line
-                break
-        
-        # If we have a description, clean it up
-        if description:
-            description = description[:155]  # Keep under 160 chars
-            if len(description) == 155:
-                description = description.rsplit(' ', 1)[0] + '...'
-        
-        return description
+                line = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', line)
+                line = re.sub(r'\*\*([^\*]+)\*\*', r'\1', line)
+                line = re.sub(r'\*([^\*]+)\*', r'\1', line)
+                if len(line) > 155:
+                    line = line[:155].rsplit(' ', 1)[0] + '...'
+                return line
+        return ""
     
     def _extract_meta_description_from_html(self, html_content, truncate=True):
-        """Extract meta description from HTML content (for homepage).
-        
-        Args:
-            html_content: HTML content to extract text from
-            truncate: If True, truncate to 155 chars for meta description. If False, return full text.
-        """
-        # Extract text from HTML
+        """Extract meta description from HTML content (for homepage)."""
         text = self._extract_text_from_html(html_content)
-        
-        # Clean up
         if text:
-            # Remove extra whitespace
             text = ' '.join(text.split())
-            # Truncate to 155 chars for meta description, but keep full text for structured data
             if truncate and len(text) > 155:
                 text = text[:155].rsplit(' ', 1)[0] + '...'
-        
         return text
     
     def _generate_meta_keywords(self, title, category):
@@ -441,25 +321,11 @@ class WikiBuilder:
         return f"{self.base_url}/og-image.webp"
     
     def _generate_structured_data(self, title, description, category=None, slug=None, page_title=None, website_description=None):
-        """Generate JSON-LD structured data for SEO.
-        
-        Args:
-            title: Page title
-            description: Page description
-            category: Page category (if any)
-            slug: Page slug (if any)
-            page_title: Short page title (if any)
-            website_description: Description for website schema (if None, uses description parameter)
-        """
+        """Generate JSON-LD structured data for SEO."""
         url = self._generate_canonical_url(category, slug)
-        
-        # Extract short title (remove title suffix if present)
         title_suffix = self.config['site']['title_suffix']
-        short_title = title.replace(title_suffix, "") if page_title is None else page_title
-        
-        # Use provided website_description or fall back to description
-        if website_description is None:
-            website_description = description
+        short_title = page_title or title.replace(title_suffix, "")
+        website_description = website_description or description
         
         # Base WebSite schema
         website_schema = {
@@ -546,8 +412,7 @@ class WikiBuilder:
         
         # Convert to HTML
         content_html = self._convert_markdown_to_html(markdown_content)
-        content_html = self._fix_image_paths(content_html, category)
-        content_html = self._fix_video_paths(content_html, category)
+        content_html = self._fix_media_paths(content_html)
         content_html = self._fix_internal_links(content_html, category)
         
         # Build navigation
