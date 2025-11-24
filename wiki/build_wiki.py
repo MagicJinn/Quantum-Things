@@ -101,7 +101,6 @@ class WikiBuilder:
                 self._copy_file(file, assets_dest / file.name, f"JS: {file.name}")
         
         # Copy root assets
-        self._copy_file(self.wiki_dir / "css_main.css", assets_dest / "css_main.css", "CSS: css_main.css")
         self._copy_file(self.wiki_dir / "favicon.ico", assets_dest / "favicon.ico", "favicon.ico")
         self._copy_file(self.wiki_dir / "og-image.webp", self.output_dir / "og-image.webp", "og-image.webp")
         
