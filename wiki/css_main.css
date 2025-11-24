@@ -199,3 +199,77 @@ nav a:hover {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     background-color: #f5f5f5;
 }
+
+/* Mobile Hamburger Menu Button */
+#mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1001;
+    background-color: #9c53e8;
+    color: white;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#mobile-menu-toggle:hover {
+    background-color: #f7ae61;
+}
+
+#mobile-menu-toggle:active {
+    transform: scale(0.95);
+}
+
+/* Mobile Overlay */
+#mobile-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* Mobile Responsive Styles */
+@media screen and (max-width: 768px) {
+    #mobile-menu-toggle {
+        display: block;
+    }
+
+    #container_navigation {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000;
+    }
+
+    #container_navigation.mobile-open {
+        transform: translateX(0);
+    }
+
+    #container_content {
+        left: 0;
+        width: 100%;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    #logo {
+        width: 100%;
+        font-size: 28px;
+    }
+
+    #wiki-search {
+        width: calc(100% - 20px);
+    }
+
+    #mobile-overlay.mobile-open {
+        display: block;
+    }
+}
