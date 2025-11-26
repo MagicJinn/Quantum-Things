@@ -2,6 +2,7 @@ package lumien.randomthings.item;
 
 import lumien.randomthings.item.diviningrod.ItemDiviningRod;
 import lumien.randomthings.item.spectretools.ItemSpectreAxe;
+import lumien.randomthings.item.spectretools.ItemSpectreHoe;
 import lumien.randomthings.item.spectretools.ItemSpectrePickaxe;
 import lumien.randomthings.item.spectretools.ItemSpectreShovel;
 import lumien.randomthings.item.spectretools.ItemSpectreSword;
@@ -67,6 +68,7 @@ public class ModItems
 	public static ItemSpectrePickaxe spectrePickaxe;
 	public static ItemSpectreAxe spectreAxe;
 	public static ItemSpectreShovel spectreShovel;
+	public static ItemSpectreHoe spectreHoe;
 	public static ItemSpectreArmor spectreHelmet;
 	public static ItemSpectreArmor spectreChestplate;
 	public static ItemSpectreArmor spectreLeggings;
@@ -136,6 +138,7 @@ public class ModItems
 		spectrePickaxe = new ItemSpectrePickaxe();
 		spectreAxe = new ItemSpectreAxe();
 		spectreShovel = new ItemSpectreShovel();
+		spectreHoe = new ItemSpectreHoe();
 		spectreHelmet = new ItemSpectreArmor(net.minecraft.inventory.EntityEquipmentSlot.HEAD);
 		spectreChestplate = new ItemSpectreArmor(net.minecraft.inventory.EntityEquipmentSlot.CHEST);
 		spectreLeggings = new ItemSpectreArmor(net.minecraft.inventory.EntityEquipmentSlot.LEGS);

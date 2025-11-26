@@ -11,7 +11,8 @@
       "data": 3
     },
     "O": {
-      "item": "minecraft:obsidian"
+      "item": "randomthings:ingredient",
+      "data": 14
     }
   },
   "result": {

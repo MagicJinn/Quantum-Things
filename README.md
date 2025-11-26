@@ -5,7 +5,7 @@
 
 [![Wiki: Quantum Things](https://img.shields.io/badge/Wiki-Read_About_Quantum_Things'_Features-purple?style=for-the-badge)](https://quantumthings.magicjinn.net/)
 
-## Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://github.com/lumien231/Random-Things).
+## Quantum Things, a 1.12.2 continuation of Lumien231's [Random Things](https://github.com/lumien231/Random-Things)
 
 ### WARNING: When upgrading from Random Things, make sure to delete the randomthings.cfg file, and re-check all config options. Some may have changed, been reset, removed or added
 
@@ -42,6 +42,9 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Added the ability to configure the Spectre Energy Injector capacity, Spectre Coil/Charger transfer rates, and whether the Genesis Spectre Coil generates energy or transfers it.
 - Made the ID Card crafting recipe shapeless.
 - Re-added Spectre Armor (WIP).
+- Re-added Biome Painter and Biome Capsule from 1.7.10.
+- Re-added Obsidian Stick from 1.7.10, now used for Spectre Weapons and the Biome Painter.
+- Added the Spectre Hoe.
 
 ### Fixes
 

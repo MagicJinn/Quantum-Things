@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "DBE",
+        "QGQ",
+        "OOO"
+    ],
+    "key": {
+        "D": {
+            "item": "minecraft:diamond_block"
+        },
+        "E": {
+            "item": "minecraft:emerald"
+        },
+        "B": {
+            "item": "randomthings:biomecrystal"
+        },
+        "Q": {
+            "item": "minecraft:quartz"
+        },
+        "G": {
+            "type": "forge:ore_dict",
+            "ore": "blockGlass"
+        },
+        "O": {
+            "item": "minecraft:obsidian"
+        }
+    },
+    "result": {
+        "item": "randomthings:biomecapsule"
+    }
+}

@@ -242,16 +242,19 @@ public class WorldUtil
 		}
 	}
 
-	public static void setBiome(World worldObj, BlockPos pos, Biome biome)
+	public static boolean setBiome(World worldObj, BlockPos pos, Biome biome)
 	{
 		Chunk c = worldObj.getChunkFromBlockCoords(new BlockPos(pos.getX(), 0, pos.getZ()));
 		int biomeID = Biome.getIdForBiome(biome);
 		byte[] biomeArray = c.getBiomeArray();
-		if ((biomeArray[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] & 255) != biomeID)
-		{
-			biomeArray[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = (byte) (biomeID & 255);
-			c.setBiomeArray(biomeArray);
-		}
+		int currentBiomeID = biomeArray[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] & 255;
+
+		// Return false if biome is already the target biome
+		if (currentBiomeID == biomeID)
+			return false;
+
+		biomeArray[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] = (byte) (biomeID & 255);
+		c.setBiomeArray(biomeArray);
 
 		if (!worldObj.isRemote)
 		{
@@ -263,6 +266,8 @@ public class WorldUtil
 			IBlockState state = worldObj.getBlockState(pos);
 			worldObj.notifyBlockUpdate(pos, state, state, 3);
 		}
+
+		return true;
 	}
 
 	public static void setEntityPosition(Entity e, double posX, double posY, double posZ)

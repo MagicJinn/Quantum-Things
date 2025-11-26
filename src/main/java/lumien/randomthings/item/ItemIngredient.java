@@ -60,7 +60,9 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 								7), PLATE_BASE("plateBase", 8), PRECIOUS_EMERALD("preciousEmerald",
 										9), LOTUS_BLOSSOM("lotusBlossom", 10), GOLDEN_EGG(
 												"goldenEgg", 11), SPECTRE_STRING("spectreString",
-														12), BLACKOUT_POWDER("blackoutPowder", 13);
+														12), BLACKOUT_POWDER("blackoutPowder",
+																13), OBSIDIAN_STICK("obsidianStick",
+																		14);
 
 		public String name;
 
