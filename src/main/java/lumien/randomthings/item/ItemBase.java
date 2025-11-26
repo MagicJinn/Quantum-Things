@@ -21,7 +21,7 @@ public class ItemBase extends Item
 	public static void registerItem(String name, Item item)
 	{
 		item.setRegistryName(name);
-		item.setCreativeTab(RandomThings.instance.creativeTab);
+		item.setCreativeTab(RandomThings.creativeTab);
 		item.setUnlocalizedName(name);
 
 		ForgeRegistries.ITEMS.register(item);

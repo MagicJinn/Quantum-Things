@@ -157,6 +157,7 @@ public class ItemModels
 		registerItem(ModItems.spectrePickaxe);
 		registerItem(ModItems.spectreShovel);
 		registerItem(ModItems.spectreAxe);
+		registerItem(ModItems.spectreHoe);
 		registerItem(ModItems.spectreHelmet);
 		registerItem(ModItems.spectreChestplate);
 		registerItem(ModItems.spectreLeggings);

@@ -74,7 +74,7 @@ public class RandomThings implements LoadingCallback
 	@SidedProxy(clientSide = "lumien.randomthings.asm.confirmer.ClientConfirmer", serverSide = "lumien.randomthings.asm.confirmer.ServerConfirmer")
 	public static ServerConfirmer asmConfirmer;
 
-	public RTCreativeTab creativeTab;
+	public static RTCreativeTab creativeTab;
 
 	public static Logger logger;
 
