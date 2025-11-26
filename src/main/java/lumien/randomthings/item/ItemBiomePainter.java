@@ -48,7 +48,10 @@ public class ItemBiomePainter extends ItemBase {
         if (!WorldUtil.setBiome(worldIn, pos, biome))
             return EnumActionResult.FAIL;
 
-        ItemBiomeCapsule.setHeldCharges(capsule, heldCharges - 1);
+        // dont reduce in creative mode
+        if (!player.isCreative())
+            ItemBiomeCapsule.setHeldCharges(capsule, heldCharges - 1);
+
 
         return EnumActionResult.SUCCESS;
     }

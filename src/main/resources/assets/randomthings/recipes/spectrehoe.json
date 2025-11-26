@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "SS",
+        " O",
+        " O"
+    ],
+    "key": {
+        "S": {
+            "item": "randomthings:ingredient",
+            "data": 3
+        },
+        "O": {
+            "item": "randomthings:ingredient",
+            "data": 14
+        }
+    },
+    "result": {
+        "item": "randomthings:spectrehoe"
+    }
+}

@@ -42,6 +42,9 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Added the ability to configure the Spectre Energy Injector capacity, Spectre Coil/Charger transfer rates, and whether the Genesis Spectre Coil generates energy or transfers it.
 - Made the ID Card crafting recipe shapeless.
 - Re-added Spectre Armor (WIP).
+- Re-added Biome Painter and Biome Capsule from 1.7.10.
+- Re-added Obsidian Stick from 1.7.10, now used for Spectre Weapons and the Biome Painter.
+- Added the Spectre Hoe.
 
 ### Fixes
 

@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "O",
+        "O"
+    ],
+    "key": {
+        "O": {
+            "item": "minecraft:obsidian"
+        }
+    },
+    "result": {
+        "item": "randomthings:ingredient",
+        "data": 14,
+        "count": 3
+    }
+}
