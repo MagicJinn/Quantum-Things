@@ -168,8 +168,8 @@ public class TileEntityAncientFurnace extends TileEntityBase implements ITickabl
 					{
 						BlockPos topPos = WorldUtil.getHeighestPos(this.world, nextPos.getX(), nextPos.getZ());
 
-						WorldUtil.setBiome(this.world, nextPos, conversion);
-						transformCount++;
+						if (WorldUtil.setBiome(this.world, nextPos, conversion))
+							transformCount++;
 
 						IBlockState topState = this.world.getBlockState(topPos);
 

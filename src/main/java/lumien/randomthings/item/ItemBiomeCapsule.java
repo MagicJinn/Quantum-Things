@@ -5,6 +5,7 @@ import java.util.List;
 import lumien.randomthings.config.Numbers;
 import lumien.randomthings.entitys.EntityBiomeCapsule;
 import lumien.randomthings.lib.IRTItemColor;
+import lumien.randomthings.util.NameUtility;
 import lumien.randomthings.util.client.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
@@ -18,8 +19,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemBiomeCapsule extends ItemBase implements IRTItemColor {
-    // store biome here somehow
-
     public ItemBiomeCapsule() {
         super("biomeCapsule");
         this.setMaxStackSize(1);
@@ -59,16 +58,36 @@ public class ItemBiomeCapsule extends ItemBase implements IRTItemColor {
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
         // TODO: Implement and remove WIP
-        return super.getItemStackDisplayName(stack) + " (WIP)";
+        Biome biome = getBiome(stack);
+        String biomeString = "";
+        if (biome != null) {
+            String biomeName = getBiome(stack).getBiomeName();
+            biomeString = NameUtility.separateWordsByCapital(biomeName) + " ";
+        }
+        return biomeString + super.getItemStackDisplayName(stack) + " (WIP)";
     }
 
-    public int getHeldCharges(ItemStack stack) {
+    public static int getHeldCharges(ItemStack stack) {
         NBTTagCompound compound;
         if ((compound = stack.getTagCompound()) != null
                 && compound.hasKey(EntityBiomeCapsule.NBT_HELD_CHARGES)) {
             return compound.getInteger(EntityBiomeCapsule.NBT_HELD_CHARGES);
         }
         return 0;
+    }
+
+    public static void setHeldCharges(ItemStack stack, int charges) {
+        int oldCharges = getHeldCharges(stack);
+        NBTTagCompound compound = stack.getTagCompound();
+        if (compound == null) {
+            compound = new NBTTagCompound();
+            stack.setTagCompound(compound);
+        }
+        compound.setInteger(EntityBiomeCapsule.NBT_HELD_CHARGES, charges);
+
+        // If we use up all charges, remove the biome as well
+        if (oldCharges > 0 && charges == 0 && compound.hasKey(EntityBiomeCapsule.NBT_HELD_BIOME))
+            compound.removeTag(EntityBiomeCapsule.NBT_HELD_BIOME);
     }
 
     @Override
@@ -81,7 +100,8 @@ public class ItemBiomeCapsule extends ItemBase implements IRTItemColor {
                 "Charges: " + getHeldCharges(stack) + " / " + Numbers.MAX_BIOME_CAPSULE_CAPACITY);
         Biome biome = getBiome(stack);
         if (biome != null) {
-            tooltip.add("Biome: " + biome.getBiomeName());
+            String biomeName = biome.getBiomeName();
+            tooltip.add("Biome: " + NameUtility.separateWordsByCapital(biomeName));
         } else {
             tooltip.add("Biome: None");
         }
