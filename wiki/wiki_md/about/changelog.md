@@ -7,7 +7,7 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
-## 1.0.2 (in development)
+## 1.0.2
 
 ### Changes
 
@@ -24,6 +24,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Fixed Biome Sensor not working when held in off-hand.
 - Fixed Nature Core, Bonemealing and Animal Spawning not being centered on the Nature Core (introduced in 1.0.0).
 - Fixed plate item entities being way too large when dropped as items.
+- Fixed a bug that caused player graves to not be created in Corail Tombstone (introduced in 1.0.0).
 
 ## v1.0.1
 
