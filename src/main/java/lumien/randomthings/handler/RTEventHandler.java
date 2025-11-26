@@ -73,7 +73,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSound;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
@@ -118,13 +117,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.GuiIngameForge;
-import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
@@ -148,7 +140,6 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.event.world.WorldEvent.PotentialSpawns;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -184,11 +175,15 @@ public class RTEventHandler
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	@SideOnly(Side.CLIENT)
-	public void playSoundEvent(PlaySoundEvent event)
+	public void playSoundEvent(net.minecraftforge.client.event.sound.PlaySoundEvent event)
 	{
-		EntityPlayerSP thePlayer = Minecraft.getMinecraft().player;
+		EntityPlayerSP thePlayer = net.minecraft.client.Minecraft.getMinecraft().player;
 
-		if (thePlayer != null && !event.isCanceled() && event.getSound() != null && event.getSound().getCategory() != SoundCategory.MUSIC && event.getSound().getCategory() != SoundCategory.RECORDS && Minecraft.getMinecraft().gameSettings.getSoundLevel(event.getSound().getCategory()) > 0)
+		if (thePlayer != null && !event.isCanceled() && event.getSound() != null
+				&& event.getSound().getCategory() != SoundCategory.MUSIC
+				&& event.getSound().getCategory() != SoundCategory.RECORDS
+				&& net.minecraft.client.Minecraft.getMinecraft().gameSettings
+						.getSoundLevel(event.getSound().getCategory()) > 0)
 		{
 			BlockPos soundPosition;
 
@@ -292,7 +287,7 @@ public class RTEventHandler
 	@SideOnly(Side.CLIENT)
 	public void clientConnectingToServer(ClientConnectedToServerEvent event)
 	{
-		Minecraft.getMinecraft().addScheduledTask(new Runnable()
+		net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(new Runnable()
 		{
 			@Override
 			public void run()
@@ -544,7 +539,8 @@ public class RTEventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void cameraSetup(CameraSetup event)
+	public void cameraSetup(
+			net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup event)
 	{
 		if (event.getEntity() instanceof EntityLivingBase)
 		{
@@ -686,7 +682,7 @@ public class RTEventHandler
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void modelBake(ModelBakeEvent event)
+	public void modelBake(net.minecraftforge.client.event.ModelBakeEvent event)
 	{
 		ModelFluidDisplay modelFluidDisplay = new ModelFluidDisplay();
 		event.getModelRegistry().putObject(new ModelResourceLocation("randomthings:fluidDisplay", "normal"), modelFluidDisplay);
@@ -705,7 +701,7 @@ public class RTEventHandler
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void textureStitch(TextureStitchEvent.Pre event)
+	public void textureStitch(net.minecraftforge.client.event.TextureStitchEvent.Pre event)
 	{
 		try
 		{
@@ -862,27 +858,30 @@ public class RTEventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void renderGameOverlay(RenderGameOverlayEvent event)
+	public void renderGameOverlay(net.minecraftforge.client.event.RenderGameOverlayEvent event)
 	{
-		if (event.getType() != null && event instanceof RenderGameOverlayEvent.Post)
+		if (event.getType() != null
+				&& event instanceof net.minecraftforge.client.event.RenderGameOverlayEvent.Post)
 		{
-			if (event.getType() == RenderGameOverlayEvent.ElementType.ARMOR)
+			if (event
+					.getType() == net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.ARMOR)
 			{
 				renderLavaCharm(event);
 			}
-			else if (event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS)
+			else if (event
+					.getType() == net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.CROSSHAIRS)
 			{
 				renderItemOverlay(event);
 			}
 		}
 	}
 
-	private void renderItemOverlay(RenderGameOverlayEvent event)
+	private void renderItemOverlay(net.minecraftforge.client.event.RenderGameOverlayEvent event)
 	{
 		ItemStack equippedItem;
 		ItemStack offHandItem;
 
-		Minecraft minecraft = Minecraft.getMinecraft();
+		net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getMinecraft();
 
 
 		if (!(equippedItem = minecraft.player.getHeldItemMainhand()).isEmpty())
@@ -904,7 +903,8 @@ public class RTEventHandler
 						int power = hitState.getValue(BlockRedstoneWire.POWER);
 
 						GlStateManager.disableBlend();
-						Minecraft.getMinecraft().fontRenderer.drawString(power + "", width / 2 + 5, height / 2 + 5, Colors.RED_INT);
+						net.minecraft.client.Minecraft.getMinecraft().fontRenderer.drawString(
+								power + "", width / 2 + 5, height / 2 + 5, Colors.RED_INT);
 						GlStateManager.color(1, 1, 1, 1);
 						GlStateManager.enableBlend();
 					}
@@ -912,11 +912,12 @@ public class RTEventHandler
 			}
 			else if (equippedItem.getItem() == ModItems.ingredients && equippedItem.getItemDamage() == ItemIngredient.INGREDIENT.BIOME_SENSOR.id)
 			{
-				renderBiomeSensor(event, minecraft);
+				renderBiomeSensor(event);
 			}
 			else
 			{
-				Entity pointedEntity = ReflectionUtilClient.getPointedEntity(Minecraft.getMinecraft().entityRenderer);
+				Entity pointedEntity = ReflectionUtilClient.getPointedEntity(
+						net.minecraft.client.Minecraft.getMinecraft().entityRenderer);
 				if (equippedItem.getItem() == ModItems.timeInABottle && pointedEntity instanceof EntityEclipsedClock)
 				{
 					int targetTime = ((EntityEclipsedClock) pointedEntity).getTargetTime();
@@ -940,7 +941,9 @@ public class RTEventHandler
 					String display = df.format(cal.getTime());
 
 					GlStateManager.disableBlend();
-					Minecraft.getMinecraft().fontRenderer.drawString(display, width / 2 + 5, height / 2 + 5, stored >= dif ? Colors.WHITE_INT : Colors.RED_INT);
+					net.minecraft.client.Minecraft.getMinecraft().fontRenderer.drawString(display,
+							width / 2 + 5, height / 2 + 5,
+							stored >= dif ? Colors.WHITE_INT : Colors.RED_INT);
 					GlStateManager.color(1, 1, 1, 1);
 					GlStateManager.enableBlend();
 				}
@@ -950,18 +953,19 @@ public class RTEventHandler
 			// Check off-hand for biome sensor
 			if (offHandItem.getItem() == ModItems.ingredients
 					&& offHandItem.getItemDamage() == ItemIngredient.INGREDIENT.BIOME_SENSOR.id) {
-				renderBiomeSensor(event, minecraft);
+				renderBiomeSensor(event);
 			}
 		}
 	}
 
-	private void renderBiomeSensor(RenderGameOverlayEvent event, Minecraft minecraft) {
+	private void renderBiomeSensor(net.minecraftforge.client.event.RenderGameOverlayEvent event) {
+		net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getMinecraft();
 		Biome b = minecraft.world.getBiome(minecraft.player.getPosition());
 		int width = event.getResolution().getScaledWidth();
 		int height = event.getResolution().getScaledHeight();
 
 		GlStateManager.disableBlend();
-		Minecraft.getMinecraft().fontRenderer.drawString(b.getBiomeName(), width / 2 + 5,
+		minecraft.fontRenderer.drawString(b.getBiomeName(), width / 2 + 5,
 				height / 2 + 5, Colors.WHITE_INT);
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.enableBlend();
@@ -988,12 +992,12 @@ public class RTEventHandler
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void renderLavaCharm(RenderGameOverlayEvent event)
+	private void renderLavaCharm(net.minecraftforge.client.event.RenderGameOverlayEvent event)
 	{
 		ItemStack lavaProtector = ItemStack.EMPTY;
 		ItemStack lavaCharm = ItemStack.EMPTY;
 
-		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		EntityPlayerSP player = net.minecraft.client.Minecraft.getMinecraft().player;
 
 		lavaCharm = InventoryUtil.getBauble(ModItems.lavaCharm, player);
 
@@ -1022,7 +1026,7 @@ public class RTEventHandler
 			if (compound != null)
 			{
 				float charge = compound.getInteger("charge");
-				Minecraft mc = Minecraft.getMinecraft();
+				net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getMinecraft();
 				mc.renderEngine.bindTexture(new ResourceLocation("randomthings:textures/gui/lavaCharmBar.png"));
 				GuiIngame ingameGui = mc.ingameGUI;
 
@@ -1259,7 +1263,7 @@ public class RTEventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void updateInputEvent(InputUpdateEvent event)
+	public void updateInputEvent(net.minecraftforge.client.event.InputUpdateEvent event)
 	{
 		EntityPlayer player = event.getEntityPlayer();
 		MovementInput input = event.getMovementInput();
@@ -1353,7 +1357,7 @@ public class RTEventHandler
 	@SideOnly(Side.CLIENT)
 	private void spawnEntityFilterParticles(LivingUpdateEvent event)
 	{
-		EntityPlayer player = Minecraft.getMinecraft().player;
+		EntityPlayer player = net.minecraft.client.Minecraft.getMinecraft().player;
 
 		ItemStack equipped = player.getHeldItemMainhand();
 
@@ -1364,7 +1368,22 @@ public class RTEventHandler
 			{
 				for (int i = 0; i < 1; ++i)
 				{
-					Particle particle = Minecraft.getMinecraft().effectRenderer.spawnEffectParticle(EnumParticleTypes.PORTAL.ordinal(), event.getEntityLiving().posX + (RTEventHandler.rng.nextDouble() - 0.5D) * event.getEntityLiving().width, event.getEntityLiving().posY + RTEventHandler.rng.nextDouble() * event.getEntityLiving().height - 0.25D, event.getEntityLiving().posZ + (RTEventHandler.rng.nextDouble() - 0.5D) * event.getEntityLiving().width, (RTEventHandler.rng.nextDouble() - 0.5D) * 2.0D, -RTEventHandler.rng.nextDouble(), (RTEventHandler.rng.nextDouble() - 0.5D) * 2.0D);
+					Particle particle =
+							net.minecraft.client.Minecraft.getMinecraft().effectRenderer
+									.spawnEffectParticle(EnumParticleTypes.PORTAL.ordinal(),
+											event.getEntityLiving().posX
+													+ (RTEventHandler.rng.nextDouble() - 0.5D)
+															* event.getEntityLiving().width,
+											event.getEntityLiving().posY
+													+ RTEventHandler.rng.nextDouble()
+															* event.getEntityLiving().height
+													- 0.25D,
+											event.getEntityLiving().posZ
+													+ (RTEventHandler.rng.nextDouble() - 0.5D)
+															* event.getEntityLiving().width,
+											(RTEventHandler.rng.nextDouble() - 0.5D) * 2.0D,
+											-RTEventHandler.rng.nextDouble(),
+											(RTEventHandler.rng.nextDouble() - 0.5D) * 2.0D);
 					particle.setRBGColorF(0.2F, 0.2F, 1);
 				}
 			}
@@ -1436,11 +1455,12 @@ public class RTEventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void renderWorldPost(RenderWorldLastEvent event)
+	public void renderWorldPost(net.minecraftforge.client.event.RenderWorldLastEvent event)
 	{
 		RandomThings.proxy.renderRedstoneInterfaceStuff(event.getPartialTicks());
 
-		Minecraft mc = FMLClientHandler.instance().getClient();
+		net.minecraft.client.Minecraft mc =
+				net.minecraftforge.fml.client.FMLClientHandler.instance().getClient();
 		EntityPlayer player = mc.player;
 		if (player != null)
 		{
