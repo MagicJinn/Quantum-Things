@@ -98,8 +98,11 @@ public class EntityBiomeCapsule extends EntityItem {
         int heldCharges = this.getHeldCharges();
 
         // Client-side particle spawning
-        if (this.world.isRemote && isInHeldBiome) {
-            spawnChargingParticles(biomeHere, heldCharges);
+        if (this.world.isRemote) {
+            if (isInHeldBiome) {
+                spawnChargingParticles(biomeHere, heldCharges);
+            }
+            // Always return if client-side
             return;
         }
 
