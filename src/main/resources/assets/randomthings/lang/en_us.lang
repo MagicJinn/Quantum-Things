@@ -632,5 +632,5 @@ item.spectreHelmet.info=WIP
 item.spectreChestplate.info=WIP
 item.spectreLeggings.info=WIP
 item.spectreBoots.info=WIP
-item.biomePainter.info=WIP
-item.biomeCapsule.info=WIP
+item.biomePainter.info=Lets you change the biome of a collumn of blocks. Uses capacity from a Biome Capsule in your inventory.
+item.biomeCapsule.info=Throw this on the ground in the biome you'd like to fill the capsule with. After a short while, the capsule will start to fill. When on the ground, the capsule will never despawn.

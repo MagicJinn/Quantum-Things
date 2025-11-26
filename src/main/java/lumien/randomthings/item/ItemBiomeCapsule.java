@@ -57,14 +57,13 @@ public class ItemBiomeCapsule extends ItemBase implements IRTItemColor {
 
     @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        // TODO: Implement and remove WIP
         Biome biome = getBiome(stack);
         String biomeString = "";
         if (biome != null) {
             String biomeName = getBiome(stack).getBiomeName();
             biomeString = NameUtility.separateWordsByCapital(biomeName) + " ";
         }
-        return biomeString + super.getItemStackDisplayName(stack) + " (WIP)";
+        return biomeString + super.getItemStackDisplayName(stack);
     }
 
     public static int getHeldCharges(ItemStack stack) {
