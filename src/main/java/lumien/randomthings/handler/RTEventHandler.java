@@ -73,6 +73,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRedstoneWire;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSound;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
@@ -117,6 +118,14 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.client.GuiIngameForge;
+import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
+import net.minecraftforge.client.event.InputUpdateEvent;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.sound.PlaySoundEvent;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.LootTableLoadEvent;
@@ -175,14 +184,14 @@ public class RTEventHandler
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	@SideOnly(Side.CLIENT)
-	public void playSoundEvent(net.minecraftforge.client.event.sound.PlaySoundEvent event)
+	public void playSoundEvent(PlaySoundEvent event)
 	{
-		EntityPlayerSP thePlayer = net.minecraft.client.Minecraft.getMinecraft().player;
+		EntityPlayerSP thePlayer = Minecraft.getMinecraft().player;
 
 		if (thePlayer != null && !event.isCanceled() && event.getSound() != null
 				&& event.getSound().getCategory() != SoundCategory.MUSIC
 				&& event.getSound().getCategory() != SoundCategory.RECORDS
-				&& net.minecraft.client.Minecraft.getMinecraft().gameSettings
+				&& Minecraft.getMinecraft().gameSettings
 						.getSoundLevel(event.getSound().getCategory()) > 0)
 		{
 			BlockPos soundPosition;
@@ -287,7 +296,7 @@ public class RTEventHandler
 	@SideOnly(Side.CLIENT)
 	public void clientConnectingToServer(ClientConnectedToServerEvent event)
 	{
-		net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(new Runnable()
+		Minecraft.getMinecraft().addScheduledTask(new Runnable()
 		{
 			@Override
 			public void run()
@@ -539,8 +548,7 @@ public class RTEventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void cameraSetup(
-			net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup event)
+	public void cameraSetup(CameraSetup event)
 	{
 		if (event.getEntity() instanceof EntityLivingBase)
 		{
@@ -682,7 +690,7 @@ public class RTEventHandler
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void modelBake(net.minecraftforge.client.event.ModelBakeEvent event)
+	public void modelBake(ModelBakeEvent event)
 	{
 		ModelFluidDisplay modelFluidDisplay = new ModelFluidDisplay();
 		event.getModelRegistry().putObject(new ModelResourceLocation("randomthings:fluidDisplay", "normal"), modelFluidDisplay);
@@ -701,7 +709,7 @@ public class RTEventHandler
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void textureStitch(net.minecraftforge.client.event.TextureStitchEvent.Pre event)
+	public void textureStitch(TextureStitchEvent.Pre event)
 	{
 		try
 		{
@@ -858,30 +866,30 @@ public class RTEventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void renderGameOverlay(net.minecraftforge.client.event.RenderGameOverlayEvent event)
+	public void renderGameOverlay(RenderGameOverlayEvent event)
 	{
 		if (event.getType() != null
-				&& event instanceof net.minecraftforge.client.event.RenderGameOverlayEvent.Post)
+				&& event instanceof RenderGameOverlayEvent.Post)
 		{
 			if (event
-					.getType() == net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.ARMOR)
+					.getType() == RenderGameOverlayEvent.ElementType.ARMOR)
 			{
 				renderLavaCharm(event);
 			}
 			else if (event
-					.getType() == net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.CROSSHAIRS)
+					.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS)
 			{
 				renderItemOverlay(event);
 			}
 		}
 	}
 
-	private void renderItemOverlay(net.minecraftforge.client.event.RenderGameOverlayEvent event)
+	private void renderItemOverlay(RenderGameOverlayEvent event)
 	{
 		ItemStack equippedItem;
 		ItemStack offHandItem;
 
-		net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getMinecraft();
+		Minecraft minecraft = Minecraft.getMinecraft();
 
 
 		if (!(equippedItem = minecraft.player.getHeldItemMainhand()).isEmpty())
@@ -958,8 +966,8 @@ public class RTEventHandler
 		}
 	}
 
-	private void renderBiomeSensor(net.minecraftforge.client.event.RenderGameOverlayEvent event) {
-		net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getMinecraft();
+	private void renderBiomeSensor(RenderGameOverlayEvent event) {
+		Minecraft minecraft = Minecraft.getMinecraft();
 		Biome b = minecraft.world.getBiome(minecraft.player.getPosition());
 		int width = event.getResolution().getScaledWidth();
 		int height = event.getResolution().getScaledHeight();
@@ -992,7 +1000,7 @@ public class RTEventHandler
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void renderLavaCharm(net.minecraftforge.client.event.RenderGameOverlayEvent event)
+	private void renderLavaCharm(RenderGameOverlayEvent event)
 	{
 		ItemStack lavaProtector = ItemStack.EMPTY;
 		ItemStack lavaCharm = ItemStack.EMPTY;
@@ -1263,7 +1271,7 @@ public class RTEventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void updateInputEvent(net.minecraftforge.client.event.InputUpdateEvent event)
+	public void updateInputEvent(InputUpdateEvent event)
 	{
 		EntityPlayer player = event.getEntityPlayer();
 		MovementInput input = event.getMovementInput();
@@ -1455,12 +1463,12 @@ public class RTEventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void renderWorldPost(net.minecraftforge.client.event.RenderWorldLastEvent event)
+	public void renderWorldPost(RenderWorldLastEvent event)
 	{
 		RandomThings.proxy.renderRedstoneInterfaceStuff(event.getPartialTicks());
 
 		net.minecraft.client.Minecraft mc =
-				net.minecraftforge.fml.client.FMLClientHandler.instance().getClient();
+				FMLClientHandler.instance().getClient();
 		EntityPlayer player = mc.player;
 		if (player != null)
 		{

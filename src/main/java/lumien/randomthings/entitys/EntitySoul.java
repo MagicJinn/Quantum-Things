@@ -65,7 +65,6 @@ public class EntitySoul extends Entity implements IEntityAdditionalSpawnData
 
 		this.noClip = true;
 		this.playerName = playerName;
-		setRenderDistanceWeight(5);
 	}
 
 	@Override
