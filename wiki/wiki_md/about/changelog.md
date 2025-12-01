@@ -7,6 +7,8 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.0.3 (in development)
+
 ## 1.0.2
 
 ### Changes
