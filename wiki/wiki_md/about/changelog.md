@@ -20,6 +20,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 - Fixed Golden Chickens being able to consume seeds, even though they cannot be bred.
 - Improved the performance of the Potion Vaporizer room detection algorithm.
+- Fixed a typo in the language file (brickss > bricks).
 
 ## 1.0.2
 

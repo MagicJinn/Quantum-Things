@@ -79,6 +79,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed plate item entities being way too large when dropped as items.
 - Fixed Golden Chickens being able to consume seeds, even though they cannot be bred.
 - Improved the performance of the Potion Vaporizer room detection algorithm.
+- Fixes various typos.
 
 ### Reporting Issues
 
