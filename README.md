@@ -70,7 +70,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Fertilized Dirt not being recognized as farmland by villagers.
 - Fixed a crash where the Block Breaker tried to incorrectly access a block state that was not a Block Breaker.
 - Fixed an issue where it would rain in the Spectre Dimension.
-- Fixed Divining Rods not showing up in Creative search.
+- Fixed Divining Rods not showing up in Creative Search.
 - Fixed torches and other attachable blocks being able to be placed on the side of the Rain Shield.
 - Fixed Rain Shield duplication.
 - Fixed a crash when Biome Stone tried to access a biome that was not registered with BiomeDictionary.
@@ -82,7 +82,9 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixes various typos.
 - Updated the translation in the language files. (Machine translated, may contain errors, please report any issues)
 - Fixed Potion Vaporizer not dropping its contents when broken.
-- Fixed Custom Workbench dropping item when broken in creative mode.
+- Fixed Custom Workbench dropping its item when broken in Creative Mode.
+- Fixed Runic Dust breaking all pieces at once in Creative Mode instead of one piece at a time.
+- Fixed Runic Dust dropping its item when broken in Creative Mode.
 
 ### Reporting Issues
 

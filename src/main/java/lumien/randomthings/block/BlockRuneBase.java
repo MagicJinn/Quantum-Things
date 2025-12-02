@@ -130,68 +130,108 @@ public class BlockRuneBase extends BlockContainerBase implements IRTBlockColor, 
 		return 0;
 	}
 
-	@Override
-	public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
+	/**
+	 * Breaks a single piece of runic dust at the position hit by the player's ray
+	 * trace.
+	 * Returns true if a piece was broken, false otherwise.
+	 */
+	private boolean breakSingleRunePiece(World worldIn, BlockPos pos, EntityPlayer playerIn)
 	{
-		if (!worldIn.isRemote)
+		if (worldIn.isRemote)
 		{
-			Vec3d start = playerIn.getPositionEyes(0);
-			RayTraceResult result = worldIn.rayTraceBlocks(start, start.add(playerIn.getLookVec().scale(6)), false, true, false);
+			return false;
+		}
 
-			if (result != null && result.typeOfHit == RayTraceResult.Type.BLOCK)
-			{
-				BlockPos hitPos = result.getBlockPos();
+		Vec3d start = playerIn.getPositionEyes(0);
+		RayTraceResult result = worldIn.rayTraceBlocks(start, start.add(playerIn.getLookVec().scale(6)), false, true,
+				false);
 
-				if (hitPos.equals(pos))
-				{
-					Vec3d hitVec = result.hitVec.subtract(new Vec3d(pos));
+		if (result != null && result.typeOfHit == RayTraceResult.Type.BLOCK) {
+			BlockPos hitPos = result.getBlockPos();
 
-					TileEntityRuneBase te = (TileEntityRuneBase) worldIn.getTileEntity(pos);
+			if (hitPos.equals(pos)) {
+				Vec3d hitVec = result.hitVec.subtract(new Vec3d(pos));
 
-					int[][] runeData = te.getRuneData();
+				TileEntityRuneBase te = (TileEntityRuneBase) worldIn.getTileEntity(pos);
+				if (te == null) {
+					return false;
+				}
 
-					int x = (int) Math.floor(hitVec.x * 4);
-					int y = (int) Math.floor(hitVec.z * 4);
+				int[][] runeData = te.getRuneData();
 
-					if (runeData[x][y] != -1)
-					{
+				int x = (int) Math.floor(hitVec.x * 4);
+				int y = (int) Math.floor(hitVec.z * 4);
+
+				// Clamp coordinates to valid range
+				x = Math.max(0, Math.min(3, x));
+				y = Math.max(0, Math.min(3, y));
+
+				if (runeData[x][y] != -1) {
+					// Only drop item if not in creative mode
+					if (!playerIn.capabilities.isCreativeMode) {
 						EntityItem entityitem = new EntityItem(worldIn, pos.getX() + hitVec.x, pos.getY() + 0.1, pos.getZ() + hitVec.z, new ItemStack(ModItems.runeDust, 1, runeData[x][y]));
 						entityitem.setNoPickupDelay();
 						worldIn.spawnEntity(entityitem);
+					}
 
-						runeData[x][y] = -1;
-						te.syncTE();
+					runeData[x][y] = -1;
+					te.syncTE();
 
+					// For some reason, the sound is played twice when breaking a single piece in
+					// creative mode
+					// This is a workaround
+					if (!playerIn.capabilities.isCreativeMode) {
 						worldIn.playSound(null, pos, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS, 1F, 0.8F);
+					}
 
-						boolean empty = true;
-						for (x = 0; x < runeData.length; x++)
-						{
-							for (y = 0; y < runeData[0].length; y++)
-							{
-								int rune = runeData[x][y];
+					boolean empty = true;
+					for (int i = 0; i < runeData.length; i++) {
+						for (int j = 0; j < runeData[0].length; j++) {
+							int rune = runeData[i][j];
 
-								if (rune != -1)
-								{
-									empty = false;
-
-									break;
-								}
-							}
-
-							if (!empty)
-							{
-								break;
-							}
-						}
-
-						if (empty)
-						{
-							worldIn.setBlockToAir(pos);
+							if (rune != -1) {
+								empty = false;
+							break;
 						}
 					}
+
+						if (!empty) {
+							break;
+						}
+					}
+
+					if (empty) {
+						worldIn.setBlockToAir(pos);
+					}
+
+					return true;
 				}
 			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player,
+			boolean willHarvest) {
+		// In creative mode, break only one piece at a time instead of all pieces
+		if (player.capabilities.isCreativeMode && !world.isRemote) {
+			if (breakSingleRunePiece(world, pos, player)) {
+				// Return false to prevent the default breakBlock from being called
+				// which would break all pieces
+				return false;
+			}
+		}
+
+		// In survival mode, allow normal behavior (onBlockClicked will handle it)
+		return super.removedByPlayer(state, world, pos, player, willHarvest);
+	}
+
+	@Override
+	public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn) {
+		if (!worldIn.isRemote) {
+			breakSingleRunePiece(worldIn, pos, playerIn);
 		}
 
 		super.onBlockClicked(worldIn, pos, playerIn);
