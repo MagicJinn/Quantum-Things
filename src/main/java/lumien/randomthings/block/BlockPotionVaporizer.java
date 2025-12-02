@@ -3,6 +3,7 @@ package lumien.randomthings.block;
 import lumien.randomthings.RandomThings;
 import lumien.randomthings.lib.GuiIds;
 import lumien.randomthings.tileentity.TileEntityPotionVaporizer;
+import lumien.randomthings.util.InventoryUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -10,8 +11,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -36,9 +35,9 @@ public class BlockPotionVaporizer extends BlockContainerBase
 	{
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 
-		if (tileentity instanceof IInventory)
+		if (tileentity instanceof TileEntityPotionVaporizer)
 		{
-			InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileentity);
+			InventoryUtil.dropItemHandlerItems(worldIn, pos, ((TileEntityPotionVaporizer) tileentity).getItemHandler());
 			worldIn.updateComparatorOutputLevel(pos, this);
 		}
 

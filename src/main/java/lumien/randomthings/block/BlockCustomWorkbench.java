@@ -2,7 +2,6 @@ package lumien.randomthings.block;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import lumien.randomthings.container.ContainerCustomWorkbench;
 import lumien.randomthings.tileentity.TileEntityCustomWorkbench;
 import lumien.randomthings.util.WorldUtil;
@@ -27,6 +26,7 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -52,21 +52,46 @@ public class BlockCustomWorkbench extends BlockContainerBase
 		this.setSoundType(SoundType.WOOD);
 	}
 
-	@Override
-	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
+	/**
+	 * Creates an ItemStack with NBT data containing the wood type and meta.
+	 * Shared code used by both getPickBlock and breakBlock.
+	 */
+	private ItemStack createWorkbenchStack(World world, BlockPos pos)
 	{
 		TileEntityCustomWorkbench te = (TileEntityCustomWorkbench) world.getTileEntity(pos);
-		String woodName = te.getWoodMaterial().getRegistryName().toString();
+		if (te == null) {
+			ItemStack stack = new ItemStack(this);
+			NBTTagCompound compound = new NBTTagCompound();
+			compound.setString("woodName", "minecraft:planks");
+			compound.setInteger("woodMeta", 0);
+			stack.setTagCompound(compound);
+			return stack;
+		}
+
+		Block woodMaterial = te.getWoodMaterial();
+		String woodName = "minecraft:planks";
+		if (woodMaterial != null) {
+			ResourceLocation registryName = woodMaterial.getRegistryName();
+			if (registryName != null) {
+				woodName = registryName.toString();
+			}
+		}
 		int meta = te.getWoodMeta();
 
-		ItemStack pickedWorkbench = new ItemStack(this);
-		NBTTagCompound compound;
-		pickedWorkbench.setTagCompound(compound = new NBTTagCompound());
+		ItemStack workbench = new ItemStack(this);
+		NBTTagCompound compound = new NBTTagCompound();
+		workbench.setTagCompound(compound);
 
 		compound.setString("woodName", woodName);
 		compound.setInteger("woodMeta", meta);
 
-		return pickedWorkbench;
+		return workbench;
+	}
+
+	@Override
+	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos,
+			EntityPlayer player) {
+		return createWorkbenchStack(world, pos);
 	}
 
 	@Override
@@ -76,21 +101,15 @@ public class BlockCustomWorkbench extends BlockContainerBase
 	}
 
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-	{
-		TileEntityCustomWorkbench te = (TileEntityCustomWorkbench) worldIn.getTileEntity(pos);
-		String woodName = te.getWoodMaterial().getRegistryName().toString();
-		int meta = te.getWoodMeta();
-
-		ItemStack droppedWorkbench = new ItemStack(this);
-		NBTTagCompound compound;
-		droppedWorkbench.setTagCompound(compound = new NBTTagCompound());
-
-		compound.setString("woodName", woodName);
-		compound.setInteger("woodMeta", meta);
-
-		WorldUtil.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), droppedWorkbench);
-		super.breakBlock(worldIn, pos, state);
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player,
+			boolean willHarvest) {
+		// If the player is not in creative mode and the block is being harvested, spawn
+		// the workbench item
+		if (!player.capabilities.isCreativeMode && !world.isRemote && willHarvest) {
+			ItemStack droppedWorkbench = createWorkbenchStack(world, pos);
+			WorldUtil.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), droppedWorkbench);
+		}
+		return super.removedByPlayer(state, world, pos, player, willHarvest);
 	}
 
 	@Override
@@ -173,15 +192,16 @@ public class BlockCustomWorkbench extends BlockContainerBase
 
 		TileEntityCustomWorkbench te = (TileEntityCustomWorkbench) worldIn.getTileEntity(pos);
 
-		Block woodBlock = Block.getBlockFromName(woodName);
+		if (te != null) {
+			Block woodBlock = Block.getBlockFromName(woodName);
 
-		if (woodBlock == null)
-		{
-			woodBlock = Blocks.PLANKS;
-			meta = 0;
+			if (woodBlock == null) {
+				woodBlock = Blocks.PLANKS;
+				meta = 0;
+			}
+
+			te.setWood(woodBlock, meta);
 		}
-
-		te.setWood(woodBlock, meta);
 	}
 
 	private static class WoodStateProperty implements IUnlistedProperty<IBlockState>

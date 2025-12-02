@@ -81,6 +81,8 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Improved the performance of the Potion Vaporizer room detection algorithm.
 - Fixes various typos.
 - Updated the translation in the language files. (Machine translated, may contain errors, please report any issues)
+- Fixed Potion Vaporizer not dropping its contents when broken.
+- Fixed Custom Workbench dropping item when broken in creative mode.
 
 ### Reporting Issues
 

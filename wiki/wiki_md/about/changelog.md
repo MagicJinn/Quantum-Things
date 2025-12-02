@@ -22,6 +22,8 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Improved the performance of the Potion Vaporizer room detection algorithm.
 - Fixed a typo in the language file (brickss > bricks).
 - Updated the translation in the language files. (Machine translated, may contain errors, please report any issues)
+- Fixed Potion Vaporizer not dropping its contents when broken.
+- Fixed Custom Workbench dropping item when broken in creative mode.
 
 ## 1.0.2
 
