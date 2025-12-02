@@ -188,23 +188,29 @@ public class TileEntityAncientFurnace extends TileEntityBase implements ITickabl
 							{
 								BlockPos addingPos = nextPos.offset(facing);
 
-								if (nextCheckEntries.containsKey(addingPos))
-								{
-									Boolean[] existingArray = nextCheckEntries.get(addingPos);
-									existingArray[facing.getOpposite().getHorizontalIndex()] = false;
-								}
-								else
-								{
-									Boolean[] newArray = new Boolean[EnumFacing.HORIZONTALS.length];
+								// Check if the block is within circular range (horizontal distance only)
+								// Radius is calculated from limit: R = √(limit/π) to maintain parity
+								int dx = addingPos.getX() - this.pos.getX();
+								int dz = addingPos.getZ() - this.pos.getZ();
+								double horizontalDistanceSq = dx * dx + dz * dz;
+								// Calculate radius from limit: πR² = limit, so R² = limit/π
+								int rangeSq = (int) Math.ceil(Numbers.ANCIENT_FURNACE_LIMIT / Math.PI);
 
-									for (int i = 0; i < newArray.length; i++)
-									{
-										newArray[i] = true;
+								if (horizontalDistanceSq <= rangeSq) {
+									if (nextCheckEntries.containsKey(addingPos)) {
+										Boolean[] existingArray = nextCheckEntries.get(addingPos);
+										existingArray[facing.getOpposite().getHorizontalIndex()] = false;
+									} else {
+										Boolean[] newArray = new Boolean[EnumFacing.HORIZONTALS.length];
+
+										for (int i = 0; i < newArray.length; i++) {
+											newArray[i] = true;
+										}
+
+										newArray[facing.getOpposite().getHorizontalIndex()] = false;
+
+										nextCheckEntries.put(addingPos, newArray);
 									}
-
-									newArray[facing.getOpposite().getHorizontalIndex()] = false;
-
-									nextCheckEntries.put(addingPos, newArray);
 								}
 							}
 						}
