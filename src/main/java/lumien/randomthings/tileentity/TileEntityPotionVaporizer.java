@@ -1,10 +1,13 @@
 package lumien.randomthings.tileentity;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
 import lumien.randomthings.block.BlockPotionVaporizer;
+import lumien.randomthings.config.Numbers;
 import lumien.randomthings.lib.ISlotFilter;
 import lumien.randomthings.network.PacketHandler;
 import lumien.randomthings.network.messages.MessagePotionVaporizerParticles;
@@ -29,8 +32,6 @@ public class TileEntityPotionVaporizer extends TileEntityBase implements ITickab
 {
 	HashSet<BlockPos> affectedBlocks;
 
-	final int MAX_BLOCKS = 100;
-
 	PotionEffect currentPotionEffect;
 
 	int durationLeft;
@@ -44,7 +45,7 @@ public class TileEntityPotionVaporizer extends TileEntityBase implements ITickab
 
 		validBlocks = new HashSet<>();
 		checkedBlocks = new HashSet<>();
-		toBeChecked = new ArrayList<>();
+		toBeChecked = new ArrayDeque<>();
 
 		durationLeft = 1;
 		fuelBurnTime = 0;
@@ -151,8 +152,12 @@ public class TileEntityPotionVaporizer extends TileEntityBase implements ITickab
 	{
 		if (!world.isRemote)
 		{
-			int roomSteps = affectedBlocks.size() > 0 ? 2 : 5;
-			for (int i = 0; i < roomSteps; i++)
+			// Scale steps with max room size: process ~5% of max blocks per tick, with
+			// minimum of 2-5 steps
+			int baseSteps = affectedBlocks.size() > 0 ? 2 : 5;
+			int scaledSteps = Math.max(baseSteps, Numbers.POTION_VAPORIZER_MAX_BLOCKS / 20);
+
+			for (int i = 0; i < scaledSteps; i++)
 			{
 				stepRoomDetection();
 			}
@@ -288,16 +293,21 @@ public class TileEntityPotionVaporizer extends TileEntityBase implements ITickab
 
 	private void spawnParticles()
 	{
-		if (!world.isRemote && currentPotionEffect != null && world.getTotalWorldTime() % 5 == 0)
+		if (!world.isRemote && currentPotionEffect != null && world.getTotalWorldTime() % 20 == 0)
 		{
-			MessagePotionVaporizerParticles message = new MessagePotionVaporizerParticles(new ArrayList<>(affectedBlocks), currentPotionEffect.getPotion().getLiquidColor());
+			ArrayList<BlockPos> particleBlocks = new ArrayList<>(affectedBlocks);
+			Collections.shuffle(particleBlocks, world.rand);
+			int count = Math.max(particleBlocks.size() / 4000, 1);
+			particleBlocks = new ArrayList<>(particleBlocks.subList(0, count));
+			MessagePotionVaporizerParticles message = new MessagePotionVaporizerParticles(
+					new ArrayList<>(particleBlocks), currentPotionEffect.getPotion().getLiquidColor());
 			PacketHandler.INSTANCE.sendToAllAround(message, new TargetPoint(this.world.provider.getDimension(), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 32));
 		}
 	}
 
 	HashSet<BlockPos> validBlocks;
 	HashSet<BlockPos> checkedBlocks;
-	ArrayList<BlockPos> toBeChecked;
+	ArrayDeque<BlockPos> toBeChecked;
 
 	int checkCounter;
 	boolean firstCheck = true;
@@ -310,7 +320,7 @@ public class TileEntityPotionVaporizer extends TileEntityBase implements ITickab
 			toBeChecked.add(this.pos.offset(facing));
 			firstCheck = false;
 		}
-		if (checkCounter > MAX_BLOCKS)
+		if (checkCounter > Numbers.POTION_VAPORIZER_MAX_BLOCKS)
 		{
 			affectedBlocks.clear();
 			validBlocks.clear();
@@ -318,9 +328,9 @@ public class TileEntityPotionVaporizer extends TileEntityBase implements ITickab
 		}
 		else
 		{
-			if (toBeChecked.size() > 0)
+			if (!toBeChecked.isEmpty())
 			{
-				BlockPos toCheck = toBeChecked.remove(0);
+				BlockPos toCheck = toBeChecked.poll();
 				if (!checkedBlocks.contains(toCheck))
 				{
 					checkedBlocks.add(toCheck);
@@ -331,7 +341,7 @@ public class TileEntityPotionVaporizer extends TileEntityBase implements ITickab
 
 						for (EnumFacing facing : EnumFacing.VALUES)
 						{
-							BlockPos nextPos = new BlockPos(toCheck.offset(facing));
+							BlockPos nextPos = toCheck.offset(facing);
 
 							if (!checkedBlocks.contains(nextPos))
 							{

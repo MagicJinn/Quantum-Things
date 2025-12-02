@@ -16,6 +16,10 @@ public class Features {
 			comment = "Should there be an Golden Egg in every Bean Pod?") public static boolean GOLDEN_EGG =
 					true;
 
+					@ConfigOption(category = CATEGORY, name = "GoldenChickenProduction",
+			comment = "Should the Golden Chicken produce Golden Ingots automatically, or only when fed?") public static boolean GOLDEN_CHICKEN_PRODUCTION =
+					false;
+
 	@ConfigOption(category = CATEGORY, name = "MagneticEnchantment",
 			comment = "Whether the magnetic enchantment should be available.") public static boolean MAGNETIC_ENCHANTMENT =
 					true;

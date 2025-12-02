@@ -47,7 +47,7 @@ minecraft {
     mappings = "snapshot_20171220"
     
     replaceIn "lib/Reference.java"
-    replace "@VERSION@",project.version
+    replace "@VERSION@",project.minecraft.version
 	replace "@FINGERPRINT@", project.findProperty('signSHA1') ?: ''
     
     useDepAts = true
@@ -77,7 +77,7 @@ processResources
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
-
+   
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'

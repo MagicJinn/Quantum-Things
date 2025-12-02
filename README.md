@@ -45,6 +45,9 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Re-added Biome Painter and Biome Capsule from 1.7.10.
 - Re-added Obsidian Stick from 1.7.10, now used for Spectre Tools and the Biome Painter.
 - Added the Spectre Hoe.
+- Added the ability to configure whether Golden Chickens should produce gold ingots automatically (legacy), or only when fed gold ore (current).
+- Added the ability to configure the maximum number of blocks a Potion Vaporizer can affect.
+- Reduced the number of particles spawned by the Potion Vaporizer by several orders of magnitude.
 
 ### Fixes
 
@@ -73,6 +76,8 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed a crash when the Eclipsed Clock tried to access a font renderer that was not available.
 - Fixed Biome Sensor not working when held in off-hand.
 - Fixed plate item entities being way too large when dropped as items.
+- Fixed Golden Chickens being able to consume seeds, even though they cannot be bred.
+- Improved the performance of the Potion Vaporizer room detection algorithm.
 
 ### Reporting Issues
 

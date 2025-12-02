@@ -9,7 +9,7 @@ category: items
 
 ---
 
-When thrown a Chicken with a Golden Wattle will hatch that lays gold ingots instead of eggs. There is always one inside of a Bean Pod on top of a grown [Magic Bean](beans).
+Golden Eggs can be found inside of Bean Pods, grown from [Magic Beans](beans). When thrown, a Chicken with a Golden Wattle will hatch. You can feed the Golden Chicken gold ore to make it drop 3 gold ingots per ore. Alongside that, it can also be configured to lay golden ingots instead of eggs.
 
 ## Screenshots
 

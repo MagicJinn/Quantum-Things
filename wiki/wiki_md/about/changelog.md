@@ -9,6 +9,17 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 ## 1.0.3 (in development)
 
+### Changes
+
+- Added the ability to configure whether Golden Chickens should produce gold ingots automatically (legacy), or only when fed gold ore (current).
+- Added the ability to configure the maximum number of blocks a Potion Vaporizer can affect.
+- Reduced the number of particles spawned by the Potion Vaporizer by several orders of magnitude.
+
+### Fixes
+
+- Fixed Golden Chickens being able to consume seeds, even though they cannot be bred.
+- Improved the performance of the Potion Vaporizer room detection algorithm.
+
 ## 1.0.2
 
 ### Changes
