@@ -220,7 +220,7 @@ item.positionFilter.name=方位过滤器
 item.biomeCrystal.name=生物群系水晶
 item.summoningPendulum.name=召唤师摆锤
 item.stableEnderpearl.name=稳态末影珍珠
-#item.craftingRecipe.name=工作台合成
+item.craftingRecipe.name=合成配方
 item.redstoneTool.name=红石工具
 item.waterWalkingBoots.name=水上漫步者之靴
 item.dungeonChestGenerator.name=战利品生成器
@@ -254,9 +254,21 @@ item.lotusseeds.name=莲子
 item.soundPattern.name=音乐模块
 item.portableSoundDampener.name=便携式隔音器
 item.escapeRope.name=逃生绳
+item.chunkAnalyzer.name=区块分析器
+item.flooPouch.name=飞路袋
+item.timeInABottle.name=瓶中时光
+item.spectreIlluminator.name=通灵照明器
+item.eclipsedClock.name=日蚀时钟
 
 item.diviningRod.name=占卜棒
 item.diviningRodUniversal.name=通用
+
+item.spectreCharger.normal.name=通灵充电器
+item.spectreCharger.redstone.name=红石通灵充电器
+item.spectreCharger.ender.name=末影通灵充电器
+item.spectreCharger.genesis.name=创造模式通灵充电器
+
+item.spectreCharger.charge=充电 %s RF/t
 
 item.bean.name=豆
 item.lesserMagicBean.name=次级魔豆
@@ -304,12 +316,17 @@ item.ingredient.preciousEmerald.name=无暇绿宝石
 item.ingredient.lotusBlossom.name=莲花
 item.ingredient.goldenEgg.name=金蛋
 item.ingredient.spectreString.name=通灵线
+item.ingredient.blackoutPowder.name=遮光粉
 item.ingredient.obsidianStick.name=黑曜石棒
 
 item.spectrePickaxe.name=通灵之镐
 item.spectreAxe.name=通灵之斧
 item.spectreShovel.name=通灵之铲
 item.spectreHoe.name=通灵之锄
+item.spectreHelmet.name=通灵头盔
+item.spectreChestplate.name=通灵胸甲
+item.spectreLeggings.name=通灵护腿
+item.spectreBoots.name=通灵靴子
 
 item.runeDust.black.name=黑色符文粉
 item.runeDust.red.name=红色符文粉
@@ -335,17 +352,17 @@ item.weatherEgg_storm.name=天气胶囊<雷暴>
 tooltip.general.shift=按住§6Shift§7来查看详细信息
 tooltip.general.empty=§8<空>
 tooltip.positionFilter.dimension=维度：%d
-tooltip.positionFilter.x=Position-X坐标：%d
-tooltip.positionFilter.y=Position-Y坐标：%d
-tooltip.positionFilter.z=Position-Z坐标：%d
+tooltip.positionFilter.x=X坐标：%d
+tooltip.positionFilter.y=Y坐标：%d
+tooltip.positionFilter.z=Z坐标：%d
 tooltip.summoningPendulum.entityCount.singular=§5内有%d个实体
 tooltip.summoningPendulum.entityCount.plural=§5内有%d个实体
 tooltip.stableEnderpearl.boundto=§5已与%s绑定
-tooltip.entityFilter.invalidEntity=无效试题
-tooltip.redstoneactivator.duration=持续时间：%d ticks
+tooltip.entityFilter.invalidEntity=无效实体
+tooltip.redstoneactivator.duration=持续时间：%d 刻
 
-tooltip.itemFilter.metadata=检查Metadata
-tooltip.itemFilter.nometadata=忽略MetaData
+tooltip.itemFilter.metadata=检查元数据
+tooltip.itemFilter.nometadata=忽略元数据
 tooltip.itemFilter.oredict=检查矿物词典
 tooltip.itemFilter.nooredict=忽略矿物词典
 tooltip.itemFilter.nbt=检查NBT
@@ -378,6 +395,8 @@ tooltip.entityDetector.invertedOutput=反向输出
 tooltip.entityDetector.weakOutput=低频红石信号输出
 tooltip.entityDetector.strongOutput=高频红石信号输出
 
+tooltip.timeInABottle=%d 时 | %d 分 | %d 秒
+
 gui.basicRedstoneInterface.notarget=无目标锁定
 gui.basicRedstoneInterface.targetX=目标-X：%s
 gui.basicRedstoneInterface.targetY=目标-Y：%s
@@ -393,6 +412,10 @@ gui.entityDetector.filter.monster=怪物
 gui.entityDetector.filter.player=玩家
 gui.entityDetector.filter.item=掉落物品
 gui.entityDetector.filter.custom=自定义
+
+gui.igniter.toggle=切换火焰
+gui.igniter.ignite=点燃
+gui.igniter.keepIgnited=保持点燃
 
 floo.info.teleport=§7移动到§a%s
 floo.info.same=§c你已经在此目的地了
@@ -428,6 +451,12 @@ entity.goldenChicken.name=金鸡
 entity.randomthings.goldenEgg.name=金蛋
 entity.goldenEgg.name=金蛋
 
+entity.randomthings.spectreIlluminator.name=通灵照明器
+entity.spectreIlluminator.name=通灵照明器
+
+entity.randomthings.eclipsedClock.name=日蚀时钟
+entity.eclipsedClock.name=日蚀时钟
+
 fluid.biomeEssence=生物群系精华
 
 enchantment.randomthings.magnetic=磁性
@@ -437,6 +466,9 @@ enchantment.randomthings.magnetic.desc=具有磁性附魔的工具，会吸收�
 command.festival.scheduled=设定附近村庄特殊节日日期
 command.festival.failed=未能为附近村庄安排特殊节日
 command.festival.novillager=附近没有村庄
+
+rt.command.op.feedback=已将目标方块的OP状态切换为 %s
+rt.command.op.error=该方块无法被设置为OP。
 
 festival.celebrating=附近村庄的村民正在庆祝节日！
 
@@ -478,8 +510,8 @@ tile.ironDropper.info=原版投掷器的升级版——铁质投掷器，允许�
 tile.blockOfSticks.normal.info=脚手架是一种非常实用的建材，放置10秒后会自动消失。
 tile.blockOfSticks.returning.info=强化脚手架与脚手架类似，不过它们会自动返还至最近玩家的物品栏中而不是消失。
 tile.igniter.info=点火器是打火石的升级版本，如果它接受到红石信号便会立即点燃它前面的方块，一旦信号结束又会立即扑灭火焰。
-#tile.inventoryRerouter.info=Each side of the Inventory Rerouter can be configured to "point" to one side of the block in front of it (Green Side). Items going into the inventory rerouter will go into the side set of the block in front.
-#tile.itemCollector.info=The Item Collector is placed on inventories and will collect any items in a 3 block radius around it into that inventory.
+tile.inventoryRerouter.info=物流管理器的每一面都可以配置为"指向"其前方方块的一面（绿色面）。进入物流管理器的物品将进入前方方块的设定面。
+tile.itemCollector.info=物品收集器放置在容器上，会收集其周围3格半径内的任何物品到该容器中。
 tile.advancedItemCollector.info=高级物品收集器是物品收集器的升级版，在原来的基础上加入了可设置范围以及过滤功能。
 tile.stainedBrick.info=染色砖块可以看做原版砖块的染色版本。
 tile.luminousStainedBrick.info=荧光染色砖块可以看做原版砖块的染色版本。
@@ -499,7 +531,7 @@ tile.inventoryTester.info=物流检测器会检测物品栏中指定物品的数
 tile.superlubricentstone.info=行走在这个方块上会由于没有摩擦而滑行。
 tile.superLubricentIce.info=行走在这个方块上会由于没有摩擦而滑行。
 tile.triggerGlass.info=感知玻璃会在接收到红石信号的三秒钟内失去碰撞体积，与之相邻的感知玻璃也会因为其中一个收到红石信号而失去碰撞体积。
-#tile.blockDestabilizer.info=The Block Destabilizer will make blocks connected to its front fall down when powered by redstone. It can destabilize a total of 50 blocks at once though they all have to be connected to each other and of the same type. In its GUI you can toggle lazy mode, in lazy mode the block destabilizer will remember the "shape" it dropped last time so it will run faster. However it will be "locked" to that shape and won't drop any blocks outside of it. Use lazy mode if you want a block destabilizer to keep dropping the same shape of blocks. You can reset the remembered shape with the "arrow" button.
+tile.blockDestabilizer.info=干扰器会在接收到红石信号时使连接在其前方的方块掉落。它一次最多可以干扰50个方块，但它们必须彼此连接且为同一类型。在其GUI中，你可以切换懒人模式，在懒人模式下，干扰器会记住上次掉落的"形状"，因此运行更快。然而，它将被"锁定"到该形状，不会掉落其外的任何方块。如果你希望干扰器持续掉落相同形状的方块，请使用懒人模式。你可以使用"箭头"按钮重置记住的形状。
 tile.advancedRedstoneRepeater.info=一种可自由设置的红石中继器。
 tile.translucentLuminousBlock.info=一种通透的荧光方块。
 tile.soundBox.info=通过提供红石信号并插入音乐模块即可播放对应的音乐。
@@ -510,6 +542,11 @@ tile.diaphanousBlock.info=通透方块会根据其与玩家的距离而改变不
 tile.sidedRedstone.info=仅在一侧产生红石信号的方块。
 tile.spectreLens.info=将通灵镜片置于信标上方，无论你身处何处均能获得信标效果。
 tile.spectreEnergyInjector.info=通灵能量注入器最多能够存储1000000RF，其需要使用通灵线圈进行输出/输入。
+
+jei.spectreCoil.number.suffix=并输出至其连接的方块。它们可以在地牢中找到。
+jei.spectreCoil.transfer.suffix=从放置者的通灵能量缓冲区输出至其连接的方块。使用通灵能量注入器可将能量输入到你的通灵能量缓冲区。
+jei.spectreCoil.generate.suffix=并输出至其连接的方块。
+
 tile.spectreCoil_normal.info=将1024RF/t从通灵能量注入器中输出，反之你也可以将能量输入通灵能量注入器。
 tile.spectreCoil_redstone.info=将4096RF/t从通灵能量注入器中输出，反之你也可以将能量输入通灵能量注入器。
 tile.spectreCoil_ender.info=将20480RF/t从通灵能量注入器中输出，反之你也可以将能量输入通灵能量注入器。
@@ -591,3 +628,22 @@ item.enderBucket.info=末影桶的功能类似原版的桶，但不完全是。�
 item.reinforcedEnderBucket.info=强化末影桶的功能类似末影桶。值得注意的是，它至多能盛装10桶相同类似的流体。
 item.diviningRod.info=在主手或副手持有此物品时，会高亮显示以你为中心的%s立方体中的每个%s。
 item.diviningRod.ore=矿石
+item.eclipsedClock.info=日蚀时钟允许你改变时间。将其挂在墙上后，你可以（按住Shift）右键点击来减少或增加目标时间。手持瓶中时光悬停在它上方会显示快进到设定时间所需的时间。使用瓶中时光右键点击会消耗相应的时间并设置时间为时钟的时间。
+item.spectreHelmet.info=WIP
+item.spectreChestplate.info=WIP
+item.spectreLeggings.info=WIP
+item.spectreBoots.info=WIP
+item.biomePainter.name=生物群系绘制器
+item.biomeCapsule.name=生物群系胶囊
+item.biomePainter.info=让你可以改变一列方块的生物群系。使用你物品栏中生物群系胶囊的容量。
+item.biomeCapsule.info=将其扔在你想要填充胶囊的生物群系的地面上。过一会儿，胶囊将开始填充。在地面上时，胶囊永远不会消失。
+item.chunkAnalyzer.info=区块分析器允许你检查区块包含哪些方块。打开其GUI并按下扫描。几秒钟后，你将获得你所在区块的结果。
+item.flooPouch.info=飞路袋可以存储128个飞路粉。使用飞路壁炉时，除了手持飞路粉外，你也可以在物品栏中任何位置放置飞路袋。按住Shift右键点击以从你的物品栏中填充飞路粉。
+item.timeInABottle.info=此物品允许你加速方块的tick速率。它在你的物品栏中被动收集时间，你可以通过右键点击方块来消耗它。第一次点击需要30秒，第二次60秒，第三次120秒，第四次240秒，第五次480秒。方块tick的速度每次点击都会翻倍。效果持续30秒。你一次只能在物品栏中拥有一个。
+item.spectreIlluminator.info=使用此物品右键点击地面会生成一个通灵照明器，它将照亮整个生成的区块。右键点击照明器以取回物品并再次使区块变暗。
+item.spectreCharger.normal.info=通过右键点击切换开启时，此物品将从你的通灵能量缓冲区传输1024 RF/t到物品栏中任何可以接受能量的物品。
+item.spectreCharger.redstone.info=通过右键点击切换开启时，此物品将从你的通灵能量缓冲区传输4096 RF/t到物品栏中任何可以接受能量的物品。
+item.spectreCharger.ender.info=通过右键点击切换开启时，此物品将从你的通灵能量缓冲区传输20480 RF/t到物品栏中任何可以接受能量的物品。
+item.spectreCharger.genesis.info=通过右键点击切换开启时，此物品将从你的通灵能量缓冲区传输尽可能多的RF/t到物品栏中任何可以接受能量的物品。
+item.spectreCharger.info=通过右键点击切换开启时，此物品将从你的通灵能量缓冲区传输 %s RF/t到物品栏中任何可以接受能量的物品。
+item.ingredient.blackoutPowder.info=在由通灵照明器照亮的区块中右键点击方块会在你点击的位置掉落通灵照明器，并再次使区块变暗。
