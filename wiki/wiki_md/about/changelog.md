@@ -21,6 +21,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Fixed Golden Chickens being able to consume seeds, even though they cannot be bred.
 - Improved the performance of the Potion Vaporizer room detection algorithm.
 - Fixed a typo in the language file (brickss > bricks).
+- Updated the translation in the language files. (Machine translated, may contain errors, please report any issues)
 
 ## 1.0.2
 
@@ -68,46 +69,23 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 ### Fixes
 
-#### World Generation
-
 - Removed the unimplemented and unfinished Sekenada from worldgen.
-
-#### Item Collection
-
 - Fixed item duplication using the advanced item collector ([courtesy of UniversalTweaks](https://github.com/ACGaming/UniversalTweaks/blob/main/src/main/java/mod/acgaming/universaltweaks/mods/randomthings/anvil/mixin/UTAnvilCraftFixMixin.java)).
 - Fixed anvil crafting voiding items ([courtesy of UniversalTweaks](https://github.com/ACGaming/UniversalTweaks/blob/main/src/main/java/mod/acgaming/universaltweaks/mods/randomthings/anvil/mixin/UTAnvilCraftFixMixin.java)).
-
-#### Spectre Dimension
-
 - Fixed teleporting survival mode players to the Spectre Dimension on servers could leave the player stalled out in the void ([courtesy of UniversalTweaks](https://github.com/ACGaming/UniversalTweaks/blob/main/src/main/java/mod/acgaming/universaltweaks/mods/randomthings/teleport/mixin/UTSpectreHandlerMixin.java)).
 - Fixed an issue where it would rain in the Spectre Dimension.
-
-#### Spectre Illuminator
-
 - Fixed Spectre Illuminator duplication.
 - Fixed Spectre Illuminator [smelting full snow blocks](https://bugs.mojang.com/browse/MC/issues/MC-88097).
 - Fixed Spectre Illuminator hitbox being inaccurate.
 - Improved Spectre Illuminator animation performance.
 - Improved Spectre Illuminator position finding performance.
-
-#### Nature Core
-
 - Fixed Nature Core being able to spawn underwater.
-
-#### Blocks
-
 - Fixed Nature and Water Chest not having breaking particles.
 - Fixed Fertilized Dirt not being recognized as farmland by villagers.
 - Fixed torches and other attachable blocks being able to be placed on the side of the Rain Shield.
 - Fixed Rain Shield duplication.
-
-#### Redstone
-
 - Fixed ConcurrentModificationException crash when using Redstone Interfaces.
 - Fixed a crash where the Redstone Observer tried to incorrectly access a block state that was not a Redstone Observer.
-
-#### Other
-
 - Fixed Magic Beans growing infinitely in Cubic Chunks worlds (limited to 512).
 - Fixed Divining Rods not having proper descriptions.
 - Fixed Divining Rods not showing up in Creative search.

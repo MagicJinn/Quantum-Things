@@ -80,6 +80,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Golden Chickens being able to consume seeds, even though they cannot be bred.
 - Improved the performance of the Potion Vaporizer room detection algorithm.
 - Fixes various typos.
+- Updated the translation in the language files. (Machine translated, may contain errors, please report any issues)
 
 ### Reporting Issues
 
