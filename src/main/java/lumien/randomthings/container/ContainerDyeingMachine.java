@@ -94,7 +94,7 @@ public class ContainerDyeingMachine extends Container
 					compound.removeTag("enchantmentColor");
 				}
 
-				if (compound.hasNoTags())
+				if (compound.isEmpty())
 				{
 					copy.setTagCompound(null);
 				}

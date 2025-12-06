@@ -46,7 +46,8 @@ public class ItemSoundPattern extends ItemBase
 		NBTTagCompound compound;
 		if (stack.hasTagCompound() && ((compound = stack.getTagCompound()).hasKey("sound")))
 		{
-			return super.getItemStackDisplayName(stack) + " <" + (new ResourceLocation(stack.getTagCompound().getString("sound")).getResourcePath()) + ">";
+			return super.getItemStackDisplayName(stack) + " <"
+					+ (new ResourceLocation(stack.getTagCompound().getString("sound")).toString()) + ">";
 		}
 		else
 		{

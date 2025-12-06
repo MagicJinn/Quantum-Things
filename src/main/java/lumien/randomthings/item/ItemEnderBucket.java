@@ -95,7 +95,8 @@ public class ItemEnderBucket extends ItemBase
 		}
 		else
 		{
-			return I18n.translateToLocalFormatted(this.getUnlocalizedNameInefficiently(stack) + ".filled.name", fluidStack.getLocalizedName());
+			return I18n.translateToLocalFormatted(this.getTranslationKey(stack) + ".filled.name",
+					fluidStack.getLocalizedName());
 		}
 	}
 

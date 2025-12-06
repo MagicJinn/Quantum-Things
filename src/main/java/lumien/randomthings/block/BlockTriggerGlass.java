@@ -45,7 +45,7 @@ public class BlockTriggerGlass extends BlockBase
 	{
 		if (!worldIn.isRemote && !state.getValue(TRIGGERED))
 		{
-			boolean powered = worldIn.isBlockIndirectlyGettingPowered(pos) > 0;
+			boolean powered = worldIn.getRedstonePowerFromNeighbors(pos) > 0;
 
 			IBlockState fromState = worldIn.getBlockState(fromPos);
 
@@ -127,7 +127,7 @@ public class BlockTriggerGlass extends BlockBase
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.TRANSLUCENT;
 	}

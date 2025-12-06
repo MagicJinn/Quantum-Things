@@ -11,7 +11,7 @@ public class RegisterUtil
 	public static void registerItem(Item i, String name)
 	{
 		i.setRegistryName(new ResourceLocation("randomthings", name));
-		i.setUnlocalizedName(name);
+		i.setTranslationKey(name);
 		i.setCreativeTab(RandomThings.instance.creativeTab);
 		ForgeRegistries.ITEMS.register(i);
 	}

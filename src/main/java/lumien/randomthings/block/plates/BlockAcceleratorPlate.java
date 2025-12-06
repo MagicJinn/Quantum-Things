@@ -88,7 +88,7 @@ public class BlockAcceleratorPlate extends BlockBase
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}
@@ -106,9 +106,9 @@ public class BlockAcceleratorPlate extends BlockBase
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
+	public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
 	{
-		super.onEntityCollidedWithBlock(worldIn, pos, state, entityIn);
+		super.onEntityCollision(worldIn, pos, state, entityIn);
 
 		Vec3d motionVec = new Vec3d(entityIn.motionX, entityIn.motionY, entityIn.motionZ);
 		motionVec = motionVec.scale(1.2);

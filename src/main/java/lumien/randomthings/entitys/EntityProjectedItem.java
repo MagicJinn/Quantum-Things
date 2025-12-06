@@ -135,9 +135,9 @@ public class EntityProjectedItem extends Entity implements IEntityAdditionalSpaw
 				dropAsItem();
 			}
 
-			this.motionX = direction.getFrontOffsetX() / 10D;
-			this.motionY = direction.getFrontOffsetY() / 10D;
-			this.motionZ = direction.getFrontOffsetZ() / 10D;
+			this.motionX = direction.getDirectionVec().getX() / 10D;
+			this.motionY = direction.getDirectionVec().getY() / 10D;
+			this.motionZ = direction.getDirectionVec().getZ() / 10D;
 
 			this.move(MoverType.SELF, motionX, motionY, motionZ);
 
@@ -328,7 +328,8 @@ public class EntityProjectedItem extends Entity implements IEntityAdditionalSpaw
 	@Override
 	public String getName()
 	{
-		return this.hasCustomName() ? this.getCustomNameTag() : I18n.translateToLocal("item." + this.getItem().getUnlocalizedName());
+		return this.hasCustomName() ? this.getCustomNameTag()
+				: I18n.translateToLocal("item." + this.getItem().getTranslationKey());
 	}
 
 	/**

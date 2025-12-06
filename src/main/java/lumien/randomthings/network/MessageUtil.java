@@ -34,7 +34,7 @@ public class MessageUtil
 		{
 			try
 			{
-				Chunk c = worldObj.getChunkFromBlockCoords(pos);
+				Chunk c = worldObj.getChunk(pos);
 
 				PlayerChunkMap playerManager = ((WorldServer) worldObj).getPlayerChunkMap();
 
@@ -57,7 +57,7 @@ public class MessageUtil
 		{
 			try
 			{
-				Chunk c = worldObj.getChunkFromBlockCoords(pos);
+				Chunk c = worldObj.getChunk(pos);
 
 				PlayerChunkMap playerManager = ((WorldServer) worldObj).getPlayerChunkMap();
 

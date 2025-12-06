@@ -205,7 +205,7 @@ public class BlockEnderMailbox extends BlockContainerBase
 			active = false;
 		}
 
-		EnumFacing enumfacing = EnumFacing.getFront(meta);
+		EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
 		if (enumfacing.getAxis() == EnumFacing.Axis.Y)
 		{
@@ -230,13 +230,16 @@ public class BlockEnderMailbox extends BlockContainerBase
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(ACTIVE, false);
+		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite())
+				.withProperty(ACTIVE, false);
 	}
 
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
-		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(ACTIVE, false), 2);
+		worldIn.setBlockState(pos,
+				state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(ACTIVE, false),
+				2);
 
 		if (!worldIn.isRemote && placer instanceof EntityPlayer)
 		{

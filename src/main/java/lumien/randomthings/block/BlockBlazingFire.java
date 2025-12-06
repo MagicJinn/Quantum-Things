@@ -193,7 +193,7 @@ public class BlockBlazingFire extends BlockBase
 
 								if (k1 > 0)
 								{
-									int l1 = (k1 + 40 + worldIn.getDifficulty().getDifficultyId() * 7) / (i + 30);
+									int l1 = (k1 + 40 + worldIn.getDifficulty().getId() * 7) / (i + 30);
 
 									if (flag1)
 									{
@@ -258,7 +258,8 @@ public class BlockBlazingFire extends BlockBase
 
 			if (iblockstate.getBlock() == Blocks.TNT)
 			{
-				Blocks.TNT.onBlockDestroyedByPlayer(worldIn, pos, iblockstate.withProperty(BlockTNT.EXPLODE, Boolean.valueOf(true)));
+				Blocks.TNT.onPlayerDestroy(worldIn, pos,
+						iblockstate.withProperty(BlockTNT.EXPLODE, Boolean.valueOf(true)));
 			}
 		}
 	}
@@ -445,7 +446,7 @@ public class BlockBlazingFire extends BlockBase
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}

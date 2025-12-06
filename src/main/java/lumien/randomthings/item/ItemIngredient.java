@@ -132,7 +132,7 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 	}
 
 	@Override
-	public String getUnlocalizedName(@Nonnull ItemStack stack)
+	public String getTranslationKey(@Nonnull ItemStack stack)
 	{
 		int id = stack.getItemDamage();
 		INGREDIENT ingredient = getIngredientById(id);
@@ -228,8 +228,11 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 			if (handler.isIlluminated(pos))
 			{
 				List<EntitySpectreIlluminator> list = new ArrayList<EntitySpectreIlluminator>();
-				ChunkPos chunkPos = worldIn.getChunkFromBlockCoords(pos).getPos();
-				worldIn.getChunkFromBlockCoords(pos).getEntitiesOfTypeWithinAABB(EntitySpectreIlluminator.class, new AxisAlignedBB(chunkPos.getXStart() - 2, 0, chunkPos.getZStart() - 2, chunkPos.getXEnd() + 2, 255, chunkPos.getZEnd() + 2), list, Predicates.alwaysTrue());
+				ChunkPos chunkPos = worldIn.getChunk(pos).getPos();
+				worldIn.getChunk(pos).getEntitiesOfTypeWithinAABB(
+						EntitySpectreIlluminator.class, new AxisAlignedBB(chunkPos.getXStart() - 2, 0,
+								chunkPos.getZStart() - 2, chunkPos.getXEnd() + 2, 255, chunkPos.getZEnd() + 2),
+						list, Predicates.alwaysTrue());
 
 				if (!list.isEmpty())
 				{

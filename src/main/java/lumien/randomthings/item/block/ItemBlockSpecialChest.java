@@ -14,7 +14,7 @@ public class ItemBlockSpecialChest extends ItemBlock
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
+	public String getTranslationKey(ItemStack stack)
 	{
 		String type = "error";
 
@@ -27,6 +27,6 @@ public class ItemBlockSpecialChest extends ItemBlock
 			type = "water";
 			break;
 		}
-		return super.getUnlocalizedName() + "." + type;
+		return super.getTranslationKey() + "." + type;
 	}
 }

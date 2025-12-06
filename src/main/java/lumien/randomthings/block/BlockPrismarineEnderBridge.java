@@ -109,7 +109,7 @@ public class BlockPrismarineEnderBridge extends BlockContainerBase
 
 		int facing = active ? meta - 6 : meta;
 
-		return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(facing)).withProperty(ACTIVE, active);
+		return this.getDefaultState().withProperty(FACING, EnumFacing.byIndex(facing)).withProperty(ACTIVE, active);
 	}
 
 	@Override

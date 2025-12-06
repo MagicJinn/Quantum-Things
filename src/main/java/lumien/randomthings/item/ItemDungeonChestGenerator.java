@@ -94,11 +94,12 @@ public class ItemDungeonChestGenerator extends ItemBase
 			if (tableIndex >= 0 && tableIndex < sortedList.size())
 			{
 				ResourceLocation tableLocation = sortedList.get(tableIndex);
-				return ("" + I18n.translateToLocal(this.getUnlocalizedNameInefficiently(par1ItemStack) + ".name")).trim() + " (" + tableLocation.toString() + ")";
+				return ("" + I18n.translateToLocal(this.getTranslationKey(par1ItemStack) + ".name")).trim()
+						+ " (" + tableLocation.toString() + ")";
 			}
 		}
 
-		return ("" + I18n.translateToLocal(this.getUnlocalizedNameInefficiently(par1ItemStack) + ".name")).trim();
+		return ("" + I18n.translateToLocal(this.getTranslationKey(par1ItemStack) + ".name")).trim();
 
 	}
 

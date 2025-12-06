@@ -39,7 +39,7 @@ public class BlockBeanSprout extends BlockBush implements IGrowable, IPlantable
 
 	public BlockBeanSprout()
 	{
-		this.setUnlocalizedName("beanSprout");
+		this.setTranslationKey("beanSprout");
 
 		this.setRegistryName(new ResourceLocation("randomthings", "beanSprout"));
 		ForgeRegistries.BLOCKS.register(this);

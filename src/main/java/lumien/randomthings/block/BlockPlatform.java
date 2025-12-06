@@ -170,7 +170,7 @@ public class BlockPlatform extends BlockBase
 			return this.name;
 		}
 
-		public String getUnlocalizedName()
+		public String getTranslationKey()
 		{
 			return this.unlocalizedName;
 		}

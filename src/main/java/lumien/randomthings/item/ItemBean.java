@@ -42,7 +42,7 @@ public class ItemBean extends ItemBase
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
+	public String getTranslationKey(ItemStack stack)
 	{
 		switch (stack.getItemDamage())
 		{

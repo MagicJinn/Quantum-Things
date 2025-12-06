@@ -36,7 +36,7 @@ public class BlockStainedBrick extends BlockBase implements ILuminousBlock
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		if (luminous)
 		{
@@ -44,7 +44,7 @@ public class BlockStainedBrick extends BlockBase implements ILuminousBlock
 		}
 		else
 		{
-			return super.getBlockLayer();
+			return super.getRenderLayer();
 		}
 	}
 

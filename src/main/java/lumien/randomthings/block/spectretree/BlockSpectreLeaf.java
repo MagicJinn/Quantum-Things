@@ -292,7 +292,7 @@ public class BlockSpectreLeaf extends Block implements net.minecraftforge.common
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.TRANSLUCENT;
 	}

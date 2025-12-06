@@ -20,7 +20,6 @@ public class BaublesContainerProvider implements INBTSerializable<NBTTagCompound
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public <T> T getCapability (Capability<T> capability, EnumFacing facing) {
 		if (capability == BaublesCapabilities.CAPABILITY_BAUBLES) return (T) this.container;
 		return null;

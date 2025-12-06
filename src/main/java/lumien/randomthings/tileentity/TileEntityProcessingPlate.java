@@ -96,7 +96,8 @@ public class TileEntityProcessingPlate extends TileEntityBase implements ITickab
 						{
 							EnumFacing outputFacing = this.world.getBlockState(this.pos).getValue(BlockProcessingPlate.OUTPUT_FACING);
 
-							Vec3d facingVec = new Vec3d(outputFacing.getDirectionVec()).scale(0.53).add(new Vec3d(pos).addVector(0.5, 0, 0.5));
+							Vec3d facingVec = new Vec3d(outputFacing.getDirectionVec()).scale(0.53)
+									.add(new Vec3d(pos).add(0.5, 0, 0.5));
 
 							Vec3d outputMotionVec = new Vec3d(outputFacing.getDirectionVec()).scale(0.1);
 

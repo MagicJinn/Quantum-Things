@@ -244,7 +244,7 @@ public class BlockRuneBase extends BlockContainerBase implements IRTBlockColor, 
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}

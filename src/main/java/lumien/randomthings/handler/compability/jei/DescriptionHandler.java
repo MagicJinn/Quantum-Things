@@ -133,7 +133,7 @@ public class DescriptionHandler
 				{
 					Block block = (Block) t;
 
-					if (block.getCreativeTabToDisplayOn() == RandomThings.instance.creativeTab)
+					if (block.getCreativeTab() == RandomThings.instance.creativeTab)
 					{
 						block.getSubBlocks(RandomThings.instance.creativeTab, subItems);
 					}
@@ -177,7 +177,7 @@ public class DescriptionHandler
 
 						if (!blackListed)
 						{
-							registry.addDescription(is, is.getUnlocalizedName() + ".info");
+							registry.addDescription(is, is.getTranslationKey() + ".info");
 						}
 					}
 				}

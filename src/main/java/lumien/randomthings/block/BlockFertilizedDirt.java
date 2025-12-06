@@ -79,7 +79,7 @@ public class BlockFertilizedDirt extends BlockBase
 	}
 
 	@Override
-	public String getUnlocalizedName()
+	public String getTranslationKey()
 	{
 		return "tile.fertilizedDirt";
 	}

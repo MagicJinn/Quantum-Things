@@ -58,7 +58,7 @@ public class BlockRedstonePlate extends BlockBase implements INoItem
 	private void checkForRedstone(IBlockState state, World worldIn, BlockPos pos)
 	{
 		boolean currentlyPowered = this.powered;
-		boolean shouldBePowered = worldIn.isBlockIndirectlyGettingPowered(pos) > 0;
+		boolean shouldBePowered = worldIn.getRedstonePowerFromNeighbors(pos) > 0;
 
 		if (currentlyPowered != shouldBePowered)
 		{
@@ -122,7 +122,7 @@ public class BlockRedstonePlate extends BlockBase implements INoItem
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}
@@ -163,15 +163,15 @@ public class BlockRedstonePlate extends BlockBase implements INoItem
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
+	public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
 	{
-		super.onEntityCollidedWithBlock(worldIn, pos, state, entityIn);
+		super.onEntityCollision(worldIn, pos, state, entityIn);
 
 		Vec3d motionVec = new Vec3d(entityIn.motionX, entityIn.motionY, entityIn.motionZ);
 
 		EnumFacing roughMovingFacing = EnumFacing.getFacingFromVector((float) motionVec.x, (float) motionVec.y, (float) motionVec.z).getOpposite();
 
-		Vec3d center = new Vec3d(pos).addVector(0.5, 0, 0.5);
+		Vec3d center = new Vec3d(pos).add(0.5, 0, 0.5);
 		Vec3d difVec = center.subtract(entityIn.getPositionVector());
 
 		EnumFacing facing = EnumFacing.getFacingFromVector((float) difVec.x, (float) difVec.y, (float) difVec.z).getOpposite();
@@ -236,7 +236,8 @@ public class BlockRedstonePlate extends BlockBase implements INoItem
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		return this.getDefaultState().withProperty(INPUT_FACING, placer.getHorizontalFacing().getOpposite()).withProperty(OUTPUT_FACING, placer.getHorizontalFacing());
+		return this.getDefaultState().withProperty(INPUT_FACING, placer.getHorizontalFacing().getOpposite())
+				.withProperty(OUTPUT_FACING, placer.getHorizontalFacing());
 	}
 
 	private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state)

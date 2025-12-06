@@ -81,8 +81,8 @@ public class ItemWeatherEgg extends ItemBase
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
+	public String getTranslationKey(ItemStack stack)
 	{
-		return super.getUnlocalizedName(stack) + "_" + TYPE.values()[stack.getItemDamage()].toString().toLowerCase();
+		return super.getTranslationKey(stack) + "_" + TYPE.values()[stack.getItemDamage()].toString().toLowerCase();
 	}
 }

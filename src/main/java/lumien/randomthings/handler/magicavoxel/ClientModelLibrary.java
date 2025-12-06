@@ -73,7 +73,7 @@ public class ClientModelLibrary
 
 	private MagicaVoxelModel loadModelFromFile(String modelName)
 	{
-		File modelFolder = new File(Minecraft.getMinecraft().mcDataDir, "voxmodels");
+		File modelFolder = new File(Minecraft.getMinecraft().gameDir, "voxmodels");
 
 		if (modelFolder.isDirectory())
 		{
@@ -138,7 +138,7 @@ public class ClientModelLibrary
 
 					if (VoxelProjector.MODEL_CLIENT_SAVING)
 					{
-						File modelFolder = new File(Minecraft.getMinecraft().mcDataDir, "voxmodels");
+						File modelFolder = new File(Minecraft.getMinecraft().gameDir, "voxmodels");
 
 						if (!modelFolder.exists())
 						{

@@ -109,7 +109,7 @@ public class TileEntityEnderBridge extends TileEntityBase implements ITickable
 	{
 		if (!worldIn.isRemote)
 		{
-			boolean powered = worldIn.isBlockIndirectlyGettingPowered(pos) != 0;
+			boolean powered = worldIn.getRedstonePowerFromNeighbors(pos) != 0;
 
 			if (powered != redstonePowered)
 			{

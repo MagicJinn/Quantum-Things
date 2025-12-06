@@ -53,7 +53,7 @@ public class BlockAdvancedRedstoneRepeater extends BlockContainerBase implements
 	@Override
 	public boolean hasNoItem()
 	{
-		return this.getUnlocalizedName().endsWith("_powered");
+		return this.getTranslationKey().endsWith("_powered");
 	}
 
 	@Override
@@ -327,7 +327,7 @@ public class BlockAdvancedRedstoneRepeater extends BlockContainerBase implements
 	 * hold the state indicated.
 	 */
 	@Override
-	public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state)
+	public void onPlayerDestroy(World worldIn, BlockPos pos, IBlockState state)
 	{
 		if (this.isRepeaterPowered)
 		{
@@ -337,7 +337,7 @@ public class BlockAdvancedRedstoneRepeater extends BlockContainerBase implements
 			}
 		}
 
-		super.onBlockDestroyedByPlayer(worldIn, pos, state);
+		super.onPlayerDestroy(worldIn, pos, state);
 	}
 
 	/**
@@ -473,8 +473,8 @@ public class BlockAdvancedRedstoneRepeater extends BlockContainerBase implements
 			float f = -5.0F;
 
 			f = f / 16.0F;
-			double d3 = f * enumfacing.getFrontOffsetX();
-			double d4 = f * enumfacing.getFrontOffsetZ();
+			double d3 = f * enumfacing.getDirectionVec().getX();
+			double d4 = f * enumfacing.getDirectionVec().getZ();
 			worldIn.spawnParticle(EnumParticleTypes.REDSTONE, d0 + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
 		}
 	}
@@ -505,7 +505,8 @@ public class BlockAdvancedRedstoneRepeater extends BlockContainerBase implements
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(LOCKED, Boolean.valueOf(false));
+		return this.getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta)).withProperty(LOCKED,
+				Boolean.valueOf(false));
 	}
 
 	/**
@@ -538,7 +539,7 @@ public class BlockAdvancedRedstoneRepeater extends BlockContainerBase implements
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}

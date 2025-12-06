@@ -91,7 +91,7 @@ public class BlockSlimeCube extends BlockContainerBase implements ILuminousBlock
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.TRANSLUCENT;
 	}

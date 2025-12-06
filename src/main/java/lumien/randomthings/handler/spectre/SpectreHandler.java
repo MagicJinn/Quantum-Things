@@ -59,7 +59,7 @@ public class SpectreHandler extends WorldSavedData
 				return null;
 			}
 
-			Chunk c = worldObj.getChunkFromBlockCoords(pos);
+			Chunk c = worldObj.getChunk(pos);
 
 			int position = c.x / 16;
 

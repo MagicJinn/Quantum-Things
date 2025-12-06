@@ -332,7 +332,7 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
+	public String getTranslationKey(ItemStack stack)
 	{
 		RodType type = types.get(stack.getItemDamage());
 		if (type.getName().equals("universal")) {

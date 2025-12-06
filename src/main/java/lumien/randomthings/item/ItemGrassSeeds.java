@@ -41,15 +41,16 @@ public class ItemGrassSeeds extends ItemBase implements IRTItemColor
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
+	public String getTranslationKey(ItemStack stack)
 	{
 		if (stack.getItemDamage() == 0)
 		{
-			return super.getUnlocalizedName() + ".normal";
+			return super.getTranslationKey() + ".normal";
 		}
 		else
 		{
-			return super.getUnlocalizedName() + "." + EnumDyeColor.byMetadata(stack.getMetadata() - 1).getUnlocalizedName();
+			return super.getTranslationKey() + "."
+					+ EnumDyeColor.byMetadata(stack.getMetadata() - 1).getTranslationKey();
 		}
 	}
 

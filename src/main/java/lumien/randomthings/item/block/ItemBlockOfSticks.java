@@ -21,7 +21,7 @@ public class ItemBlockOfSticks extends ItemBlock
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
+	public String getTranslationKey(ItemStack stack)
 	{
 		String type = "error";
 
@@ -34,6 +34,6 @@ public class ItemBlockOfSticks extends ItemBlock
 			type = "returning";
 			break;
 		}
-		return super.getUnlocalizedName() + "." + type;
+		return super.getTranslationKey() + "." + type;
 	}
 }

@@ -63,7 +63,7 @@ public class ContainerChunkAnalyzer extends Container
 		this.scanning = true;
 		this.countMap = new HashMap<IBlockState, Integer>();
 
-		Chunk targetChunk = player.world.getChunkFromBlockCoords(player.getPosition());
+		Chunk targetChunk = player.world.getChunk(player.getPosition());
 
 		this.chunkX = targetChunk.x;
 		this.chunkZ = targetChunk.z;
@@ -82,7 +82,7 @@ public class ContainerChunkAnalyzer extends Container
 		{
 			if (scanning)
 			{
-				Chunk c = player.world.getChunkFromChunkCoords(chunkX, chunkZ);
+				Chunk c = player.world.getChunk(chunkX, chunkZ);
 
 				for (int y = 0; y < c.getHeightValue(nextX, nextZ); y++)
 				{

@@ -93,7 +93,7 @@ public class EntitySpectreIlluminator extends Entity
 			if (targetX == -1 || targetZ == -1)
 				setTarget(myPosition);
 
-			Chunk thisChunk = world.getChunkFromBlockCoords(myPosition);
+			Chunk thisChunk = world.getChunk(myPosition);
 
 			// Stagger update of targetY to prevent lag
 			// Using entity ID as offset to distribute updates semi evenly

@@ -60,9 +60,9 @@ public class RenderEclipsedClock extends Render<EntityEclipsedClock>
 		this.renderItem(entity);
 
 		EnumFacing facing = entity.facingDirection;
-		float rotX = facing.getFrontOffsetX();
-		float rotY = facing.getFrontOffsetY();
-		float rotZ = facing.getFrontOffsetZ();
+		float rotX = facing.getDirectionVec().getX();
+		float rotY = facing.getDirectionVec().getY();
+		float rotZ = facing.getDirectionVec().getZ();
 
 		float horRotation = (entity.facingDirection.getHorizontalIndex() - 2) % 4 * 90;
 

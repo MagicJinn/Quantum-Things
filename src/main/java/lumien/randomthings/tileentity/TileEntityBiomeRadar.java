@@ -283,7 +283,7 @@ public class TileEntityBiomeRadar extends TileEntityBase implements ITickable
 
 	public void neighborChanged(Block neighborBlock)
 	{
-		boolean newPowered = this.world.isBlockIndirectlyGettingPowered(this.pos) > 0;
+		boolean newPowered = this.world.getRedstonePowerFromNeighbors(this.pos) > 0;
 		boolean changed = false;
 
 		if (!this.powered && newPowered && this.state == STATE.IDLE && !this.currentCrystal.isEmpty() && isValid())

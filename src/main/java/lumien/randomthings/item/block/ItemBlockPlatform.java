@@ -21,8 +21,9 @@ public class ItemBlockPlatform extends ItemBlock
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
+	public String getTranslationKey(ItemStack stack)
 	{
-		return super.getUnlocalizedName() + "." + BlockPlatform.EnumType.byMetadata(stack.getItemDamage()).getUnlocalizedName();
+		return super.getTranslationKey() + "."
+				+ BlockPlatform.EnumType.byMetadata(stack.getItemDamage()).getTranslationKey();
 	}
 }

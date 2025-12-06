@@ -83,7 +83,7 @@ public class BlockInventoryTester extends BlockContainerBase
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}

@@ -59,7 +59,7 @@ public class BlockBlockLuminousTranslucent extends BlockBase implements ILuminou
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.TRANSLUCENT;
 	}

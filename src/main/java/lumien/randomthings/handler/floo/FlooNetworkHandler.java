@@ -118,7 +118,8 @@ public class FlooNetworkHandler extends WorldSavedData
 						EnumFacing tpFacing = targetTE.getFacing();
 
 						BlockPos teleportTarget = targetPos.up();
-						player.connection.setPlayerLocation(teleportTarget.getX() + 0.5, teleportTarget.getY(), teleportTarget.getZ() + 0.5, tpFacing.getHorizontalAngle(), 0);
+						player.connection.setPlayerLocation(teleportTarget.getX() + 0.5, teleportTarget.getY(),
+								teleportTarget.getZ() + 0.5, tpFacing.getHorizontalAngle(), 0);
 
 						player.sendMessage(new TextComponentTranslation("floo.info.teleport", targetFirePlace.getName()));
 

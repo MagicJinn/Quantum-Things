@@ -41,9 +41,10 @@ public class ItemBlockBlockDiaphanous extends ItemBlock
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
+	public String getTranslationKey(ItemStack stack)
 	{
-		return super.getUnlocalizedName(stack) + (stack.hasTagCompound() && stack.getTagCompound().getBoolean("inverted") ? "_inverted" : "");
+		return super.getTranslationKey(stack)
+				+ (stack.hasTagCompound() && stack.getTagCompound().getBoolean("inverted") ? "_inverted" : "");
 	}
 
 	@Override

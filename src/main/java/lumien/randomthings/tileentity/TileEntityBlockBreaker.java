@@ -210,7 +210,7 @@ public class TileEntityBlockBreaker extends TileEntityBase implements ITickable
 
 		BlockPos targetPos = pos.offset(actualState.getValue(BlockBlockBreaker.FACING));
 
-		canMine = !(worldIn.isBlockIndirectlyGettingPowered(pos) > 0);
+		canMine = !(worldIn.getRedstonePowerFromNeighbors(pos) > 0);
 
 		// IBlockState targetState = worldIn.getBlockState(targetPos);
 

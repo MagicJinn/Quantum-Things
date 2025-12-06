@@ -74,11 +74,12 @@ public class RenderTimeAccelerator extends Render<EntityTimeAccelerator>
 
 		for (EnumFacing facing : EnumFacing.VALUES)
 		{
-			GlStateManager.translate(facing.getFrontOffsetX() / 1.9D, facing.getFrontOffsetY() / 1.9D, facing.getFrontOffsetZ() / 1.9D);
+			GlStateManager.translate(facing.getDirectionVec().getX() / 1.9D, facing.getDirectionVec().getY() / 1.9D,
+					facing.getDirectionVec().getZ() / 1.9D);
 
-			float rotX = facing.getFrontOffsetX();
-			float rotY = facing.getFrontOffsetY();
-			float rotZ = facing.getFrontOffsetZ();
+			float rotX = facing.getDirectionVec().getX();
+			float rotY = facing.getDirectionVec().getY();
+			float rotZ = facing.getDirectionVec().getZ();
 
 			GlStateManager.rotate(90, rotZ, rotY, rotX);
 			GlStateManager.rotate(progress, 0, 1, 0);
@@ -124,7 +125,8 @@ public class RenderTimeAccelerator extends Render<EntityTimeAccelerator>
 			GlStateManager.rotate(-progress, 0, 1, 0);
 			GlStateManager.rotate(-90, rotZ, rotY, rotX);
 
-			GlStateManager.translate(-facing.getFrontOffsetX() / 1.9D, -facing.getFrontOffsetY() / 1.9D, -facing.getFrontOffsetZ() / 1.9D);
+			GlStateManager.translate(-facing.getDirectionVec().getX() / 1.9D, -facing.getDirectionVec().getY() / 1.9D,
+					-facing.getDirectionVec().getZ() / 1.9D);
 		}
 
 		GlStateManager.translate(-(x), -(y), -(z));

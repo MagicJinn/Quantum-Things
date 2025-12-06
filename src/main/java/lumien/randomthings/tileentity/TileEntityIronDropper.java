@@ -107,9 +107,9 @@ public class TileEntityIronDropper extends TileEntityBase implements IRedstoneSe
 
 				double speed = 6;
 
-				double posX = pos.getX() + 0.5 + 0.7D * facing.getFrontOffsetX();
-				double posY = pos.getY() + 0.5 + 0.7D * facing.getFrontOffsetY();
-				double posZ = pos.getZ() + 0.5 + 0.7D * facing.getFrontOffsetZ();
+				double posX = pos.getX() + 0.5 + 0.7D * facing.getDirectionVec().getX();
+				double posY = pos.getY() + 0.5 + 0.7D * facing.getDirectionVec().getY();
+				double posZ = pos.getZ() + 0.5 + 0.7D * facing.getDirectionVec().getZ();
 
 				if (facing.getAxis() == EnumFacing.Axis.Y)
 				{
@@ -153,9 +153,9 @@ public class TileEntityIronDropper extends TileEntityBase implements IRedstoneSe
 					d3 = 0.25D;
 				}
 
-				entityItem.motionX = facing.getFrontOffsetX() * d3;
+				entityItem.motionX = facing.getDirectionVec().getX() * d3;
 				entityItem.motionY = 0.20000000298023224D;
-				entityItem.motionZ = facing.getFrontOffsetZ() * d3;
+				entityItem.motionZ = facing.getDirectionVec().getZ() * d3;
 
 				if (randomMotion)
 				{
@@ -165,9 +165,9 @@ public class TileEntityIronDropper extends TileEntityBase implements IRedstoneSe
 				}
 				else
 				{
-					entityItem.motionX += facing.getFrontOffsetX() * 0.5 * 0.007499999832361937D * speed;
-					entityItem.motionY += facing.getFrontOffsetY() * 0.5 * 0.007499999832361937D * speed;
-					entityItem.motionZ += facing.getFrontOffsetZ() * 0.5 * 0.007499999832361937D * speed;
+					entityItem.motionX += facing.getDirectionVec().getX() * 0.5 * 0.007499999832361937D * speed;
+					entityItem.motionY += facing.getDirectionVec().getY() * 0.5 * 0.007499999832361937D * speed;
+					entityItem.motionZ += facing.getDirectionVec().getZ() * 0.5 * 0.007499999832361937D * speed;
 				}
 
 				world.spawnEntity(entityItem);
@@ -180,7 +180,8 @@ public class TileEntityIronDropper extends TileEntityBase implements IRedstoneSe
 
 			if (effects == EFFECTS.PARTICLE || effects == EFFECTS.SOUND_PARTICLE)
 			{
-				world.playEvent(2000, this.pos, facing.getFrontOffsetX() + 1 + (facing.getFrontOffsetZ() + 1) * 3);
+				world.playEvent(2000, this.pos,
+						facing.getDirectionVec().getX() + 1 + (facing.getDirectionVec().getZ() + 1) * 3);
 			}
 		}
 	}

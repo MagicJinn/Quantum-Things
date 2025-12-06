@@ -22,7 +22,7 @@ public class ItemBase extends Item
 	{
 		item.setRegistryName(name);
 		item.setCreativeTab(RandomThings.creativeTab);
-		item.setUnlocalizedName(name);
+		item.setTranslationKey(name);
 
 		ForgeRegistries.ITEMS.register(item);
 

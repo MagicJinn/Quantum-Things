@@ -28,9 +28,10 @@ public class ItemBlockBiomeStone extends ItemBlock implements IRTItemColor
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
+	public String getTranslationKey(ItemStack stack)
 	{
-		return super.getUnlocalizedName() + "." + BlockBiomeStone.EnumType.byMetadata(stack.getItemDamage()).getUnlocalizedName();
+		return super.getTranslationKey() + "."
+				+ BlockBiomeStone.EnumType.byMetadata(stack.getItemDamage()).getTranslationKey();
 	}
 
 	@Override

@@ -282,7 +282,7 @@ public class BlockCustomWorkbench extends BlockContainerBase
 		@Override
 		public ITextComponent getDisplayName()
 		{
-			return new TextComponentTranslation(ModBlocks.customWorkbench.getUnlocalizedName() + ".name", new Object[0]);
+			return new TextComponentTranslation(ModBlocks.customWorkbench.getTranslationKey() + ".name", new Object[0]);
 		}
 
 		@Override

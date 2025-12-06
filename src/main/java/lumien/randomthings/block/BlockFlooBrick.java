@@ -35,7 +35,7 @@ public class BlockFlooBrick extends BlockContainerBase implements ILuminousBlock
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}

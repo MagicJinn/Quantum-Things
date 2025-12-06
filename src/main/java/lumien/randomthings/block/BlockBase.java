@@ -20,7 +20,7 @@ public abstract class BlockBase extends Block
 	{
 		super(materialIn);
 
-		this.setUnlocalizedName(name);
+		this.setTranslationKey(name);
 		this.setRegistryName(new ResourceLocation("randomthings", name));
 		this.setCreativeTab(RandomThings.instance.creativeTab);
 
@@ -45,7 +45,7 @@ public abstract class BlockBase extends Block
 	{
 		super(materialIn);
 
-		this.setUnlocalizedName(name);
+		this.setTranslationKey(name);
 		this.setRegistryName(new ResourceLocation("randomthings", name));
 		this.setCreativeTab(RandomThings.instance.creativeTab);
 
@@ -73,7 +73,7 @@ public abstract class BlockBase extends Block
 	{
 		block.setRegistryName(name);
 		block.setCreativeTab(RandomThings.instance.creativeTab);
-		block.setUnlocalizedName(name);
+		block.setTranslationKey(name);
 
 		ForgeRegistries.BLOCKS.register(block);
 

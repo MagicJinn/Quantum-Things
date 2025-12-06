@@ -58,7 +58,7 @@ public class WorldUtil
 		float f6 = f3 * f4;
 		float f7 = f2 * f4;
 		double d3 = playerIn.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
-		Vec3d vec3d1 = vec3d.addVector((double) f6 * d3, (double) f5 * d3, (double) f7 * d3);
+		Vec3d vec3d1 = vec3d.add((double) f6 * d3, (double) f5 * d3, (double) f7 * d3);
 		return rayTraceBlocksAll(worldIn, vec3d, vec3d1, useLiquids, !useLiquids, true);
 	}
 
@@ -244,7 +244,7 @@ public class WorldUtil
 
 	public static boolean setBiome(World worldObj, BlockPos pos, Biome biome)
 	{
-		Chunk c = worldObj.getChunkFromBlockCoords(new BlockPos(pos.getX(), 0, pos.getZ()));
+		Chunk c = worldObj.getChunk(new BlockPos(pos.getX(), 0, pos.getZ()));
 		int biomeID = Biome.getIdForBiome(biome);
 		byte[] biomeArray = c.getBiomeArray();
 		int currentBiomeID = biomeArray[(pos.getZ() & 15) << 4 | (pos.getX() & 15)] & 255;
@@ -290,7 +290,7 @@ public class WorldUtil
 
 	public static BlockPos getHeighestPos(World worldObj, int x, int z)
 	{
-		int startY = worldObj.getChunkFromBlockCoords(new BlockPos(x, 0, z)).getTopFilledSegment() + 16;
+		int startY = worldObj.getChunk(new BlockPos(x, 0, z)).getTopFilledSegment() + 16;
 
 		for (int y = startY; y >= 0; y--)
 		{
@@ -350,7 +350,7 @@ public class WorldUtil
 
 		for (Vec3i chunkVec : boxMap.keySet())
 		{
-			Chunk chunk = worldObj.getChunkFromChunkCoords(chunkVec.getX(), chunkVec.getZ());
+			Chunk chunk = worldObj.getChunk(chunkVec.getX(), chunkVec.getZ());
 
 			ClassInheritanceMultiMap[] entityMapArray = chunk.getEntityLists();
 

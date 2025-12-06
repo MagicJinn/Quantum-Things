@@ -133,7 +133,7 @@ public class BlockBiomeStone extends BlockBase implements IRTBlockColor
 			return this.name;
 		}
 
-		public String getUnlocalizedName()
+		public String getTranslationKey()
 		{
 			return this.unlocalizedName;
 		}

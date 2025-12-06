@@ -1,174 +1,134 @@
 buildscript {
     repositories {
-        jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://repo.spongepowered.org/maven' }
+
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
-}
-apply plugin: 'net.minecraftforge.gradle.forge'
-
-repositories {
-    maven {
-        url = "http://maven.cil.li/" 
-    }
-    maven{
-        url = "http://dvs1.progwml6.com/files/maven"
+        classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 
-dependencies {
-    compile "li.cil.oc:OpenComputers:MC1.12.1-1.7.0.7+:api"
-    //compile fileTree(dir: 'libs', include: ['*.*'])
-    deobfCompile "mezz.jei:jei_1.12.2:4.10.0.199"
-}
+apply plugin: 'net.minecraftforge.gradle'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'eclipse'
 
-version = "1.0.3"
-group= "lumien.randomthings"
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+version = mod_version
+group = mod_group
+archivesBaseName = "QuantumThings-MC${minecraft_version}"
 
-jar {
-    manifest {
-        attributes("FMLCorePluginContainsFMLMod": "true", "FMLCorePlugin": "lumien.randomthings.asm.LoadingPlugin", "FMLAT": "randomthings_at.cfg")
-    }
-}
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    version = "1.12.2-14.23.5.2768"
-    runDir = "run"
+    mappings channel: mappings_channel, version: mappings_version
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not allways work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20171220"
-    
-    replaceIn "lib/Reference.java"
-    replace "@VERSION@",project.minecraft.version
-	replace "@FINGERPRINT@", project.findProperty('signSHA1') ?: ''
-    
-    useDepAts = true
+    // ForgeGradle 3 uses accessTransformer instead of useDepAts
+    accessTransformer = file('src/main/resources/randomthings_at.cfg')
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            arg '-torg.spongepowered.asm.launch.MixinTweaker'
+        }
+
+        server {
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            arg '-torg.spongepowered.asm.launch.MixinTweaker'
+        }
+    }
 }
 
-archivesBaseName = "QuantumThings-MC" + minecraft.version
+repositories {
+    maven { url = 'https://repo.spongepowered.org/maven' }
+    maven { url = 'https://maven.cil.li/' }
+    maven { url = 'https://dvs1.progwml6.com/files/maven' }
+    maven { url = 'https://www.cursemaven.com' }
+
+}
+
+configurations {
+    embed
+    compile.extendsFrom(embed)
+}
 
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-      
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    compile "li.cil.oc:OpenComputers:MC1.12.1-1.7.0.7+:api"
+    compile fg.deobf("mezz.jei:jei_1.12.2:4.10.0.199")
+    compile fg.deobf("curse.maven:baubles-227083:2518667")
 
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-    
+    embed('org.spongepowered:mixin:0.8.3-SNAPSHOT') {
+        exclude module: 'guava'
+        exclude module: 'commons-io'
+        exclude module: 'gson'
+    }
 }
 
-processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-   
-    // replace stuff in mcmod.info, nothing else
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', minecraft_version
+    inputs.property 'fingerprint', project.findProperty('signSHA1') ?: ''
+
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+
+        expand 'mod_id': mod_id, 'mod_name': mod_name, 'version': project.version,
+                'mcversion': minecraft_version, 'mod_description': mod_description,
+                'mod_author': mod_author
     }
-        
-    // copy everything else, thats not the mcmod.info
+
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
     
-    // Copy Access Transformer
-    rename '(.+_at.cfg)', 'META-INF/$1'
+    // Handle @FINGERPRINT@ replacement in source files (ForgeGradle 3 way)
+    from(sourceSets.main.java.srcDirs) {
+        include 'lib/Reference.java'
+        
+        filter {
+            it.replace('@FINGERPRINT@', project.findProperty('signSHA1') ?: '')
+        }
+        
+        into 'java'
+    }
 }
 
-task signJar(type: SignJar, dependsOn: reobfJar) {
+sourceSets {
+    main {
+        refMap = mod_mixin_refmap.replace('${mod_id}', mod_id)
+    }
+}
 
-    // Skips if the keyStore property is missing.
+mixin {
+    config mod_mixin_configs.replace('${mod_id}', mod_id)
+}
+
+task signJar(type: Exec) {
     onlyIf {
         project.hasProperty('keyStore')
     }
-
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStoreKeyPass')
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
+    
+    dependsOn 'reobfJar'
+    
+    def jarFile = jar.archivePath
+    
+    commandLine 'jarsigner',
+        '-keystore', project.findProperty('keyStore'),
+        '-storepass', project.findProperty('keyStorePass'),
+        '-keypass', project.findProperty('keyStoreKeyPass'),
+        jarFile.absolutePath,
+        project.findProperty('keyStoreAlias')
+    
+    doFirst {
+        println "Signing JAR: ${jarFile.absolutePath}"
+    }
 }
 
-// Runs this task automatically when build is ran. 
 build.dependsOn signJar
-
-// Configure Eclipse to prevent indexing build folder
-// This ensures that when Gradle generates .classpath, it excludes build/sources directories
-eclipse {
-    classpath {
-        file {
-            whenMerged { classpath ->
-                // Remove any source entries that point to build/sources directories
-                // These are generated by ForgeGradle but should not be indexed as source
-                classpath.entries.removeAll { entry ->
-                    entry.kind == 'src' && (
-                        entry.path.startsWith('build/sources') ||
-                        entry.path == 'build' ||
-                        entry.path.startsWith('build/')
-                    )
-                }
-            }
-        }
-    }
-}
-
-// Task to fix .project file after eclipse generation
-// This adds build folder exclusion to prevent IDE indexing
-task fixEclipseProject {
-    description = 'Fixes .project file to exclude build folder from Eclipse indexing'
-    doLast {
-        def projectFile = file('.project')
-        if (!projectFile.exists()) {
-            logger.warn('.project file not found. Run gradlew eclipse first.')
-            return
-        }
-        
-        def content = projectFile.getText('UTF-8')
-        
-        // Check if build folder filter already exists
-        if (content.contains('^build/')) {
-            logger.info('.project file already has build folder exclusion')
-            return
-        }
-        
-        // Add build folder filter before closing filteredResources tag
-        def filterPattern = '''\t\t<filter>
-			<id>2</id>
-			<type>30</type>
-			<name/>
-			<matcher>
-				<id>org.eclipse.core.resources.regexFilterMatcher</id>
-				<arguments>^build/</arguments>
-			</matcher>
-		</filter>
-	</filteredResources>'''
-        
-        content = content.replace('</filteredResources>', filterPattern)
-        projectFile.setText(content, 'UTF-8')
-        logger.info('Fixed .project file - build folder will be excluded from indexing')
-    }
-}
-
-// Make fixEclipseProject run after eclipse task
-tasks.eclipse.finalizedBy fixEclipseProject

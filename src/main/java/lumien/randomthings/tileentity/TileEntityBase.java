@@ -223,7 +223,7 @@ public abstract class TileEntityBase extends TileEntity
 	{
 		if (this instanceof IRedstoneSensitive)
 		{
-			boolean newPowered = this.world.isBlockIndirectlyGettingPowered(this.pos) > 0;
+			boolean newPowered = this.world.getRedstonePowerFromNeighbors(this.pos) > 0;
 			boolean changed = redstonePowered != newPowered;
 
 			if (changed)

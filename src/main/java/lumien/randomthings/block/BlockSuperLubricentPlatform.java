@@ -30,7 +30,7 @@ public class BlockSuperLubricentPlatform extends BlockBase implements ISuperLubr
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.TRANSLUCENT;
 	}

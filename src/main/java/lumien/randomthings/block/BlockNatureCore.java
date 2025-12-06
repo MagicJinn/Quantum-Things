@@ -51,7 +51,7 @@ public class BlockNatureCore extends BlockContainerBase implements ILuminousBloc
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}

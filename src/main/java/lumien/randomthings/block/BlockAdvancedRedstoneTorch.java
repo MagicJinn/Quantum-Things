@@ -72,7 +72,7 @@ public class BlockAdvancedRedstoneTorch extends BlockContainerBase implements IN
 	@Override
 	public boolean hasNoItem()
 	{
-		return !this.getUnlocalizedName().endsWith("_on");
+		return !this.getTranslationKey().endsWith("_on");
 	}
 
 	@Override
@@ -251,9 +251,9 @@ public class BlockAdvancedRedstoneTorch extends BlockContainerBase implements IN
 		{
 			EnumFacing enumfacing1 = enumfacing.getOpposite();
 			double d3 = 0.27D;
-			d0 += 0.27D * enumfacing1.getFrontOffsetX();
+			d0 += 0.27D * enumfacing1.getDirectionVec().getX();
 			d1 += 0.22D;
-			d2 += 0.27D * enumfacing1.getFrontOffsetZ();
+			d2 += 0.27D * enumfacing1.getDirectionVec().getZ();
 		}
 
 		if (this.isOn)
@@ -478,7 +478,7 @@ public class BlockAdvancedRedstoneTorch extends BlockContainerBase implements IN
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}

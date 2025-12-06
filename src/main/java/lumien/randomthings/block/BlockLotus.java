@@ -122,7 +122,7 @@ public class BlockLotus extends BlockBase implements IPlantable, IGrowable
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}

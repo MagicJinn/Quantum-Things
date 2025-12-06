@@ -113,7 +113,6 @@ public class ModConfiguration
 		{
 			try
 			{
-				@SuppressWarnings("rawtypes")
 				Class clazz = Class.forName(data.getClassName());
 				Field f = clazz.getDeclaredField(data.getObjectName());
 				f.setAccessible(true);

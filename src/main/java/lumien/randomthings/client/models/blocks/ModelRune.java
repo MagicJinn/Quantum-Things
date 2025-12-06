@@ -126,10 +126,10 @@ public class ModelRune implements IBakedModel
 
 	private BakedQuad createSidedBakedQuad(float x1, float x2, float z1, float z2, float y, float u1, float v1, float u2, float v2, int tintIndex, TextureAtlasSprite texture, EnumFacing side)
 	{
-		Vec3d c1 = rotate(new Vec3d(x1 - .5, y - .5, z1 - .5), side).addVector(.5, 0.5, .5);
-		Vec3d c2 = rotate(new Vec3d(x1 - .5, y - .5, z2 - .5), side).addVector(.5, 0.5, .5);
-		Vec3d c3 = rotate(new Vec3d(x2 - .5, y - .5, z2 - .5), side).addVector(.5, 0.5, .5);
-		Vec3d c4 = rotate(new Vec3d(x2 - .5, y - .5, z1 - .5), side).addVector(.5, 0.5, .5);
+		Vec3d c1 = rotate(new Vec3d(x1 - .5, y - .5, z1 - .5), side).add(.5, 0.5, .5);
+		Vec3d c2 = rotate(new Vec3d(x1 - .5, y - .5, z2 - .5), side).add(.5, 0.5, .5);
+		Vec3d c3 = rotate(new Vec3d(x2 - .5, y - .5, z2 - .5), side).add(.5, 0.5, .5);
+		Vec3d c4 = rotate(new Vec3d(x2 - .5, y - .5, z1 - .5), side).add(.5, 0.5, .5);
 
 		EnumFacing rotation = EnumFacing.SOUTH;
 
@@ -140,18 +140,18 @@ public class ModelRune implements IBakedModel
 		else if (side == EnumFacing.NORTH)
 		{
 			rotation = EnumFacing.WEST;
-			c1 = rotate(c1.addVector(-.5, -.5, -.5), rotation).addVector(.5, 0.5, .5);
-			c2 = rotate(c2.addVector(-.5, -.5, -.5), rotation).addVector(.5, 0.5, .5);
-			c3 = rotate(c3.addVector(-.5, -.5, -.5), rotation).addVector(.5, 0.5, .5);
-			c4 = rotate(c4.addVector(-.5, -.5, -.5), rotation).addVector(.5, 0.5, .5);
+			c1 = rotate(c1.add(-.5, -.5, -.5), rotation).add(.5, 0.5, .5);
+			c2 = rotate(c2.add(-.5, -.5, -.5), rotation).add(.5, 0.5, .5);
+			c3 = rotate(c3.add(-.5, -.5, -.5), rotation).add(.5, 0.5, .5);
+			c4 = rotate(c4.add(-.5, -.5, -.5), rotation).add(.5, 0.5, .5);
 		}
 
 		if (side != EnumFacing.UP && side != EnumFacing.SOUTH)
 		{
-			c1 = rotate(c1.addVector(-.5, -.5, -.5), rotation).addVector(.5, 0.5, .5);
-			c2 = rotate(c2.addVector(-.5, -.5, -.5), rotation).addVector(.5, 0.5, .5);
-			c3 = rotate(c3.addVector(-.5, -.5, -.5), rotation).addVector(.5, 0.5, .5);
-			c4 = rotate(c4.addVector(-.5, -.5, -.5), rotation).addVector(.5, 0.5, .5);
+			c1 = rotate(c1.add(-.5, -.5, -.5), rotation).add(.5, 0.5, .5);
+			c2 = rotate(c2.add(-.5, -.5, -.5), rotation).add(.5, 0.5, .5);
+			c3 = rotate(c3.add(-.5, -.5, -.5), rotation).add(.5, 0.5, .5);
+			c4 = rotate(c4.add(-.5, -.5, -.5), rotation).add(.5, 0.5, .5);
 		}
 
 		return new BakedQuad(Ints.concat(vertexToInts((float) c1.x, (float) c1.y, (float) c1.z, -1, texture, u1, v1, side), vertexToInts((float) c2.x, (float) c2.y, (float) c2.z, -1, texture, u1, v2, side), vertexToInts((float) c3.x, (float) c3.y, (float) c3.z, -1, texture, u2, v2, side), vertexToInts((float) c4.x, (float) c4.y, (float) c4.z, -1, texture, u2, v1, side)), tintIndex, side, texture, false, DefaultVertexFormats.ITEM);
@@ -217,9 +217,9 @@ public class ModelRune implements IBakedModel
 	{
 		int normal;
 
-		int xN = ((byte) (side.getFrontOffsetX() * 127)) & 0xFF;
-		int yN = ((byte) (side.getFrontOffsetY() * 127)) & 0xFF;
-		int zN = ((byte) (side.getFrontOffsetZ() * 127)) & 0xFF;
+		int xN = ((byte) (side.getDirectionVec().getX() * 127)) & 0xFF;
+		int yN = ((byte) (side.getDirectionVec().getY() * 127)) & 0xFF;
+		int zN = ((byte) (side.getDirectionVec().getZ() * 127)) & 0xFF;
 
 		normal = xN | (yN << 0x08) | (zN << 0x10);
 

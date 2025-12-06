@@ -312,12 +312,18 @@ public class ItemModels
 	{
 		for (int i = 0; i < 16; i++)
 		{
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.luminousBlock), i, new ModelResourceLocation("randomthings:luminousblock/" + EnumDyeColor.byMetadata(i).getUnlocalizedName(), "inventory"));
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.luminousBlock), i,
+					new ModelResourceLocation(
+							"randomthings:luminousblock/" + EnumDyeColor.byMetadata(i).getTranslationKey(),
+							"inventory"));
 		}
 
 		for (int i = 0; i < 16; i++)
 		{
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.translucentLuminousBlock), i, new ModelResourceLocation("randomthings:luminousblock/" + EnumDyeColor.byMetadata(i).getUnlocalizedName() + "_t", "inventory"));
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.translucentLuminousBlock), i,
+					new ModelResourceLocation(
+							"randomthings:luminousblock/" + EnumDyeColor.byMetadata(i).getTranslationKey() + "_t",
+							"inventory"));
 		}
 	}
 
@@ -325,8 +331,14 @@ public class ItemModels
 	{
 		for (int i = 0; i < 16; i++)
 		{
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.stainedBrick), i, new ModelResourceLocation("randomthings:stainedBrick/" + EnumDyeColor.byMetadata(i).getUnlocalizedName(), "inventory"));
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.luminousStainedBrick), i, new ModelResourceLocation("randomthings:luminousStainedBrick/" + EnumDyeColor.byMetadata(i).getUnlocalizedName(), "inventory"));
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.stainedBrick), i,
+					new ModelResourceLocation(
+							"randomthings:stainedBrick/" + EnumDyeColor.byMetadata(i).getTranslationKey(),
+							"inventory"));
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.luminousStainedBrick), i,
+					new ModelResourceLocation(
+							"randomthings:luminousStainedBrick/" + EnumDyeColor.byMetadata(i).getTranslationKey(),
+							"inventory"));
 		}
 	}
 

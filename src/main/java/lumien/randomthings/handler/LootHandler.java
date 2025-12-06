@@ -120,7 +120,7 @@ public class LootHandler
 	private static void addSingleItemWithChance(LootTable table, Item item, int chance)
 	{
 		chance = Math.min(100, chance);
-		String itemName = item.getRegistryName().getResourcePath().toString();
+		String itemName = item.getRegistryName().toString();
 
 		LootEntry entryItem = new LootEntryItem(item, chance, 0, new LootFunction[0], new LootCondition[0], "item");
 		LootEntry entryEmpty = new LootEntryEmpty(100 - chance, 0, new LootCondition[0], "empty");
@@ -132,7 +132,7 @@ public class LootHandler
 
 	private static void addSingleItemWithChance(LootTable table, Item item, int chance, LootFunction function)
 	{
-		String itemName = item.getRegistryName().getResourcePath().toString();
+		String itemName = item.getRegistryName().toString();
 
 		LootEntry entryItem = new LootEntryItem(item, chance, 0, new LootFunction[] { function }, new LootCondition[0], "item");
 		LootEntry entryEmpty = new LootEntryEmpty(100 - chance, 0, new LootCondition[0], "empty");
@@ -144,7 +144,7 @@ public class LootHandler
 	
 	private static void addSingleItemWithChance(LootTable table, Item item, int chance, LootFunction function, LootCondition condition)
 	{
-		String itemName = item.getRegistryName().getResourcePath().toString();
+		String itemName = item.getRegistryName().toString();
 
 		LootEntry entryItem = new LootEntryItem(item, chance, 0, new LootFunction[] { function }, new LootCondition[0], "item");
 		LootEntry entryEmpty = new LootEntryEmpty(100 - chance, 0, new LootCondition[0], "empty");
@@ -156,7 +156,7 @@ public class LootHandler
 	
 	private static void addSingleItemWithChance(LootTable table, Item item, int chance, LootCondition condition)
 	{
-		String itemName = item.getRegistryName().getResourcePath().toString();
+		String itemName = item.getRegistryName().toString();
 
 		LootEntry entryItem = new LootEntryItem(item, chance, 0, new LootFunction[0], new LootCondition[0], "item");
 		LootEntry entryEmpty = new LootEntryEmpty(100 - chance, 0, new LootCondition[0], "empty");

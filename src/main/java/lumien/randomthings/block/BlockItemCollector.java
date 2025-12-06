@@ -55,7 +55,7 @@ public class BlockItemCollector extends BlockContainerBase
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer()
+	public BlockRenderLayer getRenderLayer()
 	{
 		return BlockRenderLayer.CUTOUT;
 	}

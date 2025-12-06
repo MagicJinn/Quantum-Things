@@ -104,13 +104,13 @@ public class TileEntityRainShield extends TileEntityBase
 
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
-		this.active = !(worldIn.isBlockIndirectlyGettingPowered(pos) > 0);
+		this.active = !(worldIn.getRedstonePowerFromNeighbors(pos) > 0);
 	}
 
 	@Override
 	public void neighborChanged(IBlockState state2, World worldIn, BlockPos pos, Block neighborBlock, BlockPos changedPos)
 	{
-		boolean desiredState = !(worldIn.isBlockIndirectlyGettingPowered(pos) > 0);
+		boolean desiredState = !(worldIn.getRedstonePowerFromNeighbors(pos) > 0);
 
 		if (desiredState != this.active)
 		{

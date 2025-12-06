@@ -95,11 +95,11 @@ public class ItemRuneDust extends ItemBase implements IRTItemColor
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
+	public String getTranslationKey(ItemStack stack)
 	{
 		EnumRuneDust runeType = EnumRuneDust.values()[stack.getItemDamage()];
 
-		return super.getUnlocalizedName(stack) + "." + runeType.getName();
+		return super.getTranslationKey(stack) + "." + runeType.getName();
 	}
 
 	@Override

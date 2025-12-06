@@ -64,9 +64,9 @@ public class ModelCubeAll implements IBakedModel
 	{
 		int normal;
 
-		int xN = ((byte) (side.getFrontOffsetX() * 127)) & 0xFF;
-		int yN = ((byte) (side.getFrontOffsetY() * 127)) & 0xFF;
-		int zN = ((byte) (side.getFrontOffsetZ() * 127)) & 0xFF;
+		int xN = ((byte) (side.getDirectionVec().getX() * 127)) & 0xFF;
+		int yN = ((byte) (side.getDirectionVec().getY() * 127)) & 0xFF;
+		int zN = ((byte) (side.getDirectionVec().getZ() * 127)) & 0xFF;
 
 		normal = xN | (yN << 0x08) | (zN << 0x10);
 
@@ -77,10 +77,10 @@ public class ModelCubeAll implements IBakedModel
 	{
 		int[][] uvs = uvArrays[rotation.ordinal()];
 
-		Vec3d v1 = rotate(new Vec3d(x1 - .5, y - .5, z1 - .5), side).addVector(.5, 0.5, .5);
-		Vec3d v2 = rotate(new Vec3d(x1 - .5, y - .5, z2 - .5), side).addVector(.5, 0.5, .5);
-		Vec3d v3 = rotate(new Vec3d(x2 - .5, y - .5, z2 - .5), side).addVector(.5, 0.5, .5);
-		Vec3d v4 = rotate(new Vec3d(x2 - .5, y - .5, z1 - .5), side).addVector(.5, 0.5, .5);
+		Vec3d v1 = rotate(new Vec3d(x1 - .5, y - .5, z1 - .5), side).add(.5, 0.5, .5);
+		Vec3d v2 = rotate(new Vec3d(x1 - .5, y - .5, z2 - .5), side).add(.5, 0.5, .5);
+		Vec3d v3 = rotate(new Vec3d(x2 - .5, y - .5, z2 - .5), side).add(.5, 0.5, .5);
+		Vec3d v4 = rotate(new Vec3d(x2 - .5, y - .5, z1 - .5), side).add(.5, 0.5, .5);
 
 		EnumFacing currentRotation = EnumFacing.SOUTH;
 
@@ -91,18 +91,18 @@ public class ModelCubeAll implements IBakedModel
 		else if (side == EnumFacing.NORTH)
 		{
 			currentRotation = EnumFacing.WEST;
-			v1 = rotate(v1.addVector(-.5, -.5, -.5), currentRotation).addVector(.5, 0.5, .5);
-			v2 = rotate(v2.addVector(-.5, -.5, -.5), currentRotation).addVector(.5, 0.5, .5);
-			v3 = rotate(v3.addVector(-.5, -.5, -.5), currentRotation).addVector(.5, 0.5, .5);
-			v4 = rotate(v4.addVector(-.5, -.5, -.5), currentRotation).addVector(.5, 0.5, .5);
+			v1 = rotate(v1.add(-.5, -.5, -.5), currentRotation).add(.5, 0.5, .5);
+			v2 = rotate(v2.add(-.5, -.5, -.5), currentRotation).add(.5, 0.5, .5);
+			v3 = rotate(v3.add(-.5, -.5, -.5), currentRotation).add(.5, 0.5, .5);
+			v4 = rotate(v4.add(-.5, -.5, -.5), currentRotation).add(.5, 0.5, .5);
 		}
 
 		if (side != EnumFacing.UP && side != EnumFacing.SOUTH && side != EnumFacing.DOWN)
 		{
-			v1 = rotate(v1.addVector(-.5, -.5, -.5), currentRotation).addVector(.5, 0.5, .5);
-			v2 = rotate(v2.addVector(-.5, -.5, -.5), currentRotation).addVector(.5, 0.5, .5);
-			v3 = rotate(v3.addVector(-.5, -.5, -.5), currentRotation).addVector(.5, 0.5, .5);
-			v4 = rotate(v4.addVector(-.5, -.5, -.5), currentRotation).addVector(.5, 0.5, .5);
+			v1 = rotate(v1.add(-.5, -.5, -.5), currentRotation).add(.5, 0.5, .5);
+			v2 = rotate(v2.add(-.5, -.5, -.5), currentRotation).add(.5, 0.5, .5);
+			v3 = rotate(v3.add(-.5, -.5, -.5), currentRotation).add(.5, 0.5, .5);
+			v4 = rotate(v4.add(-.5, -.5, -.5), currentRotation).add(.5, 0.5, .5);
 		}
 
 		return new BakedQuad(Ints.concat(vertexToInts((float) v1.x, (float) v1.y, (float) v1.z, -1, texture, uvs[0][0], uvs[0][1], side), vertexToInts((float) v2.x, (float) v2.y, (float) v2.z, -1, texture, uvs[1][0], uvs[1][1], side), vertexToInts((float) v3.x, (float) v3.y, (float) v3.z, -1, texture, uvs[2][0], uvs[2][1], side), vertexToInts((float) v4.x, (float) v4.y, (float) v4.z, -1, texture, uvs[3][0], uvs[3][1], side)), 0, side, texture, false, DefaultVertexFormats.ITEM);
