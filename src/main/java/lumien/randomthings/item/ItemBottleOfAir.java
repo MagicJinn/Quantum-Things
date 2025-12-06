@@ -1,8 +1,5 @@
 package lumien.randomthings.item;
 
-import java.lang.reflect.Field;
-
-import lumien.randomthings.asm.MCPNames;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,25 +13,6 @@ import net.minecraft.world.World;
 
 public class ItemBottleOfAir extends ItemBase
 {
-	static Field inUseField = null;
-	static
-	{
-		try
-		{
-			inUseField = EntityLivingBase.class.getDeclaredField(MCPNames.field("field_184628_bn"));
-		}
-		catch (NoSuchFieldException e)
-		{
-			e.printStackTrace();
-		}
-		catch (SecurityException e)
-		{
-			e.printStackTrace();
-		}
-
-		inUseField.setAccessible(true);
-	}
-
 	public ItemBottleOfAir()
 	{
 		super("bottleOfAir");
@@ -78,28 +56,11 @@ public class ItemBottleOfAir extends ItemBase
 
 		if (livingEntity.isInsideOfMaterial(Material.WATER) || livingEntity.getAir() < 270)
 		{
+			// Restore air every 5 ticks while using the item
 			if (count % 5 == 0)
 			{
-				if (livingEntity.getAir() < 270)
-				{
-					livingEntity.setAir(livingEntity.getAir() + 20);
-				}
-			}
-
-			if (count == 5)
-			{
-				try
-				{
-					inUseField.set(livingEntity, 20);
-				}
-				catch (IllegalArgumentException e)
-				{
-					e.printStackTrace();
-				}
-				catch (IllegalAccessException e)
-				{
-					e.printStackTrace();
-				}
+				int currentAir = livingEntity.getAir();
+				livingEntity.setAir(Math.min(currentAir + 20, 300));
 			}
 		}
 	}
