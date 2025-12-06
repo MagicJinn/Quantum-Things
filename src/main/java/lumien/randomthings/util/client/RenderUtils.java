@@ -1,9 +1,6 @@
 package lumien.randomthings.util.client;
 
 import java.awt.Color;
-import java.awt.color.ColorSpace;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
@@ -13,29 +10,24 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
 import javax.annotation.Nullable;
 
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.jcraft.jorbis.Block;
-
-import lumien.randomthings.asm.MCPNames;
-import lumien.randomthings.handler.RTEventHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.Profile;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BlockModelRenderer.AmbientOcclusionFace;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -44,13 +36,10 @@ import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ReportedException;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.client.model.animation.Animation;
-import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
@@ -60,6 +49,82 @@ public class RenderUtils
 
 	static Cache<Biome, Integer> biomeColorCache = CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build();
 
+	// TODO: Hacky - Reflection fields for AmbientOcclusionFace (package-private
+	// class access workaround)
+	private static Class<?> ambientOcclusionFaceClass;
+	private static Constructor<?> ambientOcclusionFaceConstructor;
+	private static Field vertexBrightnessField;
+	private static Field vertexColorMultiplierField;
+	private static Method updateVertexBrightnessMethod;
+	// TODO: End Hacky
+
+	static {
+		// TODO: Hacky - Reflection initialization to access package-private
+		// AmbientOcclusionFace
+		try {
+			// Get the inner class AmbientOcclusionFace
+			Class<?> blockModelRendererClass = BlockModelRenderer.class;
+			for (Class<?> innerClass : blockModelRendererClass.getDeclaredClasses()) {
+				if (innerClass.getSimpleName().equals("AmbientOcclusionFace")) {
+					ambientOcclusionFaceClass = innerClass;
+					break;
+				}
+			}
+
+			if (ambientOcclusionFaceClass != null) {
+				// Get constructor (takes BlockModelRenderer as parameter)
+				ambientOcclusionFaceConstructor = ambientOcclusionFaceClass
+						.getDeclaredConstructor(BlockModelRenderer.class);
+				ambientOcclusionFaceConstructor.setAccessible(true);
+
+				// Get fields - try deobfuscated names first, then obfuscated names
+				try {
+					vertexBrightnessField = ambientOcclusionFaceClass.getDeclaredField("vertexBrightness");
+				} catch (NoSuchFieldException e) {
+					// Try obfuscated name
+					vertexBrightnessField = ambientOcclusionFaceClass.getDeclaredField("field_178207_c");
+				}
+				vertexBrightnessField.setAccessible(true);
+
+				try {
+					vertexColorMultiplierField = ambientOcclusionFaceClass.getDeclaredField("vertexColorMultiplier");
+				} catch (NoSuchFieldException e) {
+					// Try obfuscated name
+					vertexColorMultiplierField = ambientOcclusionFaceClass.getDeclaredField("field_178206_b");
+				}
+				vertexColorMultiplierField.setAccessible(true);
+
+				// Get method - find by iterating through methods to match signature
+				// The method signature is: void method(IBlockAccess, IBlockState, BlockPos,
+				// EnumFacing, float[], BitSet)
+				Method[] methods = ambientOcclusionFaceClass.getDeclaredMethods();
+				for (Method m : methods) {
+					Class<?>[] paramTypes = m.getParameterTypes();
+					// Look for method with 6 parameters matching the signature exactly
+					if (paramTypes.length == 6) {
+						// Check if parameter types match exactly in order using getName() for
+						// interfaces/classes
+						// and == for primitives/arrays
+						boolean matches = paramTypes[0].getName().equals(IBlockAccess.class.getName())
+								&& paramTypes[1].getName().equals(IBlockState.class.getName())
+								&& paramTypes[2].getName().equals(BlockPos.class.getName())
+								&& paramTypes[3].getName().equals(EnumFacing.class.getName())
+								&& paramTypes[4] == float[].class
+								&& paramTypes[5] == BitSet.class;
+
+						if (matches) {
+							updateVertexBrightnessMethod = m;
+							updateVertexBrightnessMethod.setAccessible(true);
+							break;
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// TODO: End Hacky
+	}
 	
 
 	public static int getBiomeColor(IBlockAccess worldIn, final Biome biome, final BlockPos pos)
@@ -423,24 +488,34 @@ public class RenderUtils
 					float[] afloat = new float[EnumFacing.values().length * 2];
 					BitSet bitset = new BitSet(3);
 
-					AmbientOcclusionFace blockmodelrenderer$ambientocclusionface = bmr.new AmbientOcclusionFace();
+					// TODO: Hacky - Using reflection to instantiate package-private
+					// AmbientOcclusionFace
+					Object blockmodelrenderer$ambientocclusionface = null;
+					if (ambientOcclusionFaceConstructor != null) {
+						blockmodelrenderer$ambientocclusionface = ambientOcclusionFaceConstructor.newInstance(bmr);
+					} else {
+						// Fallback: disable AO if reflection fails
+						flag = false;
+					}
 
-					for (EnumFacing enumfacing : EnumFacing.values())
-					{
-						List<BakedQuad> list = modelIn.getQuads(stateIn, enumfacing, rand);
+					if (blockmodelrenderer$ambientocclusionface != null) {
+						for (EnumFacing enumfacing : EnumFacing.values()) {
+							List<BakedQuad> list = modelIn.getQuads(stateIn, enumfacing, rand);
 
-						if (!list.isEmpty() && faceMap.get(enumfacing))
-						{
-							renderQuadsSmooth(worldIn, stateIn, posIn, buffer, list, afloat, bitset, blockmodelrenderer$ambientocclusionface);
+							if (!list.isEmpty() && faceMap.get(enumfacing)) {
+								renderQuadsSmooth(worldIn, stateIn, posIn, buffer, list, afloat, bitset,
+										blockmodelrenderer$ambientocclusionface);
+							}
+						}
+
+						List<BakedQuad> list1 = modelIn.getQuads(stateIn, (EnumFacing) null, rand);
+
+						if (!list1.isEmpty()) {
+							renderQuadsSmooth(worldIn, stateIn, posIn, buffer, list1, afloat, bitset,
+									blockmodelrenderer$ambientocclusionface);
 						}
 					}
-
-					List<BakedQuad> list1 = modelIn.getQuads(stateIn, (EnumFacing) null, rand);
-
-					if (!list1.isEmpty())
-					{
-						renderQuadsSmooth(worldIn, stateIn, posIn, buffer, list1, afloat, bitset, blockmodelrenderer$ambientocclusionface);
-					}
+					// TODO: End Hacky
 				}
 				else
 				{
@@ -506,56 +581,84 @@ public class RenderUtils
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	private static void renderQuadsSmooth(IBlockAccess blockAccessIn, IBlockState stateIn, BlockPos posIn, BufferBuilder buffer, List<BakedQuad> list, float[] quadBounds, BitSet bitSet, BlockModelRenderer.AmbientOcclusionFace aoFace)
-	{
-		Vec3d vec3d = stateIn.getOffset(blockAccessIn, posIn);
-		double d0 = (double) posIn.getX() + vec3d.x;
-		double d1 = (double) posIn.getY() + vec3d.y;
-		double d2 = (double) posIn.getZ() + vec3d.z;
-		int i = 0;
+	// TODO: Hacky - Changed parameter type from
+	// BlockModelRenderer.AmbientOcclusionFace to Object for reflection access
+	private static void renderQuadsSmooth(IBlockAccess blockAccessIn, IBlockState stateIn, BlockPos posIn,
+			BufferBuilder buffer, List<BakedQuad> list, float[] quadBounds, BitSet bitSet, Object aoFace) {
+		if (aoFace == null || updateVertexBrightnessMethod == null || vertexBrightnessField == null
+				|| vertexColorMultiplierField == null) {
+			return;
+		}
 
-		for (int j = list.size(); i < j; ++i)
-		{
-			BakedQuad bakedquad = list.get(i);
-			fillQuadBounds(stateIn, bakedquad.getVertexData(), bakedquad.getFace(), quadBounds, bitSet);
-			aoFace.updateVertexBrightness(blockAccessIn, stateIn, posIn, bakedquad.getFace(), quadBounds, bitSet);
-			buffer.addVertexData(bakedquad.getVertexData());
-			buffer.putBrightness4(aoFace.vertexBrightness[0], aoFace.vertexBrightness[1], aoFace.vertexBrightness[2], aoFace.vertexBrightness[3]);
-			if (bakedquad.shouldApplyDiffuseLighting())
-			{
-				float diffuse = net.minecraftforge.client.model.pipeline.LightUtil.diffuseLight(bakedquad.getFace());
-				aoFace.vertexColorMultiplier[0] *= diffuse;
-				aoFace.vertexColorMultiplier[1] *= diffuse;
-				aoFace.vertexColorMultiplier[2] *= diffuse;
-				aoFace.vertexColorMultiplier[3] *= diffuse;
-			}
-			if (bakedquad.hasTintIndex())
-			{
-				int k = Minecraft.getMinecraft().getBlockColors().colorMultiplier(stateIn, blockAccessIn, posIn, bakedquad.getTintIndex());
+		try {
+			Vec3d vec3d = stateIn.getOffset(blockAccessIn, posIn);
+			double d0 = (double) posIn.getX() + vec3d.x;
+			double d1 = (double) posIn.getY() + vec3d.y;
+			double d2 = (double) posIn.getZ() + vec3d.z;
+			int i = 0;
 
-				if (EntityRenderer.anaglyphEnable)
-				{
-					k = TextureUtil.anaglyphColor(k);
+			for (int j = list.size(); i < j; ++i) {
+				BakedQuad bakedquad = list.get(i);
+				fillQuadBounds(stateIn, bakedquad.getVertexData(), bakedquad.getFace(), quadBounds, bitSet);
+
+				// TODO: Hacky - Call updateVertexBrightness using reflection
+				updateVertexBrightnessMethod.invoke(aoFace, blockAccessIn, stateIn, posIn, bakedquad.getFace(),
+						quadBounds, bitSet);
+
+				buffer.addVertexData(bakedquad.getVertexData());
+
+				// TODO: Hacky - Get vertexBrightness array using reflection
+				int[] vertexBrightness = (int[]) vertexBrightnessField.get(aoFace);
+				buffer.putBrightness4(vertexBrightness[0], vertexBrightness[1], vertexBrightness[2],
+						vertexBrightness[3]);
+
+				// TODO: Hacky - Get vertexColorMultiplier array using reflection
+				float[] vertexColorMultiplier = (float[]) vertexColorMultiplierField.get(aoFace);
+
+				if (bakedquad.shouldApplyDiffuseLighting()) {
+					float diffuse = net.minecraftforge.client.model.pipeline.LightUtil
+							.diffuseLight(bakedquad.getFace());
+					vertexColorMultiplier[0] *= diffuse;
+					vertexColorMultiplier[1] *= diffuse;
+					vertexColorMultiplier[2] *= diffuse;
+					vertexColorMultiplier[3] *= diffuse;
+				}
+				if (bakedquad.hasTintIndex()) {
+					int k = Minecraft.getMinecraft().getBlockColors().colorMultiplier(stateIn, blockAccessIn, posIn,
+							bakedquad.getTintIndex());
+
+					if (EntityRenderer.anaglyphEnable) {
+						k = TextureUtil.anaglyphColor(k);
+					}
+
+					float f = (float) (k >> 16 & 255) / 255.0F;
+					float f1 = (float) (k >> 8 & 255) / 255.0F;
+					float f2 = (float) (k & 255) / 255.0F;
+					buffer.putColorMultiplier(vertexColorMultiplier[0] * f, vertexColorMultiplier[0] * f1,
+							vertexColorMultiplier[0] * f2, 4);
+					buffer.putColorMultiplier(vertexColorMultiplier[1] * f, vertexColorMultiplier[1] * f1,
+							vertexColorMultiplier[1] * f2, 3);
+					buffer.putColorMultiplier(vertexColorMultiplier[2] * f, vertexColorMultiplier[2] * f1,
+							vertexColorMultiplier[2] * f2, 2);
+					buffer.putColorMultiplier(vertexColorMultiplier[3] * f, vertexColorMultiplier[3] * f1,
+							vertexColorMultiplier[3] * f2, 1);
+				} else {
+					buffer.putColorMultiplier(vertexColorMultiplier[0], vertexColorMultiplier[0],
+							vertexColorMultiplier[0], 4);
+					buffer.putColorMultiplier(vertexColorMultiplier[1], vertexColorMultiplier[1],
+							vertexColorMultiplier[1], 3);
+					buffer.putColorMultiplier(vertexColorMultiplier[2], vertexColorMultiplier[2],
+							vertexColorMultiplier[2], 2);
+					buffer.putColorMultiplier(vertexColorMultiplier[3], vertexColorMultiplier[3],
+							vertexColorMultiplier[3], 1);
 				}
 
-				float f = (float) (k >> 16 & 255) / 255.0F;
-				float f1 = (float) (k >> 8 & 255) / 255.0F;
-				float f2 = (float) (k & 255) / 255.0F;
-				buffer.putColorMultiplier(aoFace.vertexColorMultiplier[0] * f, aoFace.vertexColorMultiplier[0] * f1, aoFace.vertexColorMultiplier[0] * f2, 4);
-				buffer.putColorMultiplier(aoFace.vertexColorMultiplier[1] * f, aoFace.vertexColorMultiplier[1] * f1, aoFace.vertexColorMultiplier[1] * f2, 3);
-				buffer.putColorMultiplier(aoFace.vertexColorMultiplier[2] * f, aoFace.vertexColorMultiplier[2] * f1, aoFace.vertexColorMultiplier[2] * f2, 2);
-				buffer.putColorMultiplier(aoFace.vertexColorMultiplier[3] * f, aoFace.vertexColorMultiplier[3] * f1, aoFace.vertexColorMultiplier[3] * f2, 1);
+				buffer.putPosition(d0, d1, d2);
 			}
-			else
-			{
-				buffer.putColorMultiplier(aoFace.vertexColorMultiplier[0], aoFace.vertexColorMultiplier[0], aoFace.vertexColorMultiplier[0], 4);
-				buffer.putColorMultiplier(aoFace.vertexColorMultiplier[1], aoFace.vertexColorMultiplier[1], aoFace.vertexColorMultiplier[1], 3);
-				buffer.putColorMultiplier(aoFace.vertexColorMultiplier[2], aoFace.vertexColorMultiplier[2], aoFace.vertexColorMultiplier[2], 2);
-				buffer.putColorMultiplier(aoFace.vertexColorMultiplier[3], aoFace.vertexColorMultiplier[3], aoFace.vertexColorMultiplier[3], 1);
-			}
-
-			buffer.putPosition(d0, d1, d2);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		// TODO: End Hacky
 	}
 
 	private static void fillQuadBounds(IBlockState stateIn, int[] vertexData, EnumFacing face, @Nullable float[] quadBounds, BitSet boundsFlags)
