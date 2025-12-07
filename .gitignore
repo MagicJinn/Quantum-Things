@@ -38,6 +38,7 @@ Thumbs.db
 
 # Gradle
 .gradle/
+gradle.properties
 gradle-app.setting
 !gradle-wrapper.jar
 /wiki/wiki_site
