@@ -59,7 +59,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.MOD_VERSION,
-		acceptedMinecraftVersions = "[1.12,1.13)",
+		acceptedMinecraftVersions = Reference.MC_VERSION,
 		certificateFingerprint = Reference.MOD_FINGERPRINT,
 		dependencies = "after:jei@[4.7.11.100,);",
 		guiFactory = "lumien.randomthings.client.ModGuiFactory")
