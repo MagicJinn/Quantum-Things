@@ -319,7 +319,8 @@ public class RTEventHandler
 		if (target instanceof EntityVillager)
 		{
 			EntityVillager villager = (EntityVillager) target;
-			ItemStack stack = event.getEntityPlayer().getHeldItem(event.getHand());
+			EntityPlayer player = event.getEntityPlayer();
+			ItemStack stack = player.getHeldItem(event.getHand());
 
 			if (!stack.isEmpty() && stack.getItem() == ModItems.ingredients && stack.getItemDamage() == ItemIngredient.INGREDIENT.PRECIOUS_EMERALD.id && !target.world.isRemote)
 			{
@@ -327,7 +328,9 @@ public class RTEventHandler
 
 				if (success == 2)
 				{
-					stack.shrink(1);
+					if (!player.isCreative()) {
+						stack.shrink(1);
+					}
 
 					villager.world.setEntityState(villager, (byte) 12);
 				}
