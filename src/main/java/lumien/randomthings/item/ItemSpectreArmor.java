@@ -70,17 +70,8 @@ public class ItemSpectreArmor extends ItemArmor {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, World world, List<String> tooltip,
-            ITooltipFlag advanced) {
-        tooltip.add(TextFormatting.GRAY
-                + "Spectre Armor was previously removed from Random Things, and has been re-added. It currently has no special functionality or recipe.");
-    }
-
-    @Override
     public String getItemStackDisplayName(ItemStack stack) {
-        // TODO: Implement and remove WIP
-        return super.getItemStackDisplayName(stack) + " (WIP)";
+        return super.getItemStackDisplayName(stack);
     }
 
     @Override

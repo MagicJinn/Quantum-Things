@@ -41,7 +41,8 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Made Rain Shields be able to be placed on any block, similar to an end rod.
 - Added the ability to configure the Spectre Energy Injector capacity, Spectre Coil/Charger transfer rates, and whether the Genesis Spectre Coil generates energy or transfers it.
 - Made the ID Card crafting recipe shapeless.
-- Re-added Spectre Armor (WIP).
+- Re-added Spectre Armor (with no recipe, to be added later, or by modpacks).
+- Added the ability to configure the transparency effect of the Spectre Armor.
 - Re-added Biome Painter and Biome Capsule from 1.7.10.
 - Re-added Obsidian Stick from 1.7.10, now used for Spectre Tools and the Biome Painter.
 - Added the Spectre Hoe.

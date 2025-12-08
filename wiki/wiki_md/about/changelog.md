@@ -15,6 +15,8 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Added the ability to configure the maximum number of blocks a Potion Vaporizer can affect.
 - Reduced the number of particles spawned by the Potion Vaporizer by several orders of magnitude.
 - Changed the Ancient Furnace to change blocks in a circular area around it, rather than a diamond shape.
+- Re-added Spectre Armor (with no recipe, to be added later, or by modpacks).
+- Added the ability to configure the transparency effect of the Spectre Armor.
 
 ### Fixes
 

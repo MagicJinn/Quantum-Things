@@ -15,5 +15,8 @@ public class Visual {
         @ConfigOption(category = CATEGORY, name = "RemoveUnderwaterTexture",
                         comment = "TRIES to remove the weird water texture showing around ALL non full blocks. This might look weird when you, for example, are on a ladder underwater.") public static boolean removeAirBubble =
                                         false;
+
+        @ConfigOption(category = CATEGORY, name = "FancySpectreArmorTransparency", comment = "When set to true, will scale the player models transparency based on the amount of Spectre Armor pieces they are wearing. Else, it will be a flat 50% trnaparency when wearing the full set.")
+        public static boolean FANCY_SPECTRE_ARMOR_TRANSPARENCY = true;
 }
 

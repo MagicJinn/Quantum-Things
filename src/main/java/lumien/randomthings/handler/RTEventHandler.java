@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.logging.log4j.Level;
+import org.lwjgl.opengl.GL11;
 
 import lumien.randomthings.RandomThings;
 import lumien.randomthings.block.BlockCompressedSlimeBlock;
@@ -25,6 +26,7 @@ import lumien.randomthings.client.models.blocks.ModelInventoryRerouter;
 import lumien.randomthings.client.models.blocks.ModelRune;
 import lumien.randomthings.config.Internals;
 import lumien.randomthings.config.Numbers;
+import lumien.randomthings.config.Visual;
 import lumien.randomthings.container.inventories.InventoryItem;
 import lumien.randomthings.entitys.EntityEclipsedClock;
 import lumien.randomthings.entitys.EntitySoul;
@@ -45,6 +47,7 @@ import lumien.randomthings.item.ItemFlooPouch;
 import lumien.randomthings.item.ItemIngredient;
 import lumien.randomthings.item.ItemPortableSoundDampener;
 import lumien.randomthings.item.ItemSoundPattern;
+import lumien.randomthings.item.ItemSpectreArmor;
 import lumien.randomthings.item.ItemTimeInABottle;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.lib.AtlasSprite;
@@ -122,6 +125,7 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
@@ -167,6 +171,8 @@ public class RTEventHandler
 	static Random rng = new Random();
 
 	public static int clientAnimationCounter;
+
+	private boolean spectreArmorStateTracker;
 
 	@SubscribeEvent
 	public void chunkLoad(ChunkEvent.Load event)
@@ -1536,5 +1542,57 @@ public class RTEventHandler
 		if (event.getModID().equals(lumien.randomthings.lib.Reference.MOD_ID)) {
 			RandomThings.instance.configuration.reloadConfig();
 		}
+	}
+
+	private boolean toggleSpectreGL(int armorPieces, boolean enable) {
+		if (armorPieces <= 0)
+			return false;
+
+		if (enable) {
+			GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+			float alpha = getRelevantArmorAlpha(armorPieces);
+
+			GlStateManager.enableBlend();
+			GlStateManager.tryBlendFuncSeparate(
+					GlStateManager.SourceFactor.SRC_ALPHA,
+					GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
+					GlStateManager.SourceFactor.ONE,
+					GlStateManager.DestFactor.ZERO);
+			GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);
+			return true;
+
+		} else {
+			GL11.glPopAttrib();
+			return false;
+		}
+	}
+
+	@SubscribeEvent
+	public void renderPlayerPre(RenderPlayerEvent.Pre event) {
+		int armorPieces = getSpectreArmorPieces(event.getEntityPlayer());
+		spectreArmorStateTracker = toggleSpectreGL(armorPieces, true);
+	}
+
+	@SubscribeEvent
+	public void renderPlayerPost(RenderPlayerEvent.Post event) {
+		if (spectreArmorStateTracker) {
+			toggleSpectreGL(1, false);
+		}
+	}
+
+	private int getSpectreArmorPieces(EntityPlayer player) {
+		int pieces = 0;
+		for (ItemStack stack : player.inventory.armorInventory) {
+			if (!stack.isEmpty() && stack.getItem() instanceof ItemSpectreArmor) {
+				pieces++;
+			}
+		}
+		return pieces;
+	}
+
+	private float getRelevantArmorAlpha(int armorPieces) {
+		if (Visual.FANCY_SPECTRE_ARMOR_TRANSPARENCY)
+			return 1.0F - (armorPieces / 6.0F);
+		return armorPieces == 4 ? 0.5F : 1.0F;
 	}
 }
