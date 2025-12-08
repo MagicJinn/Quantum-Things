@@ -1,19 +1,12 @@
 package lumien.randomthings.item;
 
-import java.util.List;
-
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 public class ItemSpectreArmor extends ItemArmor {
@@ -67,11 +60,6 @@ public class ItemSpectreArmor extends ItemArmor {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         return 16777215; // White color
-    }
-
-    @Override
-    public String getItemStackDisplayName(ItemStack stack) {
-        return super.getItemStackDisplayName(stack);
     }
 
     @Override
