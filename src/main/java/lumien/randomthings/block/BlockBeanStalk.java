@@ -3,8 +3,6 @@ package lumien.randomthings.block;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDirt;
-import net.minecraft.block.BlockGrass;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -21,10 +19,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockBeanStalk extends BlockBase
+public class BlockBeanStalk extends BlockBase implements IPlantable
 {
 	boolean strongMagic;
 
@@ -169,12 +169,12 @@ public class BlockBeanStalk extends BlockBase
 			return false;
 		}
 		IBlockState down = worldIn.getBlockState(pos.down());
-		if (!(down.getBlock() instanceof BlockGrass || down.getBlock() instanceof BlockDirt || down.getBlock() instanceof BlockBeanStalk))
-		{
-			return false;
-		}
+		// Allow placement on bean stalks (for stacking)
+		// or blocks that can sustain plants
+		if (down.getBlock() instanceof BlockBeanStalk)
+			return true;
 
-		return true;
+		return down.getBlock().canSustainPlant(down, worldIn, pos.down(), EnumFacing.UP, this);
 	}
 
 	public boolean canBlockStay(World worldIn, BlockPos pos)
@@ -217,5 +217,18 @@ public class BlockBeanStalk extends BlockBase
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
 		return null;
+	}
+
+	@Override
+	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
+		return EnumPlantType.Plains;
+	}
+
+	@Override
+	public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
+		IBlockState state = world.getBlockState(pos);
+		if (state.getBlock() != this)
+			return getDefaultState();
+		return state;
 	}
 }

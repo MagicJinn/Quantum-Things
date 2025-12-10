@@ -87,6 +87,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Runic Dust breaking all pieces at once in Creative Mode instead of one piece at a time.
 - Fixed Runic Dust dropping its item when broken in Creative Mode.
 - Fixed Precious Emeralds being removed from your inventory when giving them to villagers in creative mode.
+- Fixed beans not being able to be planted on non-vanilla blocks, even if the block could sustain plants.
 
 ### Reporting Issues
 
