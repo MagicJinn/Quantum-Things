@@ -1571,12 +1571,14 @@ public class RTEventHandler
 	}
 
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void renderPlayerPre(RenderPlayerEvent.Pre event) {
 		int armorPieces = getSpectreArmorPieces(event.getEntityPlayer());
 		spectreArmorStateTracker = toggleSpectreGL(armorPieces, true);
 	}
 
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void renderPlayerPost(RenderPlayerEvent.Post event) {
 		if (spectreArmorStateTracker) {
 			toggleSpectreGL(1, false);

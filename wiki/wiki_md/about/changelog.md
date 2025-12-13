@@ -7,6 +7,12 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.0.4
+
+### Fixes
+
+- Fixed a STUPID crash immediately when starting a server. STUPID STUPID STUPID (Introduced in 1.0.3).
+
 ## 1.0.3
 
 ### Changes
