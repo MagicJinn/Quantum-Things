@@ -50,7 +50,8 @@ public class Numbers
 					5;
 
 	@ConfigOption(category = CATEGORY, name = "MaxBiomeCapsuleCapacity",
-			comment = "The maximum") public static int MAX_BIOME_CAPSULE_CAPACITY = 256;
+			comment = "The maximum capacity of a Biome Capsule")
+	public static int MAX_BIOME_CAPSULE_CAPACITY = 256;
 
 	@ConfigOption(category = CATEGORY, name = "PotionVaporizerMaxBlocks", comment = "The maximum number of blocks a Potion Vaporizer can affect")
 	public static int POTION_VAPORIZER_MAX_BLOCKS = 100;
