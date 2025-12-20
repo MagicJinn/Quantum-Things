@@ -92,6 +92,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Precious Emeralds being removed from your inventory when giving them to villagers in creative mode.
 - Fixed beans not being able to be planted on non-vanilla blocks, even if the block could sustain plants.
 - Fixed the Imbuing Station not dropping its contents when broken.
+- Fixed a crash when the Chunk Analyzer tried to scan a block that doesn't have a valid metadata.
 
 ### Reporting Issues
 

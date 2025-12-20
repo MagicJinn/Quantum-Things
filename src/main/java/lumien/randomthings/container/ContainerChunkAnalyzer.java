@@ -137,9 +137,14 @@ public class ContainerChunkAnalyzer extends Container
 							else
 							{
 								br.stack = new ItemStack(i, 1, meta);
-								name = br.stack.getDisplayName();
-								if (name.equals("Air"))
-								{
+								try {
+									name = br.stack.getDisplayName();
+									if (name.equals("Air"))
+									{
+										name = state.getBlock().getLocalizedName();
+									}
+								} catch (RuntimeException e) {
+									// Some mods throw exceptions for invalid metadata
 									name = state.getBlock().getLocalizedName();
 								}
 							}

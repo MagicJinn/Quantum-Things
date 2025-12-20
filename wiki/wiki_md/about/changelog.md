@@ -19,6 +19,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Improved Spectre Illuminator isIlluminated() performance [courtesy of Desoroxxx](https://github.com/MagicJinn/Quantum-Things/pull/17).
 - Improved Spectre Illuminator setIlluminated() performance.
 - Fixed the Imbuing Station not dropping its contents when broken.
+- Fixed a crash when the Chunk Analyzer tried to scan a block that doesn't have a valid metadata.
 
 ## 1.0.4
 
