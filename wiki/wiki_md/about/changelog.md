@@ -12,6 +12,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 ### Changes
 
 - Added an Imbuing Station recipe for Spectre Armor, requiring a Diamond Armor piece and 3 Spectre Ingots (NBT is transferred).
+- Added a Proportional power mode to the Entity Detector.
 
 ### Fixes
 
@@ -20,6 +21,8 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Improved Spectre Illuminator setIlluminated() performance.
 - Fixed the Imbuing Station not dropping its contents when broken.
 - Fixed a crash when the Chunk Analyzer tried to scan a block that doesn't have a valid metadata.
+- Fixed incorrect Divining Rod descriptions (introduced in 1.0.0).
+- Fixed Entity Detector having no clear difference between Weak and Strong power modes.
 
 ## 1.0.4
 

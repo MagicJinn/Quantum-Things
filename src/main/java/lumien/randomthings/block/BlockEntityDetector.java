@@ -40,18 +40,24 @@ public class BlockEntityDetector extends BlockContainerBase
 	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
 		TileEntityEntityDetector te = (TileEntityEntityDetector) blockAccess.getTileEntity(pos);
+		if (te == null)
+			return 0;
 
-		return te.isPowered() ? 15 : 0;
+		// Return the power level based on the current power mode
+		return te.getPowerLevel();
 	}
 
 	@Override
 	public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
 		TileEntityEntityDetector te = (TileEntityEntityDetector) blockAccess.getTileEntity(pos);
+		if (te == null)
+			return 0;
 
-		if (te.isPowered() && te.strongOutput())
+		if (te.isPowered() && te.getPowerMode() == TileEntityEntityDetector.POWER_MODE.STRONG)
 		{
-			return 15;
+			// Return the power level based on the current power mode
+			return te.getPowerLevel();
 		}
 		else
 		{
@@ -93,7 +99,7 @@ public class BlockEntityDetector extends BlockContainerBase
 		TileEntityEntityDetector tileentity = (TileEntityEntityDetector) worldIn.getTileEntity(pos);
 		InventoryHelper.dropInventoryItems(worldIn, pos, tileentity.getInventory());
 
-		if (tileentity.strongOutput())
+		if (tileentity.getPowerMode() == TileEntityEntityDetector.POWER_MODE.STRONG)
 		{
 
 			for (EnumFacing facing : EnumFacing.VALUES)

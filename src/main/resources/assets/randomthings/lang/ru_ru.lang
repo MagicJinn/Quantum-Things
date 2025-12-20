@@ -412,6 +412,9 @@ gui.entityDetector.filter.monster=Монстры
 gui.entityDetector.filter.player=Игроки
 gui.entityDetector.filter.item=Предметы
 gui.entityDetector.filter.custom=Пользовательское
+gui.entityDetector.powerMode.weak=Слабый
+gui.entityDetector.powerMode.strong=Сильный
+gui.entityDetector.powerMode.proportional=Пропорциональный
 
 gui.igniter.toggle=Переключить огонь
 gui.igniter.ignite=Воспламенить

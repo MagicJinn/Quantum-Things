@@ -412,6 +412,9 @@ gui.entityDetector.filter.monster=怪物
 gui.entityDetector.filter.player=玩家
 gui.entityDetector.filter.item=掉落物品
 gui.entityDetector.filter.custom=自定义
+gui.entityDetector.powerMode.weak=弱信号
+gui.entityDetector.powerMode.strong=强信号
+gui.entityDetector.powerMode.proportional=比例信号
 
 gui.igniter.toggle=切换火焰
 gui.igniter.ignite=点燃

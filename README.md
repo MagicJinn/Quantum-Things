@@ -51,6 +51,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Added the ability to configure the maximum number of blocks a Potion Vaporizer can affect.
 - Reduced the number of particles spawned by the Potion Vaporizer by several orders of magnitude.
 - Changed the Ancient Furnace to change blocks in a circular area around it, rather than a diamond shape.
+- Added a Proportional power mode to the Entity Detector.
 
 ### Fixes
 
@@ -93,6 +94,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed beans not being able to be planted on non-vanilla blocks, even if the block could sustain plants.
 - Fixed the Imbuing Station not dropping its contents when broken.
 - Fixed a crash when the Chunk Analyzer tried to scan a block that doesn't have a valid metadata.
+- Fixed Entity Detector having no clear difference between Weak and Strong power modes.
 
 ### Reporting Issues
 

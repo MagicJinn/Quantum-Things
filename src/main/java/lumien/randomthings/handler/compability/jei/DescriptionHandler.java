@@ -236,7 +236,8 @@ public class DescriptionHandler
 		}
 		String oreName = formattedOreName + " " + oreTranslation;
 		int range = Numbers.DIVINING_ROD_RANGE;
-		String rangeString = range + " x " + range;
+		int cubeSize = range + range + 1;
+		String rangeString = cubeSize + " x " + cubeSize;
 		String description = I18n.translateToLocalFormatted("item.diviningRod.info", oreName.trim(),
 				rangeString);
 		return description;

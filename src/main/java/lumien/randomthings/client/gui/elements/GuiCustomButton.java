@@ -2,10 +2,11 @@ package lumien.randomthings.client.gui.elements;
 
 import java.util.Arrays;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -53,11 +54,10 @@ public class GuiCustomButton extends GuiButton
 	}
 
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
+	public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partialTicks)
 	{
 		if (this.visible)
 		{
-			FontRenderer fontrenderer = mc.fontRenderer;
 			mc.getTextureManager().bindTexture(buttonTextures);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
@@ -66,9 +66,9 @@ public class GuiCustomButton extends GuiButton
 			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 			GlStateManager.blendFunc(770, 771);
 
-			GuiUtils.drawContinuousTexturedBox(buttonTextures, this.x, this.y, uX + (value ? 20 : 0), uY + (k - 1) * 20, this.width, this.height, this.textureWidth, this.textureHeight, 2, 3, 2, 2, this.zLevel);
-			// this.drawTexturedModalRect(this.x, this.y, uX +
-			// (value ? 20 : 0), uY + (k - 1) * 20, this.width, this.height);
+			// Use drawTexturedModalRect for fixed-size buttons to avoid border clipping
+			this.drawTexturedModalRect(this.x, this.y, uX + (value ? 20 : 0), uY + (k - 1) * 20, this.width,
+					this.height);
 			this.mouseDragged(mc, mouseX, mouseY);
 			int color = 14737632;
 

@@ -2,9 +2,12 @@ package lumien.randomthings.client.gui;
 
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.opengl.GL11;
 
 import lumien.randomthings.client.gui.elements.GuiCustomButton;
+import lumien.randomthings.client.gui.elements.GuiPowerModeButton;
 import lumien.randomthings.container.ContainerEntityDetector;
 import lumien.randomthings.network.PacketHandler;
 import lumien.randomthings.network.messages.MessageEntityDetector;
@@ -34,10 +37,11 @@ public class GuiEntityDetector extends GuiContainerBase
 	GuiButton filter;
 
 	GuiCustomButton invert;
-	GuiCustomButton strongOutput;
+	GuiPowerModeButton powerMode;
 
 	TileEntityEntityDetector entityDetector;
 	TileEntityEntityDetector.FILTER displayedFilter;
+	TileEntityEntityDetector.POWER_MODE displayedPowerMode;
 
 	public GuiEntityDetector(EntityPlayer player, World world, int x, int y, int z)
 	{
@@ -49,7 +53,7 @@ public class GuiEntityDetector extends GuiContainerBase
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException
+	protected void actionPerformed(@Nonnull GuiButton button) throws IOException
 	{
 		super.actionPerformed(button);
 
@@ -74,11 +78,16 @@ public class GuiEntityDetector extends GuiContainerBase
 
 		filter = new GuiButtonExt(6, this.guiLeft + 15 + 5, this.guiTop + 95, 70, 16, "");
 
-		invert = new GuiCustomButton(this, 7, entityDetector.invert(), this.guiLeft + 15 + 77, this.guiTop + 93, 20, 20, "", background, 176, 0, 20, 20);
+		invert = new GuiCustomButton(this, 7, entityDetector.invert(), this.guiLeft + 15 + 77, this.guiTop + 93, 20, 20,
+				"", background, 176, 0, 256, 256);
 		invert.setToolTips("tooltip.entityDetector.normalOutput", "tooltip.entityDetector.invertedOutput");
 
-		strongOutput = new GuiCustomButton(this, 8, entityDetector.strongOutput(), this.guiLeft + 15 + 100, this.guiTop + 93, 20, 20, "", background, 216, 0, 20, 20);
-		strongOutput.setToolTips("tooltip.entityDetector.weakOutput", "tooltip.entityDetector.strongOutput");
+		powerMode = new GuiPowerModeButton(this, 8, entityDetector.getPowerMode(), this.guiLeft + 15 + 100,
+				this.guiTop + 93, 20, 20,
+				"", background, 176, 40, 256, 256);
+		powerMode.setToolTips("gui.entityDetector.powerMode.weak", "gui.entityDetector.powerMode.strong",
+				"gui.entityDetector.powerMode.proportional");
+		displayedPowerMode = entityDetector.getPowerMode();
 
 		this.buttonList.add(minusX);
 		this.buttonList.add(plusX);
@@ -91,7 +100,7 @@ public class GuiEntityDetector extends GuiContainerBase
 
 		this.buttonList.add(filter);
 
-		this.buttonList.add(strongOutput);
+		this.buttonList.add(powerMode);
 		this.buttonList.add(invert);
 	}
 
@@ -158,9 +167,10 @@ public class GuiEntityDetector extends GuiContainerBase
 			invert.toggle();
 		}
 
-		if (strongOutput.getValue() != entityDetector.strongOutput())
+		if (displayedPowerMode != entityDetector.getPowerMode())
 		{
-			strongOutput.toggle();
+			displayedPowerMode = entityDetector.getPowerMode();
+			powerMode.setValue(displayedPowerMode);
 		}
 	}
 }

@@ -24,13 +24,15 @@ import net.minecraft.util.math.AxisAlignedBB;
 public class TileEntityEntityDetector extends TileEntityBase implements ITickable
 {
 	boolean powered;
+	int powerLevel; // Power level 0-15 based on entity count
+	int entityCount; // Number of entities detected
 
 	int rangeX = 5;
 	int rangeY = 5;
 	int rangeZ = 5;
 
 	boolean invert;
-	boolean strongOutput;
+	POWER_MODE powerMode = POWER_MODE.WEAK;
 
 	static final int MAX_RANGE = 10;
 
@@ -47,6 +49,7 @@ public class TileEntityEntityDetector extends TileEntityBase implements ITickabl
 	{
 		ALL("all", Entity.class), LIVING("living", EntityLivingBase.class), ANIMAL("animal", IAnimals.class), MONSTER("monster", IMob.class), PLAYER("player", EntityPlayer.class), ITEMS("item", EntityItem.class), CUSTOM("custom", null);
 
+
 		String languageKey;
 		Class filterClass;
 
@@ -62,9 +65,27 @@ public class TileEntityEntityDetector extends TileEntityBase implements ITickabl
 		}
 	}
 
+	public enum POWER_MODE {
+		WEAK("weak"), STRONG("strong"), PROPORTIONAL("proportional");
+
+		String languageKey;
+
+		private POWER_MODE(String languageKey) {
+			this.languageKey = "gui.entityDetector.powerMode." + languageKey;
+		}
+
+		public String getLanguageKey() {
+			return languageKey;
+		}
+	}
+
 	public boolean strongOutput()
 	{
-		return strongOutput;
+		return powerMode == POWER_MODE.STRONG;
+	}
+
+	public POWER_MODE getPowerMode() {
+		return powerMode;
 	}
 
 	public IInventory getInventory()
@@ -77,25 +98,27 @@ public class TileEntityEntityDetector extends TileEntityBase implements ITickabl
 	{
 		if (!this.world.isRemote)
 		{
+			int oldPowerLevel = powerLevel;
 			boolean newPowered = checkSupposedPowereredState();
 
-			if (newPowered != powered)
+			if (newPowered != powered || oldPowerLevel != powerLevel)
 			{
 				powered = newPowered;
 				this.syncTE();
+				notifyNeighborsOfPowerChange();
+			}
+		}
+	}
 
-				if (!strongOutput)
-				{
-					this.world.notifyNeighborsOfStateChange(pos, ModBlocks.entityDetector, false);
-				}
-				else
-				{
-					this.world.notifyNeighborsOfStateChange(pos, ModBlocks.entityDetector, false);
-					for (EnumFacing facing : EnumFacing.VALUES)
-					{
-						this.world.notifyNeighborsOfStateChange(this.pos.offset(facing), ModBlocks.entityDetector, false);
-					}
-				}
+	private void notifyNeighborsOfPowerChange() {
+		// Always notify neighbors of this block's position
+		this.world.notifyNeighborsOfStateChange(pos, ModBlocks.entityDetector, false);
+
+		// STRONG mode can propagate power through solid blocks,
+		// so also notify adjacent blocks
+		if (powerMode == POWER_MODE.STRONG) {
+			for (EnumFacing facing : EnumFacing.VALUES) {
+				this.world.notifyNeighborsOfStateChange(this.pos.offset(facing), ModBlocks.entityDetector, false);
 			}
 		}
 	}
@@ -121,13 +144,48 @@ public class TileEntityEntityDetector extends TileEntityBase implements ITickabl
 	private boolean checkSupposedPowereredState()
 	{
 		List<Entity> entityList = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(this.pos, this.pos.add(1, 1, 1)).grow(rangeX, rangeY, rangeZ), new FilterPredicate(filter.filterClass, filterInventory.getStackInSlot(0)));
-		return !invert == (entityList != null && entityList.size() > 0);
+		entityCount = entityList != null ? entityList.size() : 0;
+
+		// Determine if entities are detected
+		boolean hasEntities = entityCount > 0;
+		boolean shouldBePowered = !invert == hasEntities;
+
+		powerLevel = 0;
+
+		// Calculate power level based on power mode
+		switch (powerMode) {
+			case WEAK:
+				// Weak mode: 1 power when powered, 0 when not
+				if (shouldBePowered) {
+					powerLevel = 1;
+				}
+				break;
+			case STRONG:
+				// Strong mode: 15 power when powered, 0 when not
+				if (shouldBePowered) {
+					powerLevel = 15;
+				}
+				break;
+			case PROPORTIONAL:
+				// Proportional mode: 1 power per entity (up to 15)
+				if (invert) {
+					// When inverted, power decreases with entity count
+					powerLevel = Math.max(0, 15 - Math.min(15, entityCount));
+				} else {
+					// Normal: 1 power per entity, capped at 15
+					powerLevel = Math.min(15, entityCount);
+				}
+				break;
+		}
+
+		return shouldBePowered;
 	}
 
 	@Override
 	public void writeDataToNBT(NBTTagCompound compound, boolean sync)
 	{
 		compound.setBoolean("powered", powered);
+		compound.setInteger("powerLevel", powerLevel);
 
 		compound.setInteger("rangeX", rangeX);
 		compound.setInteger("rangeY", rangeY);
@@ -136,7 +194,8 @@ public class TileEntityEntityDetector extends TileEntityBase implements ITickabl
 		compound.setInteger("filter", filter.ordinal());
 
 		compound.setBoolean("invert", invert);
-		compound.setBoolean("strongOutput", strongOutput);
+		// Save power mode
+		compound.setInteger("powerMode", powerMode.ordinal());
 
 		NBTTagCompound inventoryCompound = new NBTTagCompound();
 		InventoryUtil.writeInventoryToCompound(inventoryCompound, filterInventory);
@@ -147,6 +206,7 @@ public class TileEntityEntityDetector extends TileEntityBase implements ITickabl
 	public void readDataFromNBT(NBTTagCompound compound, boolean sync)
 	{
 		powered = compound.getBoolean("powered");
+		powerLevel = compound.hasKey("powerLevel") ? compound.getInteger("powerLevel") : 0;
 
 		rangeX = compound.getInteger("rangeX");
 		rangeY = compound.getInteger("rangeY");
@@ -155,7 +215,22 @@ public class TileEntityEntityDetector extends TileEntityBase implements ITickabl
 		filter = FILTER.values()[compound.getInteger("filter")];
 
 		invert = compound.getBoolean("invert");
-		strongOutput = compound.getBoolean("strongOutput");
+
+		// Read power mode with backward compatibility
+		if (compound.hasKey("powerMode")) {
+			int modeOrdinal = compound.getInteger("powerMode");
+			if (modeOrdinal >= 0 && modeOrdinal < POWER_MODE.values().length) {
+				powerMode = POWER_MODE.values()[modeOrdinal];
+			} else {
+				powerMode = POWER_MODE.WEAK;
+			}
+		} else if (compound.hasKey("strongOutput")) {
+			// Migrate old strongOutput boolean to power mode
+			boolean oldStrongOutput = compound.getBoolean("strongOutput");
+			powerMode = oldStrongOutput ? POWER_MODE.STRONG : POWER_MODE.WEAK;
+		} else {
+			powerMode = POWER_MODE.WEAK;
+		}
 
 		NBTTagCompound inventoryCompound = compound.getCompoundTag("inventory");
 
@@ -170,6 +245,10 @@ public class TileEntityEntityDetector extends TileEntityBase implements ITickabl
 		return powered;
 	}
 
+	public int getPowerLevel() {
+		return powerLevel;
+	}
+
 	public int getRangeX()
 	{
 		return rangeX;
@@ -177,16 +256,7 @@ public class TileEntityEntityDetector extends TileEntityBase implements ITickabl
 
 	public void setRangeX(int rangeX)
 	{
-		this.rangeX = rangeX;
-
-		if (this.rangeX < 0)
-		{
-			this.rangeX = 0;
-		}
-		else if (this.rangeX > MAX_RANGE)
-		{
-			this.rangeX = MAX_RANGE;
-		}
+		this.rangeX = Math.max(0, Math.min(rangeX, MAX_RANGE));
 
 		this.syncTE();
 	}
@@ -198,17 +268,7 @@ public class TileEntityEntityDetector extends TileEntityBase implements ITickabl
 
 	public void setRangeY(int rangeY)
 	{
-		this.rangeY = rangeY;
-
-		if (this.rangeY < 0)
-		{
-			this.rangeY = 0;
-		}
-		else if (this.rangeY > MAX_RANGE)
-		{
-			this.rangeY = MAX_RANGE;
-		}
-
+		this.rangeY = Math.max(0, Math.min(rangeY, MAX_RANGE));
 		this.syncTE();
 	}
 
@@ -219,16 +279,7 @@ public class TileEntityEntityDetector extends TileEntityBase implements ITickabl
 
 	public void setRangeZ(int rangeZ)
 	{
-		this.rangeZ = rangeZ;
-
-		if (this.rangeZ < 0)
-		{
-			this.rangeZ = 0;
-		}
-		else if (this.rangeZ > MAX_RANGE)
-		{
-			this.rangeZ = MAX_RANGE;
-		}
+		this.rangeZ = Math.max(0, Math.min(rangeZ, MAX_RANGE));
 
 		this.syncTE();
 	}
@@ -280,17 +331,52 @@ public class TileEntityEntityDetector extends TileEntityBase implements ITickabl
 
 	}
 
-	public void toggleStrongOutput()
-	{
-		this.strongOutput = !this.strongOutput;
+	public void cyclePowerMode() {
+		int index = powerMode.ordinal();
+		index++;
+
+		if (index < POWER_MODE.values().length) {
+			powerMode = POWER_MODE.values()[index];
+		} else {
+			powerMode = POWER_MODE.values()[0];
+		}
+
+		// Recalculate power level with the new mode
+		int oldPowerLevel = powerLevel;
+		boolean oldPowered = powered;
+		checkSupposedPowereredState();
 
 		this.syncTE();
 
-		this.world.notifyNeighborsOfStateChange(pos, ModBlocks.entityDetector, false);
+		// Only notify neighbors if the power level actually changed
+		if (oldPowered != powered || oldPowerLevel != powerLevel) {
+			notifyNeighborsOfPowerChange();
+		}
+	}
 
-		for (EnumFacing facing : EnumFacing.VALUES)
-		{
-			this.world.notifyNeighborsOfStateChange(this.pos.offset(facing), ModBlocks.entityDetector, false);
+	// Backward compatibility method
+	@Deprecated
+	public void toggleStrongOutput()
+	{
+		// Cycle between WEAK and STRONG for backward compatibility
+		if (powerMode == POWER_MODE.WEAK) {
+			powerMode = POWER_MODE.STRONG;
+		} else if (powerMode == POWER_MODE.STRONG) {
+			powerMode = POWER_MODE.WEAK;
+		} else {
+			powerMode = POWER_MODE.STRONG;
+		}
+
+		// Recalculate power level with the new mode
+		int oldPowerLevel = powerLevel;
+		boolean oldPowered = powered;
+		checkSupposedPowereredState();
+
+		this.syncTE();
+
+		// Only notify neighbors if the power level actually changed
+		if (oldPowered != powered || oldPowerLevel != powerLevel) {
+			notifyNeighborsOfPowerChange();
 		}
 	}
 }
