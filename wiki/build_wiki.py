@@ -270,16 +270,23 @@ class WikiBuilder:
         if not content:
             return ""
         
-        # Get first paragraph
+        # Get first paragraph (prefer shorter description for Discord embeds)
         for line in content.split('\n'):
             line = line.strip()
-            if line and not line.startswith(('#', '```', '![')) and not re.match(r'^\[.+\]\(.+\)$', line):
+            # Skip empty lines, headers, code blocks, images, links, horizontal rules, and table rows
+            if (line and 
+                not line.startswith(('#', '```', '![', '---', '|')) and 
+                not re.match(r'^\[.+\]\(.+\)$', line) and
+                not re.match(r'^\|.*\|$', line)):  # Skip table rows
                 # Remove markdown formatting
                 line = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', line)
                 line = re.sub(r'\*\*([^\*]+)\*\*', r'\1', line)
                 line = re.sub(r'\*([^\*]+)\*', r'\1', line)
-                if len(line) > 155:
-                    line = line[:155].rsplit(' ', 1)[0] + '...'
+                # Remove table markers and other markdown artifacts
+                line = re.sub(r'\|', '', line)
+                # Truncate to 160 chars for better Discord display (Discord shows ~200 but we want some buffer)
+                if len(line) > 160:
+                    line = line[:160].rsplit(' ', 1)[0] + '...'
                 return line
         return ""
     
@@ -312,11 +319,23 @@ class WikiBuilder:
         else:
             return f"{self.base_url}/"
     
-    def _generate_og_image(self):
-        """Generate Open Graph image URL."""
-        # Use a default OG image - should be 1200x630px for best results
-        # The image should be placed in wiki_site/og-image.webp
-        # For now, we'll use a consistent absolute URL
+    def _generate_og_image(self, category=None, slug=None):
+        """Generate Open Graph image URL, preferring page-specific images."""
+        # First, try to find a page-specific image (crafting or screenshot)
+        if category and slug:
+            # Check for crafting image first (most common)
+            crafting_image = f"crafting_{slug}.webp"
+            crafting_path = self.source_dir / "images" / crafting_image
+            if crafting_path.exists():
+                return f"{self.base_url}/images/{crafting_image}"
+            
+            # Check for screenshot image
+            screenshot_image = f"screenshots_{slug}.webp"
+            screenshot_path = self.source_dir / "images" / screenshot_image
+            if screenshot_path.exists():
+                return f"{self.base_url}/images/{screenshot_image}"
+        
+        # Fallback to default OG image - should be 1200x630px for best results
         return f"{self.base_url}/og-image.webp"
     
     def _generate_structured_data(self, title, description, category=None, slug=None, page_title=None, website_description=None):
@@ -424,7 +443,7 @@ class WikiBuilder:
         meta_keywords = self._generate_meta_keywords(page_info['title'], category)
         canonical_url = self._generate_canonical_url(category, page_info['slug'])
         structured_data = self._generate_structured_data(title, meta_description, category, page_info['slug'], page_info['title'])
-        og_image = self._generate_og_image()
+        og_image = self._generate_og_image(category, page_info['slug'])
         
         # Build full HTML page using template
         html = self.base_template.format(
@@ -435,6 +454,7 @@ class WikiBuilder:
             canonical_url=canonical_url,
             structured_data=structured_data,
             og_image=og_image,
+            og_type="article",  # Use "article" for individual pages
             og_site_name=self.config['site']['name'],
             assets_path="../../assets/",
             extra_css="",
@@ -478,6 +498,7 @@ class WikiBuilder:
             canonical_url=canonical_url,
             structured_data=structured_data,
             og_image=og_image,
+            og_type="website",  # Use "website" for homepage
             og_site_name=self.config['site']['name'],
             assets_path="assets/",
             extra_css='<link href="assets/index-header.css" rel="stylesheet" media="print" onload="this.media=\'all\'"/><noscript><link href="assets/index-header.css" rel="stylesheet"/></noscript>',
