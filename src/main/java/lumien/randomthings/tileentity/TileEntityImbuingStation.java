@@ -138,10 +138,7 @@ public class TileEntityImbuingStation extends TileEntityBase implements ITickabl
 
 		// Preserve NBT and damage from center input to output only if recipe allows it
 		if (transferNBT && !centerInput.isEmpty()) {
-			// Copy damage value (durability for damageable items, metadata for others)
-			output.setItemDamage(centerInput.getItemDamage());
-
-			// Copy NBT data
+			// Copy NBT data first
 			if (centerInput.hasTagCompound()) {
 				NBTTagCompound centerNBT = centerInput.getTagCompound();
 				if (centerNBT != null) {
@@ -154,6 +151,10 @@ public class TileEntityImbuingStation extends TileEntityBase implements ITickabl
 					outputNBT.merge(centerNBT.copy());
 				}
 			}
+
+			// Transfer the exact damage dealt amount to output
+			int oldDamage = centerInput.getItemDamage(); // damage already done
+			output.setItemDamage(oldDamage);
 		}
 
 		// Set Output
