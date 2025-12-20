@@ -3,6 +3,7 @@ package lumien.randomthings.block.spectretree;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import lumien.randomthings.block.BlockBase;
@@ -19,6 +20,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
@@ -79,6 +81,17 @@ public class BlockSpectreLeaf extends Block implements net.minecraftforge.common
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, new IProperty[] { CHECK_DECAY, DECAYABLE });
+	}
+
+	/**
+	 * Called by ItemBlocks just before a block is actually set in the world, to
+	 * allow for adjustments to the IBlockstate
+	 */
+	@Override
+	public IBlockState getStateForPlacement(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing,
+			float hitX, float hitY,
+			float hitZ, int meta, @Nonnull EntityLivingBase placer) {
+		return this.getStateFromMeta(meta).withProperty(DECAYABLE, Boolean.valueOf(false));
 	}
 
 	@Override
@@ -275,7 +288,8 @@ public class BlockSpectreLeaf extends Block implements net.minecraftforge.common
 	{
 		if (worldIn.rand.nextInt(55) == 0)
 		{
-			spawnAsEntity(worldIn, pos, new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.ECTO_PLASM.ordinal()));
+			spawnAsEntity(worldIn, pos,
+					new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.ECTO_PLASM.id));
 		}
 	}
 

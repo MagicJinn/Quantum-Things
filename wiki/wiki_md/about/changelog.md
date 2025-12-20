@@ -23,6 +23,8 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Fixed a crash when the Chunk Analyzer tried to scan a block that doesn't have a valid metadata.
 - Fixed incorrect Divining Rod descriptions (introduced in 1.0.0).
 - Fixed Entity Detector having no clear difference between Weak and Strong power modes.
+- Fixed Spectre Leaves having their Decay flag set to true when placed.
+- Fixed Spectre Leaves dropping Evil Tears when destroyed (introduced in 1.0.0).
 
 ## 1.0.4
 

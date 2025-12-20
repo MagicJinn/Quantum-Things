@@ -95,6 +95,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed the Imbuing Station not dropping its contents when broken.
 - Fixed a crash when the Chunk Analyzer tried to scan a block that doesn't have a valid metadata.
 - Fixed Entity Detector having no clear difference between Weak and Strong power modes.
+- Fixed Spectre Leaves having their Decay flag set to true when placed.
 
 ### Reporting Issues
 
