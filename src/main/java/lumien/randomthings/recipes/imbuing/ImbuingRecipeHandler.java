@@ -21,9 +21,24 @@ public class ImbuingRecipeHandler
 		return ItemStack.EMPTY;
 	}
 
+	public static ImbuingRecipe getMatchingRecipe(IItemHandler iItemHandler) {
+		for (ImbuingRecipe ir : imbuingRecipes) {
+			if (ir.matchesItemHandler(iItemHandler)) {
+				return ir;
+			}
+		}
+		return null;
+	}
+
+	// Preserve old behavior of not transferring NBT for compatibility
 	public static void addRecipe(ItemStack ingredient1, ItemStack ingredient2, ItemStack ingredient3, ItemStack toImbue, ItemStack result)
 	{
-		ImbuingRecipe toAdd = new ImbuingRecipe(toImbue, result, ingredient1, ingredient2, ingredient3);
+		addRecipe(ingredient1, ingredient2, ingredient3, toImbue, result, false);
+	}
+
+	public static void addRecipe(ItemStack ingredient1, ItemStack ingredient2, ItemStack ingredient3, ItemStack toImbue,
+			ItemStack result, boolean transferNBT) {
+		ImbuingRecipe toAdd = new ImbuingRecipe(toImbue, result, transferNBT, ingredient1, ingredient2, ingredient3);
 		imbuingRecipes.add(toAdd);
 	}
 }

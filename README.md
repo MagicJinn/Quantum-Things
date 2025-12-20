@@ -41,7 +41,8 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Made Rain Shields be able to be placed on any block, similar to an end rod.
 - Added the ability to configure the Spectre Energy Injector capacity, Spectre Coil/Charger transfer rates, and whether the Genesis Spectre Coil generates energy or transfers it.
 - Made the ID Card crafting recipe shapeless.
-- Re-added Spectre Armor (with no recipe, to be added later, or by modpacks).
+- Re-added Spectre Armor.
+- Added an Imbuing Station recipe for Spectre Armor, requiring a Diamond Armor piece and 3 Spectre Ingots (NBT is transferred).
 - Added the ability to configure the transparency effect of the Spectre Armor.
 - Re-added Biome Painter and Biome Capsule from 1.7.10.
 - Re-added Obsidian Stick from 1.7.10, now used for Spectre Tools and the Biome Painter.
@@ -62,6 +63,8 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Spectre Illuminator hitbox being inaccurate.
 - Improved Spectre Illuminator animation performance.
 - Improved Spectre Illuminator position finding performance.
+- Improved Spectre Illuminator isIlluminated() performance [courtesy of Desoroxxx](https://github.com/MagicJinn/Quantum-Things/pull/17).
+- Improved Spectre Illuminator setIlluminated() performance.
 - Fixed Nature Core being able to spawn underwater.
 - Fixed Nature and Water Chest not having breaking particles.
 - Fixed Magic Beans growing infinitely in Cubic Chunks worlds (limited to 512).
@@ -88,6 +91,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Runic Dust dropping its item when broken in Creative Mode.
 - Fixed Precious Emeralds being removed from your inventory when giving them to villagers in creative mode.
 - Fixed beans not being able to be planted on non-vanilla blocks, even if the block could sustain plants.
+- Fixed the Imbuing Station not dropping its contents when broken.
 
 ### Reporting Issues
 

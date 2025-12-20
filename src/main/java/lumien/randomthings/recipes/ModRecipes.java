@@ -140,6 +140,18 @@ public class ModRecipes
 		ImbuingRecipeHandler.addRecipe(new ItemStack(ModItems.beans, 1, 1), lapis, glowStone, waterBottle, new ItemStack(ModItems.imbue, 1, 2));
 		ImbuingRecipeHandler.addRecipe(witherSkull, netherBrick, ghastTear, waterBottle, new ItemStack(ModItems.imbue, 1, 3));
 
+		// Spectre Armor Recipes (with NBT transfer enabled)
+		final ItemStack spectreIngot = new ItemStack(ModItems.ingredients, 1,
+				ItemIngredient.INGREDIENT.SPECTRE_INGOT.id);
+		ImbuingRecipeHandler.addRecipe(spectreIngot, spectreIngot, spectreIngot, new ItemStack(Items.DIAMOND_HELMET),
+				new ItemStack(ModItems.spectreHelmet), true);
+		ImbuingRecipeHandler.addRecipe(spectreIngot, spectreIngot, spectreIngot,
+				new ItemStack(Items.DIAMOND_CHESTPLATE), new ItemStack(ModItems.spectreChestplate), true);
+		ImbuingRecipeHandler.addRecipe(spectreIngot, spectreIngot, spectreIngot, new ItemStack(Items.DIAMOND_LEGGINGS),
+				new ItemStack(ModItems.spectreLeggings), true);
+		ImbuingRecipeHandler.addRecipe(spectreIngot, spectreIngot, spectreIngot, new ItemStack(Items.DIAMOND_BOOTS),
+				new ItemStack(ModItems.spectreBoots), true);
+
 		// Anvil
 		if (Loader.isModLoaded("baubles"))
 		{

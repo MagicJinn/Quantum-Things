@@ -9,11 +9,16 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 ## 1.0.5 (In Development)
 
+### Changes
+
+- Added an Imbuing Station recipe for Spectre Armor, requiring a Diamond Armor piece and 3 Spectre Ingots (NBT is transferred).
+
 ### Fixes
 
 - Further improved Spectre Illuminator performance.
 - Improved Spectre Illuminator isIlluminated() performance [courtesy of Desoroxxx](https://github.com/MagicJinn/Quantum-Things/pull/17).
 - Improved Spectre Illuminator setIlluminated() performance.
+- Fixed the Imbuing Station not dropping its contents when broken.
 
 ## 1.0.4
 

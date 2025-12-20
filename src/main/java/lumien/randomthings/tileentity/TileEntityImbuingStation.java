@@ -3,6 +3,7 @@ package lumien.randomthings.tileentity;
 import org.apache.logging.log4j.Level;
 
 import lumien.randomthings.RandomThings;
+import lumien.randomthings.recipes.imbuing.ImbuingRecipe;
 import lumien.randomthings.recipes.imbuing.ImbuingRecipeHandler;
 import lumien.randomthings.util.InventoryUtil;
 import net.minecraft.inventory.InventoryBasic;
@@ -127,8 +128,36 @@ public class TileEntityImbuingStation extends TileEntityBase implements ITickabl
 
 	private void imbue()
 	{
+		// Get the matching recipe and check if NBT should be transferred
+		ImbuingRecipe matchingRecipe = ImbuingRecipeHandler.getMatchingRecipe(getItemHandler());
+		boolean transferNBT = matchingRecipe != null && matchingRecipe.transferNBT;
+
+		// Get the center input item (slot 3) to preserve NBT
+		ItemStack centerInput = this.getItemHandler().getStackInSlot(3);
+		ItemStack output = currentOutput.copy();
+
+		// Preserve NBT and damage from center input to output only if recipe allows it
+		if (transferNBT && !centerInput.isEmpty()) {
+			// Copy damage value (durability for damageable items, metadata for others)
+			output.setItemDamage(centerInput.getItemDamage());
+
+			// Copy NBT data
+			if (centerInput.hasTagCompound()) {
+				NBTTagCompound centerNBT = centerInput.getTagCompound();
+				if (centerNBT != null) {
+					NBTTagCompound outputNBT = output.getTagCompound();
+					if (outputNBT == null) {
+						outputNBT = new NBTTagCompound();
+						output.setTagCompound(outputNBT);
+					}
+					// Copy all NBT data from center input to output
+					outputNBT.merge(centerNBT.copy());
+				}
+			}
+		}
+
 		// Set Output
-		this.getItemHandler().insertItem(4, currentOutput.copy(), false);
+		this.getItemHandler().insertItem(4, output, false);
 
 		// Decrease Ingredients
 		for (int slot = 0; slot < this.getItemHandler().getSlots() - 1; slot++)

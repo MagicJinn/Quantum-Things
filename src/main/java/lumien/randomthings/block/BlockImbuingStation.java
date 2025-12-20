@@ -3,6 +3,7 @@ package lumien.randomthings.block;
 import lumien.randomthings.RandomThings;
 import lumien.randomthings.lib.GuiIds;
 import lumien.randomthings.tileentity.TileEntityImbuingStation;
+import lumien.randomthings.util.InventoryUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,5 +43,16 @@ public class BlockImbuingStation extends BlockContainerBase
 			playerIn.openGui(RandomThings.instance, GuiIds.IMBUING_STATION, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 		return true;
+	}
+
+	@Override
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+		TileEntity tileentity = worldIn.getTileEntity(pos);
+
+		if (tileentity instanceof TileEntityImbuingStation) {
+			InventoryUtil.dropItemHandlerItems(worldIn, pos, ((TileEntityImbuingStation) tileentity).getItemHandler());
+		}
+
+		super.breakBlock(worldIn, pos, state);
 	}
 }

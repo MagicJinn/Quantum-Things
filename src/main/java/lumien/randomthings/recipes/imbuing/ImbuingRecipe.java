@@ -1,7 +1,6 @@
 package lumien.randomthings.recipes.imbuing;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import lumien.randomthings.util.ItemUtil;
 import net.minecraft.item.ItemStack;
@@ -12,12 +11,19 @@ public class ImbuingRecipe
 	ItemStack toImbue;
 	ArrayList<ItemStack> ingredients;
 	ItemStack result;
+	public boolean transferNBT;
 
+	// Preserve old behavior of not transferring NBT for compatibility
 	public ImbuingRecipe(ItemStack toImbue, ItemStack result, ItemStack... ingredients)
 	{
+		this(toImbue, result, false, ingredients);
+	}
+
+	public ImbuingRecipe(ItemStack toImbue, ItemStack result, boolean transferNBT, ItemStack... ingredients) {
 		this.toImbue = toImbue;
 		this.ingredients = new ArrayList<>();
 		this.result = result;
+		this.transferNBT = transferNBT;
 		for (ItemStack is : ingredients)
 		{
 			if (!is.isEmpty())
@@ -27,32 +33,58 @@ public class ImbuingRecipe
 
 	public boolean matchesItemHandler(IItemHandler iItemHandler)
 	{
-		HashMap<ItemStack, Boolean> providedIngredients = new HashMap<>();
 		ItemStack i1 = iItemHandler.getStackInSlot(0);
 		ItemStack i2 = iItemHandler.getStackInSlot(1);
 		ItemStack i3 = iItemHandler.getStackInSlot(2);
 		ItemStack center = iItemHandler.getStackInSlot(3);
 
-		providedIngredients.put(i1, false);
-		providedIngredients.put(i2, false);
-		providedIngredients.put(i3, false);
+		// Track which slots have been used (0, 1, 2)
+		boolean[] usedSlots = new boolean[3];
+		ItemStack[] slotItems = new ItemStack[] { i1, i2, i3 };
 
-		if (!ItemUtil.areItemStackContentEqual(center, toImbue) && !ItemUtil.areOreDictionaried(center, toImbue))
+		// Legacy behavior, not transferring NBT
+		if (!transferNBT && !ItemUtil.areItemStackContentEqual(center, toImbue)
+				&& !ItemUtil.areOreDictionaried(center, toImbue)) {
+			return false;
+		}
+
+		// Check center item, ignore NBT to allow items with enchantments/damage/etc
+		// Only check item type and damage, not NBT tags
+		// For armor items, ignore damage value (durability) to allow damaged armor
+		if (center.isEmpty() || toImbue.isEmpty() || center.getItem() != toImbue.getItem()) {
+			return false;
+		}
+		// For damageable items (armor, tools), damage represents durability, so ignore
+		// it. For non-damageable items, damage represents metadata, so check it.
+		if (!center.getItem().isDamageable() && center.getItemDamage() != toImbue.getItemDamage())
 		{
 			return false;
 		}
 
+		// For each needed ingredient, find an unused matching slot
 		for (ItemStack needed : ingredients)
 		{
-			if (!containsItemStack(providedIngredients, needed))
+			boolean found = false;
+			for (int slot = 0; slot < 3; slot++) {
+				if (!usedSlots[slot] && !slotItems[slot].isEmpty()) {
+					if (ItemUtil.areItemStackContentEqual(slotItems[slot], needed)
+							|| ItemUtil.areOreDictionaried(slotItems[slot], needed)) {
+						usedSlots[slot] = true;
+						found = true;
+						break;
+					}
+				}
+			}
+			if (!found)
 			{
 				return false;
 			}
 		}
 
-		for (ItemStack is : providedIngredients.keySet())
+		// Check that all non-empty slots have been used
+		for (int slot = 0; slot < 3; slot++)
 		{
-			if (!providedIngredients.get(is) && !(is.isEmpty()))
+			if (!slotItems[slot].isEmpty() && !usedSlots[slot])
 			{
 				return false;
 			}
@@ -76,19 +108,6 @@ public class ImbuingRecipe
 			}
 		}
 
-		return false;
-	}
-
-	private boolean containsItemStack(HashMap<ItemStack, Boolean> list, ItemStack is)
-	{
-		for (ItemStack testItemStack : list.keySet())
-		{
-			if (ItemUtil.areItemStackContentEqual(testItemStack, is) || ItemUtil.areOreDictionaried(testItemStack, is))
-			{
-				list.put(testItemStack, true);
-				return true;
-			}
-		}
 		return false;
 	}
 
