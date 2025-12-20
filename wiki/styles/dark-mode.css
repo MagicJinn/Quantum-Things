@@ -31,6 +31,21 @@ body.dark-mode #container_content blockquote {
   background-color: #2A232F !important;
   color: #CCCCCC !important;
 }
+body.dark-mode #container_content table {
+  border-color: #000 !important;
+  background-color: transparent !important;
+}
+body.dark-mode #container_content table th,
+body.dark-mode #container_content table td {
+  border-color: #000 !important;
+  background-color: transparent !important;
+}
+body.dark-mode #container_content table th {
+  color: #CCCCCC !important;
+}
+body.dark-mode #container_content table tr {
+  background-color: transparent !important;
+}
 body.dark-mode #container_navigation {
   background-color: #2A232F !important;
 }

@@ -79,11 +79,35 @@ nav a:hover {
     margin-top: 1em;
     margin-bottom: 1em;
     font-style: italic;
-    color: #555;
-    background-color: #f5f5f5;
+    color: #ac92be;
+    background-color: #211927;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-right: 15px;
+}
+
+#container_content table {
+    border-collapse: collapse;
+    border: 1px solid #000;
+    margin: 1em 0;
+    max-width: 100%;
+    background-color: transparent;
+}
+
+#container_content table th,
+#container_content table td {
+    border: 1px solid #000;
+    padding: 8px 12px;
+    text-align: left;
+    background-color: transparent;
+}
+
+#container_content table th {
+    font-weight: bold;
+}
+
+#container_content table tr {
+    background-color: transparent;
 }
 
 .section {
