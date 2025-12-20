@@ -1,8 +1,7 @@
 package lumien.randomthings.handler.spectreilluminator;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import lumien.randomthings.util.WorldUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
@@ -11,7 +10,7 @@ import net.minecraft.world.chunk.Chunk;
 
 public class SpectreIlluminationClientHandler
 {
-	static Set<Long> illuminatedChunks = new HashSet<Long>();
+	static LongSet illuminatedChunks = new LongOpenHashSet();
 	
 	public static boolean isIlluminated(BlockPos pos)
 	{
