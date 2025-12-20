@@ -24,15 +24,15 @@ public class SpectreIlluminationClientHandler
 
 	public static void setIlluminated(long chunkLong, boolean illuminated)
 	{
+		boolean changed = false;
 		if (illuminated)
-		{
-			illuminatedChunks.add(chunkLong);
-		}
+			changed = illuminatedChunks.add(chunkLong);
 		else
-		{
-			illuminatedChunks.remove(chunkLong);
-		}
-		
-		SpectreIlluminationHelper.lightUpdateChunk(Minecraft.getMinecraft().world, WorldUtil.getChunkPosFromLong(chunkLong));
+			changed = illuminatedChunks.remove(chunkLong);
+
+		// Only update light if the chunk state changed
+		if (changed)
+			SpectreIlluminationHelper.lightUpdateChunk(Minecraft.getMinecraft().world,
+					WorldUtil.getChunkPosFromLong(chunkLong));
 	}
 }

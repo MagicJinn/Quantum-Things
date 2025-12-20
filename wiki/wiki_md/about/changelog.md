@@ -7,6 +7,14 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.0.5 (In Development)
+
+### Fixes
+
+- Further improved Spectre Illuminator performance.
+- Improved Spectre Illuminator isIlluminated() performance [courtesy of Desoroxxx](https://github.com/MagicJinn/Quantum-Things/pull/17).
+- Improved Spectre Illuminator setIlluminated() performance.
+
 ## 1.0.4
 
 ### Fixes
