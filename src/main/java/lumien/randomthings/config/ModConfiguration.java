@@ -34,6 +34,9 @@ public class ModConfiguration
 			// Ensure divining rods list property is registered
 			configuration.getStringList("Divining Rods", "Divining Rods", DiviningRods.DEFAULT_RODS,
 					DiviningRods.PROPERTY_COMMENT);
+			// Ensure summoning pendulum blacklist property is registered
+			loadSummoningPendulumBlacklist();
+
 			markDiviningRodsRequiresRestart();
 			markSpectreDimensionRequiresRestart();
 		}
@@ -53,8 +56,13 @@ public class ModConfiguration
 
 		// Register divining rods list property to ensure it's in the config file on startup
 		// This must be done here so the property is registered before the config is saved
-		configuration.getStringList("Divining Rods", "Divining Rods", DiviningRods.DEFAULT_RODS,
+		configuration.getStringList("Divining Rods", DiviningRods.CATEGORY, DiviningRods.DEFAULT_RODS,
 				DiviningRods.PROPERTY_COMMENT);
+
+		// Register summoning pendulum blacklist property to ensure it's in the config
+		// file on startup
+		loadSummoningPendulumBlacklist();
+
 		markDiviningRodsRequiresRestart();
 		markSpectreDimensionRequiresRestart();
 
@@ -75,6 +83,9 @@ public class ModConfiguration
 			// Reload annotation-based config - this reads from config and sets static fields
 			doAnnoations(configuration);
 
+			// Load string list properties
+			loadSummoningPendulumBlacklist();
+
 			// Validate worldgen chances
 			checkSettingsValid();
 		}
@@ -92,9 +103,18 @@ public class ModConfiguration
 			// values
 			doAnnoations(configuration);
 
+			// Sync string list properties
+			loadSummoningPendulumBlacklist();
+
 			// Validate worldgen chances
 			checkSettingsValid();
 		}
+	}
+
+	private void loadSummoningPendulumBlacklist() {
+		Features.SUMMONING_PENDULUM_BLACKLIST = configuration.getStringList("SummoningPendulumBlacklist",
+				Features.CATEGORY,
+				Features.SUMMONING_PENDULUM_BLACKLIST, Features.SUMMONING_PENDULUM_BLACKLIST_COMMENT);
 	}
 
 	private void doAnnoations(Configuration configuration)

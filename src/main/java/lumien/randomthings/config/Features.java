@@ -31,4 +31,8 @@ public class Features {
 	@ConfigOption(category = CATEGORY, name = "EnableSpectreSapling",
 			comment = "Whether the Spectre Sapling should be enabled. If disabled, the sapling will not grow and cannot be created from regular saplings.") public static boolean ENABLE_SPECTRE_SAPLING =
 					true;
+
+	public static final String SUMMONING_PENDULUM_BLACKLIST_COMMENT = "List of entity resource locations that cannot be captured by the Summoning Pendulum. Format: modid:entityname. Example: minecraft:villager, randomthings:spirit.";
+
+	public static String[] SUMMONING_PENDULUM_BLACKLIST = new String[0];
 }

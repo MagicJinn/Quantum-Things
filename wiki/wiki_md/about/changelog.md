@@ -9,6 +9,16 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 ## 1.0.6 (In Development)
 
+### Changes
+
+- Added the ability to configure a blacklist of entities that cannot be captured by the Summoning Pendulum.
+- Creative players can now capture any entity with the Summoning Pendulum, bypassing all restrictions.
+- Added a failure sound when the Summoning Pendulum blocks the capture of an entity.
+  
+### Fixes
+
+- Fixed the Summoning Pendulum being able to capture entities that are targeting you, but are not classified as monsters.
+
 ## 1.0.5
 
 ### Changes

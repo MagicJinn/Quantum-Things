@@ -52,6 +52,9 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Reduced the number of particles spawned by the Potion Vaporizer by several orders of magnitude.
 - Changed the Ancient Furnace to change blocks in a circular area around it, rather than a diamond shape.
 - Added a Proportional power mode to the Entity Detector.
+- Added the ability to configure a blacklist of entities that cannot be captured by the Summoning Pendulum.
+- Creative players can now capture any entity with the Summoning Pendulum, bypassing all restrictions.
+- Added a failure sound when the Summoning Pendulum blocks the capture of an entity.
 
 ### Fixes
 
@@ -96,6 +99,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed a crash when the Chunk Analyzer tried to scan a block that doesn't have a valid metadata.
 - Fixed Entity Detector having no clear difference between Weak and Strong power modes.
 - Fixed Spectre Leaves having their Decay flag set to true when placed.
+- Fixed the Summoning Pendulum being able to capture entities that are targeting you, but are not classified as monsters.
 
 ### Reporting Issues
 

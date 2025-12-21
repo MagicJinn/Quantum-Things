@@ -4,13 +4,15 @@ import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
-import lumien.randomthings.util.EntityUtil;
+import lumien.randomthings.config.Features;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
@@ -26,13 +28,14 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemSummoningPendulum extends ItemBase
 {
+	private static final int MAX_ENTITIES = 5;
+
 	public ItemSummoningPendulum()
 	{
 		super("summoningPendulum");
@@ -65,7 +68,7 @@ public class ItemSummoningPendulum extends ItemBase
 			entityCount = tagList.tagCount();
 		}
 
-		return 1 - 1F / 5F * entityCount;
+		return 1 - 1F / MAX_ENTITIES * Math.min(entityCount, MAX_ENTITIES);
 	}
 
 	@Override
@@ -81,7 +84,7 @@ public class ItemSummoningPendulum extends ItemBase
 			entityCount = tagList.tagCount();
 		}
 
-		return entityCount == 5;
+		return entityCount == MAX_ENTITIES;
 	}
 
 	@Override
@@ -96,7 +99,7 @@ public class ItemSummoningPendulum extends ItemBase
 			entityCount = tagList.tagCount();
 		}
 
-		return entityCount != 5;
+		return entityCount != MAX_ENTITIES;
 	}
 
 	@Override
@@ -135,38 +138,74 @@ public class ItemSummoningPendulum extends ItemBase
 	public boolean itemInteractionForEntity(ItemStack itemstack, EntityPlayer player, EntityLivingBase entity, EnumHand hand)
 	{
 		if (entity.world.isRemote)
-		{
 			return false;
+
+		itemstack = player.getHeldItemMainhand();
+		NBTTagCompound compound = itemstack.getTagCompound();
+		if (compound == null) {
+			compound = new NBTTagCompound();
 		}
 
-		if (!(entity instanceof IMob || entity instanceof EntityPlayer))
-		{
-			itemstack = player.getHeldItemMainhand();
-			NBTTagCompound compound = itemstack.getTagCompound();
-			if (compound == null)
-			{
-				compound = new NBTTagCompound();
-			}
+		NBTTagList tagList = compound.getTagList("entitys", 10);
 
-			NBTTagList tagList = compound.getTagList("entitys", 10);
-			if (tagList.tagCount() < 5)
-			{
-				NBTTagCompound entityNBT = new NBTTagCompound();
-				entity.writeToNBTOptional(entityNBT);
-				tagList.appendTag(entityNBT);
-				entity.setDead();
-				entity.world.playSound(null, player.getPosition(), SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.PLAYERS, 0.5f, 1.5F);
-			}
-			else
-			{
-				entity.world.playSound(null, player.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.PLAYERS, 0.5f, 1.5F);
-			}
+		// Early return if any fail condition is met (unless creative)
+		if (!player.isCreative()
+				&& ((entity instanceof IMob || entity instanceof EntityPlayer) || isEntityBlacklisted(entity)
+						|| !ownsEntity(entity, player) || isTargetingYou(entity, player)
+						|| tagList.tagCount() >= MAX_ENTITIES)) {
+			entity.world.playSound(null, player.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
+					SoundCategory.PLAYERS, 0.5f, 1.5F);
 
-			compound.setTag("entitys", tagList);
-			itemstack.setTagCompound(compound);
+			if (tagList.tagCount() >= MAX_ENTITIES) {
+				compound.setTag("entitys", tagList);
+				itemstack.setTagCompound(compound);
+			}
 			return true;
 		}
+
+		// Capture the entity
+		NBTTagCompound entityNBT = new NBTTagCompound();
+		entity.writeToNBTOptional(entityNBT);
+		tagList.appendTag(entityNBT);
+		entity.setDead();
+		entity.world.playSound(null, player.getPosition(), SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.PLAYERS,
+				0.5f, 1.5F);
+
+		compound.setTag("entitys", tagList);
+		itemstack.setTagCompound(compound);
 		return true;
+	}
+
+	private boolean isTargetingYou(Entity entity, EntityPlayer player) {
+		if (entity instanceof EntityLivingBase) {
+			EntityLiving living = (EntityLiving) entity;
+			boolean isTargeting = living.getAttackTarget() == player || living.getRevengeTarget() == player;
+			return isTargeting;
+		}
+		return false;
+	}
+
+	private boolean ownsEntity(Entity entity, EntityPlayer player) {
+		if (entity instanceof EntityTameable) {
+			EntityTameable tameable = (EntityTameable) entity;
+			// Disallow stealing pets
+			if (tameable.isTamed())
+				return tameable.isOwner(player);
+		}
+		return true; // Default to true, so if the entity is not tameable, it can be captured
+	}
+
+	private boolean isEntityBlacklisted(Entity entity) {
+		ResourceLocation entityKey = EntityList.getKey(entity);
+		if (entityKey != null) {
+			String entityId = entityKey.toString();
+			for (String blacklistedId : Features.SUMMONING_PENDULUM_BLACKLIST) {
+				if (entityId.equals(blacklistedId)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override
