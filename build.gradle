@@ -24,7 +24,7 @@ dependencies {
     deobfCompile "mezz.jei:jei_1.12.2:4.10.0.199"
 }
 
-version = "1.0.5"
+version = "1.0.6"
 group= "lumien.randomthings"
 sourceCompatibility = targetCompatibility = 1.8
 
@@ -127,6 +127,20 @@ eclipse {
                         entry.path.startsWith('build/')
                     )
                 }
+                
+                // Remove duplicate source entries (keep the first occurrence, typically the Gradle-generated one)
+                def seenPaths = new HashSet()
+                def entriesToRemove = []
+                classpath.entries.each { entry ->
+                    if (entry.kind == 'src' && entry.path) {
+                        if (seenPaths.contains(entry.path)) {
+                            entriesToRemove.add(entry)
+                        } else {
+                            seenPaths.add(entry.path)
+                        }
+                    }
+                }
+                classpath.entries.removeAll(entriesToRemove)
             }
         }
     }
@@ -169,5 +183,23 @@ task fixEclipseProject {
     }
 }
 
+tasks.withType(Copy) {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+// Task to clean Eclipse metadata files
+task cleanEclipseMetadata {
+    description = 'Removes Eclipse metadata files (.classpath, .project, .settings)'
+    doLast {
+        delete '.classpath'
+        delete '.project'
+        delete '.settings'
+        logger.info('Cleaned Eclipse metadata files')
+    }
+}
+
 // Make fixEclipseProject run after eclipse task
 tasks.eclipse.finalizedBy fixEclipseProject
+
+// Make eclipse task depend on cleaning metadata to prevent duplicates
+tasks.eclipse.dependsOn cleanEclipseMetadata
