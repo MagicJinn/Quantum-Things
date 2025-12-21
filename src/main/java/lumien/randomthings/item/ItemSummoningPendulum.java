@@ -84,7 +84,7 @@ public class ItemSummoningPendulum extends ItemBase
 			entityCount = tagList.tagCount();
 		}
 
-		return entityCount == MAX_ENTITIES;
+		return entityCount >= MAX_ENTITIES;
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class ItemSummoningPendulum extends ItemBase
 			entityCount = tagList.tagCount();
 		}
 
-		return entityCount != MAX_ENTITIES;
+		return entityCount < MAX_ENTITIES;
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class ItemSummoningPendulum extends ItemBase
 						|| !ownsEntity(entity, player) || isTargetingYou(entity, player)
 						|| tagList.tagCount() >= MAX_ENTITIES)) {
 			entity.world.playSound(null, player.getPosition(), SoundEvents.ITEM_FIRECHARGE_USE,
-					SoundCategory.PLAYERS, 0.5f, 1.5F);
+					SoundCategory.PLAYERS, 0.5f, 0.2F);
 
 			if (tagList.tagCount() >= MAX_ENTITIES) {
 				compound.setTag("entitys", tagList);
