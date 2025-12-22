@@ -53,6 +53,16 @@ public class GuiCustomButton extends GuiButton
 		value = !value;
 	}
 
+	protected int getTextureOffset() {
+		return value ? 20 : 0;
+	}
+
+	protected String getTooltip() {
+		if (tooltips == null)
+			return null;
+		return value ? tooltips.getRight() : tooltips.getLeft();
+	}
+
 	@Override
 	public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partialTicks)
 	{
@@ -66,8 +76,7 @@ public class GuiCustomButton extends GuiButton
 			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 			GlStateManager.blendFunc(770, 771);
 
-			// Use drawTexturedModalRect for fixed-size buttons to avoid border clipping
-			this.drawTexturedModalRect(this.x, this.y, uX + (value ? 20 : 0), uY + (k - 1) * 20, this.width,
+			this.drawTexturedModalRect(this.x, this.y, uX + getTextureOffset(), uY + (k - 1) * 20, this.width,
 					this.height);
 			this.mouseDragged(mc, mouseX, mouseY);
 			int color = 14737632;
@@ -99,16 +108,7 @@ public class GuiCustomButton extends GuiButton
 	@Override
 	public void drawButtonForegroundLayer(int mouseX, int mouseY)
 	{
-		String toolTip;
-		if (this.value)
-		{
-			toolTip = tooltips.getRight();
-		}
-		else
-		{
-			toolTip = tooltips.getLeft();
-		}
-
+		String toolTip = getTooltip();
 		if (toolTip != null)
 		{
 			toolTip = I18n.format(toolTip);

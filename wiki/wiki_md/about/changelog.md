@@ -18,6 +18,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 ### Fixes
 
 - Fixed the Summoning Pendulum being able to capture entities that are targeting you, but are not classified as monsters.
+- Fixed the Entity Detector not properly updating its power level through blocks when the power mode changed (introduced in 1.0.5).
 
 ## 1.0.5
 
