@@ -100,6 +100,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Entity Detector having no clear difference between Weak and Strong power modes.
 - Fixed Spectre Leaves having their Decay flag set to true when placed.
 - Fixed the Summoning Pendulum being able to capture entities that are targeting you, but are not classified as monsters.
+- Fixed a crash when the Item Filter tried to compare to an empty item stack.
 
 ## Developing
 
