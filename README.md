@@ -101,6 +101,10 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Spectre Leaves having their Decay flag set to true when placed.
 - Fixed the Summoning Pendulum being able to capture entities that are targeting you, but are not classified as monsters.
 
+## Developing
+
+The workspace and setup are inherited from Lumien231's Random Things repository. The workspace is completely and utterly fucked up and ancient, so builds may randomly fail for no discernible reason. Sometimes, when the build does succeed, when loading the game some textures will be missing. If this happens, just rebuild. If the workspace becomes broken in some way, run `unfuck_workspace.bat` to reset the workspace. This is also helpful when you first cloned the repository and you want to set up the workspace from scratch.
+
 ### Reporting Issues
 
 If you encounter any issues, please report them to the [issue tracker](https://github.com/MagicJinn/Quantum-Things/issues). Do **not** report issues to the original Random Things repository. Lumien231 is no longer actively developing Random Things, and new issues on the original repository are unlikely to be addressed.
