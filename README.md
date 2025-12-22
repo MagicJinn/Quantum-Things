@@ -101,6 +101,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Spectre Leaves having their Decay flag set to true when placed.
 - Fixed the Summoning Pendulum being able to capture entities that are targeting you, but are not classified as monsters.
 - Fixed a crash when the Item Filter tried to compare to an empty item stack.
+- Fixed Spectre Energy Injectors accepting infinite energy when confronted with high energy inputs, causing them to eat the energy.
 
 ## Developing
 
