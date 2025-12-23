@@ -1,6 +1,6 @@
 package lumien.randomthings.handler.redstone.signal;
 
-public interface ITickableSignal
+public interface ITickableSignal extends IPositionedSignal
 {
     /**
      * @return The current age of the signal in ticks.

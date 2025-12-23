@@ -1,5 +1,7 @@
 package lumien.randomthings.handler.redstone.signal;
 
+import java.util.Objects;
+
 import net.minecraft.nbt.NBTTagCompound;
 
 public class TemporarySignal extends RedstoneSignal implements ITickableSignal
@@ -66,5 +68,20 @@ public class TemporarySignal extends RedstoneSignal implements ITickableSignal
         super.readFromNBT(compound);
         duration = compound.getInteger(DURATION_KEY);
         age = compound.getInteger(AGE_KEY);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (!(o instanceof TemporarySignal)) return false;
+        if (!super.equals(o)) return false;
+        TemporarySignal that = (TemporarySignal) o;
+        return duration == that.duration;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(super.hashCode(), duration);
     }
 }
