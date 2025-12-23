@@ -1,0 +1,38 @@
+package lumien.randomthings.capability.redstone;
+
+import javax.annotation.Nonnull;
+
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+
+import lumien.randomthings.capability.ICapability;
+import lumien.randomthings.lib.Reference;
+import lumien.randomthings.util.DimPos;
+
+/**
+ * Capability that manages externally controlled, position-based redstone signals.
+ */
+public interface IDynamicRedstoneManager extends ICapability<IDynamicRedstoneManager>
+{
+    @CapabilityInject(IDynamicRedstoneManager.class)
+    Capability<IDynamicRedstoneManager> CAPABILITY_DYNAMIC_REDSTONE = null;
+
+    ResourceLocation CAPABILITY_DYNAMIC_REDSTONE_KEY = new ResourceLocation(Reference.MOD_ID, "capability_dynamic_redstone");
+
+    /**
+     * @return If there are any signals providing redstone power.
+     */
+    boolean hasDynamicSignals();
+
+    /**
+     * Get the dynamic redstone power at a given position.
+     * @param pos The position of the redstone power.
+     * @param side The side from which the power should come from.
+     * @return The dynamic redstone power.
+     */
+    IDynamicRedstone getDynamicRedstone(DimPos pos, @Nonnull EnumFacing side);
+
+    void tick();
+}

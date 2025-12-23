@@ -1,16 +1,22 @@
 package lumien.randomthings.network.messages;
 
 import io.netty.buffer.ByteBuf;
+import lumien.randomthings.capability.redstone.IDynamicRedstone;
+import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.container.inventories.InventoryItem;
-import lumien.randomthings.handler.redstonesignal.RedstoneSignalHandler;
+import lumien.randomthings.handler.redstone.signal.TemporarySignal;
 import lumien.randomthings.item.ItemPositionFilter;
 import lumien.randomthings.item.ItemRedstoneRemote;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.network.IRTMessage;
+import lumien.randomthings.util.DimPos;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -65,7 +71,16 @@ public class MessageRedstoneRemote implements IRTMessage
 
 					if (target != null)
 					{
-						RedstoneSignalHandler.getHandler().addSignal(player.world, target, 20, 15);
+                        World world = player.world;
+                        IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
+                        if (manager != null)
+                        {
+                            for (EnumFacing side : EnumFacing.values())
+                            {
+                                IDynamicRedstone signal = manager.getDynamicRedstone(DimPos.of(target, world), side);
+                                signal.setRedstoneLevel(new TemporarySignal(15, 20), true);
+                            }
+                        }
 					}
 				}
 			}

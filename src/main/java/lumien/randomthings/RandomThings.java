@@ -16,6 +16,7 @@ import lumien.randomthings.config.ModConfiguration;
 import lumien.randomthings.container.SyncHandler;
 import lumien.randomthings.enchantment.ModEnchantments;
 import lumien.randomthings.entitys.ModEntitys;
+import lumien.randomthings.handler.CapabilityHandler;
 import lumien.randomthings.handler.ModDimensions;
 import lumien.randomthings.handler.RTEventHandler;
 import lumien.randomthings.handler.compability.bonsaitrees.BonsaiTreesComp;
@@ -115,6 +116,8 @@ public class RandomThings implements LoadingCallback
 		RTEventHandler eventHandler = new RTEventHandler();
 		MinecraftForge.EVENT_BUS.register(eventHandler);
 		net.minecraftforge.fml.common.FMLCommonHandler.instance().bus().register(eventHandler);
+
+        MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
 
 		WorldGenEventHandler worldGenEventHandler = new WorldGenEventHandler();
 		MinecraftForge.TERRAIN_GEN_BUS.register(worldGenEventHandler);

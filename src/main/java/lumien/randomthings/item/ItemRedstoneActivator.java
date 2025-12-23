@@ -2,7 +2,6 @@ package lumien.randomthings.item;
 
 import java.util.List;
 
-import lumien.randomthings.handler.redstonesignal.RedstoneSignalHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -16,6 +15,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import lumien.randomthings.capability.redstone.IDynamicRedstone;
+import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
+import lumien.randomthings.handler.redstone.signal.TemporarySignal;
+import lumien.randomthings.util.DimPos;
 
 public class ItemRedstoneActivator extends ItemBase
 {
@@ -72,7 +76,12 @@ public class ItemRedstoneActivator extends ItemBase
 		ItemStack stack = playerIn.getHeldItem(hand);
 		if (!worldIn.isRemote)
 		{
-			RedstoneSignalHandler.getHandler().addSignal(worldIn, pos, durations[getDurationIndex(stack)], 15);
+            IDynamicRedstoneManager manager = worldIn.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
+            if (manager != null)
+            {
+                IDynamicRedstone signal = manager.getDynamicRedstone(DimPos.of(pos.offset(side), worldIn), side);
+                signal.setRedstoneLevel(new TemporarySignal(15, durations[getDurationIndex(stack)]), true);
+            }
 
 			return EnumActionResult.SUCCESS;
 		}
