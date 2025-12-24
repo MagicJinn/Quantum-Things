@@ -9,7 +9,6 @@ import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -21,22 +20,17 @@ import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
 import lumien.randomthings.tileentity.TileEntityBase;
 import lumien.randomthings.util.DimPos;
 
-public abstract class TileEntityRedstoneInterface extends TileEntityBase implements ITickable, IRedstoneWriter
+public abstract class TileEntityRedstoneInterface extends TileEntityBase implements IRedstoneWriter
 {
-    private boolean loaded = false;
-
     protected abstract Set<BlockPos> getTargets();
 
     @Override
-    public void update()
+    public void onLoad()
     {
-        if (!world.isRemote && !loaded)
+        if (world.isRemote) return;
+        for (EnumFacing side : EnumFacing.values())
         {
-            loaded = true;
-            for (EnumFacing side : EnumFacing.values())
-            {
-                sendSignal(side, getTargets());
-            }
+            sendSignal(side, getTargets());
         }
     }
 
@@ -89,6 +83,7 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
 
     protected void invalidateTargets(Set<BlockPos> targets)
     {
+        if (world.isRemote) return;
         for (EnumFacing side : EnumFacing.values())
         {
             targets.forEach(pos -> deactivate(pos, side));
