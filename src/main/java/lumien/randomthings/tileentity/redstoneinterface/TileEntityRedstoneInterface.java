@@ -1,213 +1,149 @@
 package lumien.randomthings.tileentity.redstoneinterface;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.WeakHashMap;
 
-import lumien.randomthings.tileentity.TileEntityBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class TileEntityRedstoneInterface extends TileEntityBase implements ITickable
+import lumien.randomthings.capability.redstone.IDynamicRedstone;
+import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
+import lumien.randomthings.handler.redstone.IRedstoneWriter;
+import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
+import lumien.randomthings.tileentity.TileEntityBase;
+import lumien.randomthings.util.DimPos;
+
+public abstract class TileEntityRedstoneInterface extends TileEntityBase implements ITickable, IRedstoneWriter
 {
-	public static Set<TileEntityRedstoneInterface> interfaces =
-			Collections.newSetFromMap(new WeakHashMap<TileEntityRedstoneInterface, Boolean>());
+    private boolean loaded = false;
 
-	public static Object lock = new Object();
+    public List<Connection> getConnections()
+    {
+        List<Connection> connections = new ArrayList<>();
+        for (BlockPos targetPos : getTargets())
+        {
+            Connection connection = new Connection(pos, targetPos);
+            connections.add(connection);
+        }
+        return connections;
+    }
 
-	HashMap<EnumFacing, Integer> weakPower;
-	HashMap<EnumFacing, Integer> strongPower;
+    protected abstract Set<BlockPos> getTargets();
 
-	boolean firstTick = true;
+    @Override
+    public void update()
+    {
+        if (!world.isRemote && !loaded)
+        {
+            loaded = true;
+            for (EnumFacing side : EnumFacing.values())
+            {
+                sendSignal(side, getTargets());
+            }
+        }
+    }
 
-	public TileEntityRedstoneInterface()
-	{
-		synchronized (lock)
-		{
-			interfaces.add(this);
-		}
-
-		weakPower = new HashMap<>();
-		strongPower = new HashMap<>();
-
-		for (EnumFacing facing : EnumFacing.values())
-		{
-			strongPower.put(facing, -1);
-		}
-
-		for (EnumFacing facing : EnumFacing.values())
-		{
-			weakPower.put(facing, -1);
-		}
-	}
-
-	@Override
-	public void update()
-	{
-		if (firstTick)
-		{
-			firstTick = false;
-
-			if (weakPower.get(EnumFacing.DOWN) == -1)
-			{
-				updateRedstoneState(Blocks.REDSTONE_BLOCK);
-			}
-		}
-	}
-
-	@Override
-	public void onChunkUnload()
-	{
-		this.invalidate();
-	}
-
-	@Override
-	public void writeDataToNBT(NBTTagCompound compound, boolean sync)
-	{
-		NBTTagCompound weakPowerCompound = new NBTTagCompound();
-		NBTTagCompound strongPowerCompound = new NBTTagCompound();
-
-		for (EnumFacing facing : EnumFacing.values())
-		{
-			weakPowerCompound.setInteger(facing.ordinal() + "", weakPower.get(facing));
-			strongPowerCompound.setInteger(facing.ordinal() + "", strongPower.get(facing));
-		}
-
-		compound.setTag("weakPowerCompound", weakPowerCompound);
-		compound.setTag("strongPowerCompound", strongPowerCompound);
-	}
-
-	@Override
-	public void readDataFromNBT(NBTTagCompound compound, boolean sync)
-	{
-		NBTTagCompound weakPowerCompound = compound.getCompoundTag("weakPowerCompound");
-		NBTTagCompound strongPowerCompound = compound.getCompoundTag("strongPowerCompound");
-
-		for (EnumFacing facing : EnumFacing.values())
-		{
-			weakPower.put(facing, weakPowerCompound.getInteger(facing.ordinal() + ""));
-			strongPower.put(facing, strongPowerCompound.getInteger(facing.ordinal() + ""));
-		}
-	}
-
-	public static int getRedstonePower(World blockWorld, BlockPos pos, EnumFacing facing)
-	{
-		synchronized (lock)
-		{
-			int totalPower = 0;
-
-			BlockPos checkingBlock = pos.offset(facing.getOpposite());
-
-			// Create a snapshot copy to avoid ConcurrentModificationException
-			for (TileEntityRedstoneInterface redstoneInterface : new ArrayList<>(interfaces))
-			{
-				if (!redstoneInterface.isInvalid() && redstoneInterface.world == blockWorld && redstoneInterface.isTargeting(checkingBlock))
-				{
-					int remotePower = redstoneInterface.weakPower.get(facing);
-
-					if (remotePower > totalPower)
-					{
-						totalPower = remotePower;
-					}
-				}
-			}
-
-			return totalPower;
-		}
-	}
-
-	public static int getStrongPower(World blockWorld, BlockPos pos, EnumFacing facing)
-	{
-		synchronized (lock)
-		{
-			int totalPower = 0;
-
-			BlockPos checkingBlock = pos.offset(facing.getOpposite());
-
-			// Create a snapshot copy to avoid ConcurrentModificationException
-			for (TileEntityRedstoneInterface redstoneInterface : new ArrayList<>(interfaces))
-			{
-				if (!redstoneInterface.isInvalid() && redstoneInterface.world == blockWorld && redstoneInterface.isTargeting(checkingBlock))
-				{
-					int remotePower = redstoneInterface.strongPower.get(facing);
-
-					if (remotePower > totalPower)
-					{
-						totalPower = remotePower;
-					}
-				}
-			}
-			
-			return totalPower;
-		}
-	}
-
-	protected abstract void notifyTargets(Block neighborBlock);
-
-	static HashSet<BlockPos> notifiedPositions = new HashSet<>();
-
-	@Override
+    @Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block neighborBlock, BlockPos changedPos)
 	{
-		if (notifiedPositions.contains(this.pos))
-		{
-			return;
-		}
-
-		notifiedPositions.add(this.pos);
-
-		updateRedstoneState(neighborBlock);
-
-		notifiedPositions.remove(this.pos);
+        if (world.isRemote) return;
+		BlockPos direction = changedPos.subtract(pos);
+        EnumFacing side = EnumFacing.getFacingFromVector(direction.getX(), direction.getY(), direction.getZ());
+        sendSignal(side, getTargets());
 	}
 
-	private void updateRedstoneState(Block neighbor)
-	{
-		boolean changed = false;
-		for (EnumFacing facing : EnumFacing.values())
-		{
-			int oldStrong = strongPower.get(facing);
-			int newStrong;
-			strongPower.put(facing, (newStrong = world.getStrongPower(this.pos.offset(facing), facing)));
-			if (oldStrong != newStrong)
-			{
-				changed = true;
-			}
+    /**
+     * Sends the signal received by this interface to its targets.
+     * @param signalDir The side the received signal is coming from, relative to this tile.
+     */
+    public void sendSignal(EnumFacing signalDir, Set<BlockPos> targets)
+    {
+        if (targets.isEmpty()) return;
 
-			int oldWeak = weakPower.get(facing);
-			int newWeak;
-			weakPower.put(facing, (newWeak = world.getRedstonePower(this.pos.offset(facing), facing)));
+        BlockPos signalPos = pos.offset(signalDir);
+        int strongLevel = world.getStrongPower(signalPos, signalDir);
+        int level = world.getRedstonePower(signalPos, signalDir);
 
-			if (oldWeak != newWeak)
-			{
-				changed = true;
-			}
-		}
+        for (BlockPos targetPos : targets)
+        {
+            if (level <= 0)
+            {
+                deactivate(targetPos, signalDir);
+            }
+            else
+            {
+                setRedstoneLevel(targetPos, signalDir, level, level == strongLevel);
+            }
+        }
+    }
 
-		if (changed)
-		{
-			notifyTargets(neighbor);
-		}
-	}
+    @Override
+    public void onChunkUnload()
+    {
+        invalidateTargets(getTargets());
+    }
 
-	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-	{
-		super.breakBlock(worldIn, pos, state);
+    @Override
+    public void invalidate()
+    {
+        super.invalidate();
+        invalidateTargets(getTargets());
+    }
 
-		this.invalidate();
+    protected void invalidateTargets(Set<BlockPos> targets)
+    {
+        for (EnumFacing side : EnumFacing.values())
+        {
+            targets.forEach(pos -> deactivate(pos, side));
+        }
+    }
 
-		notifyTargets(Blocks.REDSTONE_BLOCK);
-	}
+    @Nonnull
+    public Optional<IDynamicRedstone> getDynamicRedstoneFor(BlockPos pos, EnumFacing side)
+    {
+        IDynamicRedstoneManager managerCap = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
+        return Optional.ofNullable(managerCap)
+                .map(manager -> manager.getDynamicRedstone(DimPos.of(pos, world), side));
+    }
 
-	protected abstract boolean isTargeting(BlockPos pos);
+    @Override
+    public void setRedstoneLevel(BlockPos pos, EnumFacing side, int level, boolean strongPower)
+    {
+        getDynamicRedstoneFor(pos.offset(side), side).ifPresent(signal -> signal.setRedstoneLevel(new RedstoneSignal(level), strongPower));
+    }
+
+    @Override
+    public void deactivate(BlockPos pos, EnumFacing side)
+    {
+        getDynamicRedstoneFor(pos.offset(side), side).ifPresent(signal -> signal.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL), signal.isStrongSignal()));
+    }
+
+    public static class Connection
+    {
+        private final BlockPos sourcePos;
+        private final BlockPos targetPos;
+
+        public Connection(BlockPos sourcePos, BlockPos targetPos)
+        {
+            this.sourcePos = sourcePos;
+            this.targetPos = targetPos;
+        }
+
+        public BlockPos source()
+        {
+            return sourcePos;
+        }
+
+        public BlockPos target()
+        {
+            return targetPos;
+        }
+    }
 }
