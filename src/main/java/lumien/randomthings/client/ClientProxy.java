@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import lumien.randomthings.handler.redstone.Connection;
+import lumien.randomthings.handler.redstone.IRedstoneConnectionProvider;
 import org.lwjgl.opengl.GL11;
 
 import lumien.randomthings.CommonProxy;
@@ -58,11 +60,9 @@ import lumien.randomthings.tileentity.TileEntityAncientFurnace;
 import lumien.randomthings.tileentity.TileEntityBiomeRadar;
 import lumien.randomthings.tileentity.TileEntityBlockDiaphanous;
 import lumien.randomthings.tileentity.TileEntityLinkOrb;
-import lumien.randomthings.tileentity.TileEntityRedstoneObserver;
 import lumien.randomthings.tileentity.TileEntitySpecialChest;
 import lumien.randomthings.tileentity.TileEntitySpectreEnergyInjector;
 import lumien.randomthings.tileentity.TileEntityVoxelProjector;
-import lumien.randomthings.tileentity.redstoneinterface.TileEntityRedstoneInterface;
 import lumien.randomthings.util.client.RenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -293,16 +293,16 @@ public class ClientProxy extends CommonProxy
 		{
 			worldRenderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
-            List<TileEntityRedstoneInterface.Connection> connections = new ArrayList<>();
+            List<Connection> connections = new ArrayList<>();
             for (TileEntity tile : Minecraft.getMinecraft().world.loadedTileEntityList)
             {
-                if (tile instanceof TileEntityRedstoneInterface)
+                if (tile instanceof IRedstoneConnectionProvider)
                 {
-                    List<TileEntityRedstoneInterface.Connection> tileConnections = ((TileEntityRedstoneInterface) tile).getConnections();
+                    List<Connection> tileConnections = ((IRedstoneConnectionProvider) tile).getConnections();
                     connections.addAll(tileConnections);
                 }
             }
-            for (TileEntityRedstoneInterface.Connection connection : connections)
+            for (Connection connection : connections)
             {
                 BlockPos target = connection.target();
                 BlockPos source = connection.source();
@@ -313,30 +313,6 @@ public class ClientProxy extends CommonProxy
                     worldRenderer.pos(source.getX() + 0.5 - playerX, source.getY() + 0.5 - playerY, source.getZ() + 0.5 - playerZ).color(255, 0, 0, 255).endVertex();
                 }
             }
-
-			ArrayList<TileEntityRedstoneObserver> observers = new ArrayList<>();
-			synchronized (TileEntityRedstoneObserver.loadedObservers)
-			{
-				observers.addAll(TileEntityRedstoneObserver.loadedObservers);
-			}
-
-			for (TileEntityRedstoneObserver redstoneObserver : observers)
-			{
-				if (!redstoneObserver.isInvalid())
-				{
-					BlockPos target = redstoneObserver.getTarget();
-					BlockPos position = redstoneObserver.getPos();
-
-					if (target != null)
-					{
-						if (target.distanceSq(player.getPosition()) < 256 || position.distanceSq(player.getPosition()) < 256)
-						{
-							worldRenderer.pos(target.getX() + 0.5 - playerX, target.getY() + 0.5 - playerY, target.getZ() + 0.5 - playerZ).color(255, 0, 0, 255).endVertex();
-							worldRenderer.pos(position.getX() + 0.5 - playerX, position.getY() + 0.5 - playerY, position.getZ() + 0.5 - playerZ).color(255, 0, 0, 255).endVertex();
-						}
-					}
-				}
-			}
 			tessellator.draw();
 		}
 		GlStateManager.popMatrix();

@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
+import lumien.randomthings.handler.redstone.Connection;
 import lumien.randomthings.handler.redstone.IRedstoneWriter;
 import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
 import lumien.randomthings.tileentity.TileEntityBase;
@@ -23,17 +24,6 @@ import lumien.randomthings.util.DimPos;
 public abstract class TileEntityRedstoneInterface extends TileEntityBase implements ITickable, IRedstoneWriter
 {
     private boolean loaded = false;
-
-    public List<Connection> getConnections()
-    {
-        List<Connection> connections = new ArrayList<>();
-        for (BlockPos targetPos : getTargets())
-        {
-            Connection connection = new Connection(pos, targetPos);
-            connections.add(connection);
-        }
-        return connections;
-    }
 
     protected abstract Set<BlockPos> getTargets();
 
@@ -125,25 +115,15 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
         getDynamicRedstoneFor(pos.offset(side), side).ifPresent(signal -> signal.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL), signal.isStrongSignal()));
     }
 
-    public static class Connection
+    @Override
+    public List<Connection> getConnections()
     {
-        private final BlockPos sourcePos;
-        private final BlockPos targetPos;
-
-        public Connection(BlockPos sourcePos, BlockPos targetPos)
+        List<Connection> connections = new ArrayList<>();
+        for (BlockPos targetPos : getTargets())
         {
-            this.sourcePos = sourcePos;
-            this.targetPos = targetPos;
+            Connection connection = new Connection(pos, targetPos);
+            connections.add(connection);
         }
-
-        public BlockPos source()
-        {
-            return sourcePos;
-        }
-
-        public BlockPos target()
-        {
-            return targetPos;
-        }
+        return connections;
     }
 }

@@ -2,10 +2,15 @@ package lumien.randomthings.tileentity;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
 
 import lumien.randomthings.block.ModBlocks;
+import lumien.randomthings.handler.redstone.Connection;
+import lumien.randomthings.handler.redstone.IRedstoneConnectionProvider;
+import lumien.randomthings.handler.redstone.IRedstoneReader;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -14,7 +19,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent.NeighborNotifyEvent;
 
-public class TileEntityRedstoneObserver extends TileEntityBase
+public class TileEntityRedstoneObserver extends TileEntityBase implements IRedstoneReader
 {
 	public static Set<TileEntityRedstoneObserver> loadedObservers = Collections.newSetFromMap(new WeakHashMap());
 	BlockPos target;
@@ -157,4 +162,16 @@ public class TileEntityRedstoneObserver extends TileEntityBase
 	{
 		return strongPower.get(side);
 	}
+
+    @Override
+    public void getRedstoneLevel(BlockPos pos, EnumFacing side)
+    {
+
+    }
+
+    @Override
+    public List<Connection> getConnections()
+    {
+        return target == null ? Collections.emptyList() : Collections.singletonList(new Connection(pos, target));
+    }
 }
