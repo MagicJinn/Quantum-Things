@@ -2,10 +2,10 @@ package lumien.randomthings.handler;
 
 import java.awt.Color;
 import java.lang.reflect.Field;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 import lumien.randomthings.asm.MCPNames;
@@ -28,7 +28,6 @@ import lumien.randomthings.tileentity.TileEntityLightRedirector;
 import lumien.randomthings.tileentity.TileEntityPeaceCandle;
 import lumien.randomthings.tileentity.TileEntityRainShield;
 import lumien.randomthings.tileentity.TileEntitySlimeCube;
-import lumien.randomthings.tileentity.redstoneinterface.TileEntityRedstoneInterface;
 import lumien.randomthings.util.DimPos;
 import lumien.randomthings.util.ItemUtil;
 import net.minecraft.block.Block;
@@ -72,9 +71,11 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import static lumien.randomthings.capability.redstone.IDynamicRedstone.Source.*;
+
 public class AsmHandler
 {
-	static Random rng = new Random();
+    public static final EnumSet<IDynamicRedstone.Source> ALLOWED_REDSTONE_SOURCES = EnumSet.of(INTERFACE, ITEM);
 
 	static Field fluidRenderer;
 	static
@@ -488,23 +489,23 @@ public class AsmHandler
 	public static int getRedstonePower(World worldObj, BlockPos pos, EnumFacing facing)
 	{
         IDynamicRedstoneManager manager = worldObj.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
-        if (manager == null || !manager.hasDynamicSignals())
+        if (manager != null && manager.hasDynamicSignals())
         {
-            return 0;
+            IDynamicRedstone signal = manager.getDynamicRedstone(DimPos.of(pos, worldObj), facing, ALLOWED_REDSTONE_SOURCES);
+            return Math.max(signal.getRedstoneLevel(), 0);
         }
-        IDynamicRedstone signal = manager.getDynamicRedstone(DimPos.of(pos, worldObj), facing);
-        return Math.max(signal.getRedstoneLevel(), 0);
+        return 0;
 	}
 
 	public static int getStrongPower(World worldObj, BlockPos pos, EnumFacing facing)
 	{
         IDynamicRedstoneManager manager = worldObj.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
-        if (manager == null || !manager.hasDynamicSignals())
+        if (manager != null && manager.hasDynamicSignals())
         {
-            return 0;
+            IDynamicRedstone signal = manager.getDynamicRedstone(DimPos.of(pos, worldObj), facing, ALLOWED_REDSTONE_SOURCES);
+            return signal.isStrongSignal() ? Math.max(signal.getRedstoneLevel(), 0) : 0;
         }
-        IDynamicRedstone signal = manager.getDynamicRedstone(DimPos.of(pos, worldObj), facing);
-        return signal.isStrongSignal() ? Math.max(signal.getRedstoneLevel(), 0) : 0;
+        return 0;
 	}
 
 	// Returns whether to cancel normal behaviour

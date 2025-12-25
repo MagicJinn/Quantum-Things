@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+import lumien.randomthings.capability.redstone.IDynamicRedstone;
+
 public class TemporarySignal extends RedstoneSignal implements ITickableSignal
 {
     public static final String AGE_KEY = "age";
@@ -17,9 +19,9 @@ public class TemporarySignal extends RedstoneSignal implements ITickableSignal
         super();
     }
 
-    public TemporarySignal(int redstoneLevel, int duration)
+    public TemporarySignal(int redstoneLevel, int duration, IDynamicRedstone.Source sourceType)
     {
-        super(redstoneLevel);
+        super(redstoneLevel, sourceType);
         this.duration = duration;
     }
 
@@ -33,12 +35,6 @@ public class TemporarySignal extends RedstoneSignal implements ITickableSignal
     public int getDuration()
     {
         return duration;
-    }
-
-    @Override
-    public SignalType getSignalType()
-    {
-        return SignalType.TEMPORARY;
     }
 
     @Override

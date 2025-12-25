@@ -2,6 +2,7 @@ package lumien.randomthings.handler.redstone;
 
 import javax.annotation.Nonnull;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -25,6 +26,8 @@ import lumien.randomthings.handler.redstone.signal.ITickableSignal;
 import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
 import lumien.randomthings.handler.redstone.signal.SignalType;
 import lumien.randomthings.util.DimPos;
+
+import static lumien.randomthings.handler.redstone.signal.SignalType.SIGNAL_TYPE_KEY;
 
 /**
  * Per-world capability that manages dynamic redstone signals.
@@ -59,9 +62,9 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     }
 
     @Override
-    public IDynamicRedstone getDynamicRedstone(DimPos dimPos, @Nonnull EnumFacing side)
+    public IDynamicRedstone getDynamicRedstone(DimPos dimPos, @Nonnull EnumFacing side, @Nonnull EnumSet<IDynamicRedstone.Source> allowedSources)
     {
-        return new DynamicRedstone(this, dimPos, side);
+        return new DynamicRedstone(this, dimPos, side, allowedSources);
     }
 
     public void tick()
@@ -76,8 +79,10 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
             if (!signal.isAlive())
             {
                 itr.remove();
-                IDynamicRedstone dynamicRedstone = getDynamicRedstone(signal.getPos(), signal.getSide());
-                dynamicRedstone.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL), dynamicRedstone.isStrongSignal());
+                IDynamicRedstone.Source sourceType = signal.getSourceType();
+                EnumSet<IDynamicRedstone.Source> sourceSet = EnumSet.of(sourceType);
+                IDynamicRedstone dynamicRedstone = getDynamicRedstone(signal.getPos(), signal.getSide(), sourceSet);
+                dynamicRedstone.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL, sourceType), dynamicRedstone.isStrongSignal());
             }
         }
     }
@@ -107,7 +112,9 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                 }
                 signalData.setBoolean(STRONG_POWER_KEY, strongPower);
 
-                signalEntry.getValue().writeToNBT(signalData);
+                RedstoneSignal signal = signalEntry.getValue();
+                signalData.setByte(SIGNAL_TYPE_KEY, (byte) SignalType.byClass(signal.getClass()).getIndex());
+                signal.writeToNBT(signalData);
                 signalList.appendTag(signalData);
             }
 
@@ -125,10 +132,11 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
             NBTTagCompound signalData = signalList.getCompoundTagAt(i);
 
             DimPos pos = DimPos.of(NBTUtil.getPosFromTag(signalData.getCompoundTag(POSITION_KEY)), dimension);
-            SignalType signalType = SignalType.valueOf(signalData.getString(SignalType.SIGNAL_TYPE_KEY));
-            boolean strongPower = signalData.getBoolean(STRONG_POWER_KEY);
             EnumFacing signalSide = EnumFacing.byIndex(signalData.getByte(SIDE_KEY));
 
+            boolean strongPower = signalData.getBoolean(STRONG_POWER_KEY);
+
+            SignalType signalType = SignalType.byIndex(signalData.getByte(SignalType.SIGNAL_TYPE_KEY));
             RedstoneSignal signal = signalType.getSignal();
             signal.readFromNBT(signalData);
             signal.setContext(pos, signalSide);
@@ -149,12 +157,14 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         private final DynamicRedstoneManager manager;
         private final DimPos dimPos;
         private final EnumFacing side;
+        private final EnumSet<Source> allowedSources;
 
-        public DynamicRedstone(DynamicRedstoneManager manager, DimPos dimPos, EnumFacing side)
+        public DynamicRedstone(DynamicRedstoneManager manager, DimPos dimPos, EnumFacing side, EnumSet<Source> allowedSources)
         {
             this.manager = manager;
             this.dimPos = dimPos;
             this.side = side;
+            this.allowedSources = allowedSources;
         }
 
         @Override
@@ -164,7 +174,10 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
             if (signalsPerSide != null)
             {
                 RedstoneSignal signal = signalsPerSide.get(side);
-                return signal != null ? signal.getRedstoneLevel() : -1;
+                if (signal != null && verifySignalSource(signal))
+                {
+                    return signal.getRedstoneLevel();
+                }
             }
             return -1;
         }
@@ -172,6 +185,11 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         @Override
         public void setRedstoneLevel(RedstoneSignal signalIn, boolean strongPower)
         {
+            if (!verifySignalSource(signalIn))
+            {
+                throw new IllegalArgumentException("Passed RedstoneSignal's source type cannot be handled by this DynamicRedstone! " +
+                        "Expected: " + allowedSources.toString() + ", Actual: " + signalIn.getSourceType());
+            }
             signalIn.setContext(dimPos, side);
             int level = signalIn.getRedstoneLevel();
             EnumMap<EnumFacing, RedstoneSignal> redstoneLevels = manager.redstoneLevels.computeIfAbsent(dimPos, key -> new EnumMap<>(EnumFacing.class));
@@ -279,6 +297,11 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                     world.notifyNeighborsOfStateChange(actualPos, Blocks.REDSTONE_BLOCK, false);
                 }
             }
+        }
+
+        private boolean verifySignalSource(RedstoneSignal signal)
+        {
+            return allowedSources.contains(signal.getSourceType());
         }
 
         @Override

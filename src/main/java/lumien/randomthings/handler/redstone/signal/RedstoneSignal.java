@@ -5,33 +5,36 @@ import java.util.Objects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
+import lumien.randomthings.capability.redstone.IDynamicRedstone.Source;
 import lumien.randomthings.util.DimPos;
 
-import static lumien.randomthings.handler.redstone.signal.SignalType.SIGNAL_TYPE_KEY;
+import static lumien.randomthings.capability.redstone.IDynamicRedstone.Source.SOURCE_KEY;
 
 public class RedstoneSignal implements IPositionedSignal
 {
     public static final String REDSTONE_LEVEL_KEY = "level";
 
     protected int redstoneLevel;
+    private Source sourceType;
     private DimPos dimPos;
     private EnumFacing side;
 
-	public RedstoneSignal() {}
+    public RedstoneSignal() {}
 
-	public RedstoneSignal(int redstoneLevel)
+	public RedstoneSignal(int redstoneLevel, Source sourceType)
 	{
 		this.redstoneLevel = redstoneLevel;
+        this.sourceType = sourceType;
 	}
-
-    public SignalType getSignalType()
-    {
-        return SignalType.CONSTANT;
-    }
 
     public int getRedstoneLevel()
     {
         return redstoneLevel;
+    }
+
+    public Source getSourceType()
+    {
+        return sourceType;
     }
 
     @Override
@@ -54,14 +57,15 @@ public class RedstoneSignal implements IPositionedSignal
 
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
-        compound.setString(SIGNAL_TYPE_KEY, getSignalType().name());
 		compound.setInteger(REDSTONE_LEVEL_KEY, redstoneLevel);
+        compound.setByte(SOURCE_KEY, (byte) sourceType.getIndex());
         return compound;
 	}
 
 	public void readFromNBT(NBTTagCompound compound)
 	{
 		redstoneLevel = compound.getInteger(REDSTONE_LEVEL_KEY);
+        sourceType = Source.byIndex(compound.getByte(SOURCE_KEY));
 	}
 
     @Override
@@ -69,12 +73,12 @@ public class RedstoneSignal implements IPositionedSignal
     {
         if (!(o instanceof RedstoneSignal)) return false;
         RedstoneSignal that = (RedstoneSignal) o;
-        return redstoneLevel == that.redstoneLevel;
+        return redstoneLevel == that.redstoneLevel && sourceType == that.sourceType && Objects.equals(dimPos, that.dimPos) && side == that.side;
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hashCode(redstoneLevel);
+        return Objects.hash(redstoneLevel, sourceType, dimPos, side);
     }
 }

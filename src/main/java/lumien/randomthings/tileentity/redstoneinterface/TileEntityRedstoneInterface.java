@@ -2,6 +2,7 @@ package lumien.randomthings.tileentity.redstoneinterface;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -19,6 +20,8 @@ import lumien.randomthings.handler.redstone.IRedstoneWriter;
 import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
 import lumien.randomthings.tileentity.TileEntityBase;
 import lumien.randomthings.util.DimPos;
+
+import static lumien.randomthings.capability.redstone.IDynamicRedstone.Source.INTERFACE;
 
 public abstract class TileEntityRedstoneInterface extends TileEntityBase implements IRedstoneWriter
 {
@@ -95,19 +98,21 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     {
         IDynamicRedstoneManager managerCap = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
         return Optional.ofNullable(managerCap)
-                .map(manager -> manager.getDynamicRedstone(DimPos.of(pos, world), side));
+                .map(manager -> manager.getDynamicRedstone(DimPos.of(pos, world), side, EnumSet.of(INTERFACE)));
     }
 
     @Override
     public void setRedstoneLevel(BlockPos pos, EnumFacing side, int level, boolean strongPower)
     {
-        getDynamicRedstoneFor(pos.offset(side), side).ifPresent(signal -> signal.setRedstoneLevel(new RedstoneSignal(level), strongPower));
+        getDynamicRedstoneFor(pos.offset(side), side).ifPresent(dynamicRedstone ->
+                dynamicRedstone.setRedstoneLevel(new RedstoneSignal(level, INTERFACE), strongPower));
     }
 
     @Override
     public void deactivate(BlockPos pos, EnumFacing side)
     {
-        getDynamicRedstoneFor(pos.offset(side), side).ifPresent(signal -> signal.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL), signal.isStrongSignal()));
+        getDynamicRedstoneFor(pos.offset(side), side).ifPresent(dynamicRedstone ->
+                dynamicRedstone.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL, INTERFACE), dynamicRedstone.isStrongSignal()));
     }
 
     @Override

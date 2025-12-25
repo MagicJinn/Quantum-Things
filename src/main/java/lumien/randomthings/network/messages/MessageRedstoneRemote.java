@@ -1,5 +1,7 @@
 package lumien.randomthings.network.messages;
 
+import java.util.EnumSet;
+
 import io.netty.buffer.ByteBuf;
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
@@ -19,6 +21,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+
+import static lumien.randomthings.capability.redstone.IDynamicRedstone.Source.ITEM;
 
 public class MessageRedstoneRemote implements IRTMessage
 {
@@ -77,8 +81,8 @@ public class MessageRedstoneRemote implements IRTMessage
                         {
                             for (EnumFacing side : EnumFacing.values())
                             {
-                                IDynamicRedstone signal = manager.getDynamicRedstone(DimPos.of(target, world), side);
-                                signal.setRedstoneLevel(new TemporarySignal(15, 20), true);
+                                IDynamicRedstone signal = manager.getDynamicRedstone(DimPos.of(target, world), side, EnumSet.of(ITEM));
+                                signal.setRedstoneLevel(new TemporarySignal(15, 20, ITEM), true);
                             }
                         }
 					}
