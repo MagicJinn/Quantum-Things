@@ -1,6 +1,7 @@
 package lumien.randomthings.handler.redstone;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -17,13 +18,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
+import com.google.common.base.Preconditions;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.handler.redstone.signal.ITickableSignal;
 import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
 import lumien.randomthings.handler.redstone.signal.SignalType;
-import lumien.randomthings.util.DimPos;
 
 /**
  * Per-world capability that manages dynamic redstone signals.
@@ -36,20 +38,31 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     public static final String SIDE_KEY = "side";
     public static final String STRONG_POWER_KEY = "strongPower";
 
-    private final int dimension;
+    private World world;
     /* Dynamic redstone levels */
-    private final Map<DimPos, EnumMap<EnumFacing, RedstoneSignal>> redstoneLevels;
+    private final Map<BlockPos, EnumMap<EnumFacing, RedstoneSignal>> redstoneLevels;
     /* The state of the redstone levels, strong or weak */
-    private final Map<DimPos, Reference2BooleanMap<EnumFacing>> strongPowerStates;
+    private final Map<BlockPos, Reference2BooleanMap<EnumFacing>> strongPowerStates;
     /* Signals to tick */
-    private final Map<DimPos, EnumMap<EnumFacing, ITickableSignal>> tickingSignals;
+    private final Map<BlockPos, EnumMap<EnumFacing, ITickableSignal>> tickingSignals;
 
-    public DynamicRedstoneManager(int dimension)
+    public DynamicRedstoneManager()
     {
-        this.dimension = dimension;
         redstoneLevels = new HashMap<>();
         strongPowerStates = new HashMap<>();
         tickingSignals = new LinkedHashMap<>();
+    }
+
+    public DynamicRedstoneManager(World world)
+    {
+        this();
+        this.world = world;
+    }
+
+    @Nullable
+    public World getWorld()
+    {
+        return world;
     }
 
     @Override
@@ -59,21 +72,24 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     }
 
     @Override
-    public IDynamicRedstone getDynamicRedstone(DimPos dimPos, @Nonnull EnumFacing side, @Nonnull EnumSet<IDynamicRedstone.Source> allowedSources)
+    public IDynamicRedstone getDynamicRedstone(BlockPos BlockPos, @Nonnull EnumFacing side, @Nonnull EnumSet<IDynamicRedstone.Source> allowedSources)
     {
-        return new DynamicRedstone(this, dimPos, side, allowedSources);
+        return new DynamicRedstone(this, BlockPos, side, allowedSources);
     }
 
     public void tick()
     {
         if (tickingSignals.isEmpty()) return;
 
-        Iterator<Map.Entry<DimPos, EnumMap<EnumFacing, ITickableSignal>>> signalsPerSideItr = tickingSignals.entrySet().iterator();
+        Iterator<Map.Entry<BlockPos, EnumMap<EnumFacing, ITickableSignal>>> signalsPerSideItr = tickingSignals.entrySet().iterator();
         while (signalsPerSideItr.hasNext())
         {
-            Map.Entry<DimPos, EnumMap<EnumFacing, ITickableSignal>> signalsPerSideEntry = signalsPerSideItr.next();
-            DimPos pos = signalsPerSideEntry.getKey();
-            if (pos.getWorld(false).isBlockLoaded(pos.getPos()))
+            Map.Entry<BlockPos, EnumMap<EnumFacing, ITickableSignal>> signalsPerSideEntry = signalsPerSideItr.next();
+            BlockPos pos = signalsPerSideEntry.getKey();
+            World world = getWorld();
+            Preconditions.checkNotNull(world, "Tried to tick signals for null world!");
+
+            if (!getWorld().isBlockLoaded(pos))
             {
                 continue;
             }
@@ -87,8 +103,8 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                 tickableSignal.tick();
                 if (!tickableSignal.isAlive())
                 {
-                    signalItr.remove();
                     tickableSignal.onRemoved(this, pos, signalEntry.getKey());
+                    signalItr.remove();
                 }
             }
             if (signalsPerSide.isEmpty())
@@ -100,13 +116,12 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
 
     @Nonnull
     @Override
-    public NBTTagCompound writeNBT(IDynamicRedstoneManager instance, EnumFacing side, NBTTagCompound nbt)
+    public NBTTagCompound writeNBT(IDynamicRedstoneManager instance, EnumFacing side, NBTTagCompound rootNBT)
     {
         NBTTagList signalList = new NBTTagList();
-        for (Map.Entry<DimPos, EnumMap<EnumFacing, RedstoneSignal>> signalsPerSide : redstoneLevels.entrySet())
+        for (Map.Entry<BlockPos, EnumMap<EnumFacing, RedstoneSignal>> signalsPerSide : redstoneLevels.entrySet())
         {
-            // Don't need the dimension, this manager is dimension specific
-            NBTTagCompound pos = NBTUtil.createPosTag(signalsPerSide.getKey().getPos());
+            NBTTagCompound pos = NBTUtil.createPosTag(signalsPerSide.getKey());
             for (Map.Entry<EnumFacing, RedstoneSignal> signalEntry : signalsPerSide.getValue().entrySet())
             {
                 EnumFacing signalSide = signalEntry.getKey();
@@ -125,34 +140,34 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                 signalData.setBoolean(STRONG_POWER_KEY, strongPower);
 
                 SignalType.writeToNBT(signalData, signal);
-                signal.writeToNBT(nbt);
+                signal.writeToNBT(signalData);
                 signalList.appendTag(signalData);
             }
 
         }
-        nbt.setTag(SIGNAL_LIST_KEY, signalList);
-        return nbt;
+        rootNBT.setTag(SIGNAL_LIST_KEY, signalList);
+        return rootNBT;
     }
 
     @Override
-    public void readNBT(IDynamicRedstoneManager instance, EnumFacing side, NBTTagCompound nbt)
+    public void readNBT(IDynamicRedstoneManager instance, EnumFacing side, NBTTagCompound rootNBT)
     {
-        NBTTagList signalList = nbt.getTagList(SIGNAL_LIST_KEY, Constants.NBT.TAG_COMPOUND);
+        NBTTagList signalList = rootNBT.getTagList(SIGNAL_LIST_KEY, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < signalList.tagCount(); i++)
         {
             NBTTagCompound signalData = signalList.getCompoundTagAt(i);
 
-            DimPos pos = DimPos.of(NBTUtil.getPosFromTag(signalData.getCompoundTag(POSITION_KEY)), dimension);
+            BlockPos pos = NBTUtil.getPosFromTag(signalData.getCompoundTag(POSITION_KEY));
             EnumFacing signalSide = EnumFacing.byIndex(signalData.getByte(SIDE_KEY));
 
             boolean strongPower = signalData.getBoolean(STRONG_POWER_KEY);
 
             RedstoneSignal signal = SignalType.readFromNBT(signalData);
-            signal.readFromNBT(nbt);
+            signal.readFromNBT(signalData);
 
             redstoneLevels.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class))
                     .put(signalSide, signal);
-            strongPowerStates.computeIfAbsent(pos, key -> new Reference2BooleanMap<>(EnumFacing.class))
+            strongPowerStates.computeIfAbsent(pos, key -> new Reference2BooleanOpenHashMap<>())
                     .put(signalSide, strongPower);
             if (signal instanceof ITickableSignal)
             {
@@ -165,14 +180,14 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     public static class DynamicRedstone implements IDynamicRedstone
     {
         private final DynamicRedstoneManager manager;
-        private final DimPos dimPos;
+        private final BlockPos pos;
         private final EnumFacing side;
         private final EnumSet<Source> allowedSources;
 
-        public DynamicRedstone(DynamicRedstoneManager manager, DimPos dimPos, EnumFacing side, EnumSet<Source> allowedSources)
+        public DynamicRedstone(DynamicRedstoneManager manager, BlockPos pos, EnumFacing side, EnumSet<Source> allowedSources)
         {
             this.manager = manager;
-            this.dimPos = dimPos;
+            this.pos = pos;
             this.side = side;
             this.allowedSources = allowedSources;
         }
@@ -180,7 +195,7 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         @Override
         public int getRedstoneLevel()
         {
-            EnumMap<EnumFacing, RedstoneSignal> signalsPerSide = manager.redstoneLevels.get(dimPos);
+            EnumMap<EnumFacing, RedstoneSignal> signalsPerSide = manager.redstoneLevels.get(pos);
             if (signalsPerSide != null)
             {
                 RedstoneSignal signal = signalsPerSide.get(side);
@@ -201,9 +216,9 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                         "Expected: " + allowedSources.toString() + ", Actual: " + signalIn.getSourceType());
             }
             int level = signalIn.getRedstoneLevel();
-            EnumMap<EnumFacing, RedstoneSignal> redstoneLevels = manager.redstoneLevels.computeIfAbsent(dimPos, key -> new EnumMap<>(EnumFacing.class));
-            Reference2BooleanMap<EnumFacing> strongPowerStates = manager.strongPowerStates.computeIfAbsent(dimPos, key -> new Reference2BooleanMap<>(EnumFacing.class));
-            EnumMap<EnumFacing, ITickableSignal> tickingSignals = manager.tickingSignals.computeIfAbsent(dimPos, key -> new EnumMap<>(EnumFacing.class));
+            EnumMap<EnumFacing, RedstoneSignal> redstoneLevels = manager.redstoneLevels.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class));
+            Reference2BooleanMap<EnumFacing> strongPowerStates = manager.strongPowerStates.computeIfAbsent(pos, key -> new Reference2BooleanOpenHashMap<>());
+            EnumMap<EnumFacing, ITickableSignal> tickingSignals = manager.tickingSignals.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class));
 
             boolean sendUpdate = false;
 
@@ -274,11 +289,11 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
             // Cleanup empty maps
             if (redstoneLevels.isEmpty())
             {
-                manager.redstoneLevels.remove(dimPos);
+                manager.redstoneLevels.remove(pos);
             }
             if (strongPowerStates.isEmpty())
             {
-                manager.strongPowerStates.remove(dimPos);
+                manager.strongPowerStates.remove(pos);
             }
 
             if (sendUpdate)
@@ -289,13 +304,11 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
 
         public void updateRedstoneInfo(boolean strongPower)
         {
-            World world = dimPos.getWorld(false);
-            if (world == null)
-            {
-                return;
-            }
+            World world = manager.getWorld();
+            Preconditions.checkNotNull(world, "Tried to update dynamic redstone for null world!");
+
             // The position the signal is coming from.
-            BlockPos signalPos = dimPos.getPos();
+            BlockPos signalPos = pos;
             // The actual position of the block to emit the signal to.
             BlockPos actualPos = signalPos.offset(side.getOpposite());
             if (world.isBlockLoaded(actualPos))
@@ -317,7 +330,7 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         @Override
         public boolean isStrongSignal()
         {
-            Reference2BooleanMap<EnumFacing> signalsPerSide = manager.strongPowerStates.get(dimPos);
+            Reference2BooleanMap<EnumFacing> signalsPerSide = manager.strongPowerStates.get(pos);
             if (signalsPerSide != null)
             {
                 return signalsPerSide.getBoolean(side);

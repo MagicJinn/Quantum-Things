@@ -64,7 +64,7 @@ public class TileEntityBasicRedstoneInterface extends TileEntityRedstoneInterfac
             invalidateTargets(Collections.singleton(oldTarget));
         }
 
-        for (EnumFacing side : EnumFacing.values())
+        for (EnumFacing side : EnumFacing.VALUES)
         {
             sendSignal(side, getTargets());
         }

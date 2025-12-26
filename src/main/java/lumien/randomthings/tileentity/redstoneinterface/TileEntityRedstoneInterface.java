@@ -19,7 +19,6 @@ import lumien.randomthings.handler.redstone.Connection;
 import lumien.randomthings.handler.redstone.IRedstoneWriter;
 import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
 import lumien.randomthings.tileentity.TileEntityBase;
-import lumien.randomthings.util.DimPos;
 
 import static lumien.randomthings.capability.redstone.IDynamicRedstone.Source.INTERFACE;
 
@@ -31,7 +30,7 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     public void onLoad()
     {
         if (world.isRemote) return;
-        for (EnumFacing side : EnumFacing.values())
+        for (EnumFacing side : EnumFacing.VALUES)
         {
             sendSignal(side, getTargets());
         }
@@ -87,7 +86,7 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     protected void invalidateTargets(Set<BlockPos> targets)
     {
         if (world.isRemote) return;
-        for (EnumFacing side : EnumFacing.values())
+        for (EnumFacing side : EnumFacing.VALUES)
         {
             targets.forEach(pos -> deactivate(pos, side));
         }
@@ -98,20 +97,20 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     {
         IDynamicRedstoneManager managerCap = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
         return Optional.ofNullable(managerCap)
-                .map(manager -> manager.getDynamicRedstone(DimPos.of(pos, world), side, EnumSet.of(INTERFACE)));
+                .map(manager -> manager.getDynamicRedstone(pos.offset(side), side, EnumSet.of(INTERFACE)));
     }
 
     @Override
     public void setRedstoneLevel(BlockPos pos, EnumFacing side, int level, boolean strongPower)
     {
-        getDynamicRedstoneFor(pos.offset(side), side).ifPresent(dynamicRedstone ->
+        getDynamicRedstoneFor(pos, side).ifPresent(dynamicRedstone ->
                 dynamicRedstone.setRedstoneLevel(new RedstoneSignal(level, INTERFACE), strongPower));
     }
 
     @Override
     public void deactivate(BlockPos pos, EnumFacing side)
     {
-        getDynamicRedstoneFor(pos.offset(side), side).ifPresent(dynamicRedstone ->
+        getDynamicRedstoneFor(pos, side).ifPresent(dynamicRedstone ->
                 dynamicRedstone.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL, INTERFACE), dynamicRedstone.isStrongSignal()));
     }
 

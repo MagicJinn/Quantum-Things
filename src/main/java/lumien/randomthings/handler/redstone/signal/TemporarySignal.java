@@ -4,10 +4,10 @@ import java.util.EnumSet;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
-import lumien.randomthings.util.DimPos;
 
 public class TemporarySignal extends RedstoneSignal implements ITickableSignal
 {
@@ -53,11 +53,11 @@ public class TemporarySignal extends RedstoneSignal implements ITickableSignal
     }
 
     @Override
-    public void onRemoved(IDynamicRedstoneManager manager, DimPos pos, EnumFacing side)
+    public void onRemoved(IDynamicRedstoneManager manager, BlockPos pos, EnumFacing side)
     {
         IDynamicRedstone.Source sourceType = getSourceType();
-        EnumSet<IDynamicRedstone.Source> sourceSet = EnumSet.of(sourceType);
-        IDynamicRedstone dynamicRedstone = manager.getDynamicRedstone(pos, side, sourceSet);
+        EnumSet<IDynamicRedstone.Source> allowedSources = EnumSet.of(sourceType);
+        IDynamicRedstone dynamicRedstone = manager.getDynamicRedstone(pos, side, allowedSources);
         dynamicRedstone.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL, sourceType), dynamicRedstone.isStrongSignal());
     }
 

@@ -5,13 +5,13 @@ import java.util.EnumSet;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
 import lumien.randomthings.capability.ICapability;
 import lumien.randomthings.capability.redstone.IDynamicRedstone.Source;
 import lumien.randomthings.lib.Reference;
-import lumien.randomthings.util.DimPos;
 
 /**
  * Capability that manages externally controlled, position-based redstone signals.
@@ -35,7 +35,7 @@ public interface IDynamicRedstoneManager extends ICapability<IDynamicRedstoneMan
      * @param allowedSources The set of allowed {@link Source}s the dynamic redstone can handle.
      * @return The dynamic redstone power.
      */
-    IDynamicRedstone getDynamicRedstone(DimPos pos, @Nonnull EnumFacing side, EnumSet<Source> allowedSources);
+    IDynamicRedstone getDynamicRedstone(BlockPos pos, @Nonnull EnumFacing side, EnumSet<Source> allowedSources);
 
     void tick();
 }

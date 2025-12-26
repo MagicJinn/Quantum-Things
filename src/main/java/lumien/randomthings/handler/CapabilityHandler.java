@@ -20,7 +20,7 @@ public class CapabilityHandler
 {
     public CapabilityHandler()
     {
-        registerCapability(IDynamicRedstoneManager.class, new DynamicRedstoneManager(0));
+        registerCapability(IDynamicRedstoneManager.class, new DynamicRedstoneManager());
     }
 
     public <T extends ICapability<T>> void registerCapability(Class<T> clazz, T defaultImpl)
@@ -50,7 +50,7 @@ public class CapabilityHandler
     {
         if (!event.getCapabilities().containsKey(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE_KEY))
         {
-            event.addCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE_KEY, new DynamicRedstoneManagerProvider(event.getObject().provider.getDimension()));
+            event.addCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE_KEY, new DynamicRedstoneManagerProvider(event.getObject()));
         }
     }
 }

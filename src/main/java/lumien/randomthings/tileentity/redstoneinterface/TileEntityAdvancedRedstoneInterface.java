@@ -102,7 +102,7 @@ public class TileEntityAdvancedRedstoneInterface extends TileEntityRedstoneInter
 
         invalidateTargets(discardedPositions);
 
-        for (EnumFacing side : EnumFacing.values())
+        for (EnumFacing side : EnumFacing.VALUES)
         {
             sendSignal(side, changedPositions);
         }

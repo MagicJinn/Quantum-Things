@@ -20,7 +20,6 @@ import net.minecraft.world.World;
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.handler.redstone.signal.TemporarySignal;
-import lumien.randomthings.util.DimPos;
 
 import static lumien.randomthings.capability.redstone.IDynamicRedstone.Source.ITEM;
 
@@ -82,7 +81,7 @@ public class ItemRedstoneActivator extends ItemBase
             IDynamicRedstoneManager manager = worldIn.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
             if (manager != null)
             {
-                IDynamicRedstone signal = manager.getDynamicRedstone(DimPos.of(pos.offset(side), worldIn), side, EnumSet.of(ITEM));
+                IDynamicRedstone signal = manager.getDynamicRedstone(pos.offset(side), side, EnumSet.of(ITEM));
                 signal.setRedstoneLevel(new TemporarySignal(15, durations[getDurationIndex(stack)], ITEM), true);
             }
 

@@ -28,7 +28,6 @@ import lumien.randomthings.tileentity.TileEntityLightRedirector;
 import lumien.randomthings.tileentity.TileEntityPeaceCandle;
 import lumien.randomthings.tileentity.TileEntityRainShield;
 import lumien.randomthings.tileentity.TileEntitySlimeCube;
-import lumien.randomthings.util.DimPos;
 import lumien.randomthings.util.ItemUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
@@ -491,7 +490,7 @@ public class AsmHandler
         IDynamicRedstoneManager manager = worldObj.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
         if (manager != null && manager.hasDynamicSignals())
         {
-            IDynamicRedstone signal = manager.getDynamicRedstone(DimPos.of(pos, worldObj), facing, ALLOWED_REDSTONE_SOURCES);
+            IDynamicRedstone signal = manager.getDynamicRedstone(pos, facing, ALLOWED_REDSTONE_SOURCES);
             return Math.max(signal.getRedstoneLevel(), 0);
         }
         return 0;
@@ -502,7 +501,7 @@ public class AsmHandler
         IDynamicRedstoneManager manager = worldObj.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
         if (manager != null && manager.hasDynamicSignals())
         {
-            IDynamicRedstone signal = manager.getDynamicRedstone(DimPos.of(pos, worldObj), facing, ALLOWED_REDSTONE_SOURCES);
+            IDynamicRedstone signal = manager.getDynamicRedstone(pos, facing, ALLOWED_REDSTONE_SOURCES);
             return signal.isStrongSignal() ? Math.max(signal.getRedstoneLevel(), 0) : 0;
         }
         return 0;

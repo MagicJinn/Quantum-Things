@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
@@ -14,9 +15,9 @@ public class DynamicRedstoneManagerProvider implements ICapabilitySerializable<N
 {
     private final IDynamicRedstoneManager manager;
 
-    public DynamicRedstoneManagerProvider(int dimId)
+    public DynamicRedstoneManagerProvider(World world)
     {
-        this.manager = new DynamicRedstoneManager(dimId);
+        this.manager = new DynamicRedstoneManager(world);
     }
 
     @SuppressWarnings("ConstantValue")

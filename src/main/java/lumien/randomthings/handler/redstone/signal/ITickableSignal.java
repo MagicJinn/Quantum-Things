@@ -1,9 +1,9 @@
 package lumien.randomthings.handler.redstone.signal;
 
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
-import lumien.randomthings.util.DimPos;
 
 public interface ITickableSignal
 {
@@ -31,5 +31,5 @@ public interface ITickableSignal
      * Callback for when this signal is removed from a manager.
      * @param manager The manager the signal was removed from.
      */
-    void onRemoved(IDynamicRedstoneManager manager, DimPos pos, EnumFacing side);
+    void onRemoved(IDynamicRedstoneManager manager, BlockPos pos, EnumFacing side);
 }

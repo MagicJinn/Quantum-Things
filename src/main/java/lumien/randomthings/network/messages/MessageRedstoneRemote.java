@@ -11,7 +11,6 @@ import lumien.randomthings.item.ItemPositionFilter;
 import lumien.randomthings.item.ItemRedstoneRemote;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.network.IRTMessage;
-import lumien.randomthings.util.DimPos;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -79,9 +78,9 @@ public class MessageRedstoneRemote implements IRTMessage
                         IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
                         if (manager != null)
                         {
-                            for (EnumFacing side : EnumFacing.values())
+                            for (EnumFacing side : EnumFacing.VALUES)
                             {
-                                IDynamicRedstone signal = manager.getDynamicRedstone(DimPos.of(target, world), side, EnumSet.of(ITEM));
+                                IDynamicRedstone signal = manager.getDynamicRedstone(target.offset(side), side, EnumSet.of(ITEM));
                                 signal.setRedstoneLevel(new TemporarySignal(15, 20, ITEM), true);
                             }
                         }
