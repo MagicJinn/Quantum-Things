@@ -2,6 +2,7 @@ package lumien.randomthings.handler.redstone.signal;
 
 import java.util.function.Supplier;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
 public enum SignalType
@@ -48,6 +49,17 @@ public enum SignalType
     public static SignalType byIndex(int index)
     {
         return VALUES[MathHelper.abs(index % VALUES.length)];
+    }
+
+    public static RedstoneSignal readFromNBT(NBTTagCompound nbt)
+    {
+        SignalType signalType = SignalType.byIndex(nbt.getByte(SignalType.SIGNAL_TYPE_KEY));
+        return signalType.getSignal();
+    }
+
+    public static void writeToNBT(NBTTagCompound nbt, RedstoneSignal signal)
+    {
+        nbt.setByte(SIGNAL_TYPE_KEY, (byte) SignalType.byClass(signal.getClass()).getIndex());
     }
 
     static

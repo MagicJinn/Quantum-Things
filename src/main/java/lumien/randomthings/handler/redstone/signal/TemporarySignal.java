@@ -1,10 +1,13 @@
 package lumien.randomthings.handler.redstone.signal;
 
-import java.util.Objects;
+import java.util.EnumSet;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
+import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
+import lumien.randomthings.util.DimPos;
 
 public class TemporarySignal extends RedstoneSignal implements ITickableSignal
 {
@@ -50,6 +53,15 @@ public class TemporarySignal extends RedstoneSignal implements ITickableSignal
     }
 
     @Override
+    public void onRemoved(IDynamicRedstoneManager manager, DimPos pos, EnumFacing side)
+    {
+        IDynamicRedstone.Source sourceType = getSourceType();
+        EnumSet<IDynamicRedstone.Source> sourceSet = EnumSet.of(sourceType);
+        IDynamicRedstone dynamicRedstone = manager.getDynamicRedstone(pos, side, sourceSet);
+        dynamicRedstone.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL, sourceType), dynamicRedstone.isStrongSignal());
+    }
+
+    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
@@ -64,20 +76,5 @@ public class TemporarySignal extends RedstoneSignal implements ITickableSignal
         super.readFromNBT(compound);
         duration = compound.getInteger(DURATION_KEY);
         age = compound.getInteger(AGE_KEY);
-    }
-
-    @Override
-    public boolean equals(Object o)
-    {
-        if (!(o instanceof TemporarySignal)) return false;
-        if (!super.equals(o)) return false;
-        TemporarySignal that = (TemporarySignal) o;
-        return duration == that.duration;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(super.hashCode(), duration);
     }
 }
