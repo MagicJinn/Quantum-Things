@@ -72,6 +72,12 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     }
 
     @Override
+    public boolean hasTickingSignals()
+    {
+        return !tickingSignals.isEmpty();
+    }
+
+    @Override
     public IDynamicRedstone getDynamicRedstone(BlockPos BlockPos, @Nonnull EnumFacing side, @Nonnull EnumSet<IDynamicRedstone.Source> allowedSources)
     {
         return new DynamicRedstone(this, BlockPos, side, allowedSources);
@@ -79,8 +85,6 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
 
     public void tick()
     {
-        if (tickingSignals.isEmpty()) return;
-
         Iterator<Map.Entry<BlockPos, EnumMap<EnumFacing, ITickableSignal>>> signalsPerSideItr = tickingSignals.entrySet().iterator();
         while (signalsPerSideItr.hasNext())
         {

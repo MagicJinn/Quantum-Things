@@ -546,8 +546,10 @@ public class RTEventHandler
         if (event.phase == Phase.END && !event.world.isRemote)
         {
             IDynamicRedstoneManager manager = event.world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
-            if (manager == null || !manager.hasDynamicSignals()) return;
-            manager.tick();
+            if (manager != null && manager.hasTickingSignals())
+            {
+                manager.tick();
+            }
         }
     }
 

@@ -29,6 +29,11 @@ public interface IDynamicRedstoneManager extends ICapability<IDynamicRedstoneMan
     boolean hasDynamicSignals();
 
     /**
+     * @return If there are any signals to tick.
+     */
+    boolean hasTickingSignals();
+
+    /**
      * Get the dynamic redstone power at a given position.
      * @param pos The position of the redstone power.
      * @param side The side from which the power should come from.
