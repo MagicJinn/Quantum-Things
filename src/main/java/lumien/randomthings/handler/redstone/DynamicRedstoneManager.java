@@ -124,14 +124,18 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
             {
                 EnumFacing signalSide = signalEntry.getKey();
                 RedstoneSignal signal = signalEntry.getValue();
-                NBTTagCompound signalData = new NBTTagCompound();
+                // Only tickable signals need to be saved, other ones will be recreated by their source.
+                if (signal instanceof ITickableSignal)
+                {
+                    NBTTagCompound signalData = new NBTTagCompound();
 
-                signalData.setTag(POSITION_KEY, pos);
-                signalData.setByte(SIDE_KEY, (byte) signalSide.getIndex());
+                    signalData.setTag(POSITION_KEY, pos);
+                    signalData.setByte(SIDE_KEY, (byte) signalSide.getIndex());
 
-                SignalType.writeToNBT(signalData, signal);
-                signal.writeToNBT(signalData);
-                signalList.appendTag(signalData);
+                    SignalType.writeToNBT(signalData, signal);
+                    signal.writeToNBT(signalData);
+                    signalList.appendTag(signalData);
+                }
             }
 
         }
