@@ -104,14 +104,14 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     public void setRedstoneLevel(BlockPos pos, EnumFacing side, int level, boolean strongPower)
     {
         getDynamicRedstoneFor(pos, side).ifPresent(dynamicRedstone ->
-                dynamicRedstone.setRedstoneLevel(new RedstoneSignal(level, INTERFACE), strongPower));
+                dynamicRedstone.setRedstoneLevel(new RedstoneSignal(level, INTERFACE, strongPower)));
     }
 
     @Override
     public void deactivate(BlockPos pos, EnumFacing side)
     {
         getDynamicRedstoneFor(pos, side).ifPresent(dynamicRedstone ->
-                dynamicRedstone.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL, INTERFACE), dynamicRedstone.isStrongSignal()));
+                dynamicRedstone.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL, INTERFACE, dynamicRedstone.isStrongSignal())));
     }
 
     @Override

@@ -2,6 +2,15 @@ package lumien.randomthings.network.messages;
 
 import java.util.EnumSet;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+
 import io.netty.buffer.ByteBuf;
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
@@ -11,15 +20,6 @@ import lumien.randomthings.item.ItemPositionFilter;
 import lumien.randomthings.item.ItemRedstoneRemote;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.network.IRTMessage;
-
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
 
 import static lumien.randomthings.capability.redstone.IDynamicRedstone.Source.ITEM;
 
@@ -81,7 +81,7 @@ public class MessageRedstoneRemote implements IRTMessage
                             for (EnumFacing side : EnumFacing.VALUES)
                             {
                                 IDynamicRedstone signal = manager.getDynamicRedstone(target.offset(side), side, EnumSet.of(ITEM));
-                                signal.setRedstoneLevel(new TemporarySignal(15, 20, ITEM), true);
+                                signal.setRedstoneLevel(new TemporarySignal(15, 20, ITEM, true));
                             }
                         }
 					}

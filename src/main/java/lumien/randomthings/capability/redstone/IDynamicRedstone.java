@@ -29,9 +29,8 @@ public interface IDynamicRedstone
      * Set the redstone signal.
      *
      * @param signalIn The {@link RedstoneSignal}.
-     * @param strongPower If the redstone power is a strong signal.
      */
-    void setRedstoneLevel(RedstoneSignal signalIn, boolean strongPower);
+    void setRedstoneLevel(RedstoneSignal signalIn);
 
     /**
      * @return If the redstone power is a strong signal.

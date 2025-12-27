@@ -1,5 +1,6 @@
 package lumien.randomthings.handler.redstone.signal;
 
+import javax.annotation.Nonnull;
 import java.util.EnumSet;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,9 +23,15 @@ public class TemporarySignal extends RedstoneSignal implements ITickableSignal
         super();
     }
 
-    public TemporarySignal(int redstoneLevel, int duration, IDynamicRedstone.Source sourceType)
+    public TemporarySignal(int redstoneLevel, int duration, IDynamicRedstone.Source sourceType, boolean strongPower)
     {
-        super(redstoneLevel, sourceType);
+        super(redstoneLevel, sourceType, strongPower);
+        this.duration = duration;
+    }
+
+    public TemporarySignal(int weakLevel, int strongLevel, int duration, IDynamicRedstone.Source sourceType)
+    {
+        super(weakLevel, strongLevel, sourceType);
         this.duration = duration;
     }
 
@@ -56,9 +63,10 @@ public class TemporarySignal extends RedstoneSignal implements ITickableSignal
     public void onRemoved(IDynamicRedstoneManager manager, BlockPos pos, EnumFacing side)
     {
         IDynamicRedstone.Source sourceType = getSourceType();
-        EnumSet<IDynamicRedstone.Source> allowedSources = EnumSet.of(sourceType);
-        IDynamicRedstone dynamicRedstone = manager.getDynamicRedstone(pos, side, allowedSources);
-        dynamicRedstone.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL, sourceType), dynamicRedstone.isStrongSignal());
+        EnumSet<IDynamicRedstone.Source> source = EnumSet.of(sourceType);
+        IDynamicRedstone dynamicRedstone = manager.getDynamicRedstone(pos, side, source);
+        // Remove the signal
+        dynamicRedstone.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL, sourceType, dynamicRedstone.isStrongSignal()));
     }
 
     @Override

@@ -82,7 +82,7 @@ public class ItemRedstoneActivator extends ItemBase
             if (manager != null)
             {
                 IDynamicRedstone signal = manager.getDynamicRedstone(pos.offset(side), side, EnumSet.of(ITEM));
-                signal.setRedstoneLevel(new TemporarySignal(15, durations[getDurationIndex(stack)], ITEM), true);
+                signal.setRedstoneLevel(new TemporarySignal(15, durations[getDurationIndex(stack)], ITEM, true));
             }
 
 			return EnumActionResult.SUCCESS;

@@ -19,8 +19,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
 import com.google.common.base.Preconditions;
-import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.handler.redstone.signal.ITickableSignal;
@@ -36,20 +34,16 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     public static final String SIGNAL_LIST_KEY = "redstoneSignals";
     public static final String POSITION_KEY = "position";
     public static final String SIDE_KEY = "side";
-    public static final String STRONG_POWER_KEY = "strongPower";
 
     private World world;
     /* Dynamic redstone levels */
     private final Map<BlockPos, EnumMap<EnumFacing, RedstoneSignal>> redstoneLevels;
-    /* The state of the redstone levels, strong or weak */
-    private final Map<BlockPos, Reference2BooleanMap<EnumFacing>> strongPowerStates;
     /* Signals to tick */
     private final Map<BlockPos, EnumMap<EnumFacing, ITickableSignal>> tickingSignals;
 
     public DynamicRedstoneManager()
     {
         redstoneLevels = new HashMap<>();
-        strongPowerStates = new HashMap<>();
         tickingSignals = new LinkedHashMap<>();
     }
 
@@ -135,14 +129,6 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                 signalData.setTag(POSITION_KEY, pos);
                 signalData.setByte(SIDE_KEY, (byte) signalSide.getIndex());
 
-                boolean strongPower = false;
-                Reference2BooleanMap<EnumFacing> strongSignalsPerSide = strongPowerStates.get(signalsPerSide.getKey());
-                if (strongSignalsPerSide != null)
-                {
-                    strongPower = strongSignalsPerSide.getBoolean(signalSide);
-                }
-                signalData.setBoolean(STRONG_POWER_KEY, strongPower);
-
                 SignalType.writeToNBT(signalData, signal);
                 signal.writeToNBT(signalData);
                 signalList.appendTag(signalData);
@@ -164,15 +150,11 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
             BlockPos pos = NBTUtil.getPosFromTag(signalData.getCompoundTag(POSITION_KEY));
             EnumFacing signalSide = EnumFacing.byIndex(signalData.getByte(SIDE_KEY));
 
-            boolean strongPower = signalData.getBoolean(STRONG_POWER_KEY);
-
             RedstoneSignal signal = SignalType.readFromNBT(signalData);
             signal.readFromNBT(signalData);
 
             redstoneLevels.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class))
                     .put(signalSide, signal);
-            strongPowerStates.computeIfAbsent(pos, key -> new Reference2BooleanOpenHashMap<>())
-                    .put(signalSide, strongPower);
             if (signal instanceof ITickableSignal)
             {
                 tickingSignals.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class))
@@ -212,7 +194,7 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         }
 
         @Override
-        public void setRedstoneLevel(RedstoneSignal signalIn, boolean strongPower)
+        public void setRedstoneLevel(RedstoneSignal signalIn)
         {
             if (!verifySignalSource(signalIn))
             {
@@ -221,18 +203,21 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
             }
             int level = signalIn.getRedstoneLevel();
             EnumMap<EnumFacing, RedstoneSignal> redstoneLevels = manager.redstoneLevels.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class));
-            Reference2BooleanMap<EnumFacing> strongPowerStates = manager.strongPowerStates.computeIfAbsent(pos, key -> new Reference2BooleanOpenHashMap<>());
             EnumMap<EnumFacing, ITickableSignal> tickingSignals = manager.tickingSignals.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class));
 
             boolean sendUpdate = false;
+            boolean sendUpdateStrong = false;
 
             if (redstoneLevels.containsKey(side))
             {
                 RedstoneSignal signal = redstoneLevels.get(side);
-                // Signal level changed, update
-                if (signal.getRedstoneLevel() != level)
+                boolean signalLevelChanged = signal.getRedstoneLevel() != level;
+                boolean strongStateChanged = signal.isStrong() != signalIn.isStrong();
+                // Signal level or strength state changed, update
+                if (signalLevelChanged || strongStateChanged)
                 {
                     sendUpdate = true;
+                    sendUpdateStrong = strongStateChanged;
                     if (level == REMOVE_SIGNAL)
                     {
                         redstoneLevels.remove(side);
@@ -261,48 +246,15 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                 }
             }
 
-            boolean sendUpdateStrong = false;
-            if (strongPowerStates.containsKey(side))
-            {
-                // Strong state changed or signal removed, update
-                if (strongPowerStates.getBoolean(side) != strongPower || level == REMOVE_SIGNAL)
-                {
-                    sendUpdateStrong = true;
-                    sendUpdate = true;
-                    if (level == REMOVE_SIGNAL)
-                    {
-                        strongPowerStates.removeBoolean(side);
-                    }
-                    else
-                    {
-                        strongPowerStates.put(side, strongPower);
-                    }
-                }
-            }
-            // Add strong signal state
-            else
-            {
-                sendUpdateStrong = true;
-                sendUpdate = true;
-                if (level != REMOVE_SIGNAL)
-                {
-                    strongPowerStates.put(side, strongPower);
-                }
-            }
-
-            // Cleanup empty maps
+            // Cleanup empty map
             if (redstoneLevels.isEmpty())
             {
                 manager.redstoneLevels.remove(pos);
             }
-            if (strongPowerStates.isEmpty())
-            {
-                manager.strongPowerStates.remove(pos);
-            }
 
             if (sendUpdate)
             {
-                updateRedstoneInfo(strongPower || sendUpdateStrong);
+                updateRedstoneInfo(signalIn.isStrong() || sendUpdateStrong);
             }
         }
 
@@ -334,10 +286,14 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         @Override
         public boolean isStrongSignal()
         {
-            Reference2BooleanMap<EnumFacing> signalsPerSide = manager.strongPowerStates.get(pos);
+            EnumMap<EnumFacing, RedstoneSignal> signalsPerSide = manager.redstoneLevels.get(pos);
             if (signalsPerSide != null)
             {
-                return signalsPerSide.getBoolean(side);
+                RedstoneSignal signal = signalsPerSide.get(side);
+                if (signal != null && verifySignalSource(signal))
+                {
+                    return signal.isStrong();
+                }
             }
             return false;
         }
