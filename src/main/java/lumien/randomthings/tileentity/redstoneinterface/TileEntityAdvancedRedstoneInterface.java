@@ -35,6 +35,8 @@ public class TileEntityAdvancedRedstoneInterface extends TileEntityRedstoneInter
 	@Override
 	public void writeDataToNBT(NBTTagCompound compound, boolean sync)
 	{
+        super.writeDataToNBT(compound, sync);
+
 		NBTTagList nbtTargetList = new NBTTagList();
 
         for (BlockPos pos : targets)
@@ -55,6 +57,8 @@ public class TileEntityAdvancedRedstoneInterface extends TileEntityRedstoneInter
 	@Override
 	public void readDataFromNBT(NBTTagCompound compound, boolean sync)
 	{
+        super.readDataFromNBT(compound, sync);
+
 		NBTTagList nbtTargetList = compound.getTagList("targets", 10);
 
         for (int i = 0; i < nbtTargetList.tagCount(); i++)

@@ -10,7 +10,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
 import lumien.randomthings.capability.ICapability;
-import lumien.randomthings.capability.redstone.IDynamicRedstone.Source;
+import lumien.randomthings.handler.redstone.source.RedstoneSource;
 import lumien.randomthings.lib.Reference;
 
 /**
@@ -37,10 +37,13 @@ public interface IDynamicRedstoneManager extends ICapability<IDynamicRedstoneMan
      * Get the dynamic redstone power at a given position.
      * @param pos The position of the redstone power.
      * @param side The side from which the power should come from.
-     * @param allowedSources The set of allowed {@link Source}s the dynamic redstone can handle.
+     * @param allowedSources The set of allowed {@link RedstoneSource.Type}s the dynamic redstone can handle.
      * @return The dynamic redstone power.
      */
-    IDynamicRedstone getDynamicRedstone(BlockPos pos, @Nonnull EnumFacing side, EnumSet<Source> allowedSources);
+    IDynamicRedstone getDynamicRedstone(BlockPos pos, @Nonnull EnumFacing side, EnumSet<RedstoneSource.Type> allowedSources);
 
+    /**
+     * Tick any tickable signals.
+     */
     void tick();
 }

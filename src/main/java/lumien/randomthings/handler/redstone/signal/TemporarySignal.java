@@ -1,6 +1,5 @@
 package lumien.randomthings.handler.redstone.signal;
 
-import javax.annotation.Nonnull;
 import java.util.EnumSet;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -9,6 +8,8 @@ import net.minecraft.util.math.BlockPos;
 
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
+import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
+import lumien.randomthings.handler.redstone.source.RedstoneSource;
 
 public class TemporarySignal extends RedstoneSignal implements ITickableSignal
 {
@@ -23,15 +24,15 @@ public class TemporarySignal extends RedstoneSignal implements ITickableSignal
         super();
     }
 
-    public TemporarySignal(int redstoneLevel, int duration, IDynamicRedstone.Source sourceType, boolean strongPower)
+    public TemporarySignal(IDynamicRedstoneSource source, int redstoneLevel, boolean strongPower, int duration)
     {
-        super(redstoneLevel, sourceType, strongPower);
+        super(source, redstoneLevel, strongPower);
         this.duration = duration;
     }
 
-    public TemporarySignal(int weakLevel, int strongLevel, int duration, IDynamicRedstone.Source sourceType)
+    public TemporarySignal(IDynamicRedstoneSource source, int weakLevel, int strongLevel, int duration)
     {
-        super(weakLevel, strongLevel, sourceType);
+        super(source, weakLevel, strongLevel);
         this.duration = duration;
     }
 
@@ -62,11 +63,11 @@ public class TemporarySignal extends RedstoneSignal implements ITickableSignal
     @Override
     public void onRemoved(IDynamicRedstoneManager manager, BlockPos pos, EnumFacing side)
     {
-        IDynamicRedstone.Source sourceType = getSourceType();
-        EnumSet<IDynamicRedstone.Source> source = EnumSet.of(sourceType);
-        IDynamicRedstone dynamicRedstone = manager.getDynamicRedstone(pos, side, source);
+        RedstoneSource source = getSource();
+        EnumSet<RedstoneSource.Type> sourceSet = EnumSet.of(source.getType());
+        IDynamicRedstone dynamicRedstone = manager.getDynamicRedstone(pos, side, sourceSet);
         // Remove the signal
-        dynamicRedstone.setRedstoneLevel(new RedstoneSignal(IDynamicRedstone.REMOVE_SIGNAL, sourceType, dynamicRedstone.isStrongSignal()));
+        dynamicRedstone.setRedstoneLevel(new RedstoneSignal(source, IDynamicRedstone.REMOVE_SIGNAL, dynamicRedstone.isStrongSignal()));
     }
 
     @Override

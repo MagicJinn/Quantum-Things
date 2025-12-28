@@ -16,12 +16,14 @@ import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.container.inventories.InventoryItem;
 import lumien.randomthings.handler.redstone.signal.TemporarySignal;
+import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
+import lumien.randomthings.handler.redstone.source.RedstoneSource;
 import lumien.randomthings.item.ItemPositionFilter;
 import lumien.randomthings.item.ItemRedstoneRemote;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.network.IRTMessage;
 
-import static lumien.randomthings.capability.redstone.IDynamicRedstone.Source.ITEM;
+import static lumien.randomthings.handler.redstone.source.RedstoneSource.Type.ITEM;
 
 public class MessageRedstoneRemote implements IRTMessage
 {
@@ -78,10 +80,11 @@ public class MessageRedstoneRemote implements IRTMessage
                         IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
                         if (manager != null)
                         {
+                            IDynamicRedstoneSource source = new RedstoneSource(ITEM, RedstoneSource.getOrCreateId(using));
                             for (EnumFacing side : EnumFacing.VALUES)
                             {
                                 IDynamicRedstone signal = manager.getDynamicRedstone(target.offset(side), side, EnumSet.of(ITEM));
-                                signal.setRedstoneLevel(new TemporarySignal(15, 20, ITEM, true));
+                                signal.setRedstoneLevel(new TemporarySignal(source, 15, true, 20));
                             }
                         }
 					}

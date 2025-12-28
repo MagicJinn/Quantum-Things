@@ -1,12 +1,10 @@
 package lumien.randomthings.handler.redstone.signal;
 
 import net.minecraft.nbt.NBTTagCompound;
-
 import net.minecraftforge.common.util.Constants;
 
-import lumien.randomthings.capability.redstone.IDynamicRedstone.Source;
-
-import static lumien.randomthings.capability.redstone.IDynamicRedstone.Source.SOURCE_KEY;
+import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
+import lumien.randomthings.handler.redstone.source.RedstoneSource;
 
 public class RedstoneSignal
 {
@@ -17,23 +15,23 @@ public class RedstoneSignal
     protected int redstoneLevel;
     // The weak level, if it exists
     protected int weakLevel;
-    protected Source sourceType;
+    protected RedstoneSource source;
 
     public RedstoneSignal() {}
 
-	public RedstoneSignal(int redstoneLevel, Source sourceType, boolean strongPower)
+	public RedstoneSignal(IDynamicRedstoneSource source, int redstoneLevel, boolean strongPower)
 	{
+        this.source = new RedstoneSource(source);
 		this.redstoneLevel = redstoneLevel;
         if (!strongPower)
         {
             weakLevel = redstoneLevel;
         }
-        this.sourceType = sourceType;
 	}
 
-    public RedstoneSignal(int weakLevel, int strongLevel, Source sourceType)
+    public RedstoneSignal(IDynamicRedstoneSource source, int weakLevel, int strongLevel)
     {
-        this(strongLevel, sourceType, true);
+        this(source, strongLevel, true);
         this.weakLevel = weakLevel;
     }
 
@@ -42,9 +40,9 @@ public class RedstoneSignal
         return redstoneLevel;
     }
 
-    public Source getSourceType()
+    public RedstoneSource getSource()
     {
-        return sourceType;
+        return source;
     }
 
     public boolean isStrong()
@@ -59,7 +57,7 @@ public class RedstoneSignal
         {
             compound.setInteger(WEAK_LEVEL_KEY, weakLevel);
         }
-        compound.setByte(SOURCE_KEY, (byte) sourceType.getIndex());
+        source.writeToNBT(compound);
         return compound;
 	}
 
@@ -70,6 +68,7 @@ public class RedstoneSignal
         {
             weakLevel = compound.getInteger(WEAK_LEVEL_KEY);
         }
-        sourceType = Source.byIndex(compound.getByte(SOURCE_KEY));
+        source = new RedstoneSource();
+        source.readFromNBT(compound);
 	}
 }

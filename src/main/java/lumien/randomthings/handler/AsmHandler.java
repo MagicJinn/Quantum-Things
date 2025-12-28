@@ -15,6 +15,7 @@ import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.enchantment.ModEnchantments;
 import lumien.randomthings.config.Internals;
+import lumien.randomthings.handler.redstone.source.RedstoneSource;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationClientHandler;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationHandler;
 import lumien.randomthings.item.ItemIngredient;
@@ -70,11 +71,11 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static lumien.randomthings.capability.redstone.IDynamicRedstone.Source.*;
+import static lumien.randomthings.handler.redstone.source.RedstoneSource.Type.*;
 
 public class AsmHandler
 {
-    public static final EnumSet<IDynamicRedstone.Source> ALLOWED_REDSTONE_SOURCES = EnumSet.of(INTERFACE, ITEM);
+    public static final EnumSet<RedstoneSource.Type> ALLOWED_REDSTONE_SOURCES = EnumSet.of(INTERFACE, ITEM);
 
 	static Field fluidRenderer;
 	static

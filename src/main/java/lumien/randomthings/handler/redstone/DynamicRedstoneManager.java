@@ -2,11 +2,13 @@ package lumien.randomthings.handler.redstone;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.init.Blocks;
@@ -23,7 +25,9 @@ import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.handler.redstone.signal.ITickableSignal;
 import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
+import lumien.randomthings.handler.redstone.signal.SignalQueue;
 import lumien.randomthings.handler.redstone.signal.SignalType;
+import lumien.randomthings.handler.redstone.source.RedstoneSource;
 
 /**
  * Per-world capability that manages dynamic redstone signals.
@@ -37,9 +41,9 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
 
     private World world;
     /* Dynamic redstone levels */
-    private final Map<BlockPos, EnumMap<EnumFacing, RedstoneSignal>> redstoneLevels;
+    private final Map<BlockPos, EnumMap<EnumFacing, SignalQueue>> redstoneLevels;
     /* Signals to tick */
-    private final Map<BlockPos, EnumMap<EnumFacing, ITickableSignal>> tickingSignals;
+    private final Map<BlockPos, EnumMap<EnumFacing, List<ITickableSignal>>> tickingSignals;
 
     public DynamicRedstoneManager()
     {
@@ -72,39 +76,49 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     }
 
     @Override
-    public IDynamicRedstone getDynamicRedstone(BlockPos BlockPos, @Nonnull EnumFacing side, @Nonnull EnumSet<IDynamicRedstone.Source> allowedSources)
+    public IDynamicRedstone getDynamicRedstone(BlockPos BlockPos, @Nonnull EnumFacing side, @Nonnull EnumSet<RedstoneSource.Type> allowedSources)
     {
         return new DynamicRedstone(this, BlockPos, side, allowedSources);
     }
 
     public void tick()
     {
-        Iterator<Map.Entry<BlockPos, EnumMap<EnumFacing, ITickableSignal>>> signalsPerSideItr = tickingSignals.entrySet().iterator();
+        Iterator<Map.Entry<BlockPos, EnumMap<EnumFacing, List<ITickableSignal>>>> signalsPerSideItr = tickingSignals.entrySet().iterator();
         while (signalsPerSideItr.hasNext())
         {
-            Map.Entry<BlockPos, EnumMap<EnumFacing, ITickableSignal>> signalsPerSideEntry = signalsPerSideItr.next();
+            Map.Entry<BlockPos, EnumMap<EnumFacing, List<ITickableSignal>>> signalsPerSideEntry = signalsPerSideItr.next();
             BlockPos pos = signalsPerSideEntry.getKey();
-            World world = getWorld();
             Preconditions.checkNotNull(world, "Tried to tick signals for null world!");
 
-            if (!getWorld().isBlockLoaded(pos))
+            if (!world.isBlockLoaded(pos))
             {
                 continue;
             }
-            EnumMap<EnumFacing, ITickableSignal> signalsPerSide = signalsPerSideEntry.getValue();
-
-            Iterator<Map.Entry<EnumFacing, ITickableSignal>> signalItr = signalsPerSide.entrySet().iterator();
-            while (signalItr.hasNext())
+            EnumMap<EnumFacing, List<ITickableSignal>> signalsPerSide = signalsPerSideEntry.getValue();
+            Iterator<Map.Entry<EnumFacing, List<ITickableSignal>>> signalListItr = signalsPerSide.entrySet().iterator();
+            while (signalListItr.hasNext())
             {
-                Map.Entry<EnumFacing, ITickableSignal> signalEntry = signalItr.next();
-                ITickableSignal tickableSignal = signalEntry.getValue();
-                tickableSignal.tick();
-                if (!tickableSignal.isAlive())
+                Map.Entry<EnumFacing, List<ITickableSignal>> signalListEntry = signalListItr.next();
+                EnumFacing side = signalListEntry.getKey();
+                List<ITickableSignal> signalList = signalListEntry.getValue();
+
+                signalList.removeIf(signal ->
                 {
-                    tickableSignal.onRemoved(this, pos, signalEntry.getKey());
-                    signalItr.remove();
+                    signal.tick();
+                    if (!signal.isAlive())
+                    {
+                        signal.onRemoved(this, pos, side);
+                        return true;
+                    }
+                    return false;
+                });
+
+                if (signalList.isEmpty())
+                {
+                    signalListItr.remove();
                 }
             }
+
             if (signalsPerSide.isEmpty())
             {
                 signalsPerSideItr.remove();
@@ -117,24 +131,26 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     public NBTTagCompound writeNBT(IDynamicRedstoneManager instance, EnumFacing side, NBTTagCompound rootNBT)
     {
         NBTTagList signalList = new NBTTagList();
-        for (Map.Entry<BlockPos, EnumMap<EnumFacing, RedstoneSignal>> signalsPerSide : redstoneLevels.entrySet())
+        for (Map.Entry<BlockPos, EnumMap<EnumFacing, SignalQueue>> signalsPerSide : redstoneLevels.entrySet())
         {
             NBTTagCompound pos = NBTUtil.createPosTag(signalsPerSide.getKey());
-            for (Map.Entry<EnumFacing, RedstoneSignal> signalEntry : signalsPerSide.getValue().entrySet())
+            for (Map.Entry<EnumFacing, SignalQueue> signalQueueEntry : signalsPerSide.getValue().entrySet())
             {
-                EnumFacing signalSide = signalEntry.getKey();
-                RedstoneSignal signal = signalEntry.getValue();
-                // Only tickable signals need to be saved, other ones will be recreated by their source.
-                if (signal instanceof ITickableSignal)
+                EnumFacing signalSide = signalQueueEntry.getKey();
+                for (RedstoneSignal signal : signalQueueEntry.getValue())
                 {
-                    NBTTagCompound signalData = new NBTTagCompound();
+                    // Only tickable signals need to be saved, other ones will be recreated by their source.
+                    if (signal instanceof ITickableSignal)
+                    {
+                        NBTTagCompound signalData = new NBTTagCompound();
 
-                    signalData.setTag(POSITION_KEY, pos);
-                    signalData.setByte(SIDE_KEY, (byte) signalSide.getIndex());
+                        signalData.setTag(POSITION_KEY, pos);
+                        signalData.setByte(SIDE_KEY, (byte) signalSide.getIndex());
 
-                    SignalType.writeToNBT(signalData, signal);
-                    signal.writeToNBT(signalData);
-                    signalList.appendTag(signalData);
+                        SignalType.writeToNBT(signalData, signal);
+                        signal.writeToNBT(signalData);
+                        signalList.appendTag(signalData);
+                    }
                 }
             }
 
@@ -158,11 +174,13 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
             signal.readFromNBT(signalData);
 
             redstoneLevels.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class))
-                    .put(signalSide, signal);
+                    .computeIfAbsent(signalSide, key -> new SignalQueue())
+                    .offer(signal);
             if (signal instanceof ITickableSignal)
             {
                 tickingSignals.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class))
-                        .put(signalSide, (ITickableSignal) signal);
+                        .computeIfAbsent(signalSide, key -> new ArrayList<>())
+                        .add((ITickableSignal) signal);
             }
         }
     }
@@ -172,9 +190,9 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         private final DynamicRedstoneManager manager;
         private final BlockPos pos;
         private final EnumFacing side;
-        private final EnumSet<Source> allowedSources;
+        private final EnumSet<RedstoneSource.Type> allowedSources;
 
-        public DynamicRedstone(DynamicRedstoneManager manager, BlockPos pos, EnumFacing side, EnumSet<Source> allowedSources)
+        public DynamicRedstone(DynamicRedstoneManager manager, BlockPos pos, EnumFacing side, EnumSet<RedstoneSource.Type> allowedSources)
         {
             this.manager = manager;
             this.pos = pos;
@@ -185,13 +203,17 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         @Override
         public int getRedstoneLevel()
         {
-            EnumMap<EnumFacing, RedstoneSignal> signalsPerSide = manager.redstoneLevels.get(pos);
+            EnumMap<EnumFacing, SignalQueue> signalsPerSide = manager.redstoneLevels.get(pos);
             if (signalsPerSide != null)
             {
-                RedstoneSignal signal = signalsPerSide.get(side);
-                if (signal != null && verifySignalSource(signal))
+                SignalQueue signalQueue = signalsPerSide.get(side);
+                if (signalQueue != null && !signalQueue.isEmpty())
                 {
-                    return signal.getRedstoneLevel();
+                    RedstoneSignal signal = signalQueue.findFirst(this::canHandleSignal);
+                    if (signal != null)
+                    {
+                        return signal.getRedstoneLevel();
+                    }
                 }
             }
             return -1;
@@ -200,21 +222,22 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         @Override
         public void setRedstoneLevel(RedstoneSignal signalIn)
         {
-            if (!verifySignalSource(signalIn))
+            if (!canHandleSignal(signalIn))
             {
                 throw new IllegalArgumentException("Passed RedstoneSignal's source type cannot be handled by this DynamicRedstone! " +
-                        "Expected: " + allowedSources.toString() + ", Actual: " + signalIn.getSourceType());
+                        "Expected: " + allowedSources.toString() + ", Actual: " + signalIn.getSource().getType());
             }
-            int level = signalIn.getRedstoneLevel();
-            EnumMap<EnumFacing, RedstoneSignal> redstoneLevels = manager.redstoneLevels.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class));
-            EnumMap<EnumFacing, ITickableSignal> tickingSignals = manager.tickingSignals.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class));
+            final int level = signalIn.getRedstoneLevel();
+            EnumMap<EnumFacing, SignalQueue> redstoneLevels = manager.redstoneLevels.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class));
+            EnumMap<EnumFacing, List<ITickableSignal>> tickingSignals = manager.tickingSignals.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class));
 
             boolean sendUpdate = false;
             boolean sendUpdateStrong = false;
 
-            if (redstoneLevels.containsKey(side))
+            SignalQueue signalQueue = redstoneLevels.get(side);
+            RedstoneSignal signal = signalQueue != null ? signalQueue.getBySource(signalIn.getSource().getId()) : null;
+            if (signal != null)
             {
-                RedstoneSignal signal = redstoneLevels.get(side);
                 boolean signalLevelChanged = signal.getRedstoneLevel() != level;
                 boolean strongStateChanged = signal.isStrong() != signalIn.isStrong();
                 // Signal level or strength state changed, update
@@ -224,14 +247,14 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                     sendUpdateStrong = strongStateChanged;
                     if (level == REMOVE_SIGNAL)
                     {
-                        redstoneLevels.remove(side);
+                        signalQueue.remove(signalIn);
                     }
                     else
                     {
-                        redstoneLevels.put(side, signalIn);
+                        redstoneLevels.computeIfAbsent(side, key -> new SignalQueue()).offer(signalIn);
                         if (signalIn instanceof ITickableSignal)
                         {
-                            tickingSignals.put(side, (ITickableSignal) signalIn);
+                            tickingSignals.computeIfAbsent(side, key -> new ArrayList<>()).add((ITickableSignal) signalIn);
                         }
                     }
                 }
@@ -242,18 +265,27 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                 sendUpdate = true;
                 if (level != REMOVE_SIGNAL)
                 {
-                    redstoneLevels.put(side, signalIn);
+                    signalQueue = redstoneLevels.computeIfAbsent(side, key -> new SignalQueue());
+                    signalQueue.offer(signalIn);
                     if (signalIn instanceof ITickableSignal)
                     {
-                        tickingSignals.put(side, (ITickableSignal) signalIn);
+                        tickingSignals.computeIfAbsent(side, key -> new ArrayList<>()).add((ITickableSignal) signalIn);
                     }
                 }
             }
 
-            // Cleanup empty map
+            // Cleanup empty maps
+            if (signalQueue != null && signalQueue.isEmpty())
+            {
+                redstoneLevels.remove(side);
+            }
             if (redstoneLevels.isEmpty())
             {
                 manager.redstoneLevels.remove(pos);
+            }
+            if (tickingSignals.isEmpty())
+            {
+                manager.tickingSignals.remove(pos);
             }
 
             if (sendUpdate)
@@ -273,7 +305,7 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
             BlockPos actualPos = signalPos.offset(side.getOpposite());
             if (world.isBlockLoaded(actualPos))
             {
-                // Simulate neighbor change with a block that has (canProvidePower() == true)
+                // Simulate neighbor change with a block that has canProvidePower()
                 world.neighborChanged(actualPos, Blocks.REDSTONE_BLOCK, signalPos);
                 if (strongPower)
                 {
@@ -282,21 +314,25 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
             }
         }
 
-        private boolean verifySignalSource(RedstoneSignal signal)
+        private boolean canHandleSignal(RedstoneSignal signal)
         {
-            return allowedSources.contains(signal.getSourceType());
+            return allowedSources.contains(signal.getSource().getType());
         }
 
         @Override
         public boolean isStrongSignal()
         {
-            EnumMap<EnumFacing, RedstoneSignal> signalsPerSide = manager.redstoneLevels.get(pos);
+            EnumMap<EnumFacing, SignalQueue> signalsPerSide = manager.redstoneLevels.get(pos);
             if (signalsPerSide != null)
             {
-                RedstoneSignal signal = signalsPerSide.get(side);
-                if (signal != null && verifySignalSource(signal))
+                SignalQueue signalQueue = signalsPerSide.get(side);
+                if (signalQueue != null && !signalQueue.isEmpty())
                 {
-                    return signal.isStrong();
+                    RedstoneSignal signal = signalQueue.findFirst(this::canHandleSignal);
+                    if (signal != null)
+                    {
+                        return signal.isStrong();
+                    }
                 }
             }
             return false;
