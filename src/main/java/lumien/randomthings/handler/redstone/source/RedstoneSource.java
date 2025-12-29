@@ -1,13 +1,18 @@
 package lumien.randomthings.handler.redstone.source;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.world.BlockEvent;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import lumien.randomthings.handler.RTEventHandler;
 import lumien.randomthings.item.ItemRedstoneActivator;
@@ -20,9 +25,11 @@ public class RedstoneSource implements IDynamicRedstoneSource
     public static final String SOURCE_KEY = "source";
     public static final String TYPE_KEY = "type";
     public static final String ID_KEY = "id";
+    public static final String POS_KEY = "pos";
 
     private Type type;
     private UUID id;
+    private BlockPos pos;
 
     public RedstoneSource() {}
 
@@ -30,11 +37,19 @@ public class RedstoneSource implements IDynamicRedstoneSource
     {
         this.type = type;
         this.id = id;
+        this.pos = null;
+    }
+
+    public RedstoneSource(Type type, UUID id, BlockPos pos)
+    {
+        this.type = type;
+        this.id = id;
+        this.pos = pos;
     }
 
     public RedstoneSource(IDynamicRedstoneSource source)
     {
-        this(source.getType(), source.getId());
+        this(source.getType(), source.getId(), source.getPos());
     }
 
     @Override
@@ -47,6 +62,13 @@ public class RedstoneSource implements IDynamicRedstoneSource
     public UUID getId()
     {
         return id;
+    }
+
+    @Nullable
+    @Override
+    public BlockPos getPos()
+    {
+        return pos;
     }
 
     public static UUID getOrCreateId(ItemStack stack)
@@ -81,6 +103,10 @@ public class RedstoneSource implements IDynamicRedstoneSource
 
         sourceData.setByte(TYPE_KEY, (byte) type.index);
         sourceData.setUniqueId(ID_KEY, id);
+        if (pos != null)
+        {
+            sourceData.setTag(POS_KEY, NBTUtil.createPosTag(pos));
+        }
 
         compound.setTag(SOURCE_KEY, sourceData);
         return compound;
@@ -91,6 +117,11 @@ public class RedstoneSource implements IDynamicRedstoneSource
         NBTTagCompound sourceData = compound.getCompoundTag(SOURCE_KEY);
         type = Type.byIndex(sourceData.getByte(TYPE_KEY));
         id = sourceData.getUniqueId(ID_KEY);
+        if (sourceData.hasKey(POS_KEY, Constants.NBT.TAG_COMPOUND))
+        {
+            NBTTagCompound posCompound = sourceData.getCompoundTag(POS_KEY);
+            pos = NBTUtil.getPosFromTag(posCompound);
+        }
     }
 
     @Override
@@ -107,6 +138,16 @@ public class RedstoneSource implements IDynamicRedstoneSource
         return Objects.hashCode(id);
     }
 
+    @Override
+    public String toString()
+    {
+        return MoreObjects.toStringHelper(this)
+                .add("type", type)
+                .add("id", id)
+                .add("pos", pos)
+                .toString();
+    }
+
     public enum Type
     {
         /**
@@ -117,7 +158,7 @@ public class RedstoneSource implements IDynamicRedstoneSource
          * From {@link RTEventHandler#notifyNeighbors(BlockEvent.NeighborNotifyEvent)},
          * used with {@link TileEntityRedstoneObserver}.
          */
-        OBSERVEE(1),
+        OBSERVED(1),
         /**
          * From an item ({@link ItemRedstoneActivator}, {@link ItemRedstoneRemote}).
          */

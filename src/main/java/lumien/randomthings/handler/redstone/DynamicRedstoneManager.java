@@ -1,7 +1,6 @@
 package lumien.randomthings.handler.redstone;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -11,6 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -21,12 +22,17 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
+import lumien.randomthings.handler.redstone.component.IRedstoneWriter;
+import lumien.randomthings.handler.redstone.component.RedstoneWriterDefault;
 import lumien.randomthings.handler.redstone.signal.ITickableSignal;
 import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
 import lumien.randomthings.handler.redstone.signal.SignalQueue;
 import lumien.randomthings.handler.redstone.signal.SignalType;
+import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
 import lumien.randomthings.handler.redstone.source.RedstoneSource;
 
 /**
@@ -40,15 +46,23 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     public static final String SIDE_KEY = "side";
 
     private World world;
-    /* Dynamic redstone levels */
+    /**
+     * Dynamic redstone levels, keyed by position and side.
+     * Value is a {@link SignalQueue}, which holds all signals at the same target, sorted by strength.
+     * It is not required for the entry's position to currently be loaded.
+     */
     private final Map<BlockPos, EnumMap<EnumFacing, SignalQueue>> redstoneLevels;
     /* Signals to tick */
     private final Map<BlockPos, EnumMap<EnumFacing, List<ITickableSignal>>> tickingSignals;
+    /* Key: Observed position, Value: Copy of observer source info */
+    private final Multimap<BlockPos, RedstoneSource> observers;
 
+    @SuppressWarnings("UnstableApiUsage")
     public DynamicRedstoneManager()
     {
         redstoneLevels = new HashMap<>();
         tickingSignals = new LinkedHashMap<>();
+        observers = MultimapBuilder.hashKeys().hashSetValues().build();
     }
 
     public DynamicRedstoneManager(World world)
@@ -57,9 +71,11 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         this.world = world;
     }
 
-    @Nullable
+    @Nonnull
+    @Override
     public World getWorld()
     {
+        Preconditions.checkNotNull(world, "Tried to get a null world from redstone manager!");
         return world;
     }
 
@@ -69,16 +85,70 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         return !redstoneLevels.isEmpty();
     }
 
-    @Override
-    public boolean hasTickingSignals()
-    {
-        return !tickingSignals.isEmpty();
-    }
-
+    @Nonnull
     @Override
     public IDynamicRedstone getDynamicRedstone(BlockPos BlockPos, @Nonnull EnumFacing side, @Nonnull EnumSet<RedstoneSource.Type> allowedSources)
     {
         return new DynamicRedstone(this, BlockPos, side, allowedSources);
+    }
+
+    /* Observer functions */
+
+    @Override
+    public void updateObservers(BlockPos observedPos, IBlockState state, Block observerBlock)
+    {
+        if (observers.isEmpty() || !observers.containsKey(observedPos)) return;
+
+        boolean initSignals = true;
+        for (RedstoneSource observer : observers.get(observedPos))
+        {
+            BlockPos observerPos = observer.getPos();
+            Preconditions.checkNotNull(observerPos);
+
+            if (!world.isBlockLoaded(observerPos)) continue;
+
+            // Write observed signals to dynamic redstone
+            if (initSignals)
+            {
+                initSignals = false;
+                IRedstoneWriter writer = new RedstoneWriterDefault(this, observer);
+                for (EnumFacing side : EnumFacing.VALUES)
+                {
+                    int weakLevel = state.getWeakPower(world, observedPos, side);
+                    int strongLevel = state.getStrongPower(world, observedPos, side);
+                    if (weakLevel > 0 || strongLevel > 0)
+                    {
+                        writer.setRedstoneLevel(observerPos, side, weakLevel, strongLevel);
+                    }
+                    else
+                    {
+                        writer.deactivate(observerPos, side);
+                    }
+                }
+            }
+            // Update observer's neighbors to refresh signals
+            world.notifyNeighborsOfStateChange(observerPos, observerBlock, false);
+        }
+    }
+
+    @Override
+    public void startObserving(BlockPos pos, IDynamicRedstoneSource observer)
+    {
+        observers.put(pos, new RedstoneSource(observer));
+    }
+
+    @Override
+    public void stopObserving(BlockPos pos, IDynamicRedstoneSource observer)
+    {
+        observers.remove(pos, new RedstoneSource(observer));
+    }
+
+    /* Ticking */
+
+    @Override
+    public boolean hasTickingSignals()
+    {
+        return !tickingSignals.isEmpty();
     }
 
     public void tick()
@@ -201,7 +271,7 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         }
 
         @Override
-        public int getRedstoneLevel()
+        public int getRedstoneLevel(boolean strongPower)
         {
             EnumMap<EnumFacing, SignalQueue> signalsPerSide = manager.redstoneLevels.get(pos);
             if (signalsPerSide != null)
@@ -212,7 +282,7 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                     RedstoneSignal signal = signalQueue.findFirst(this::canHandleSignal);
                     if (signal != null)
                     {
-                        return signal.getRedstoneLevel();
+                        return strongPower ? signal.getStrongLevel() : signal.getWeakLevel();
                     }
                 }
             }
@@ -297,7 +367,6 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         public void updateRedstoneInfo(boolean strongPower)
         {
             World world = manager.getWorld();
-            Preconditions.checkNotNull(world, "Tried to update dynamic redstone for null world!");
 
             // The position the signal is coming from.
             BlockPos signalPos = pos;

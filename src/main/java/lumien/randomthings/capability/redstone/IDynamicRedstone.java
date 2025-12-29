@@ -13,9 +13,11 @@ public interface IDynamicRedstone
     int REMOVE_SIGNAL = -1;
 
     /**
+     * Return the redstone level, weak or strong.
+     * @param strongPower If the level returned should be the strong power.
      * @return The redstone level.
      */
-    int getRedstoneLevel();
+    int getRedstoneLevel(boolean strongPower);
 
     /**
      * Set the redstone signal.

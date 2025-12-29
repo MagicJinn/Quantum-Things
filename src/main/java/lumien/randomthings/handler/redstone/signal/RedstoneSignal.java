@@ -39,6 +39,16 @@ public class RedstoneSignal
         return redstoneLevel;
     }
 
+    public int getStrongLevel()
+    {
+        return isStrong() ? redstoneLevel : 0;
+    }
+
+    public int getWeakLevel()
+    {
+        return weakLevel;
+    }
+
     public RedstoneSource getSource()
     {
         return source;

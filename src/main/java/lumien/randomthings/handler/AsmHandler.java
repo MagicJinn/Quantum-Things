@@ -492,7 +492,7 @@ public class AsmHandler
         if (manager != null && manager.hasDynamicSignals())
         {
             IDynamicRedstone signal = manager.getDynamicRedstone(pos, facing, ALLOWED_REDSTONE_SOURCES);
-            return Math.max(signal.getRedstoneLevel(), 0);
+            return Math.max(signal.getRedstoneLevel(true), 0);
         }
         return 0;
 	}
@@ -503,7 +503,7 @@ public class AsmHandler
         if (manager != null && manager.hasDynamicSignals())
         {
             IDynamicRedstone signal = manager.getDynamicRedstone(pos, facing, ALLOWED_REDSTONE_SOURCES);
-            return signal.isStrongSignal() ? Math.max(signal.getRedstoneLevel(), 0) : 0;
+            return signal.isStrongSignal() ? Math.max(signal.getRedstoneLevel(true), 0) : 0;
         }
         return 0;
 	}

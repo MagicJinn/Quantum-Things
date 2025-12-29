@@ -19,21 +19,28 @@ import com.google.common.base.Preconditions;
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.handler.redstone.Connection;
-import lumien.randomthings.handler.redstone.IRedstoneWriter;
+import lumien.randomthings.handler.redstone.IRedstoneConnectionProvider;
+import lumien.randomthings.handler.redstone.component.IRedstoneWriter;
 import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
 import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
 import lumien.randomthings.handler.redstone.source.RedstoneSource;
 import lumien.randomthings.tileentity.TileEntityBase;
+import lumien.randomthings.util.Lazy;
 
 import static lumien.randomthings.handler.redstone.source.RedstoneSource.SOURCE_KEY;
-import static lumien.randomthings.handler.redstone.source.RedstoneSource.Type.INTERFACE;
 
-public abstract class TileEntityRedstoneInterface extends TileEntityBase implements IDynamicRedstoneSource, IRedstoneWriter
+public abstract class TileEntityRedstoneInterface extends TileEntityBase implements IDynamicRedstoneSource, IRedstoneConnectionProvider, IRedstoneWriter
 {
+    public static final EnumSet<RedstoneSource.Type> INTERFACE_SOURCE = EnumSet.of(RedstoneSource.Type.INTERFACE);
+
+    @Nonnull
+    private Lazy<Optional<IDynamicRedstoneManager>> redstoneManager;
+    @Nonnull
     protected UUID sourceId;
 
     public TileEntityRedstoneInterface()
     {
+        redstoneManager = Lazy.empty();
         sourceId = UUID.randomUUID();
     }
 
@@ -43,6 +50,7 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     public void onLoad()
     {
         if (world.isRemote) return;
+        redstoneManager = Lazy.ofCapability(world, IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE);
         for (EnumFacing side : EnumFacing.VALUES)
         {
             sendSignal(side, getTargets());
@@ -66,20 +74,20 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     {
         if (targets.isEmpty()) return;
 
-        // May cause adjacent chunk loading, but that should be fine considering it's just direct neighbors and other redstone does this as well.
         BlockPos signalPos = pos.offset(signalDir);
+        // May cause chunks neighboring the interface to load, but should be fine.
+        int weakLevel = world.getRedstonePower(signalPos, signalDir);
         int strongLevel = world.getStrongPower(signalPos, signalDir);
-        int level = world.getRedstonePower(signalPos, signalDir);
 
         for (BlockPos targetPos : targets)
         {
-            if (level <= 0)
+            if (weakLevel > 0 || strongLevel > 0)
             {
-                deactivate(targetPos, signalDir);
+                setRedstoneLevel(targetPos, signalDir, weakLevel, strongLevel);
             }
             else
             {
-                setRedstoneLevel(targetPos, signalDir, level, level == strongLevel);
+                deactivate(targetPos, signalDir);
             }
         }
     }
@@ -113,7 +121,9 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
 
         if (compound.hasUniqueId(SOURCE_KEY))
         {
-            sourceId = compound.getUniqueId(SOURCE_KEY);
+            UUID sourceId = compound.getUniqueId(SOURCE_KEY);
+            Preconditions.checkNotNull(sourceId);
+            this.sourceId = sourceId;
         }
         else
         {
@@ -136,16 +146,15 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     @Override
     public Optional<IDynamicRedstone> getDynamicRedstoneFor(BlockPos pos, EnumFacing side)
     {
-        IDynamicRedstoneManager managerCap = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
-        return Optional.ofNullable(managerCap)
-                .map(manager -> manager.getDynamicRedstone(pos.offset(side), side, EnumSet.of(INTERFACE)));
+        return redstoneManager.get()
+                .map(manager -> manager.getDynamicRedstone(pos.offset(side), side, INTERFACE_SOURCE));
     }
 
     @Override
-    public void setRedstoneLevel(BlockPos pos, EnumFacing side, int level, boolean strongPower)
+    public void setRedstoneLevel(BlockPos pos, EnumFacing side, int weakLevel, int strongLevel)
     {
         getDynamicRedstoneFor(pos, side).ifPresent(dynamicRedstone ->
-                dynamicRedstone.setRedstoneLevel(new RedstoneSignal(TileEntityRedstoneInterface.this, level, strongPower)));
+                dynamicRedstone.setRedstoneLevel(new RedstoneSignal(TileEntityRedstoneInterface.this, weakLevel, strongLevel)));
     }
 
     @Override
