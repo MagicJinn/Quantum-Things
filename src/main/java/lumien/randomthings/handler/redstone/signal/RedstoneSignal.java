@@ -1,7 +1,6 @@
 package lumien.randomthings.handler.redstone.signal;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.Constants;
 
 import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
 import lumien.randomthings.handler.redstone.source.RedstoneSource;
@@ -47,16 +46,13 @@ public class RedstoneSignal
 
     public boolean isStrong()
     {
-        return redstoneLevel != weakLevel;
+        return redstoneLevel != weakLevel && redstoneLevel > 0;
     }
 
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
 		compound.setInteger(REDSTONE_LEVEL_KEY, redstoneLevel);
-        if (isStrong())
-        {
-            compound.setInteger(WEAK_LEVEL_KEY, weakLevel);
-        }
+        compound.setInteger(WEAK_LEVEL_KEY, weakLevel);
         source.writeToNBT(compound);
         return compound;
 	}
@@ -64,10 +60,7 @@ public class RedstoneSignal
 	public void readFromNBT(NBTTagCompound compound)
 	{
 		redstoneLevel = compound.getInteger(REDSTONE_LEVEL_KEY);
-        if (compound.hasKey(WEAK_LEVEL_KEY, Constants.NBT.TAG_INT))
-        {
-            weakLevel = compound.getInteger(WEAK_LEVEL_KEY);
-        }
+        weakLevel = compound.getInteger(WEAK_LEVEL_KEY);
         source = new RedstoneSource();
         source.readFromNBT(compound);
 	}
