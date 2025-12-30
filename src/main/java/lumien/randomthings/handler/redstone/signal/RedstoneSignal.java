@@ -4,6 +4,7 @@ import java.util.function.Predicate;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
 import lumien.randomthings.handler.redstone.source.RedstoneSource;
@@ -93,5 +94,15 @@ public class RedstoneSignal implements Predicate<RedstoneSignal>
     public boolean test(RedstoneSignal signal)
     {
         return strongLevel == signal.strongLevel && weakLevel == signal.weakLevel && getSource().equals(signal.getSource());
+    }
+
+    @Override
+    public String toString()
+    {
+        return MoreObjects.toStringHelper(this)
+                .add("source", source)
+                .add("strongLevel", strongLevel)
+                .add("weakLevel", weakLevel)
+                .toString();
     }
 }

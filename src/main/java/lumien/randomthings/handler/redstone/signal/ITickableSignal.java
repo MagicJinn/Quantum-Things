@@ -1,5 +1,6 @@
 package lumien.randomthings.handler.redstone.signal;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
@@ -34,4 +35,16 @@ public interface ITickableSignal
      * @param side The signal's side.
      */
     void onRemoved(IDynamicRedstoneManager manager, BlockPos pos, EnumFacing side);
+
+    /**
+     * @param compound The NBT tag to write data to.
+     * @return The serialized data for this tickable signal.
+     */
+    NBTTagCompound writeToNBT(NBTTagCompound compound);
+
+    /**
+     * Deserialized data for this tickable signal.
+     * @param compound The NBT tag to read data from.
+     */
+    void readFromNBT(NBTTagCompound compound);
 }

@@ -13,6 +13,8 @@ import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.StreamSupport;
 
+import com.google.common.base.MoreObjects;
+
 /**
  * A queue of redstone signals, sorted by their strength.
  * Equality is determined solely by the signals' source.
@@ -23,17 +25,17 @@ public class SignalQueue extends AbstractQueue<RedstoneSignal>
 
     private final PriorityQueue<RedstoneSignal> signalQueue;
     // Signals mapped by their unique id.
-    private final Map<UUID, RedstoneSignal> signalMap;
+    private final Map<UUID, RedstoneSignal> idToSignals;
 
     public SignalQueue()
     {
         signalQueue = new PriorityQueue<>(Comparator.comparingInt(SIGNAL_SUM).reversed());
-        signalMap = new HashMap<>();
+        idToSignals = new HashMap<>();
     }
 
     public RedstoneSignal getBySource(UUID sourceId)
     {
-        return signalMap.get(sourceId);
+        return idToSignals.get(sourceId);
     }
 
     @Nullable
@@ -57,12 +59,12 @@ public class SignalQueue extends AbstractQueue<RedstoneSignal>
     public boolean offer(RedstoneSignal signal)
     {
         UUID id = signal.getSource().getId();
-        if (signalMap.containsKey(id)) {
-            RedstoneSignal oldSignal = signalMap.get(id);
+        if (idToSignals.containsKey(id)) {
+            RedstoneSignal oldSignal = idToSignals.get(id);
             super.remove(oldSignal);
         }
         signalQueue.offer(signal);
-        signalMap.put(id, signal);
+        idToSignals.put(id, signal);
         return true;
     }
 
@@ -74,7 +76,7 @@ public class SignalQueue extends AbstractQueue<RedstoneSignal>
             return false;
         }
         UUID signalId = ((RedstoneSignal) o).getSource().getId();
-        RedstoneSignal toRemove = signalMap.remove(signalId);
+        RedstoneSignal toRemove = idToSignals.remove(signalId);
         return signalQueue.remove(toRemove);
     }
 
@@ -82,7 +84,7 @@ public class SignalQueue extends AbstractQueue<RedstoneSignal>
     public void clear()
     {
         signalQueue.clear();
-        signalMap.clear();
+        idToSignals.clear();
     }
 
     @Override
@@ -94,7 +96,7 @@ public class SignalQueue extends AbstractQueue<RedstoneSignal>
             return null;
         }
         UUID signalId = signal.getSource().getId();
-        signalMap.remove(signalId);
+        idToSignals.remove(signalId);
         return signalQueue.poll();
     }
 
@@ -115,5 +117,14 @@ public class SignalQueue extends AbstractQueue<RedstoneSignal>
     public int size()
     {
         return signalQueue.size();
+    }
+
+    @Override
+    public String toString()
+    {
+        return MoreObjects.toStringHelper(this)
+                .add("queue", signalQueue)
+                .add("idToSignals", idToSignals)
+                .toString();
     }
 }

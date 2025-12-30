@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
+import com.google.common.base.MoreObjects;
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
@@ -85,5 +86,15 @@ public class TemporarySignal extends RedstoneSignal implements ITickableSignal
         super.readFromNBT(compound);
         duration = compound.getInteger(DURATION_KEY);
         age = compound.getInteger(AGE_KEY);
+    }
+
+    @Override
+    public String toString()
+    {
+        return MoreObjects.toStringHelper(this)
+                .add("signal", super.toString())
+                .add("age", age)
+                .add("duration", duration)
+                .toString();
     }
 }

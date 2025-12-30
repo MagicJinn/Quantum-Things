@@ -33,7 +33,7 @@ import lumien.randomthings.handler.redstone.signal.ITickableSignal;
 import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
 import lumien.randomthings.handler.redstone.signal.RemovalSignal;
 import lumien.randomthings.handler.redstone.signal.SignalQueue;
-import lumien.randomthings.handler.redstone.signal.SignalType;
+import lumien.randomthings.handler.redstone.signal.TemporarySignal;
 import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
 import lumien.randomthings.handler.redstone.source.RedstoneSource;
 
@@ -43,7 +43,7 @@ import lumien.randomthings.handler.redstone.source.RedstoneSource;
  */
 public class DynamicRedstoneManager implements IDynamicRedstoneManager
 {
-    public static final String SIGNAL_LIST_KEY = "redstoneSignals";
+    public static final String TICKABLE_SIGNALS_KEY = "tickableSignals";
     public static final String POSITION_KEY = "position";
     public static final String SIDE_KEY = "side";
 
@@ -207,39 +207,36 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     @Override
     public NBTTagCompound writeNBT(IDynamicRedstoneManager instance, EnumFacing side, NBTTagCompound rootNBT)
     {
-        NBTTagList signalList = new NBTTagList();
-        for (Map.Entry<BlockPos, EnumMap<EnumFacing, SignalQueue>> signalsPerSide : redstoneLevels.entrySet())
+        // Only tickable signals need to be saved, other ones will be recreated by their source.
+        NBTTagList tickableSignals = new NBTTagList();
+        for (Map.Entry<BlockPos, EnumMap<EnumFacing, List<ITickableSignal>>> signalsPerSide : tickingSignals.entrySet())
         {
             NBTTagCompound pos = NBTUtil.createPosTag(signalsPerSide.getKey());
-            for (Map.Entry<EnumFacing, SignalQueue> signalQueueEntry : signalsPerSide.getValue().entrySet())
+            for (Map.Entry<EnumFacing, List<ITickableSignal>> signalQueueEntry : signalsPerSide.getValue().entrySet())
             {
                 EnumFacing signalSide = signalQueueEntry.getKey();
-                for (RedstoneSignal signal : signalQueueEntry.getValue())
+                for (ITickableSignal signal : signalQueueEntry.getValue())
                 {
-                    // Only tickable signals need to be saved, other ones will be recreated by their source.
-                    if (signal instanceof ITickableSignal)
-                    {
-                        NBTTagCompound signalData = new NBTTagCompound();
+                    NBTTagCompound signalData = new NBTTagCompound();
 
-                        signalData.setTag(POSITION_KEY, pos);
-                        signalData.setByte(SIDE_KEY, (byte) signalSide.getIndex());
+                    signalData.setTag(POSITION_KEY, pos);
+                    signalData.setByte(SIDE_KEY, (byte) signalSide.getIndex());
 
-                        SignalType.writeToNBT(signalData, signal);
-                        signal.writeToNBT(signalData);
-                        signalList.appendTag(signalData);
-                    }
+                    signal.writeToNBT(signalData);
+                    tickableSignals.appendTag(signalData);
                 }
             }
 
         }
-        rootNBT.setTag(SIGNAL_LIST_KEY, signalList);
+        rootNBT.setTag(TICKABLE_SIGNALS_KEY, tickableSignals);
         return rootNBT;
     }
 
     @Override
     public void readNBT(IDynamicRedstoneManager instance, EnumFacing side, NBTTagCompound rootNBT)
     {
-        NBTTagList signalList = rootNBT.getTagList(SIGNAL_LIST_KEY, Constants.NBT.TAG_COMPOUND);
+        // Read tickable signals
+        NBTTagList signalList = rootNBT.getTagList(TICKABLE_SIGNALS_KEY, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < signalList.tagCount(); i++)
         {
             NBTTagCompound signalData = signalList.getCompoundTagAt(i);
@@ -247,18 +244,16 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
             BlockPos pos = NBTUtil.getPosFromTag(signalData.getCompoundTag(POSITION_KEY));
             EnumFacing signalSide = EnumFacing.byIndex(signalData.getByte(SIDE_KEY));
 
-            RedstoneSignal signal = SignalType.readFromNBT(signalData);
+            TemporarySignal signal = new TemporarySignal();
             signal.readFromNBT(signalData);
 
+            // Add tickable signal to both maps
             redstoneLevels.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class))
                     .computeIfAbsent(signalSide, key -> new SignalQueue())
                     .offer(signal);
-            if (signal instanceof ITickableSignal)
-            {
-                tickingSignals.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class))
-                        .computeIfAbsent(signalSide, key -> new ArrayList<>())
-                        .add((ITickableSignal) signal);
-            }
+            tickingSignals.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class))
+                    .computeIfAbsent(signalSide, key -> new ArrayList<>())
+                    .add(signal);
         }
     }
 
