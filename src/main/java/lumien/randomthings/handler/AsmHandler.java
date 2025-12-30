@@ -486,27 +486,85 @@ public class AsmHandler
 		return pos;
 	}
 
-	public static int getRedstonePower(World worldObj, BlockPos pos, EnumFacing facing)
+    /**
+     * {@link World#getRedstonePower(BlockPos, EnumFacing)}
+     * <br>
+     * Old code:
+     * <pre>
+     * {@code
+     * IBlockState iblockstate1 = this.getBlockState(pos);
+     * return iblockstate1.getBlock().shouldCheckWeakPower(iblockstate1, this, pos, facing) ?
+     *     this.getStrongPower(pos) : iblockstate1.getWeakPower(this, pos, facing);
+     * }
+     * </pre>
+     * New code:
+     * <pre>
+     * {@code
+     * IBlockState iblockstate1 = this.getBlockState(pos);
+     * Block block = iblockstate1.getBlock();
+     * return block.shouldCheckWeakPower(iblockstate1, this, pos, facing) ?
+     *     AsmHandler.getRedstonePower(this.getStrongPower(pos), block, world, pos, facing) :
+     *     AsmHandler.getRedstonePower(iblockstate1.getWeakPower(this, pos, facing), block, world, pos, facing);
+     * }
+     * </pre>
+     * <p>
+     *     This basically changes the return value(s) to {@code Math.max(dynamicWeakPower, originalReturnValue)}.
+     * </p>
+     */
+	public static int getRedstonePower(int original, Block block, World world, BlockPos pos, EnumFacing side)
 	{
-        IDynamicRedstoneManager manager = worldObj.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
+        if (original >= 15)
+        {
+            return original;
+        }
+        IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
         if (manager != null && manager.hasDynamicSignals())
         {
-            IDynamicRedstone signal = manager.getDynamicRedstone(pos, facing, ALLOWED_REDSTONE_SOURCES);
-            return Math.max(signal.getRedstoneLevel(true), 0);
+            IDynamicRedstone signal = manager.getDynamicRedstone(pos, side, block, ALLOWED_REDSTONE_SOURCES);
+            int value = signal.getRedstoneLevel(false);
+            if (value > 0)
+            {
+                return Math.max(value, original);
+            }
         }
-        return 0;
+        return original;
 	}
 
-	public static int getStrongPower(World worldObj, BlockPos pos, EnumFacing facing)
-	{
-        IDynamicRedstoneManager manager = worldObj.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
+    /**
+     * {@link World#getStrongPower(BlockPos, EnumFacing)}
+     * <br>
+     * Old code:
+     * <pre>
+     * {@code
+     * return this.getBlockState(pos).getStrongPower(this, pos, direction);
+     * }
+     * </pre>
+     * New code:
+     * <pre>
+     * {@code
+     * IBlockState state = this.getBlockState(pos);
+     * return AsmHandler.getStrongPower(state.getStrongPower(this, pos, direction), state, this, pos, direction);
+     * }
+     * </pre>
+     */
+    public static int getStrongPower(int original, IBlockState state, World world, BlockPos pos, EnumFacing side)
+    {
+        if (original >= 15)
+        {
+            return original;
+        }
+        IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
         if (manager != null && manager.hasDynamicSignals())
         {
-            IDynamicRedstone signal = manager.getDynamicRedstone(pos, facing, ALLOWED_REDSTONE_SOURCES);
-            return signal.isStrongSignal() ? Math.max(signal.getRedstoneLevel(true), 0) : 0;
+            IDynamicRedstone signal = manager.getDynamicRedstone(pos, side, state.getBlock(), ALLOWED_REDSTONE_SOURCES);
+            int value = signal.getRedstoneLevel(true);
+            if (value > 0)
+            {
+                return Math.max(value, original);
+            }
         }
-        return 0;
-	}
+        return original;
+    }
 
 	// Returns whether to cancel normal behaviour
 	public static boolean addCollisionBoxesToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List list, Entity collidingEntity)
