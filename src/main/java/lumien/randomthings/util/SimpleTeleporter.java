@@ -18,7 +18,7 @@ public class SimpleTeleporter extends Teleporter
 	}
 
 	@Override
-	public void removeStalePortalLocations(long p_85189_1_)
+	public void removeStalePortalLocations(long worldTime)
 	{
 
 	}

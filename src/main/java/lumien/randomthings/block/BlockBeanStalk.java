@@ -147,16 +147,16 @@ public class BlockBeanStalk extends BlockBase implements IPlantable
 		this.checkForDrop(worldIn, pos, state);
 	}
 
-	protected final boolean checkForDrop(World worldIn, BlockPos p_176353_2_, IBlockState state)
+	protected final boolean checkForDrop(World worldIn, BlockPos pos, IBlockState state)
 	{
-		if (this.canBlockStay(worldIn, p_176353_2_))
+		if (this.canBlockStay(worldIn, pos))
 		{
 			return true;
 		}
 		else
 		{
-			this.dropBlockAsItem(worldIn, p_176353_2_, state, 0);
-			worldIn.setBlockToAir(p_176353_2_);
+			this.dropBlockAsItem(worldIn, pos, state, 0);
+			worldIn.setBlockToAir(pos);
 			return false;
 		}
 	}

@@ -108,8 +108,8 @@ public class EntitySpirit extends EntityFlying
 	}
 
 	@Override
-	public void knockBack(@Nonnull Entity entity, float p_70653_2_, double p_70653_3_,
-			double p_70653_5_)
+	public void knockBack(@Nonnull Entity entity, float strength, double xRatio,
+			double zRatio)
 	{
 
 	}
@@ -244,11 +244,11 @@ public class EntitySpirit extends EntityFlying
 		/**
 		 * Checks if entity bounding box is not colliding with terrain
 		 */
-		private boolean isNotColliding(double p_179926_1_, double p_179926_3_, double p_179926_5_, double p_179926_7_)
+		private boolean isNotColliding(double x, double y, double z, double p_179926_7_)
 		{
-			double d0 = (p_179926_1_ - this.parentEntity.posX) / p_179926_7_;
-			double d1 = (p_179926_3_ - this.parentEntity.posY) / p_179926_7_;
-			double d2 = (p_179926_5_ - this.parentEntity.posZ) / p_179926_7_;
+			double d0 = (x - this.parentEntity.posX) / p_179926_7_;
+			double d1 = (y - this.parentEntity.posY) / p_179926_7_;
+			double d2 = (z - this.parentEntity.posZ) / p_179926_7_;
 			AxisAlignedBB axisalignedbb = this.parentEntity.getEntityBoundingBox();
 
 			for (int i = 1; i < p_179926_7_; ++i)

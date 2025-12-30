@@ -20,7 +20,7 @@ public class LayerSpiritGel implements LayerRenderer<EntitySpirit>
 	}
 
 	@Override
-	public void doRenderLayer(EntitySpirit entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)
+	public void doRenderLayer(EntitySpirit entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale)
 	{
 		if (!entitylivingbaseIn.isInvisible())
 		{
@@ -29,7 +29,7 @@ public class LayerSpiritGel implements LayerRenderer<EntitySpirit>
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(770, 771);
 			this.slimeModel.setModelAttributes(this.slimeRenderer.getMainModel());
-			this.slimeModel.render(entitylivingbaseIn, p_177141_2_, p_177141_3_, p_177141_5_, p_177141_6_, p_177141_7_, scale);
+			this.slimeModel.render(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 			GlStateManager.disableBlend();
 			GlStateManager.disableNormalize();
 		}

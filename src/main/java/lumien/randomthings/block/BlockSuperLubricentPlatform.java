@@ -80,7 +80,7 @@ public class BlockSuperLubricentPlatform extends BlockBase implements ISuperLubr
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List list, Entity collidingEntity, boolean p_185477_7_)
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List list, Entity collidingEntity, boolean isActualState)
 	{
 		if (collidingEntity != null)
 		{
@@ -104,6 +104,6 @@ public class BlockSuperLubricentPlatform extends BlockBase implements ISuperLubr
 			return;
 		}
 
-		super.addCollisionBoxToList(state, worldIn, pos, mask, list, collidingEntity, p_185477_7_);
+		super.addCollisionBoxToList(state, worldIn, pos, mask, list, collidingEntity, isActualState);
 	}
 }

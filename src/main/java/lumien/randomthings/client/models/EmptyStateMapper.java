@@ -11,7 +11,7 @@ public class EmptyStateMapper implements IStateMapper
 {
 
 	@Override
-	public Map putStateModelLocations(Block p_178130_1_)
+	public Map putStateModelLocations(Block blockIn)
 	{
 		return Maps.newLinkedHashMap();
 	}

@@ -98,7 +98,7 @@ public class BlockPlatform extends BlockBase
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List list, Entity collidingEntity, boolean p_185477_7_)
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List list, Entity collidingEntity, boolean isActualState)
 	{
 		if (collidingEntity != null)
 		{
@@ -118,7 +118,7 @@ public class BlockPlatform extends BlockBase
 			}
 		}
 
-		super.addCollisionBoxToList(state, worldIn, pos, mask, list, collidingEntity, p_185477_7_);
+		super.addCollisionBoxToList(state, worldIn, pos, mask, list, collidingEntity, isActualState);
 	}
 
 	public static enum EnumType implements IStringSerializable

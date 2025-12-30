@@ -148,7 +148,7 @@ public class BlockFluidDisplay extends BlockContainerBase implements IRTBlockCol
 	}
 
 	@Override
-	public int colorMultiplier(IBlockState state, IBlockAccess p_186720_2_, BlockPos pos, int tintIndex)
+	public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
 	{
 		if (tintIndex == 0)
 		{

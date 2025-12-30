@@ -14,7 +14,7 @@ public class FocusStateMapper extends StateMapperBase
 	}
 
 	@Override
-	protected ModelResourceLocation getModelResourceLocation(IBlockState p_178132_1_)
+	protected ModelResourceLocation getModelResourceLocation(IBlockState state)
 	{
 		return mrl;
 	}
