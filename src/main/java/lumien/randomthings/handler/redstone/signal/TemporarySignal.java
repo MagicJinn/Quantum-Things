@@ -65,9 +65,9 @@ public class TemporarySignal extends RedstoneSignal implements ITickableSignal
     {
         RedstoneSource source = getSource();
         EnumSet<RedstoneSource.Type> sourceSet = EnumSet.of(source.getType());
-        IDynamicRedstone dynamicRedstone = manager.getDynamicRedstone(pos, side, sourceSet);
+        IDynamicRedstone dynamicRedstone = manager.getDynamicRedstone(pos, side, null, sourceSet);
         // Remove the signal
-        dynamicRedstone.setRedstoneLevel(new RedstoneSignal(source, IDynamicRedstone.REMOVE_SIGNAL, dynamicRedstone.isStrongSignal()));
+        dynamicRedstone.setRedstoneLevel(new RemovalSignal(source, dynamicRedstone.isStrongSignal()));
     }
 
     @Override

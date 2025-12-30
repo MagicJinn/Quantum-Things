@@ -11,7 +11,6 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
 import com.google.common.collect.Sets;
@@ -79,7 +78,7 @@ public class TileEntityAdvancedRedstoneInterface extends TileEntityRedstoneInter
         return targets;
     }
 
-	@Override
+    @Override
 	public void onInventoryChanged(@Nonnull IInventory inventory)
 	{
         if (world == null || world.isRemote || pos == null) return;
@@ -105,11 +104,7 @@ public class TileEntityAdvancedRedstoneInterface extends TileEntityRedstoneInter
         world.notifyBlockUpdate(pos, state, state, 3);
 
         invalidateTargets(discardedPositions);
-
-        for (EnumFacing side : EnumFacing.VALUES)
-        {
-            sendSignal(side, changedPositions);
-        }
+        sendSignal(changedPositions);
     }
 
 	public IInventory getTargetInventory()

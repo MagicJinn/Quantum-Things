@@ -62,34 +62,37 @@ public class MessageRedstoneRemote implements IRTMessage
 
 		if (slotUsed >= 0 && slotUsed < 9 && player != null)
 		{
-			ItemStack using = player.getHeldItem(usingHand);
+            player.getServerWorld().addScheduledTask(() ->
+            {
+                ItemStack using = player.getHeldItem(usingHand);
 
-			if (using != null && using.getItem() instanceof ItemRedstoneRemote)
-			{
-				InventoryItem itemInventory = new InventoryItem("RedstoneRemote", 18, using);
+                if (using != null && using.getItem() instanceof ItemRedstoneRemote)
+                {
+                    InventoryItem itemInventory = new InventoryItem("RedstoneRemote", 18, using);
 
-				ItemStack positionFilter = itemInventory.getStackInSlot(slotUsed);
+                    ItemStack positionFilter = itemInventory.getStackInSlot(slotUsed);
 
-				if (positionFilter != null && positionFilter.getItem() == ModItems.positionFilter)
-				{
-					BlockPos target = ItemPositionFilter.getPosition(positionFilter);
+                    if (positionFilter != null && positionFilter.getItem() == ModItems.positionFilter)
+                    {
+                        BlockPos target = ItemPositionFilter.getPosition(positionFilter);
 
-					if (target != null)
-					{
-                        World world = player.world;
-                        IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
-                        if (manager != null)
+                        if (target != null)
                         {
-                            IDynamicRedstoneSource source = new RedstoneSource(ITEM, RedstoneSource.getOrCreateId(using));
-                            for (EnumFacing side : EnumFacing.VALUES)
+                            World world = player.world;
+                            IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
+                            if (manager != null)
                             {
-                                IDynamicRedstone signal = manager.getDynamicRedstone(target.offset(side), side, EnumSet.of(ITEM));
-                                signal.setRedstoneLevel(new TemporarySignal(source, 15, true, 20));
+                                IDynamicRedstoneSource source = new RedstoneSource(ITEM, RedstoneSource.getOrCreateId(using));
+                                for (EnumFacing side : EnumFacing.VALUES)
+                                {
+                                    IDynamicRedstone signal = manager.getDynamicRedstone(target.offset(side), side, null, EnumSet.of(ITEM));
+                                    signal.setRedstoneLevel(new TemporarySignal(source, 15, true, 20));
+                                }
                             }
                         }
-					}
-				}
-			}
+                    }
+                }
+            });
 		}
 	}
 

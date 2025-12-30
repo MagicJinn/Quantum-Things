@@ -2,6 +2,7 @@ package lumien.randomthings.tileentity.redstoneinterface;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +23,12 @@ import lumien.randomthings.handler.redstone.Connection;
 import lumien.randomthings.handler.redstone.IRedstoneConnectionProvider;
 import lumien.randomthings.handler.redstone.component.IRedstoneWriter;
 import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
+import lumien.randomthings.handler.redstone.signal.RemovalSignal;
 import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
 import lumien.randomthings.handler.redstone.source.RedstoneSource;
 import lumien.randomthings.tileentity.TileEntityBase;
 import lumien.randomthings.util.Lazy;
+import lumien.randomthings.util.WorldUtil;
 
 import static lumien.randomthings.handler.redstone.source.RedstoneSource.SOURCE_KEY;
 
@@ -50,45 +53,103 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     public void onLoad()
     {
         if (world.isRemote) return;
+
         redstoneManager = Lazy.ofCapability(world, IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE);
-        for (EnumFacing side : EnumFacing.VALUES)
-        {
-            sendSignal(side, getTargets());
-        }
+        sendSignal(getTargets());
     }
 
     @Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block neighborBlock, BlockPos changedPos)
 	{
         if (world.isRemote) return;
+
 		BlockPos direction = changedPos.subtract(pos);
         EnumFacing side = EnumFacing.getFacingFromVector(direction.getX(), direction.getY(), direction.getZ());
-        sendSignal(side, getTargets());
+        sendSidedSignal(side, getTargets());
 	}
 
     /**
-     * Sends the signal received by this interface to its targets.
+     * Sends the signal received by this interface to its targets on the specified side.
      * @param signalDir The side the received signal is coming from, relative to this tile.
+     * @param targets The targets' positions.
      */
-    public void sendSignal(EnumFacing signalDir, Set<BlockPos> targets)
+    public void sendSidedSignal(EnumFacing signalDir, Set<BlockPos> targets)
     {
         if (targets.isEmpty()) return;
 
         BlockPos signalPos = pos.offset(signalDir);
+        Block signalBlock = world.getBlockState(signalPos).getBlock();
         // May cause chunks neighboring the interface to load, but should be fine.
         int weakLevel = world.getRedstonePower(signalPos, signalDir);
         int strongLevel = world.getStrongPower(signalPos, signalDir);
 
         for (BlockPos targetPos : targets)
         {
+            Block block = world.getBlockState(targetPos).getBlock();
             if (weakLevel > 0 || strongLevel > 0)
             {
-                setRedstoneLevel(targetPos, signalDir, weakLevel, strongLevel);
+                setRedstoneLevel(signalBlock, targetPos, signalDir, weakLevel, strongLevel);
             }
             else
             {
-                deactivate(targetPos, signalDir);
+                deactivate(signalBlock, targetPos, signalDir);
             }
+            // Update target's neighbors
+            if (WorldUtil.isNeighboring(targetPos, pos))
+            {
+                // Don't recursively update this interface
+                world.notifyNeighborsOfStateExcept(targetPos, block, signalDir.getOpposite());
+            }
+            else
+            {
+                world.notifyNeighborsOfStateChange(targetPos, block, false);
+            }
+        }
+    }
+
+    /**
+     * Sends the signal received by this interface to its targets for all sides.
+     * @param targets The targets' positions.
+     */
+    public void sendSignal(Set<BlockPos> targets)
+    {
+        if (targets.isEmpty()) return;
+
+        EnumMap<EnumFacing, Block> signalBlocks = new EnumMap<>(EnumFacing.class);
+        EnumMap<EnumFacing, Integer> weakLevels = new EnumMap<>(EnumFacing.class);
+        EnumMap<EnumFacing, Integer> strongLevels = new EnumMap<>(EnumFacing.class);
+        // Gather observed signal levels
+        for (EnumFacing side : EnumFacing.VALUES)
+        {
+            BlockPos signalPos = pos.offset(side);
+            Block signalBlock = world.getBlockState(signalPos).getBlock();
+            int weakLevel = world.getRedstonePower(signalPos, side);
+            int strongLevel = world.getStrongPower(signalPos, side);
+
+            signalBlocks.put(side, signalBlock);
+            weakLevels.put(side, weakLevel);
+            strongLevels.put(side, strongLevel);
+        }
+        for (BlockPos targetPos : targets)
+        {
+            Block block = world.getBlockState(targetPos).getBlock();
+            for (EnumFacing side : EnumFacing.VALUES)
+            {
+                Block signalBlock = signalBlocks.get(side);
+                int weakLevel = weakLevels.get(side);
+                int strongLevel = strongLevels.get(side);
+
+                if (weakLevel > 0 || strongLevel > 0)
+                {
+                    setRedstoneLevel(signalBlock, targetPos, side, weakLevel, strongLevel);
+                }
+                else
+                {
+                    deactivate(signalBlock, targetPos, side);
+                }
+            }
+            // Update target's neighbors
+            world.notifyNeighborsOfStateChange(targetPos, block, false);
         }
     }
 
@@ -104,6 +165,29 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     {
         super.invalidate();
         invalidateTargets(getTargets());
+    }
+
+    protected void invalidateTargets(Set<BlockPos> targets)
+    {
+        if (world.isRemote || targets.isEmpty()) return;
+
+        EnumMap<EnumFacing, Block> signalBlocks = new EnumMap<>(EnumFacing.class);
+        for (EnumFacing side : EnumFacing.VALUES)
+        {
+            BlockPos signalPos = pos.offset(side);
+            Block signalBlock = world.getBlockState(signalPos).getBlock();
+            signalBlocks.put(side, signalBlock);
+        }
+        for (BlockPos targetPos : targets)
+        {
+            Block block = world.getBlockState(targetPos).getBlock();
+            for (EnumFacing side : EnumFacing.VALUES)
+            {
+                deactivate(signalBlocks.get(side), targetPos, side);
+            }
+            // Update target's neighbors
+            world.notifyNeighborsOfStateChange(targetPos, block, false);
+        }
     }
 
     @Override
@@ -133,35 +217,26 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
 
     /* Dynamic redstone */
 
-    protected void invalidateTargets(Set<BlockPos> targets)
-    {
-        if (world.isRemote) return;
-        for (EnumFacing side : EnumFacing.VALUES)
-        {
-            targets.forEach(pos -> deactivate(pos, side));
-        }
-    }
-
     @Nonnull
     @Override
-    public Optional<IDynamicRedstone> getDynamicRedstoneFor(BlockPos pos, EnumFacing side)
+    public Optional<IDynamicRedstone> getDynamicRedstoneFor(Block block, BlockPos pos, EnumFacing side)
     {
         return redstoneManager.get()
-                .map(manager -> manager.getDynamicRedstone(pos.offset(side), side, INTERFACE_SOURCE));
+                .map(manager -> manager.getDynamicRedstone(pos.offset(side), side, block, INTERFACE_SOURCE));
     }
 
     @Override
-    public void setRedstoneLevel(BlockPos pos, EnumFacing side, int weakLevel, int strongLevel)
+    public void setRedstoneLevel(Block block, BlockPos pos, EnumFacing side, int weakLevel, int strongLevel)
     {
-        getDynamicRedstoneFor(pos, side).ifPresent(dynamicRedstone ->
+        getDynamicRedstoneFor(block, pos, side).ifPresent(dynamicRedstone ->
                 dynamicRedstone.setRedstoneLevel(new RedstoneSignal(TileEntityRedstoneInterface.this, weakLevel, strongLevel)));
     }
 
     @Override
-    public void deactivate(BlockPos pos, EnumFacing side)
+    public void deactivate(Block block, BlockPos pos, EnumFacing side)
     {
-        getDynamicRedstoneFor(pos, side).ifPresent(dynamicRedstone ->
-                dynamicRedstone.setRedstoneLevel(new RedstoneSignal(TileEntityRedstoneInterface.this, IDynamicRedstone.REMOVE_SIGNAL, dynamicRedstone.isStrongSignal())));
+        getDynamicRedstoneFor(block, pos, side).ifPresent(dynamicRedstone ->
+                dynamicRedstone.setRedstoneLevel(new RemovalSignal(TileEntityRedstoneInterface.this, dynamicRedstone.isStrongSignal())));
     }
 
     @Override

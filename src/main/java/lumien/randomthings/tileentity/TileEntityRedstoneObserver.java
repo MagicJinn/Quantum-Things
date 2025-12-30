@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -22,7 +23,6 @@ import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.handler.redstone.Connection;
 import lumien.randomthings.handler.redstone.IRedstoneConnectionProvider;
 import lumien.randomthings.handler.redstone.component.IRedstoneReader;
-import lumien.randomthings.handler.redstone.component.IRedstoneWriter;
 import lumien.randomthings.handler.redstone.component.RedstoneWriterDefault;
 import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
 import lumien.randomthings.handler.redstone.source.RedstoneSource;
@@ -40,7 +40,7 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
     private UUID sourceId;
     private BlockPos target;
     // Internal writer
-    private IRedstoneWriter writer;
+    private RedstoneWriterDefault writer;
 
 	public TileEntityRedstoneObserver()
 	{
@@ -62,6 +62,11 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
         refreshSignals(true);
     }
 
+    public static Block getBlock()
+    {
+        return ModBlocks.redstoneObserver;
+    }
+
     /**
      * Refresh this observer's signals, updating its neighbors.
      * @param isObserving If this observer is actively observing its target
@@ -77,7 +82,7 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
         {
             for (EnumFacing side : EnumFacing.VALUES)
             {
-                writer.deactivate(pos, side);
+                writer.deactivate(getBlock(), pos, side);
             }
             return;
         }
@@ -89,14 +94,15 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
             int strongLevel = targetState.getStrongPower(world, target, side);
             if (weakLevel > 0 || strongLevel > 0)
             {
-                writer.setRedstoneLevel(pos, side, weakLevel, strongLevel);
+                writer.setRedstoneLevel(getBlock(), pos, side, weakLevel, strongLevel);
             }
             else
             {
-                writer.deactivate(pos, side);
+                writer.deactivate(getBlock(), pos, side);
             }
         }
-        world.notifyNeighborsOfStateChange(pos, ModBlocks.redstoneObserver, false);
+        // Update observer's neighbors
+        world.notifyNeighborsOfStateChange(pos, getBlock(), false);
     }
 
     /**
@@ -110,7 +116,7 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
         IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
         if (manager != null)
         {
-            manager.updateObservers(pos, event.getState(), ModBlocks.redstoneObserver);
+            manager.updateObservers(pos, event.getState(), getBlock());
         }
     }
 
@@ -215,16 +221,16 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
 
     @Nonnull
     @Override
-    public Optional<IDynamicRedstone> getDynamicRedstoneFor(BlockPos pos, EnumFacing side)
+    public Optional<IDynamicRedstone> getDynamicRedstoneFor(Block block, BlockPos pos, EnumFacing side)
     {
         return redstoneManager.get()
-                .map(manager -> manager.getDynamicRedstone(pos.offset(side), side, OBSERVED_SOURCE));
+                .map(manager -> manager.getDynamicRedstone(pos.offset(side), side, block, OBSERVED_SOURCE));
     }
 
     @Override
-    public int getRedstoneLevel(BlockPos pos, EnumFacing side, boolean strongPower)
+    public int getRedstoneLevel(Block block, BlockPos pos, EnumFacing side, boolean strongPower)
     {
-        return getDynamicRedstoneFor(pos, side)
+        return getDynamicRedstoneFor(block, pos, side)
                 .map(dynamicRedstone -> dynamicRedstone.getRedstoneLevel(strongPower)).orElse(0);
     }
 
@@ -245,12 +251,12 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
 
 	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
-        return getRedstoneLevel(pos, side, false);
+        return getRedstoneLevel(blockState.getBlock(), pos, side, false);
 	}
 
 	public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
-        return getRedstoneLevel(pos, side, true);
+        return getRedstoneLevel(blockState.getBlock(), pos, side, true);
 	}
 
     /* Connection provider */

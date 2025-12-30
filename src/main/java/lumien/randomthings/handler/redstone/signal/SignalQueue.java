@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 import java.util.stream.StreamSupport;
 
 /**
@@ -18,13 +19,15 @@ import java.util.stream.StreamSupport;
  */
 public class SignalQueue extends AbstractQueue<RedstoneSignal>
 {
+    private static final ToIntFunction<RedstoneSignal> SIGNAL_SUM = signal -> signal.strongLevel + signal.weakLevel;
+
     private final PriorityQueue<RedstoneSignal> signalQueue;
     // Signals mapped by their unique id.
     private final Map<UUID, RedstoneSignal> signalMap;
 
     public SignalQueue()
     {
-        signalQueue = new PriorityQueue<>(Comparator.comparingInt(RedstoneSignal::getRedstoneLevel).reversed());
+        signalQueue = new PriorityQueue<>(Comparator.comparingInt(SIGNAL_SUM).reversed());
         signalMap = new HashMap<>();
     }
 

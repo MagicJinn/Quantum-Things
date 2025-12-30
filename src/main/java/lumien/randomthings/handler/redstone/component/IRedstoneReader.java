@@ -1,5 +1,6 @@
 package lumien.randomthings.handler.redstone.component;
 
+import net.minecraft.block.Block;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
@@ -9,10 +10,11 @@ import net.minecraft.util.math.BlockPos;
 public interface IRedstoneReader extends IRedstoneComponent
 {
     /**
+     * @param block The signal's block.
      * @param pos The signal's position.
      * @param side The signal's side.
      * @param strongPower If the signal's strong power should be read, otherwise its weak power.
      * @return The strong or weak power of the dynamic redstone signal.
      */
-    int getRedstoneLevel(BlockPos pos, EnumFacing side, boolean strongPower);
+    int getRedstoneLevel(Block block, BlockPos pos, EnumFacing side, boolean strongPower);
 }
