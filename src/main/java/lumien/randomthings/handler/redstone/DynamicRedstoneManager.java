@@ -29,8 +29,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
-import lumien.randomthings.handler.redstone.component.IRedstoneWriter;
-import lumien.randomthings.handler.redstone.component.RedstoneWriterDefault;
 import lumien.randomthings.handler.redstone.scheduling.ChunkArea;
 import lumien.randomthings.handler.redstone.scheduling.TaskScheduler;
 import lumien.randomthings.handler.redstone.signal.ITickableSignal;
@@ -257,7 +255,7 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
             // Add tickable signal to both maps
             redstoneLevels.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class))
                     .computeIfAbsent(signalSide, key -> new SignalQueue())
-                    .offer(signal);
+                    .add(signal);
             tickingSignals.computeIfAbsent(pos, key -> new EnumMap<>(EnumFacing.class))
                     .computeIfAbsent(signalSide, key -> new ArrayList<>())
                     .add(signal);
@@ -290,7 +288,7 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                 SignalQueue signalQueue = signalsPerSide.get(side);
                 if (signalQueue != null && !signalQueue.isEmpty())
                 {
-                    RedstoneSignal signal = signalQueue.findFirst(this::canHandleSignal);
+                    RedstoneSignal signal = signalQueue.findFirst(this::canHandleSignal, strongPower);
                     if (signal != null)
                     {
                         return strongPower ? signal.getStrongLevel() : signal.getWeakLevel();
@@ -331,7 +329,7 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                     }
                     else
                     {
-                        redstoneLevels.computeIfAbsent(side, key -> new SignalQueue()).offer(signalIn);
+                        redstoneLevels.computeIfAbsent(side, key -> new SignalQueue()).add(signalIn);
                         if (signalIn instanceof ITickableSignal)
                         {
                             tickingSignals.computeIfAbsent(side, key -> new ArrayList<>()).add((ITickableSignal) signalIn);
@@ -345,7 +343,7 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                 sendUpdate = true;
                 sendUpdateStrong = signalIn.isStrong();
                 signalQueue = redstoneLevels.computeIfAbsent(side, key -> new SignalQueue());
-                signalQueue.offer(signalIn);
+                signalQueue.add(signalIn);
                 if (signalIn instanceof ITickableSignal)
                 {
                     tickingSignals.computeIfAbsent(side, key -> new ArrayList<>()).add((ITickableSignal) signalIn);
@@ -404,7 +402,7 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                 SignalQueue signalQueue = signalsPerSide.get(side);
                 if (signalQueue != null && !signalQueue.isEmpty())
                 {
-                    RedstoneSignal signal = signalQueue.findFirst(this::canHandleSignal);
+                    RedstoneSignal signal = signalQueue.findFirst(this::canHandleSignal, true);
                     if (signal != null)
                     {
                         return signal.isStrong();

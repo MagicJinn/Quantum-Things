@@ -1,36 +1,41 @@
 package lumien.randomthings.handler.redstone.signal;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.AbstractQueue;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.UUID;
 import java.util.function.Predicate;
-import java.util.function.ToIntFunction;
-import java.util.stream.StreamSupport;
+import java.util.stream.Stream;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Preconditions;
 
 /**
  * A queue of redstone signals, sorted by their strength.
  * Equality is determined solely by the signals' source.
  */
-public class SignalQueue extends AbstractQueue<RedstoneSignal>
+public class SignalQueue
 {
-    private static final ToIntFunction<RedstoneSignal> SIGNAL_SUM = signal -> signal.strongLevel + signal.weakLevel;
+    // Multiple signals are pretty rare, so use a small initial capacity.
+    private static final int INITIAL_CAPACITY = 4;
+    private static final Comparator<RedstoneSignal> STRONG_COMPARE = Comparator.comparingInt(RedstoneSignal::getStrongLevel).reversed();
+    private static final Comparator<RedstoneSignal> WEAK_COMPARE = Comparator.comparingInt(RedstoneSignal::getWeakLevel).reversed();
 
-    private final PriorityQueue<RedstoneSignal> signalQueue;
+    // Both queues contain the same set of signals, just sorted differently.
+    private final PriorityQueue<RedstoneSignal> strongQueue;
+    private final PriorityQueue<RedstoneSignal> weakQueue;
     // Signals mapped by their unique id.
     private final Map<UUID, RedstoneSignal> idToSignals;
 
     public SignalQueue()
     {
-        signalQueue = new PriorityQueue<>(Comparator.comparingInt(SIGNAL_SUM).reversed());
-        idToSignals = new HashMap<>();
+        strongQueue = new PriorityQueue<>(INITIAL_CAPACITY, STRONG_COMPARE);
+        weakQueue = new PriorityQueue<>(INITIAL_CAPACITY, WEAK_COMPARE);
+        idToSignals = new HashMap<>(INITIAL_CAPACITY);
     }
 
     public RedstoneSignal getBySource(UUID sourceId)
@@ -39,9 +44,9 @@ public class SignalQueue extends AbstractQueue<RedstoneSignal>
     }
 
     @Nullable
-    public RedstoneSignal findFirst(Predicate<RedstoneSignal> predicate)
+    public RedstoneSignal findFirst(Predicate<RedstoneSignal> predicate, boolean strongPower)
     {
-        RedstoneSignal signal = peek();
+        RedstoneSignal signal = strongPower ? strongQueue.peek() : weakQueue.peek();
         // Check the first signal
         if (predicate.test(signal))
         {
@@ -50,25 +55,31 @@ public class SignalQueue extends AbstractQueue<RedstoneSignal>
         // Then check the rest of the queue
         if (size() > 1)
         {
-            return StreamSupport.stream(spliterator(), false).skip(1).filter(predicate).findFirst().orElse(null);
+            return stream(strongPower).skip(1).filter(predicate).findFirst().orElse(null);
         }
         return null;
     }
 
-    @Override
-    public boolean offer(RedstoneSignal signal)
+    private Stream<RedstoneSignal> stream(boolean strongPower)
+    {
+        RedstoneSignal[] signals = (strongPower ? strongQueue : weakQueue).toArray(new RedstoneSignal[0]);
+        return Arrays.stream(signals).sorted(strongPower ? STRONG_COMPARE : WEAK_COMPARE);
+    }
+
+    public boolean add(RedstoneSignal signal)
     {
         UUID id = signal.getSource().getId();
         if (idToSignals.containsKey(id)) {
             RedstoneSignal oldSignal = idToSignals.get(id);
-            super.remove(oldSignal);
+            remove(oldSignal);
         }
-        signalQueue.offer(signal);
+        strongQueue.offer(signal);
+        weakQueue.offer(signal);
         idToSignals.put(id, signal);
+        checkSize();
         return true;
     }
 
-    @Override
     public boolean remove(Object o)
     {
         if (!(o instanceof RedstoneSignal))
@@ -77,53 +88,38 @@ public class SignalQueue extends AbstractQueue<RedstoneSignal>
         }
         UUID signalId = ((RedstoneSignal) o).getSource().getId();
         RedstoneSignal toRemove = idToSignals.remove(signalId);
-        return signalQueue.remove(toRemove);
+        boolean removed = strongQueue.remove(toRemove);
+        weakQueue.remove(toRemove);
+        checkSize();
+        return removed;
     }
 
-    @Override
-    public void clear()
+    private void checkSize()
     {
-        signalQueue.clear();
-        idToSignals.clear();
+        Preconditions.checkState(strongQueue.size() == weakQueue.size());
     }
 
-    @Override
-    public RedstoneSignal poll()
-    {
-        RedstoneSignal signal = peek();
-        if (signal == null)
-        {
-            return null;
-        }
-        UUID signalId = signal.getSource().getId();
-        idToSignals.remove(signalId);
-        return signalQueue.poll();
-    }
-
-    @Override
-    public RedstoneSignal peek()
-    {
-        return signalQueue.peek();
-    }
-
-    @Nonnull
-    @Override
-    public Iterator<RedstoneSignal> iterator()
-    {
-        return signalQueue.iterator();
-    }
-
-    @Override
     public int size()
     {
-        return signalQueue.size();
+        checkSize();
+        return strongQueue.size();
+    }
+
+    public boolean isEmpty()
+    {
+        checkSize();
+        return size() == 0;
     }
 
     @Override
     public String toString()
     {
         return MoreObjects.toStringHelper(this)
-                .add("queue", signalQueue)
+                .add("strongQueueOrder", stream(true)
+                        .map(RedstoneSignal::getStrongLevel).toArray())
+                .add("weakQueueOrder", stream(false)
+                        .map(RedstoneSignal::getWeakLevel).toArray())
+                .add("signals", new ArrayList<>(strongQueue))
                 .add("idToSignals", idToSignals)
                 .toString();
     }
