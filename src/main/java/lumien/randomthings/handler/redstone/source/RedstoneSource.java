@@ -49,7 +49,7 @@ public class RedstoneSource implements IDynamicRedstoneSource
 
     public RedstoneSource(IDynamicRedstoneSource source)
     {
-        this(source.getType(), source.getId(), source.getPos());
+        this(source.getType(), source.getId(), source.getSourcePos());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class RedstoneSource implements IDynamicRedstoneSource
 
     @Nullable
     @Override
-    public BlockPos getPos()
+    public BlockPos getSourcePos()
     {
         return pos;
     }

@@ -23,6 +23,10 @@ public interface IDynamicRedstoneSource
     /**
      * @return The source's position, if it exists.
      */
+    /*
+    This can't be named getPos() in order to implement it on tile entities - getPos() will be obfuscated away by
+    them and crash with AbstractMethodError.
+    */
     @Nullable
-    BlockPos getPos();
+    BlockPos getSourcePos();
 }

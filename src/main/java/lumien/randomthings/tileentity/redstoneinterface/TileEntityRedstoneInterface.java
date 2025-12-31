@@ -245,6 +245,13 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
         return sourceId;
     }
 
+    @Nullable
+    @Override
+    public BlockPos getSourcePos()
+    {
+        return pos;
+    }
+
     /* Connection provider */
 
     @Override

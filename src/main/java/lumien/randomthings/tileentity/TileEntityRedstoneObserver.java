@@ -1,6 +1,7 @@
 package lumien.randomthings.tileentity;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
@@ -288,6 +289,13 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
     {
         Preconditions.checkNotNull(sourceId);
         return sourceId;
+    }
+
+    @Nullable
+    @Override
+    public BlockPos getSourcePos()
+    {
+        return pos;
     }
 
     /* Block delegate functions */
