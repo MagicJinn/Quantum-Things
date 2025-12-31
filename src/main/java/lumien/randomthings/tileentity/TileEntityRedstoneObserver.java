@@ -24,6 +24,7 @@ import lumien.randomthings.handler.redstone.Connection;
 import lumien.randomthings.handler.redstone.IRedstoneConnectionProvider;
 import lumien.randomthings.handler.redstone.component.IRedstoneReader;
 import lumien.randomthings.handler.redstone.component.RedstoneWriterDefault;
+import lumien.randomthings.handler.redstone.scheduling.ChunkArea;
 import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
 import lumien.randomthings.handler.redstone.source.RedstoneSource;
 import lumien.randomthings.util.Lazy;
@@ -59,7 +60,7 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
         redstoneManager = Lazy.ofCapability(world, IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE);
         writer = new RedstoneWriterDefault(redstoneManager, this);
         startObserving(target);
-        refreshSignals(true);
+        refreshSignals();
     }
 
     public static Block getBlock()
@@ -68,38 +69,56 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
     }
 
     /**
-     * Refresh this observer's signals, updating its neighbors.
-     * @param isObserving If this observer is actively observing its target
-     *                    (i.e. didn't just call {@link #stopObserving(BlockPos)} on {@link #target}).
-     *                    NOT an indication of whether this observer has a target.
+     * Refresh this observer's signals, updating its neighbors when possible.
      */
-    public void refreshSignals(boolean isObserving)
+    public void refreshSignals()
     {
         if (world.isRemote || target == null) return;
 
-        // No longer watching a position, clear dynamic redstone
-        if (!isObserving)
+        if (!world.isBlockLoaded(target))
         {
-            for (EnumFacing side : EnumFacing.VALUES)
-            {
-                writer.deactivate(getBlock(), pos, side);
-            }
+            // Schedule task for when targetPos is loaded
+            redstoneManager.get().ifPresent(manager ->
+                    manager.scheduleTask(ChunkArea.of(target), pos,
+                            this::refreshSignals));
             return;
         }
-        // Otherwise update dynamic redstone based on target's signals
+
+        // Now get the loaded target's state
         IBlockState targetState = world.getBlockState(target);
+
         for (EnumFacing side : EnumFacing.VALUES)
         {
             int weakLevel = targetState.getWeakPower(world, target, side);
             int strongLevel = targetState.getStrongPower(world, target, side);
-            if (weakLevel > 0 || strongLevel > 0)
-            {
-                writer.setRedstoneLevel(getBlock(), pos, side, weakLevel, strongLevel);
-            }
-            else
-            {
-                writer.deactivate(getBlock(), pos, side);
-            }
+            refreshSignalForSide(side, weakLevel, strongLevel);
+        }
+    }
+
+    /**
+     * Side specific variant of {@link #refreshSignals()}.
+     * @param side The observer's side to refresh.
+     * @param weakLevel The weak power.
+     * @param strongLevel The strong power.
+     */
+    private void refreshSignalForSide(EnumFacing side, int weakLevel, int strongLevel)
+    {
+        if (!world.isAreaLoaded(pos, 1))
+        {
+            // Schedule task for when observer neighbors are loaded
+            redstoneManager.get().ifPresent(manager ->
+                    manager.scheduleTask(ChunkArea.of(pos, 1), pos,
+                            () -> this.refreshSignalForSide(side, weakLevel, strongLevel)));
+            return;
+        }
+
+        if (weakLevel > 0 || strongLevel > 0)
+        {
+            writer.setRedstoneLevel(getBlock(), pos, side, weakLevel, strongLevel);
+        }
+        else
+        {
+            writer.deactivate(getBlock(), pos, side);
         }
         // Update observer's neighbors
         world.notifyNeighborsOfStateChange(pos, getBlock(), false);
@@ -125,7 +144,7 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
     {
         super.onChunkUnload();
         stopObserving(target);
-        refreshSignals(false);
+        clearSignals();
     }
 
     @Override
@@ -133,7 +152,31 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
     {
         super.invalidate();
         stopObserving(target);
-        refreshSignals(false);
+        clearSignals();
+    }
+
+    /**
+     * Clear this observer's signals, updating its neighbors when possible.
+     */
+    private void clearSignals()
+    {
+        if (world.isRemote) return;
+
+        if (!world.isAreaLoaded(pos, 1))
+        {
+            // Schedule task for when observer neighbors are loaded
+            redstoneManager.get().ifPresent(manager ->
+                    manager.scheduleTask(ChunkArea.of(pos, 1), pos,
+                            this::clearSignals));
+            return;
+        }
+
+        for (EnumFacing side : EnumFacing.VALUES)
+        {
+            writer.deactivate(getBlock(), pos, side);
+        }
+        // Update observer's neighbors
+        world.notifyNeighborsOfStateChange(pos, getBlock(), false);
     }
 
     @Override
@@ -187,7 +230,7 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
         IBlockState state = world.getBlockState(pos);
         world.notifyBlockUpdate(pos, state, state, 3);
 
-        refreshSignals(true);
+        refreshSignals();
     }
 
     public BlockPos getTarget()

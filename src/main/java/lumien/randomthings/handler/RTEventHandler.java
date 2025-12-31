@@ -177,9 +177,34 @@ public class RTEventHandler
 	@SubscribeEvent
 	public void chunkLoad(ChunkEvent.Load event)
 	{
-        if (event.getWorld().isRemote)
-			SpectreIlluminationClientHandler.loadChunk(event.getChunk());
+        World world = event.getWorld();
+        if (world.isRemote)
+        {
+            SpectreIlluminationClientHandler.loadChunk(event.getChunk());
+        }
+        else
+        {
+            IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
+            if (manager != null)
+            {
+                manager.runScheduledTasks(event.getChunk().getPos());
+            }
+        }
 	}
+
+    @SubscribeEvent
+    public void chunkUnload(ChunkEvent.Unload event)
+    {
+        World world = event.getWorld();
+        if (!world.isRemote)
+        {
+            IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
+            if (manager != null)
+            {
+                manager.invalidateTasks(event.getChunk().getPos());
+            }
+        }
+    }
 
 	@SubscribeEvent
 	public void chunkWatch(ChunkWatchEvent.Watch event)

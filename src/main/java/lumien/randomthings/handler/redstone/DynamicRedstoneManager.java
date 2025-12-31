@@ -17,8 +17,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
@@ -29,6 +31,8 @@ import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.handler.redstone.component.IRedstoneWriter;
 import lumien.randomthings.handler.redstone.component.RedstoneWriterDefault;
+import lumien.randomthings.handler.redstone.scheduling.ChunkArea;
+import lumien.randomthings.handler.redstone.scheduling.TaskScheduler;
 import lumien.randomthings.handler.redstone.signal.ITickableSignal;
 import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
 import lumien.randomthings.handler.redstone.signal.RemovalSignal;
@@ -36,6 +40,7 @@ import lumien.randomthings.handler.redstone.signal.SignalQueue;
 import lumien.randomthings.handler.redstone.signal.TemporarySignal;
 import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
 import lumien.randomthings.handler.redstone.source.RedstoneSource;
+import lumien.randomthings.tileentity.TileEntityRedstoneObserver;
 
 /**
  * Per-world capability that manages dynamic redstone signals.
@@ -59,18 +64,22 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     /* Key: Observed position, Value: Copy of observer source info */
     private final Multimap<BlockPos, RedstoneSource> observers;
 
+    private final TaskScheduler scheduler;
+
     @SuppressWarnings("UnstableApiUsage")
     public DynamicRedstoneManager()
     {
         redstoneLevels = new HashMap<>();
         tickingSignals = new LinkedHashMap<>();
         observers = MultimapBuilder.hashKeys().hashSetValues().build();
+        scheduler = new TaskScheduler();
     }
 
     public DynamicRedstoneManager(World world)
     {
         this();
         this.world = world;
+        scheduler.setWorld(world);
     }
 
     @Nonnull
@@ -94,6 +103,26 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         return new DynamicRedstone(this, BlockPos, signalBlock, side, allowedSources);
     }
 
+    /* Scheduling */
+
+    @Override
+    public void scheduleTask(ChunkArea requiredArea, BlockPos sourcePos, Runnable task)
+    {
+        scheduler.scheduleTask(requiredArea, sourcePos, task);
+    }
+
+    @Override
+    public void invalidateTasks(ChunkPos unloadedChunkPos)
+    {
+        scheduler.invalidateTasks(unloadedChunkPos);
+    }
+
+    @Override
+    public void runScheduledTasks(ChunkPos loadedChunkPos)
+    {
+        scheduler.runScheduledTasks(loadedChunkPos);
+    }
+
     /* Observer functions */
 
     @Override
@@ -101,40 +130,18 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     {
         if (observers.isEmpty() || !observers.containsKey(observedPos)) return;
 
-        EnumMap<EnumFacing, Integer> weakLevels = new EnumMap<>(EnumFacing.class);
-        EnumMap<EnumFacing, Integer> strongLevels = new EnumMap<>(EnumFacing.class);
-        // Gather observed signal levels
-        for (EnumFacing side : EnumFacing.VALUES)
+        for (RedstoneSource observerSource : observers.get(observedPos))
         {
-            int weakLevel = state.getWeakPower(world, observedPos, side);
-            int strongLevel = state.getStrongPower(world, observedPos, side);
-            weakLevels.put(side, weakLevel);
-            strongLevels.put(side, strongLevel);
-        }
-        for (RedstoneSource observer : observers.get(observedPos))
-        {
-            BlockPos observerPos = observer.getPos();
+            BlockPos observerPos = observerSource.getSourcePos();
             Preconditions.checkNotNull(observerPos);
 
             if (!world.isBlockLoaded(observerPos)) continue;
 
-            // Write levels to observer's dynamic redstone
-            IRedstoneWriter writer = new RedstoneWriterDefault(this, observer);
-            for (EnumFacing side : EnumFacing.VALUES)
+            TileEntity tile = world.getTileEntity(observerPos);
+            if (tile instanceof TileEntityRedstoneObserver)
             {
-                int weakLevel = weakLevels.get(side);
-                int strongLevel = strongLevels.get(side);
-                if (weakLevel > 0 || strongLevel > 0)
-                {
-                    writer.setRedstoneLevel(observerBlock, observerPos, side, weakLevel, strongLevel);
-                }
-                else
-                {
-                    writer.deactivate(observerBlock, observerPos, side);
-                }
+                ((TileEntityRedstoneObserver) tile).refreshSignals();
             }
-            // Update observer's neighbors
-            world.notifyNeighborsOfStateChange(observerPos, observerBlock, false);
         }
     }
 
@@ -333,17 +340,15 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                 }
             }
             // Add new signal
-            else
+            else if (!RemovalSignal.isRemovalSignal(signalIn))
             {
                 sendUpdate = true;
-                if (!RemovalSignal.isRemovalSignal(signalIn))
+                sendUpdateStrong = signalIn.isStrong();
+                signalQueue = redstoneLevels.computeIfAbsent(side, key -> new SignalQueue());
+                signalQueue.offer(signalIn);
+                if (signalIn instanceof ITickableSignal)
                 {
-                    signalQueue = redstoneLevels.computeIfAbsent(side, key -> new SignalQueue());
-                    signalQueue.offer(signalIn);
-                    if (signalIn instanceof ITickableSignal)
-                    {
-                        tickingSignals.computeIfAbsent(side, key -> new ArrayList<>()).add((ITickableSignal) signalIn);
-                    }
+                    tickingSignals.computeIfAbsent(side, key -> new ArrayList<>()).add((ITickableSignal) signalIn);
                 }
             }
 

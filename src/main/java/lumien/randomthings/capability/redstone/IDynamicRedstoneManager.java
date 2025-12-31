@@ -21,7 +21,7 @@ import lumien.randomthings.lib.Reference;
 /**
  * Capability that manages externally controlled, position-based redstone signals.
  */
-public interface IDynamicRedstoneManager extends ICapability<IDynamicRedstoneManager>
+public interface IDynamicRedstoneManager extends ICapability<IDynamicRedstoneManager>, ITaskScheduler
 {
     @CapabilityInject(IDynamicRedstoneManager.class)
     Capability<IDynamicRedstoneManager> CAPABILITY_DYNAMIC_REDSTONE = null;
