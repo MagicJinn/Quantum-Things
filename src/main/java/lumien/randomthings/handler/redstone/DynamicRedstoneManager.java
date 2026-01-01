@@ -163,9 +163,11 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
         return !tickingSignals.isEmpty();
     }
 
+    @Override
     public void tick()
     {
         Iterator<Map.Entry<BlockPos, EnumMap<EnumFacing, List<ITickableSignal>>>> signalsPerSideItr = tickingSignals.entrySet().iterator();
+        List<Runnable> toRemoveList = new ArrayList<>();
         while (signalsPerSideItr.hasNext())
         {
             Map.Entry<BlockPos, EnumMap<EnumFacing, List<ITickableSignal>>> signalsPerSideEntry = signalsPerSideItr.next();
@@ -189,7 +191,8 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
                     signal.tick();
                     if (!signal.isAlive())
                     {
-                        signal.onRemoved(this, pos, side);
+                        // This could cause recursive updates to the manager, run later
+                        toRemoveList.add(() -> signal.onRemoved(this, pos, side));
                         return true;
                     }
                     return false;
@@ -205,6 +208,10 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
             {
                 signalsPerSideItr.remove();
             }
+        }
+        for (Runnable toRemove : toRemoveList)
+        {
+            toRemove.run();
         }
     }
 
