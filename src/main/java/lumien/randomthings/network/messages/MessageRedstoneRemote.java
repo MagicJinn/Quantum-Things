@@ -86,7 +86,7 @@ public class MessageRedstoneRemote implements IRTMessage
                                 for (EnumFacing side : EnumFacing.VALUES)
                                 {
                                     IDynamicRedstone signal = manager.getDynamicRedstone(target.offset(side), side, null, EnumSet.of(ITEM));
-                                    signal.setRedstoneLevel(new TemporarySignal(source, 15, true, 20));
+                                    signal.setRedstoneLevel(new TemporarySignal(source, 15, 15, 20));
                                 }
                             }
                         }
