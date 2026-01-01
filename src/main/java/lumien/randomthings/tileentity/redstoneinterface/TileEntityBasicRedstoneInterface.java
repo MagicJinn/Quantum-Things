@@ -63,6 +63,6 @@ public class TileEntityBasicRedstoneInterface extends TileEntityRedstoneInterfac
             invalidateTargets(Collections.singleton(oldTarget));
         }
 
-        sendSignal(getTargets());
+        sendSignalsToAll(getTargets());
     }
 }

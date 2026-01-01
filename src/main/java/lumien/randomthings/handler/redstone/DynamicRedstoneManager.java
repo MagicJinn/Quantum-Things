@@ -29,7 +29,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
-import lumien.randomthings.handler.redstone.scheduling.ChunkArea;
 import lumien.randomthings.handler.redstone.scheduling.TaskScheduler;
 import lumien.randomthings.handler.redstone.signal.ITickableSignal;
 import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
@@ -77,7 +76,6 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     {
         this();
         this.world = world;
-        scheduler.setWorld(world);
     }
 
     @Nonnull
@@ -104,9 +102,9 @@ public class DynamicRedstoneManager implements IDynamicRedstoneManager
     /* Scheduling */
 
     @Override
-    public void scheduleTask(ChunkArea requiredArea, BlockPos sourcePos, Runnable task)
+    public void scheduleTask(@Nonnull BlockPos requiredPos, @Nonnull BlockPos sourcePos, Runnable task)
     {
-        scheduler.scheduleTask(requiredArea, sourcePos, task);
+        scheduler.scheduleTask(requiredPos, sourcePos, task);
     }
 
     @Override

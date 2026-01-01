@@ -14,6 +14,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
 import lumien.randomthings.capability.ICapability;
+import lumien.randomthings.handler.redstone.scheduling.ITaskScheduler;
 import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
 import lumien.randomthings.handler.redstone.source.RedstoneSource;
 import lumien.randomthings.lib.Reference;

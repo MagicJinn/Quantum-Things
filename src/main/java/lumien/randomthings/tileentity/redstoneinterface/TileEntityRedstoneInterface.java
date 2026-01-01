@@ -3,6 +3,7 @@ package lumien.randomthings.tileentity.redstoneinterface;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -17,13 +18,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
+import lumien.randomthings.RandomThings;
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.handler.redstone.Connection;
 import lumien.randomthings.handler.redstone.IRedstoneConnectionProvider;
 import lumien.randomthings.handler.redstone.component.IRedstoneWriter;
-import lumien.randomthings.handler.redstone.scheduling.ChunkArea;
 import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
 import lumien.randomthings.handler.redstone.signal.RemovalSignal;
 import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
@@ -57,7 +59,7 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
         if (world.isRemote) return;
 
         redstoneManager = Lazy.ofCapability(world, IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE);
-        sendSignal(getTargets());
+        sendSignalsToAll(getTargets());
     }
 
     @Override
@@ -67,94 +69,104 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
 
 		BlockPos direction = changedPos.subtract(pos);
         EnumFacing side = EnumFacing.getFacingFromVector(direction.getX(), direction.getY(), direction.getZ());
-        sendSidedSignal(changedPos, side, neighborBlock, getTargets(), false);
+        sendSidedSignal(side, neighborBlock, getTargets());
 	}
 
     /**
      * Sends the signal received by this interface to its targets on the specified side.
-     * @param signalPos The signal's position - must be loaded.
      * @param signalDir The side the received signal is coming from, relative to this tile.
-     * @param signalBlockIn The block sending the signal, null if not loaded yet.
+     * @param signalBlock The block sending the signal.
      * @param targets The targets' positions.
-     * @param checkPower If the power in-world should be checked.
      */
-    private void sendSidedSignal(BlockPos signalPos, EnumFacing signalDir, @Nullable Block signalBlockIn, Set<BlockPos> targets, boolean checkPower)
+    private void sendSidedSignal(EnumFacing signalDir, Block signalBlock, Set<BlockPos> targets)
     {
         if (targets.isEmpty()) return;
 
-        if (!world.isAreaLoaded(signalPos, 1))
-        {
-            // Schedule task for when signalPos is loaded
-            redstoneManager.get().ifPresent(manager ->
-                    manager.scheduleTask(ChunkArea.of(signalPos, 1), pos,
-                            () -> this.sendSidedSignal(signalPos, signalDir, signalBlockIn, targets, checkPower)));
-            return;
-        }
-
-        Block signalBlock = signalBlockIn != null ? signalBlockIn : world.getBlockState(signalPos).getBlock();
-        // Requires neighbors of signalPos to be loaded
-        int weakLevel = checkPower ? 0 : world.getRedstonePower(signalPos, signalDir);
-        int strongLevel = checkPower ? 0 : world.getStrongPower(signalPos, signalDir);
+        SignalInfo signalInfo = new SignalInfo();
+        int weakLevel = signalInfo.weakLevels.get(signalDir);
+        int strongLevel = signalInfo.strongLevels.get(signalDir);
 
         for (BlockPos targetPos : targets)
         {
-            sendSidedSignalToTarget(signalDir, signalBlock, targetPos, weakLevel, strongLevel);
+            if (!world.isBlockLoaded(targetPos))
+            {
+                // Schedule all-sided task for when targetPos is loaded
+                redstoneManager.get().ifPresent(manager ->
+                        manager.scheduleTask(targetPos, pos,
+                                () -> this.sendSignalsTo(targetPos, signalInfo)));
+                continue;
+            }
+
+            Block targetBlock = world.getBlockState(targetPos).getBlock();
+            if (weakLevel > 0 || strongLevel > 0)
+            {
+                setRedstoneLevel(signalBlock, targetPos, signalDir, weakLevel, strongLevel);
+            }
+            else
+            {
+                deactivate(signalBlock, targetPos, signalDir);
+            }
+            // Update target's neighbors
+            if (WorldUtil.isNeighboring(targetPos, pos))
+            {
+                // Don't recursively update signal -> interface -> signal -> ...
+                world.notifyNeighborsOfStateExcept(targetPos, targetBlock, signalDir.getOpposite());
+            }
+            else
+            {
+                world.notifyNeighborsOfStateChange(targetPos, targetBlock, false);
+            }
         }
     }
 
     /**
-     * Single target variant of {@link #sendSidedSignal(BlockPos, EnumFacing, Block, Set, boolean)}.
-     * @param signalDir The side the received signal is coming from, relative to this tile.
-     * @param signalBlock The signal's block.
-     * @param targetPos The targets' position - must be loaded.
-     * @param weakLevel The signal's weak power.
-     * @param strongLevel The signal's strong power.
+     * Send all signals to the target, waiting for the target to be loaded.
+     * @param targetPos The target position.
      */
-    private void sendSidedSignalToTarget(EnumFacing signalDir, @Nonnull Block signalBlock,
-                                         BlockPos targetPos, int weakLevel, int strongLevel)
+    private void sendSignalsTo(BlockPos targetPos, SignalInfo signals)
     {
-        if (!world.isAreaLoaded(targetPos, 1))
+        if (!world.isBlockLoaded(targetPos))
         {
-            // Schedule task for when targetPos is loaded
+            // Schedule self for when targetPos is loaded
             redstoneManager.get().ifPresent(manager ->
-                    manager.scheduleTask(ChunkArea.of(targetPos, 1), pos,
-                            () -> this.sendSidedSignalToTarget(signalDir, signalBlock, targetPos, weakLevel, strongLevel)));
+                    manager.scheduleTask(targetPos, pos,
+                            () -> this.sendSignalsTo(targetPos, signals)));
             return;
         }
 
+        // Now get the loaded target's state
         Block targetBlock = world.getBlockState(targetPos).getBlock();
-        if (weakLevel > 0 || strongLevel > 0)
+        for (EnumFacing side : EnumFacing.VALUES)
         {
-            setRedstoneLevel(signalBlock, targetPos, signalDir, weakLevel, strongLevel);
-        }
-        else
-        {
-            deactivate(signalBlock, targetPos, signalDir);
+            int weakLevel = signals.weakLevels.get(side);
+            int strongLevel = signals.strongLevels.get(side);
+            Block signalBlock = signals.signalBlocks.get(side);
+
+            if (weakLevel > 0 || strongLevel > 0)
+            {
+                setRedstoneLevel(signalBlock, targetPos, side, weakLevel, strongLevel);
+            }
+            else
+            {
+                deactivate(signalBlock, targetPos, side);
+            }
         }
         // Update target's neighbors
-        if (WorldUtil.isNeighboring(targetPos, pos))
-        {
-            // Don't recursively update signal -> interface -> signal -> ...
-            world.notifyNeighborsOfStateExcept(targetPos, targetBlock, signalDir.getOpposite());
-        }
-        else
-        {
-            world.notifyNeighborsOfStateChange(targetPos, targetBlock, false);
-        }
+        world.notifyNeighborsOfStateChange(targetPos, targetBlock, false);
     }
 
     /**
-     * Sends the signal received by this interface to its targets for all sides.
+     * Sends all signals received by this interface to all specified targets.
      * @param targets The targets' positions.
      */
-    public void sendSignal(Set<BlockPos> targets)
+    public void sendSignalsToAll(Set<BlockPos> targets)
     {
-        if (targets.isEmpty()) return;
+        if (world.isRemote || targets.isEmpty()) return;
 
-        for (EnumFacing side : EnumFacing.VALUES)
+        SignalInfo signalInfo = new SignalInfo();
+        for (BlockPos target : targets)
         {
-            BlockPos signalPos = pos.offset(side);
-            sendSidedSignal(signalPos, side, null, targets, false);
+            sendSignalsTo(target, signalInfo);
         }
     }
 
@@ -176,10 +188,11 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     {
         if (world.isRemote || targets.isEmpty()) return;
 
-        for (EnumFacing side : EnumFacing.VALUES)
+        // Blocks.AIR to always deactivate
+        SignalInfo signalInfo = new SignalInfo(Blocks.AIR);
+        for (BlockPos target : targets)
         {
-            BlockPos signalPos = pos.offset(side);
-            sendSidedSignal(signalPos, side, Blocks.AIR, targets, true);
+            sendSignalsTo(target, signalInfo);
         }
     }
 
@@ -264,5 +277,50 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
             connections.add(connection);
         }
         return connections;
+    }
+
+    /**
+     * Signal info for all neighbors of this interface.
+     */
+    private class SignalInfo
+    {
+        final EnumMap<EnumFacing, Integer> weakLevels;
+        final EnumMap<EnumFacing, Integer> strongLevels;
+        final EnumMap<EnumFacing, Block> signalBlocks;
+
+        SignalInfo()
+        {
+            this(null);
+        }
+
+        SignalInfo(@Nullable Block blockOverride)
+        {
+            weakLevels = new EnumMap<>(EnumFacing.class);
+            strongLevels = new EnumMap<>(EnumFacing.class);
+            signalBlocks = new EnumMap<>(EnumFacing.class);
+
+            // Gather signal info
+            for (EnumFacing side : EnumFacing.VALUES)
+            {
+                BlockPos signalPos = pos.offset(side);
+                int weakLevel = world.getRedstonePower(signalPos, side);
+                int strongLevel = world.getStrongPower(signalPos, side);
+                Block signalBlock = blockOverride != null ? blockOverride : world.getBlockState(signalPos).getBlock();
+
+                weakLevels.put(side, weakLevel);
+                strongLevels.put(side, strongLevel);
+                signalBlocks.put(side, signalBlock);
+            }
+        }
+
+        @Override
+        public String toString()
+        {
+            return MoreObjects.toStringHelper(this)
+                    .add("weakLevels", weakLevels)
+                    .add("strongLevels", strongLevels)
+                    .add("signalBlocks", signalBlocks)
+                    .toString();
+        }
     }
 }

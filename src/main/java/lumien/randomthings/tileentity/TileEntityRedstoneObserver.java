@@ -25,7 +25,6 @@ import lumien.randomthings.handler.redstone.Connection;
 import lumien.randomthings.handler.redstone.IRedstoneConnectionProvider;
 import lumien.randomthings.handler.redstone.component.IRedstoneReader;
 import lumien.randomthings.handler.redstone.component.RedstoneWriterDefault;
-import lumien.randomthings.handler.redstone.scheduling.ChunkArea;
 import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
 import lumien.randomthings.handler.redstone.source.RedstoneSource;
 import lumien.randomthings.util.Lazy;
@@ -78,48 +77,28 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
 
         if (!world.isBlockLoaded(target))
         {
-            // Schedule task for when targetPos is loaded
+            // Schedule self for when targetPos is loaded
             redstoneManager.get().ifPresent(manager ->
-                    manager.scheduleTask(ChunkArea.of(target), pos,
+                    manager.scheduleTask(target, pos,
                             this::refreshSignals));
             return;
         }
 
         // Now get the loaded target's state
         IBlockState targetState = world.getBlockState(target);
-
         for (EnumFacing side : EnumFacing.VALUES)
         {
             int weakLevel = targetState.getWeakPower(world, target, side);
             int strongLevel = targetState.getStrongPower(world, target, side);
-            refreshSignalForSide(side, weakLevel, strongLevel);
-        }
-    }
 
-    /**
-     * Side specific variant of {@link #refreshSignals()}.
-     * @param side The observer's side to refresh.
-     * @param weakLevel The weak power.
-     * @param strongLevel The strong power.
-     */
-    private void refreshSignalForSide(EnumFacing side, int weakLevel, int strongLevel)
-    {
-        if (!world.isAreaLoaded(pos, 1))
-        {
-            // Schedule task for when observer neighbors are loaded
-            redstoneManager.get().ifPresent(manager ->
-                    manager.scheduleTask(ChunkArea.of(pos, 1), pos,
-                            () -> this.refreshSignalForSide(side, weakLevel, strongLevel)));
-            return;
-        }
-
-        if (weakLevel > 0 || strongLevel > 0)
-        {
-            writer.setRedstoneLevel(getBlock(), pos, side, weakLevel, strongLevel);
-        }
-        else
-        {
-            writer.deactivate(getBlock(), pos, side);
+            if (weakLevel > 0 || strongLevel > 0)
+            {
+                writer.setRedstoneLevel(getBlock(), pos, side, weakLevel, strongLevel);
+            }
+            else
+            {
+                writer.deactivate(getBlock(), pos, side);
+            }
         }
         // Update observer's neighbors
         world.notifyNeighborsOfStateChange(pos, getBlock(), false);
@@ -162,15 +141,6 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
     private void clearSignals()
     {
         if (world.isRemote) return;
-
-        if (!world.isAreaLoaded(pos, 1))
-        {
-            // Schedule task for when observer neighbors are loaded
-            redstoneManager.get().ifPresent(manager ->
-                    manager.scheduleTask(ChunkArea.of(pos, 1), pos,
-                            this::clearSignals));
-            return;
-        }
 
         for (EnumFacing side : EnumFacing.VALUES)
         {

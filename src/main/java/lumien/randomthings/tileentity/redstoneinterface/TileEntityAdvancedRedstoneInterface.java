@@ -104,7 +104,7 @@ public class TileEntityAdvancedRedstoneInterface extends TileEntityRedstoneInter
         world.notifyBlockUpdate(pos, state, state, 3);
 
         invalidateTargets(discardedPositions);
-        sendSignal(changedPositions);
+        sendSignalsToAll(changedPositions);
     }
 
 	public IInventory getTargetInventory()
