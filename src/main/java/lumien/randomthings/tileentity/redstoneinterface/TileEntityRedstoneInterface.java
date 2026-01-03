@@ -20,7 +20,6 @@ import net.minecraft.world.World;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
-import lumien.randomthings.RandomThings;
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.handler.redstone.Connection;
@@ -82,9 +81,10 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     {
         if (targets.isEmpty()) return;
 
-        SignalInfo signalInfo = new SignalInfo();
-        int weakLevel = signalInfo.weakLevels.get(signalDir);
-        int strongLevel = signalInfo.strongLevels.get(signalDir);
+        EnumMap<EnumFacing, SignalInfo> signals = gatherSignals(null);
+        SignalInfo signalInfo = signals.get(signalDir);
+        int weakLevel = signalInfo.weakLevel;
+        int strongLevel = signalInfo.strongLevel;
 
         for (BlockPos targetPos : targets)
         {
@@ -93,7 +93,7 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
                 // Schedule all-sided task for when targetPos is loaded
                 redstoneManager.get().ifPresent(manager ->
                         manager.scheduleTask(targetPos, pos,
-                                () -> this.sendSignalsTo(targetPos, signalInfo)));
+                                () -> this.sendSignalsTo(targetPos, signals)));
                 continue;
             }
 
@@ -123,7 +123,7 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
      * Send all signals to the target, waiting for the target to be loaded.
      * @param targetPos The target position.
      */
-    private void sendSignalsTo(BlockPos targetPos, SignalInfo signals)
+    private void sendSignalsTo(BlockPos targetPos, EnumMap<EnumFacing, SignalInfo> signals)
     {
         if (!world.isBlockLoaded(targetPos))
         {
@@ -138,9 +138,10 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
         Block targetBlock = world.getBlockState(targetPos).getBlock();
         for (EnumFacing side : EnumFacing.VALUES)
         {
-            int weakLevel = signals.weakLevels.get(side);
-            int strongLevel = signals.strongLevels.get(side);
-            Block signalBlock = signals.signalBlocks.get(side);
+            SignalInfo signalInfo = signals.get(side);
+            int weakLevel = signalInfo.weakLevel;
+            int strongLevel = signalInfo.strongLevel;
+            Block signalBlock = signalInfo.signalBlock;
 
             if (weakLevel > 0 || strongLevel > 0)
             {
@@ -163,10 +164,10 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     {
         if (world.isRemote || targets.isEmpty()) return;
 
-        SignalInfo signalInfo = new SignalInfo();
+        EnumMap<EnumFacing, SignalInfo> signals = gatherSignals(null);
         for (BlockPos target : targets)
         {
-            sendSignalsTo(target, signalInfo);
+            sendSignalsTo(target, signals);
         }
     }
 
@@ -189,10 +190,10 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
         if (world.isRemote || targets.isEmpty()) return;
 
         // Blocks.AIR to always deactivate
-        SignalInfo signalInfo = new SignalInfo(Blocks.AIR);
+        EnumMap<EnumFacing, SignalInfo> signals = gatherSignals(Blocks.AIR);
         for (BlockPos target : targets)
         {
-            sendSignalsTo(target, signalInfo);
+            sendSignalsTo(target, signals);
         }
     }
 
@@ -280,46 +281,50 @@ public abstract class TileEntityRedstoneInterface extends TileEntityBase impleme
     }
 
     /**
-     * Signal info for all neighbors of this interface.
+     * Gather neighboring signals of this interface.
+     * @param blockOverride A block to override all signal info with, null to use the in-world block.
+     * @return An {@link EnumMap} of signals' sides mapped to their {@link SignalInfo}.
      */
-    private class SignalInfo
+    private EnumMap<EnumFacing, SignalInfo> gatherSignals(@Nullable Block blockOverride)
     {
-        final EnumMap<EnumFacing, Integer> weakLevels;
-        final EnumMap<EnumFacing, Integer> strongLevels;
-        final EnumMap<EnumFacing, Block> signalBlocks;
+        EnumMap<EnumFacing, SignalInfo> signalInfos = new EnumMap<>(EnumFacing.class);
 
-        SignalInfo()
+        // Gather signal info
+        for (EnumFacing side : EnumFacing.VALUES)
         {
-            this(null);
+            BlockPos signalPos = pos.offset(side);
+            int weakLevel = world.getRedstonePower(signalPos, side);
+            int strongLevel = world.getStrongPower(signalPos, side);
+            Block signalBlock = blockOverride != null ? blockOverride : world.getBlockState(signalPos).getBlock();
+
+            signalInfos.put(side, new SignalInfo(weakLevel, strongLevel, signalBlock));
         }
+        return signalInfos;
+    }
 
-        SignalInfo(@Nullable Block blockOverride)
+    /**
+     * Signal info for a neighbor of the interface.
+     */
+    private static class SignalInfo
+    {
+        final int weakLevel;
+        final int strongLevel;
+        final Block signalBlock;
+
+        private SignalInfo(int weakLevel, int strongLevel, Block signalBlock)
         {
-            weakLevels = new EnumMap<>(EnumFacing.class);
-            strongLevels = new EnumMap<>(EnumFacing.class);
-            signalBlocks = new EnumMap<>(EnumFacing.class);
-
-            // Gather signal info
-            for (EnumFacing side : EnumFacing.VALUES)
-            {
-                BlockPos signalPos = pos.offset(side);
-                int weakLevel = world.getRedstonePower(signalPos, side);
-                int strongLevel = world.getStrongPower(signalPos, side);
-                Block signalBlock = blockOverride != null ? blockOverride : world.getBlockState(signalPos).getBlock();
-
-                weakLevels.put(side, weakLevel);
-                strongLevels.put(side, strongLevel);
-                signalBlocks.put(side, signalBlock);
-            }
+            this.weakLevel = weakLevel;
+            this.strongLevel = strongLevel;
+            this.signalBlock = signalBlock;
         }
 
         @Override
         public String toString()
         {
             return MoreObjects.toStringHelper(this)
-                    .add("weakLevels", weakLevels)
-                    .add("strongLevels", strongLevels)
-                    .add("signalBlocks", signalBlocks)
+                    .add("weakLevel", weakLevel)
+                    .add("strongLevel", strongLevel)
+                    .add("signalBlock", signalBlock)
                     .toString();
         }
     }
