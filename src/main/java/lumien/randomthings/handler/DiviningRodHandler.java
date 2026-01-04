@@ -2,21 +2,18 @@ package lumien.randomthings.handler;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import lumien.randomthings.config.Numbers;
+import lumien.randomthings.config.DiviningRods;
 import lumien.randomthings.item.diviningrod.ItemDiviningRod;
 import lumien.randomthings.item.diviningrod.RodType;
 import lumien.randomthings.util.client.RenderUtils;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -28,20 +25,9 @@ public class DiviningRodHandler {
 
 	List<Indicator> indicators;
 
-	HashMap<Block, Color> blockColorMap;
-
 	public DiviningRodHandler() {
-		blockColorMap = new HashMap<Block, Color>();
 		positionsToCheck = new LinkedHashSet<BlockPos>();
 		indicators = new ArrayList<Indicator>();
-
-		blockColorMap.put(Blocks.COAL_ORE, new Color(20, 20, 20, 50));
-		blockColorMap.put(Blocks.IRON_ORE, new Color(211, 180, 159, 50));
-		blockColorMap.put(Blocks.GOLD_ORE, new Color(246, 233, 80, 50));
-		blockColorMap.put(Blocks.LAPIS_ORE, new Color(5, 45, 150, 50));
-		blockColorMap.put(Blocks.REDSTONE_ORE, new Color(211, 1, 1, 50));
-		blockColorMap.put(Blocks.EMERALD_ORE, new Color(0, 220, 0, 50));
-		blockColorMap.put(Blocks.DIAMOND_ORE, new Color(87, 221, 229, 50));
 	}
 
 	public boolean shouldGlow(RodType rodType) {
@@ -112,7 +98,7 @@ public class DiviningRodHandler {
 					if (type == null)
 						return;
 
-					int range = Numbers.DIVINING_ROD_RANGE;
+					int range = DiviningRods.RANGE;
 					int maxCoord = range + 1; // +1 because it is centered on the player
 					int totalBlocks = (range * 2 + 1) * (range * 2 + 1) * (range * 2 + 1);
 					// Check all blocks over 20 ticks (roughly 1 second)

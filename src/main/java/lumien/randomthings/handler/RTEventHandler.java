@@ -1035,7 +1035,35 @@ public class RTEventHandler {
 	@SubscribeEvent
 	public void anvilUpdate(AnvilUpdateEvent event) {
 		if (!event.getLeft().isEmpty() && !event.getRight().isEmpty()) {
-			AnvilRecipe recipe = AnvilRecipeHandler.getRecipe(event.getLeft(), event.getRight());
+			// Check for divining rod repair
+			ItemStack left = event.getLeft();
+			ItemStack right = event.getRight();
+
+			if (left.getItem() instanceof ItemDiviningRod) {
+				ItemDiviningRod rod = (ItemDiviningRod) left.getItem();
+
+				// Check if the repair item is valid
+				if (rod.getIsRepairable(left, right)) {
+					ItemStack repaired = left.copy();
+					int maxDamage = repaired.getMaxDamage();
+					int currentDamage = repaired.getItemDamage();
+
+					// Repair 50% of max durability
+					int repairAmount = maxDamage / 2;
+					int newDamage = Math.max(0, currentDamage - repairAmount);
+
+					repaired.setItemDamage(newDamage);
+					event.setOutput(repaired);
+
+					// Set cost (1 level per repair material used)
+					event.setCost(1);
+					event.setMaterialCost(1);
+					return;
+				}
+			}
+
+			// Check for custom anvil recipes
+			AnvilRecipe recipe = AnvilRecipeHandler.getRecipe(left, right);
 
 			if (recipe != null) {
 				event.setOutput(recipe.getOutput().copy());

@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.logging.log4j.Level;
 import lumien.randomthings.RandomThings;
 import lumien.randomthings.config.DiviningRods;
@@ -16,29 +20,34 @@ import lumien.randomthings.lib.IRTItemColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
-public class ItemDiviningRod extends ItemBase implements IRTItemColor
-{
+public class ItemDiviningRod extends ItemBase implements IRTItemColor {
 	public static List<RodType> types;
 	public static Map<RodType, Boolean> availableTypes;
 	public static CombinedRodType universalRod;
 	public static Map<RodType, ItemDiviningRod> rodItems;
 	public static Map<Item, RodType> itemToRodType;
+	public static int baseDurability = 1024;
 
 	private RodType rodType;
 
-	static
-	{
+	static {
 		types = new ArrayList<RodType>();
 		availableTypes = new LinkedHashMap<RodType, Boolean>();
 		rodItems = new LinkedHashMap<RodType, ItemDiviningRod>();
@@ -49,13 +58,18 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 		super(name);
 		this.rodType = rodType;
 		this.setMaxStackSize(1);
+		if (rodType != null && rodType.getName().equals("universal")) {
+			this.setMaxDamage(baseDurability * 8);
+		} else {
+			this.setMaxDamage(baseDurability);
+		}
 	}
 
 	public static void preInit() {
 		// Load all divining rods from config (needed before model registration)
 		loadConfigRods();
 
-		// Create universal rod with all non-universal rods (needed before model registration)
+		// Create universal rod with all non-universal rods
 		List<RodType> rods = new ArrayList<RodType>();
 		for (RodType type : types) {
 			if (!(type instanceof CombinedRodType) && !type.getName().equals("universal")) {
@@ -140,36 +154,33 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 			ingredient = recipeItem;
 		}
 
-		net.minecraft.item.ItemStack stick =
-				new net.minecraft.item.ItemStack(net.minecraft.init.Items.STICK);
-		net.minecraft.item.ItemStack spiderEye =
-				new net.minecraft.item.ItemStack(net.minecraft.init.Items.SPIDER_EYE);
+		ItemStack stick = new ItemStack(net.minecraft.init.Items.STICK);
+		ItemStack spiderEye = new ItemStack(net.minecraft.init.Items.SPIDER_EYE);
 		ItemDiviningRod rodItem = rodItems.get(type);
 		if (rodItem == null) {
 			RandomThings.logger.log(Level.WARN, "Could not find item for divining rod type: " + rodType.getName());
 			return;
 		}
-		net.minecraft.item.ItemStack result = new net.minecraft.item.ItemStack(rodItem, 1);
+		ItemStack result = new ItemStack(rodItem, 1);
 
-		net.minecraft.util.ResourceLocation recipeName = new net.minecraft.util.ResourceLocation(
+		ResourceLocation recipeName = new ResourceLocation(
 				"randomthings", "diviningrod_" + rodType.getName());
-		net.minecraftforge.oredict.ShapedOreRecipe recipe =
-				new net.minecraftforge.oredict.ShapedOreRecipe(recipeName, result, "RSR", "SES",
-						"S S", 'R', ingredient, 'S', stick, 'E', spiderEye);
+		ShapedOreRecipe recipe = new ShapedOreRecipe(recipeName,
+				result, "RSR", "SES",
+				"S S", 'R', ingredient, 'S', stick, 'E', spiderEye);
 		recipe.setRegistryName(recipeName);
 		net.minecraftforge.fml.common.registry.ForgeRegistries.RECIPES.register(recipe);
 	}
 
 	private static void registerUniversalRecipe() {
 		// Universal rod recipe uses the first 8 valid rods in a 3x3 pattern
-		List<net.minecraft.item.ItemStack> rodStacks =
-				new ArrayList<net.minecraft.item.ItemStack>();
+		List<ItemStack> rodStacks = new ArrayList<ItemStack>();
 		for (RodType type : types) {
 			if (!(type instanceof CombinedRodType) && !type.getName().equals("universal")
 					&& availableTypes.get(type)) {
 				ItemDiviningRod rodItem = rodItems.get(type);
 				if (rodItem != null) {
-					rodStacks.add(new net.minecraft.item.ItemStack(rodItem, 1));
+					rodStacks.add(new ItemStack(rodItem, 1));
 					if (rodStacks.size() >= 8) {
 						break; // Only need first 8
 					}
@@ -196,16 +207,13 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 		}
 
 		net.minecraft.item.ItemStack result = new net.minecraft.item.ItemStack(universalItem, 1);
-		net.minecraft.item.ItemStack stick =
-				new net.minecraft.item.ItemStack(net.minecraft.init.Items.STICK);
-		net.minecraft.item.ItemStack slimeBall =
-				new net.minecraft.item.ItemStack(net.minecraft.init.Items.SLIME_BALL);
+		ItemStack stick = new ItemStack(Items.STICK);
+		ItemStack slimeBall = new ItemStack(Items.SLIME_BALL);
 
 		// Pattern: CSD, IBE, GLR (8 rod positions: C, I, G, L, R, E, D, S)
 		// S can be a rod (8th) or stick if less than 8 rods available
 		// B=slimeBall (center)
-		net.minecraft.util.ResourceLocation recipeName =
-				new net.minecraft.util.ResourceLocation("randomthings", "diviningrod_universal");
+		ResourceLocation recipeName = new ResourceLocation("randomthings", "diviningrod_universal");
 
 		// Get ingredients - use rods if available, otherwise use sticks
 		Object c = rodStacks.size() > 0 ? rodStacks.get(0) : stick;
@@ -220,12 +228,10 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 		// Create recipe with pattern: CSD, IBE, GLR
 		// C, S, D, I, E, G, L, R are rod positions (or sticks if not enough rods)
 		// B is slimeBall (center)
-		net.minecraftforge.oredict.ShapedOreRecipe recipe =
-				new net.minecraftforge.oredict.ShapedOreRecipe(recipeName, result, "CSD", "IBE",
-						"GLR", 'C', c, 'S', s, 'D', d, 'I', i, 'B', slimeBall, 'E', e, 'G', g, 'L',
-						l, 'R', r);
+		ShapedOreRecipe recipe = new ShapedOreRecipe(recipeName, result, "CSD", "IBE", "GLR", 'C', c, 'S', s, 'D', d,
+				'I', i, 'B', slimeBall, 'E', e, 'G', g, 'L', l, 'R', r);
 		recipe.setRegistryName(recipeName);
-		net.minecraftforge.fml.common.registry.ForgeRegistries.RECIPES.register(recipe);
+		ForgeRegistries.RECIPES.register(recipe);
 	}
 
 	private static void loadConfigRods() {
@@ -298,7 +304,7 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 
 	private static String generateNameFromRecipeItem(String recipeItem) {
 		// List of common suffixes/prefixes to remove
-		String[] list = {"ingot", "gem", "crystal", "ore", "dust", "nugget", "block"};
+		String[] list = { "ingot", "gem", "crystal", "ore", "dust", "nugget", "block" };
 		String name;
 		if (recipeItem.contains(":")) {
 			String[] parts = recipeItem.split(":");
@@ -331,15 +337,11 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 	}
 
 	@Override
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
-	{
-		if (this.isInCreativeTab(tab))
-		{
-			if (rodType != null && availableTypes != null)
-			{
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+		if (this.isInCreativeTab(tab)) {
+			if (rodType != null && availableTypes != null) {
 				Boolean available = availableTypes.get(rodType);
-				if (available != null && available)
-				{
+				if (available != null && available) {
 					items.add(new ItemStack(this, 1));
 				}
 			}
@@ -347,8 +349,7 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 	}
 
 	@Override
-	public String getTranslationKey(ItemStack stack)
-	{
+	public String getTranslationKey(ItemStack stack) {
 		if (rodType != null && rodType.getName().equals("universal")) {
 			return "item.diviningRodUniversal";
 		}
@@ -382,7 +383,8 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 				}
 
 				// Remove dimension prefixes (Overworld, Nether, End) from display name
-				// Only remove dimension if it has a space after it (avoid Netherite, Ender Essence)
+				// Only remove dimension if it has a space after it (avoid Netherite, Ender
+				// Essence)
 				oreDisplayName = oreDisplayName.replace("Overworld", "").replace("Nether ", "")
 						.replace("End ", "").trim();
 
@@ -397,14 +399,11 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean hasEffect(ItemStack stack)
-	{
+	public boolean hasEffect(ItemStack stack) {
 		EntityPlayer player = Minecraft.getMinecraft().player;
 
-		if (player != null)
-		{
-			if (player.getHeldItemMainhand() == stack || player.getHeldItemOffhand() == stack)
-			{
+		if (player != null) {
+			if (player.getHeldItemMainhand() == stack || player.getHeldItemOffhand() == stack) {
 				RodType type = getRodType(stack);
 				if (type != null) {
 					return DiviningRodHandler.get().shouldGlow(type);
@@ -415,8 +414,7 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 		return super.hasEffect(stack);
 	}
 
-	public static RodType getRodType(ItemStack stack)
-	{
+	public static RodType getRodType(ItemStack stack) {
 		if (stack.isEmpty()) {
 			return null;
 		}
@@ -428,27 +426,135 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 	}
 
 	@Override
-	public int getColorFromItemstack(ItemStack stack, int tintIndex)
-	{
-		if (tintIndex == 1 && rodType != null)
-		{
+	public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+		if (tintIndex == 1 && rodType != null) {
 			return rodType.getItemColor().getRGB();
-		}
-		else
-		{
+		} else {
 			return Color.WHITE.getRGB();
 		}
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip,
-			ITooltipFlag flagIn) {
+	public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> tooltip,
+			@Nonnull ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 
 		if (rodType != null) {
 			String description = DescriptionHandler.getDiviningRodDescription(rodType);
 			tooltip.add(description);
 		}
+	}
+
+	@Override
+	public void onUpdate(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull Entity entityIn, int itemSlot,
+			boolean isSelected) {
+		if (worldIn.isRemote)
+			return;
+
+		// Only apply durability when the rod is being held (main hand or offhand)
+		if (!(entityIn instanceof EntityPlayer))
+			return;
+
+		EntityPlayer player = (EntityPlayer) entityIn;
+		ItemStack mainHand = player.getHeldItemMainhand();
+		ItemStack offHand = player.getHeldItemOffhand();
+
+		// Check if this rod is being held (main hand selected or offhand)
+		boolean isHeld = (isSelected && !mainHand.isEmpty() && mainHand.getItem() == this)
+				|| (!offHand.isEmpty() && offHand.getItem() == this);
+		if (!isHeld)
+			return;
+
+		// Skip if durability usage is disabled
+		if (DiviningRods.DURABILITY_USAGE_SECONDS <= 0.0 || !stack.isItemStackDamageable()
+				|| stack.getItemDamage() > stack.getMaxDamage())
+			return;
+
+		// Calculate chance per tick based on DURABILITY_USAGE_SECONDS
+		// If DURABILITY_USAGE_SECONDS = 1.0, that's 1 durability per second = 1/20 =
+		// 0.05 chance per tick
+		// If DURABILITY_USAGE_SECONDS = 2.0, that's 0.5 durability per second = 0.5/20
+		// = 0.025 chance per tick
+		double chancePerTick = (1.0 / DiviningRods.DURABILITY_USAGE_SECONDS) / 20.0;
+
+		// Damage item if the random chance is met
+		if (worldIn.rand.nextDouble() < chancePerTick) {
+			stack.damageItem(1, player);
+		}
+	}
+
+	@Override
+	public boolean getIsRepairable(@Nonnull ItemStack toRepair, @Nonnull ItemStack repair) {
+		// Universal rod cannot be repaired
+		if (rodType != null && rodType.getName().equals("universal"))
+			return false;
+
+		// Check if the repair item matches the recipe item
+		if (rodType instanceof OreRodType) {
+			OreRodType oreType = (OreRodType) rodType;
+			String recipeItem = oreType.getRecipeItem();
+
+			// Check if it's an item string (contains colon) or an ore dict entry
+			if (recipeItem.contains(":")) {
+				// Parse item string (format: modid:itemname or modid:itemname:metadata)
+				String[] itemParts = recipeItem.split(":");
+				if (itemParts.length >= 2) {
+					net.minecraft.item.Item item = net.minecraft.item.Item.getByNameOrId(recipeItem);
+					if (item != null) {
+						int itemMeta = 0;
+						if (itemParts.length > 2) {
+							try {
+								itemMeta = Integer.parseInt(itemParts[2]);
+							} catch (NumberFormatException e) {
+								// Use default meta
+							}
+						}
+						// Check if repair item matches
+						return repair.getItem() == item && repair.getItemDamage() == itemMeta;
+					}
+				}
+			} else {
+				// Use ore dictionary
+				int[] repairOreIDs = net.minecraftforge.oredict.OreDictionary.getOreIDs(repair);
+				String oreDictName = recipeItem;
+				for (int oreID : repairOreIDs) {
+					if (net.minecraftforge.oredict.OreDictionary.getOreName(oreID).equals(oreDictName)) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean shouldCauseReequipAnimation(@Nonnull ItemStack oldStack, @Nonnull ItemStack newStack,
+			boolean slotChanged) {
+		// Prevent the stupid reequip animation every time you lose durability
+		return oldStack.getItem() != newStack.getItem();
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		return isUnbreaking(stack) || isMending(stack);
+	}
+
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+		return isUnbreaking(stack) || isMending(stack);
+	}
+
+	public boolean isUnbreaking(ItemStack stack) {
+		// Check if the book has the Unbreaking enchantment
+		return net.minecraft.enchantment.EnchantmentHelper
+				.getEnchantmentLevel(net.minecraft.init.Enchantments.UNBREAKING, stack) > 0;
+	}
+
+	public boolean isMending(ItemStack stack) {
+		// Check if the book has the Mending enchantment
+		return net.minecraft.enchantment.EnchantmentHelper.getEnchantmentLevel(net.minecraft.init.Enchantments.MENDING,
+				stack) > 0;
 	}
 }
