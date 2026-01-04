@@ -50,6 +50,8 @@ import lumien.randomthings.item.ItemSoundPattern;
 import lumien.randomthings.item.ItemSpectreArmor;
 import lumien.randomthings.item.ItemTimeInABottle;
 import lumien.randomthings.item.ModItems;
+import lumien.randomthings.item.diviningrod.ItemDiviningRod;
+import lumien.randomthings.item.diviningrod.ItemDiviningRodLegacy;
 import lumien.randomthings.lib.AtlasSprite;
 import lumien.randomthings.lib.Colors;
 import lumien.randomthings.lib.IEntityFilterItem;
@@ -98,6 +100,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
@@ -152,6 +155,7 @@ import net.minecraftforge.event.world.BlockEvent.NeighborNotifyEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.event.world.WorldEvent.PotentialSpawns;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
@@ -166,8 +170,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToSe
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class RTEventHandler
-{
+public class RTEventHandler {
 	static Random rng = new Random();
 
 	public static int clientAnimationCounter;
@@ -175,52 +178,43 @@ public class RTEventHandler
 	private boolean spectreArmorStateTracker;
 
 	@SubscribeEvent
-	public void chunkLoad(ChunkEvent.Load event)
-	{
+	public void chunkLoad(ChunkEvent.Load event) {
 		if (event.getWorld().isRemote)
 			SpectreIlluminationClientHandler.loadChunk(event.getChunk());
 	}
 
 	@SubscribeEvent
-	public void chunkWatch(ChunkWatchEvent.Watch event)
-	{
+	public void chunkWatch(ChunkWatchEvent.Watch event) {
 		if (!event.getChunkInstance().getWorld().isRemote)
-			SpectreIlluminationHandler.get(event.getChunkInstance().getWorld()).startWatching(event.getChunkInstance(), event.getPlayer());
+			SpectreIlluminationHandler.get(event.getChunkInstance().getWorld()).startWatching(event.getChunkInstance(),
+					event.getPlayer());
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	@SideOnly(Side.CLIENT)
-	public void playSoundEvent(PlaySoundEvent event)
-	{
+	public void playSoundEvent(PlaySoundEvent event) {
 		EntityPlayerSP thePlayer = Minecraft.getMinecraft().player;
 
 		if (thePlayer != null && !event.isCanceled() && event.getSound() != null
 				&& event.getSound().getCategory() != SoundCategory.MUSIC
 				&& event.getSound().getCategory() != SoundCategory.RECORDS
 				&& Minecraft.getMinecraft().gameSettings
-						.getSoundLevel(event.getSound().getCategory()) > 0)
-		{
+						.getSoundLevel(event.getSound().getCategory()) > 0) {
 			BlockPos soundPosition;
 
-			if (event.getSound() instanceof PositionedSound)
-			{
+			if (event.getSound() instanceof PositionedSound) {
 				PositionedSound ps = (PositionedSound) event.getSound();
 
 				soundPosition = new BlockPos(ps.getXPosF(), ps.getYPosF(), ps.getZPosF());
-			}
-			else
-			{
+			} else {
 				soundPosition = thePlayer.getPosition();
 			}
 
-			synchronized (TileEntitySoundDampener.dampeners)
-			{
-				for (TileEntitySoundDampener soundDampener : TileEntitySoundDampener.dampeners)
-				{
-					if (soundDampener.getWorld() == thePlayer.world && !soundDampener.isInvalid() && soundDampener.getPos().distanceSq(soundPosition) < 20 * 20)
-					{
-						if (soundDampener.getMutedSounds().contains(event.getSound().getSoundLocation()))
-						{
+			synchronized (TileEntitySoundDampener.dampeners) {
+				for (TileEntitySoundDampener soundDampener : TileEntitySoundDampener.dampeners) {
+					if (soundDampener.getWorld() == thePlayer.world && !soundDampener.isInvalid()
+							&& soundDampener.getPos().distanceSq(soundPosition) < 20 * 20) {
+						if (soundDampener.getMutedSounds().contains(event.getSound().getSoundLocation())) {
 							event.setResultSound(null);
 							break;
 						}
@@ -228,27 +222,21 @@ public class RTEventHandler
 				}
 			}
 
-			if (event.getResultSound() != null)
-			{
+			if (event.getResultSound() != null) {
 				ItemStack baubleDampener = InventoryUtil.getBauble(ModItems.portableSoundDampener, thePlayer);
 
 				// Bauble
-				if (!baubleDampener.isEmpty())
-				{
+				if (!baubleDampener.isEmpty()) {
 					InventoryItem inv = ItemPortableSoundDampener.getInventory(baubleDampener);
 
-					if (!inv.isEmpty())
-					{
-						for (int s = 0; s < inv.getSizeInventory(); s++)
-						{
+					if (!inv.isEmpty()) {
+						for (int s = 0; s < inv.getSizeInventory(); s++) {
 							ItemStack sis = inv.getStackInSlot(s);
 
-							if (!sis.isEmpty())
-							{
+							if (!sis.isEmpty()) {
 								ResourceLocation rl = ItemSoundPattern.getSoundLocation(sis);
 
-								if (rl != null && rl.equals(event.getSound().getSoundLocation()))
-								{
+								if (rl != null && rl.equals(event.getSound().getSoundLocation())) {
 									event.setResultSound(null);
 									return;
 								}
@@ -258,33 +246,25 @@ public class RTEventHandler
 				}
 
 				// Normal
-				for (int slot = 0; slot < thePlayer.inventory.mainInventory.size(); slot++)
-				{
+				for (int slot = 0; slot < thePlayer.inventory.mainInventory.size(); slot++) {
 					ItemStack stack = thePlayer.inventory.getStackInSlot(slot);
 
-					if (!stack.isEmpty())
-					{
-						if (stack.getItem() == ModItems.soundRecorder)
-						{
-							MessagePlayedSound msg = new MessagePlayedSound(event.getSound().getSoundLocation().toString(), slot);
+					if (!stack.isEmpty()) {
+						if (stack.getItem() == ModItems.soundRecorder) {
+							MessagePlayedSound msg = new MessagePlayedSound(
+									event.getSound().getSoundLocation().toString(), slot);
 							PacketHandler.INSTANCE.sendToServer(msg);
-						}
-						else if (stack.getItem() == ModItems.portableSoundDampener)
-						{
+						} else if (stack.getItem() == ModItems.portableSoundDampener) {
 							InventoryItem inv = ItemPortableSoundDampener.getInventory(stack);
 
-							if (!inv.isEmpty())
-							{
-								for (int s = 0; s < inv.getSizeInventory(); s++)
-								{
+							if (!inv.isEmpty()) {
+								for (int s = 0; s < inv.getSizeInventory(); s++) {
 									ItemStack sis = inv.getStackInSlot(s);
 
-									if (!sis.isEmpty())
-									{
+									if (!sis.isEmpty()) {
 										ResourceLocation rl = ItemSoundPattern.getSoundLocation(sis);
 
-										if (rl != null && rl.equals(event.getSound().getSoundLocation()))
-										{
+										if (rl != null && rl.equals(event.getSound().getSoundLocation())) {
 											event.setResultSound(null);
 											return;
 										}
@@ -300,46 +280,37 @@ public class RTEventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void clientConnectingToServer(ClientConnectedToServerEvent event)
-	{
-		Minecraft.getMinecraft().addScheduledTask(new Runnable()
-		{
+	public void clientConnectingToServer(ClientConnectedToServerEvent event) {
+		Minecraft.getMinecraft().addScheduledTask(new Runnable() {
 			@Override
-			public void run()
-			{
+			public void run() {
 				ClientModelLibrary.getInstance().reset();
 			}
 		});
 	}
 
 	@SubscribeEvent
-	public void entityInteract(EntityInteract event)
-	{
+	public void entityInteract(EntityInteract event) {
 		Entity target = event.getTarget();
-		if (target instanceof EntityVillager)
-		{
+		if (target instanceof EntityVillager) {
 			EntityVillager villager = (EntityVillager) target;
 			EntityPlayer player = event.getEntityPlayer();
 			ItemStack stack = player.getHeldItem(event.getHand());
 
-			if (!stack.isEmpty() && stack.getItem() == ModItems.ingredients && stack.getItemDamage() == ItemIngredient.INGREDIENT.PRECIOUS_EMERALD.id && !target.world.isRemote)
-			{
+			if (!stack.isEmpty() && stack.getItem() == ModItems.ingredients
+					&& stack.getItemDamage() == ItemIngredient.INGREDIENT.PRECIOUS_EMERALD.id
+					&& !target.world.isRemote) {
 				int success = FestivalHandler.get(target.world).addFestival((EntityVillager) target);
 
-				if (success == 2)
-				{
+				if (success == 2) {
 					if (!player.isCreative()) {
 						stack.shrink(1);
 					}
 
 					villager.world.setEntityState(villager, (byte) 12);
-				}
-				else if (success == 1)
-				{
+				} else if (success == 1) {
 					villager.world.setEntityState(villager, (byte) 14);
-				}
-				else
-				{
+				} else {
 					villager.world.setEntityState(villager, (byte) 13);
 				}
 
@@ -349,41 +320,32 @@ public class RTEventHandler
 	}
 
 	@SubscribeEvent
-	public void itemPickup(EntityItemPickupEvent event)
-	{
+	public void itemPickup(EntityItemPickupEvent event) {
 		EntityItem ei = event.getItem();
 		ItemStack stack = ei.getItem();
 		EntityPlayer player = event.getEntityPlayer();
 
-		if (stack.getItem() == ModItems.portKey)
-		{
+		if (stack.getItem() == ModItems.portKey) {
 			NBTTagCompound targetCompound = stack.getSubCompound("target");
 
 			NBTTagCompound ageCompound = stack.getSubCompound("trueage");
 
-			if (ageCompound != null && ageCompound.getInteger("value") > 100 && targetCompound != null)
-			{
+			if (ageCompound != null && ageCompound.getInteger("value") > 100 && targetCompound != null) {
 				int dimension = targetCompound.getInteger("dimension");
 				int posX = targetCompound.getInteger("posX");
 				int posY = targetCompound.getInteger("posY");
 				int posZ = targetCompound.getInteger("posZ");
 
-				if (dimension == event.getEntityPlayer().world.provider.getDimension())
-				{
+				if (dimension == event.getEntityPlayer().world.provider.getDimension()) {
 					List<BlockPos> possiblePositions = new ArrayList<BlockPos>();
 
-					for (int modX = -2; modX < 3; modX++)
-					{
-						for (int modZ = -2; modZ < 3; modZ++)
-						{
-							for (int targetY = posY; targetY >= 0 && targetY >= posY - 10; targetY--)
-							{
+					for (int modX = -2; modX < 3; modX++) {
+						for (int modZ = -2; modZ < 3; modZ++) {
+							for (int targetY = posY; targetY >= 0 && targetY >= posY - 10; targetY--) {
 								BlockPos evPos = new BlockPos(posX + modX, targetY, posZ + modZ);
 
-								if (ei.world.isSideSolid(evPos, EnumFacing.UP))
-								{
-									if (ei.world.isAirBlock(evPos.up()) && ei.world.isAirBlock(evPos.up().up()))
-									{
+								if (ei.world.isSideSolid(evPos, EnumFacing.UP)) {
+									if (ei.world.isAirBlock(evPos.up()) && ei.world.isAirBlock(evPos.up().up())) {
 										possiblePositions.add(evPos);
 									}
 								}
@@ -391,17 +353,20 @@ public class RTEventHandler
 						}
 					}
 
-					if (!possiblePositions.isEmpty())
-					{
+					if (!possiblePositions.isEmpty()) {
 						Collections.shuffle(possiblePositions);
 
 						BlockPos teleportTarget = possiblePositions.get(0);
 
-						player.world.playSound(null, player.getPosition(), SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.PLAYERS, 1, 1);
+						player.world.playSound(null, player.getPosition(), SoundEvents.ENTITY_ENDERMEN_TELEPORT,
+								SoundCategory.PLAYERS, 1, 1);
 
-						((EntityPlayerMP) event.getEntityPlayer()).connection.setPlayerLocation(teleportTarget.getX() + 0.5, teleportTarget.getY() + 1, teleportTarget.getZ() + 0.5, player.rotationYaw, player.rotationPitch);
+						((EntityPlayerMP) event.getEntityPlayer()).connection.setPlayerLocation(
+								teleportTarget.getX() + 0.5, teleportTarget.getY() + 1, teleportTarget.getZ() + 0.5,
+								player.rotationYaw, player.rotationPitch);
 
-						player.world.playSound(null, player.getPosition(), SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.PLAYERS, 1, 1);
+						player.world.playSound(null, player.getPosition(), SoundEvents.ENTITY_ENDERMEN_TELEPORT,
+								SoundCategory.PLAYERS, 1, 1);
 
 						ei.setDead();
 						event.setCanceled(true);
@@ -412,65 +377,220 @@ public class RTEventHandler
 	}
 
 	@SubscribeEvent
-	public void entityJoinWorld(EntityJoinWorldEvent event)
-	{
+	public void entityJoinWorld(EntityJoinWorldEvent event) {
 		ItemCatcher.entityJoinWorld(event);
 	}
 
 	@SubscribeEvent
-	public void loadLootTable(LootTableLoadEvent event)
-	{
+	public void loadLootTable(LootTableLoadEvent event) {
 		LootHandler.addLoot(event);
 	}
 
+	private static final java.util.Set<World> migratedWorlds = java.util.Collections
+			.synchronizedSet(new java.util.HashSet<>());
+
+	@SubscribeEvent
+	public void worldLoad(WorldEvent.Load event) {
+		World world = event.getWorld();
+		if (world.isRemote)
+			return; // Only run on server
+
+		// Mark this world as needing migration
+		migratedWorlds.remove(world);
+	}
+
+	@SubscribeEvent
+	public void worldTick(WorldTickEvent event) {
+		if (event.phase != Phase.END || event.world.isRemote)
+			return;
+
+		// Check if this world needs migration (only once per world load)
+		if (!migratedWorlds.contains(event.world)) {
+			migratedWorlds.add(event.world);
+			migrateLegacyDiviningRods(event.world);
+		}
+	}
+
+	@SubscribeEvent
+	public void playerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
+		if (event.player.world.isRemote)
+			return;
+
+		// Also migrate when player logs in (in case they weren't loaded during world
+		// load)
+		EntityPlayer player = event.player;
+		int migratedCount = migrateInventory(player.inventory);
+
+		ItemStack offhand = player.getHeldItemOffhand();
+		if (isLegacyDiviningRod(offhand)) {
+			ItemStack migratedStack = migrateLegacyRod(offhand);
+			if (migratedStack != offhand) {
+				player.setHeldItem(EnumHand.OFF_HAND, migratedStack);
+				migratedCount++;
+			}
+		}
+
+		if (migratedCount > 0) {
+			RandomThings.logger.log(Level.INFO, "Migrated " + migratedCount + " legacy divining rod(s) from player "
+					+ player.getName() + " on login");
+		}
+	}
+
+	private void migrateLegacyDiviningRods(World world) {
+		int migratedCount = 0;
+
+		RandomThings.logger.log(Level.INFO,
+				"Starting legacy divining rod migration for world " + world.provider.getDimension());
+
+		// Migrate all players' inventories
+		for (EntityPlayer player : world.playerEntities) {
+			// Main inventory (includes main hand)
+			int playerMigrated = migrateInventory(player.inventory);
+
+			// Also check offhand
+			ItemStack offhand = player.getHeldItemOffhand();
+			if (isLegacyDiviningRod(offhand)) {
+				ItemStack migrated = migrateLegacyRod(offhand);
+				if (migrated != offhand) {
+					player.setHeldItem(EnumHand.OFF_HAND, migrated);
+					playerMigrated++;
+				}
+			}
+			if (playerMigrated > 0) {
+				RandomThings.logger.log(Level.INFO,
+						"Migrated " + playerMigrated + " legacy rod(s) from player " + player.getName());
+			}
+
+			migratedCount += playerMigrated;
+		}
+
+		// Migrate item entities on the ground
+		for (EntityItem entityItem : world.getEntities(EntityItem.class, EntitySelectors.IS_ALIVE)) {
+			ItemStack stack = entityItem.getItem();
+			if (isLegacyDiviningRod(stack)) {
+				ItemStack migrated = migrateLegacyRod(stack);
+				if (migrated != stack) {
+					entityItem.setItem(migrated);
+					migratedCount++;
+				}
+			}
+		}
+
+		// Migrate tile entity inventories
+		for (TileEntity te : world.loadedTileEntityList) {
+			if (te instanceof net.minecraft.inventory.IInventory) {
+				int teMigrated = migrateInventory((net.minecraft.inventory.IInventory) te);
+				migratedCount += teMigrated;
+				if (teMigrated > 0) {
+					RandomThings.logger.log(Level.INFO,
+							"Migrated " + teMigrated + " legacy rod(s) from tile entity at " + te.getPos());
+				}
+			}
+		}
+
+		if (migratedCount > 0) {
+			RandomThings.logger.log(Level.INFO, "Successfully migrated " + migratedCount
+					+ " legacy divining rod(s) in world " + world.provider.getDimension());
+		}
+	}
+
+	private boolean isLegacyDiviningRod(ItemStack stack) {
+		if (stack.isEmpty())
+			return false;
+
+		Item item = stack.getItem();
+		if (item == null)
+			return false;
+
+		// Check if it's the legacy item class
+		if (item instanceof ItemDiviningRodLegacy)
+			return true;
+
+		// Check by registry name
+		// old items have registry name randomthings:diviningRod
+		ResourceLocation registryName = item.getRegistryName();
+		if (registryName != null) {
+			String name = registryName.toString();
+			// Check for old registry name
+			if (name.equals("randomthings:diviningRod") || name.equals("diviningRod")) {
+				// Make sure it's not one of the new individual items
+				if (!(item instanceof ItemDiviningRod))
+					return true;
+			}
+		}
+
+		return false;
+	}
+
+	private int migrateInventory(IInventory inventory) {
+		int migrated = 0;
+		for (int i = 0; i < inventory.getSizeInventory(); i++) {
+			ItemStack stack = inventory.getStackInSlot(i);
+			if (isLegacyDiviningRod(stack)) {
+				ItemStack migratedStack = migrateLegacyRod(stack);
+				if (migratedStack != stack) {
+					inventory.setInventorySlotContents(i, migratedStack);
+					migrated++;
+				}
+			}
+		}
+		return migrated;
+	}
+
+	private ItemStack migrateLegacyRod(ItemStack oldStack) {
+		if (oldStack.isEmpty() || !isLegacyDiviningRod(oldStack))
+			return oldStack;
+
+		Item oldItem = oldStack.getItem();
+		ResourceLocation oldRegistryName = oldItem != null ? oldItem.getRegistryName() : null;
+		int metadata = oldStack.getItemDamage();
+
+		RandomThings.logger.log(Level.INFO, "Migrating legacy divining rod: registry=" + oldRegistryName + ", metadata="
+				+ metadata + ", count=" + oldStack.getCount());
+
+		// Use the static method from ItemDiviningRodLegacy
+		return ItemDiviningRodLegacy.convertLegacyRod(oldStack, "World load");
+	}
+
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void playerDropsEarly(PlayerDropsEvent event)
-	{
+	public void playerDropsEarly(PlayerDropsEvent event) {
 		BaublesSpectreAnchor.handleDropsEarly(event);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void playerDropsLate(PlayerDropsEvent event)
-	{
+	public void playerDropsLate(PlayerDropsEvent event) {
 		BaublesSpectreAnchor.handleDropsLate(event);
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public void playerClone(PlayerEvent.Clone event)
-	{
-		if (event.isWasDeath() && !event.isCanceled() && event.getOriginal() != null && !(event.getEntityPlayer() instanceof FakePlayer) && !event.getEntityPlayer().world.getGameRules().getBoolean("keepInventory"))
-		{
+	public void playerClone(PlayerEvent.Clone event) {
+		if (event.isWasDeath() && !event.isCanceled() && event.getOriginal() != null
+				&& !(event.getEntityPlayer() instanceof FakePlayer)
+				&& !event.getEntityPlayer().world.getGameRules().getBoolean("keepInventory")) {
 			EntityPlayer oldPlayer = event.getOriginal();
 			EntityPlayer newPlayer = event.getEntityPlayer();
 
-			for (int i = 0; i < oldPlayer.inventory.getSizeInventory(); i++)
-			{
+			for (int i = 0; i < oldPlayer.inventory.getSizeInventory(); i++) {
 				ItemStack is = oldPlayer.inventory.getStackInSlot(i);
 
-				if (!is.isEmpty() && is.hasTagCompound() && is.getTagCompound().hasKey("spectreAnchor"))
-				{
+				if (!is.isEmpty() && is.hasTagCompound() && is.getTagCompound().hasKey("spectreAnchor")) {
 					ItemStack newIs = newPlayer.inventory.getStackInSlot(i);
 
-					if (newIs.isEmpty())
-					{
+					if (newIs.isEmpty()) {
 						newPlayer.inventory.setInventorySlotContents(i, is.copy());
-					}
-					else
-					{
+					} else {
 						// Another mod put an ItemStack into the Slot
 						ItemStack existing = newIs;
 
 						int emptyStack = newPlayer.inventory.getFirstEmptyStack();
-						if (emptyStack != -1)
-						{
+						if (emptyStack != -1) {
 							newPlayer.inventory.setInventorySlotContents(emptyStack, existing);
 							newPlayer.inventory.setInventorySlotContents(i, is.copy());
-						}
-						else
-						{
+						} else {
 							RandomThings.logger.log(Level.INFO,
 									"Couldn't keep Anchored Item in the Inventory");
-							WorldUtil.spawnItemStack(oldPlayer.world, oldPlayer.posX, oldPlayer.posY, oldPlayer.posZ, is);
+							WorldUtil.spawnItemStack(oldPlayer.world, oldPlayer.posX, oldPlayer.posY, oldPlayer.posZ,
+									is);
 						}
 					}
 				}
@@ -482,88 +602,73 @@ public class RTEventHandler
 	}
 
 	@SubscribeEvent
-	public void biomeDecoration(DecorateBiomeEvent event)
-	{
-		if (event instanceof DecorateBiomeEvent.Pre)
-		{
+	public void biomeDecoration(DecorateBiomeEvent event) {
+		if (event instanceof DecorateBiomeEvent.Pre) {
 
 		}
 	}
 
 	@SubscribeEvent
-	public void explosionDetonate(ExplosionEvent.Detonate event)
-	{
+	public void explosionDetonate(ExplosionEvent.Detonate event) {
 		Iterator<BlockPos> iterator = event.getAffectedBlocks().iterator();
 
-		while (iterator.hasNext())
-		{
+		while (iterator.hasNext()) {
 			BlockPos pos = iterator.next();
 
-			if (event.getWorld().getBlockState(pos).getBlock() instanceof IExplosionImmune)
-			{
+			if (event.getWorld().getBlockState(pos).getBlock() instanceof IExplosionImmune) {
 				iterator.remove();
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public void tick(TickEvent tickEvent)
-	{
-		if (tickEvent.type == TickEvent.Type.WORLD && tickEvent.phase == TickEvent.Phase.START)
-		{
+	public void tick(TickEvent tickEvent) {
+		if (tickEvent.type == TickEvent.Type.WORLD && tickEvent.phase == TickEvent.Phase.START) {
 			World world = ((WorldTickEvent) tickEvent).world;
 
 			FestivalHandler.get(world).tick(world);
 			SpectreLensHandler.get(world).tick(world);
 		}
 
-		if ((tickEvent.type == TickEvent.Type.CLIENT || tickEvent.type == TickEvent.Type.SERVER) && tickEvent.phase == TickEvent.Phase.END)
-		{
+		if ((tickEvent.type == TickEvent.Type.CLIENT || tickEvent.type == TickEvent.Type.SERVER)
+				&& tickEvent.phase == TickEvent.Phase.END) {
 			TileEntityRainShield.rainCache.clear();
 		}
 
-		if ((tickEvent.type == TickEvent.Type.CLIENT))
-		{
+		if ((tickEvent.type == TickEvent.Type.CLIENT)) {
 			clientAnimationCounter++;
 
-			if (tickEvent.phase == Phase.END)
-			{
+			if (tickEvent.phase == Phase.END) {
 				DiviningRodHandler.get().tick();
 			}
 		}
 
-		if (tickEvent instanceof ServerTickEvent)
-		{
+		if (tickEvent instanceof ServerTickEvent) {
 			ServerModelLibrary.getInstance().tick();
 			EscapeRopeHandler.getInstance().tick();
 		}
 
-		if (tickEvent instanceof WorldTickEvent)
-		{
+		if (tickEvent instanceof WorldTickEvent) {
 			WorldTickEvent worldTickEvent = (WorldTickEvent) tickEvent;
 
-			if (worldTickEvent.phase == Phase.END && !worldTickEvent.world.isRemote && worldTickEvent.world.provider.getDimension() == 0)
-			{
+			if (worldTickEvent.phase == Phase.END && !worldTickEvent.world.isRemote
+					&& worldTickEvent.world.provider.getDimension() == 0) {
 				RedstoneSignalHandler.getHandler().tick();
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public void notifyNeighbors(NeighborNotifyEvent event)
-	{
+	public void notifyNeighbors(NeighborNotifyEvent event) {
 		TileEntityRedstoneObserver.notifyNeighbor(event);
 	}
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void cameraSetup(CameraSetup event)
-	{
-		if (event.getEntity() instanceof EntityLivingBase)
-		{
+	public void cameraSetup(CameraSetup event) {
+		if (event.getEntity() instanceof EntityLivingBase) {
 			PotionEffect effect = ((EntityLivingBase) event.getEntity()).getActivePotionEffect(ModPotions.collapse);
-			if (effect != null && effect.getAmplifier() == 1)
-			{
+			if (effect != null && effect.getAmplifier() == 1) {
 				event.setRoll(180);
 			}
 		}
@@ -571,63 +676,55 @@ public class RTEventHandler
 	}
 
 	@SubscribeEvent
-	public void playerInteract(PlayerInteractEvent event)
-	{
-		if (event instanceof RightClickBlock)
-		{
+	public void playerInteract(PlayerInteractEvent event) {
+		if (event instanceof RightClickBlock) {
 			ItemStack equipped = event.getEntityPlayer().getHeldItem(event.getHand());
 
-			if (!equipped.isEmpty() && (equipped.getItem() instanceof ItemSpade || TConUtil.isTconShovel(equipped)))
-			{
+			if (!equipped.isEmpty() && (equipped.getItem() instanceof ItemSpade || TConUtil.isTconShovel(equipped))) {
 				RightClickBlock rcEvent = (RightClickBlock) event;
 				IBlockState targetState = event.getWorld().getBlockState(event.getPos());
 
-				if (targetState.getBlock() == Blocks.SLIME_BLOCK)
-				{
+				if (targetState.getBlock() == Blocks.SLIME_BLOCK) {
 					event.getEntityPlayer().swingArm(event.getHand());
-					if (!event.getWorld().isRemote)
-					{
-						if (!event.getWorld().isRemote)
-						{
-							event.getWorld().setBlockState(event.getPos(), ModBlocks.compressedSlimeBlock.getDefaultState());
-							event.getWorld().playSound(null, event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(), Blocks.SLIME_BLOCK.getSoundType().getPlaceSound(), SoundCategory.PLAYERS, 1, 0.8f);
+					if (!event.getWorld().isRemote) {
+						if (!event.getWorld().isRemote) {
+							event.getWorld().setBlockState(event.getPos(),
+									ModBlocks.compressedSlimeBlock.getDefaultState());
+							event.getWorld().playSound(null, event.getPos().getX(), event.getPos().getY(),
+									event.getPos().getZ(), Blocks.SLIME_BLOCK.getSoundType().getPlaceSound(),
+									SoundCategory.PLAYERS, 1, 0.8f);
 							equipped.damageItem(1, event.getEntityPlayer());
 						}
 					}
-				}
-				else if (targetState.getBlock() == ModBlocks.compressedSlimeBlock)
-				{
+				} else if (targetState.getBlock() == ModBlocks.compressedSlimeBlock) {
 					int currentCompression = targetState.getValue(BlockCompressedSlimeBlock.COMPRESSION);
 					event.getEntityPlayer().swingArm(event.getHand());
-					if (!event.getWorld().isRemote)
-					{
-						if (currentCompression < 2)
-						{
-							rcEvent.getWorld().setBlockState(rcEvent.getPos(), targetState.withProperty(BlockCompressedSlimeBlock.COMPRESSION, currentCompression + 1));
-							event.getWorld().playSound(null, event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(), Blocks.SLIME_BLOCK.getSoundType().getPlaceSound(), SoundCategory.PLAYERS, 1, 0.8f - ((currentCompression + 1) * 0.2f));
+					if (!event.getWorld().isRemote) {
+						if (currentCompression < 2) {
+							rcEvent.getWorld().setBlockState(rcEvent.getPos(), targetState
+									.withProperty(BlockCompressedSlimeBlock.COMPRESSION, currentCompression + 1));
+							event.getWorld().playSound(null, event.getPos().getX(), event.getPos().getY(),
+									event.getPos().getZ(), Blocks.SLIME_BLOCK.getSoundType().getPlaceSound(),
+									SoundCategory.PLAYERS, 1, 0.8f - ((currentCompression + 1) * 0.2f));
 							equipped.damageItem(1, event.getEntityPlayer());
 						}
 					}
 				}
 			}
 
-			if (!event.getWorld().isRemote && !equipped.isEmpty() && equipped.getItem() == Items.PAPER)
-			{
+			if (!event.getWorld().isRemote && !equipped.isEmpty() && equipped.getItem() == Items.PAPER) {
 				RightClickBlock rcEvent = (RightClickBlock) event;
 				IBlockState targetState = event.getWorld().getBlockState(event.getPos());
 
-				if (targetState.getBlock() == ModBlocks.runeBase)
-				{
+				if (targetState.getBlock() == ModBlocks.runeBase) {
 					TileEntityRuneBase te = (TileEntityRuneBase) event.getWorld().getTileEntity(rcEvent.getPos());
 					int[][] runeData = te.getRuneData();
 
 					int[] savedData = new int[16];
 
 					int counter = 0;
-					for (int y = 0; y < runeData[0].length; y++)
-					{
-						for (int x = 0; x < runeData.length; x++)
-						{
+					for (int y = 0; y < runeData[0].length; y++) {
+						for (int x = 0; x < runeData.length; x++) {
 							savedData[counter] = runeData[x][y];
 							counter++;
 						}
@@ -639,47 +736,36 @@ public class RTEventHandler
 
 					((RightClickBlock) event).setUseItem(Result.ALLOW);
 
-					if (equipped.getCount() == 1)
-					{
+					if (equipped.getCount() == 1) {
 						int slot;
-						if (event.getHand() == EnumHand.MAIN_HAND)
-						{
+						if (event.getHand() == EnumHand.MAIN_HAND) {
 							slot = event.getEntityPlayer().inventory.currentItem;
-						}
-						else
-						{
+						} else {
 							slot = 40;
 						}
 
 						event.getEntityPlayer().inventory.setInventorySlotContents(slot, patternStack);
-					}
-					else
-					{
+					} else {
 						equipped.shrink(1);
 						event.getEntityPlayer().inventory.addItemStackToInventory(patternStack);
 					}
 				}
 			}
 
-			if (!event.getWorld().isRemote && event.getHand() == EnumHand.MAIN_HAND)
-			{
-				for (EnumFacing facing : EnumFacing.values())
-				{
+			if (!event.getWorld().isRemote && event.getHand() == EnumHand.MAIN_HAND) {
+				for (EnumFacing facing : EnumFacing.values()) {
 					BlockPos pos = event.getPos().offset(facing);
 					IBlockState state = event.getWorld().getBlockState(pos);
-					if (state.getBlock() == ModBlocks.contactButton)
-					{
-						if (state.getValue(BlockContactButton.FACING).getOpposite() == facing)
-						{
-							((BlockContactButton) state.getBlock()).activate(event.getWorld(), event.getPos().offset(facing), facing.getOpposite());
+					if (state.getBlock() == ModBlocks.contactButton) {
+						if (state.getValue(BlockContactButton.FACING).getOpposite() == facing) {
+							((BlockContactButton) state.getBlock()).activate(event.getWorld(),
+									event.getPos().offset(facing), facing.getOpposite());
 							break;
 						}
-					}
-					else if (state.getBlock() == ModBlocks.contactLever)
-					{
-						if (state.getValue(BlockContactLever.FACING).getOpposite() == facing)
-						{
-							((BlockContactLever) state.getBlock()).activate(event.getWorld(), event.getPos().offset(facing), facing.getOpposite());
+					} else if (state.getBlock() == ModBlocks.contactLever) {
+						if (state.getValue(BlockContactLever.FACING).getOpposite() == facing) {
+							((BlockContactLever) state.getBlock()).activate(event.getWorld(),
+									event.getPos().offset(facing), facing.getOpposite());
 							break;
 						}
 					}
@@ -689,45 +775,45 @@ public class RTEventHandler
 	}
 
 	@SubscribeEvent
-	public void livingExperience(LivingExperienceDropEvent event)
-	{
-		if (event.getAttackingPlayer() != null && event.getAttackingPlayer().isPotionActive(ModPotions.imbueExperience))
-		{
+	public void livingExperience(LivingExperienceDropEvent event) {
+		if (event.getAttackingPlayer() != null
+				&& event.getAttackingPlayer().isPotionActive(ModPotions.imbueExperience)) {
 			event.setDroppedExperience(event.getDroppedExperience() + event.getOriginalExperience());
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void modelBake(ModelBakeEvent event)
-	{
+	public void modelBake(ModelBakeEvent event) {
 		ModelFluidDisplay modelFluidDisplay = new ModelFluidDisplay();
-		event.getModelRegistry().putObject(new ModelResourceLocation("randomthings:fluidDisplay", "normal"), modelFluidDisplay);
-		event.getModelRegistry().putObject(new ModelResourceLocation("randomthings:fluidDisplay", "inventory"), modelFluidDisplay);
+		event.getModelRegistry().putObject(new ModelResourceLocation("randomthings:fluidDisplay", "normal"),
+				modelFluidDisplay);
+		event.getModelRegistry().putObject(new ModelResourceLocation("randomthings:fluidDisplay", "inventory"),
+				modelFluidDisplay);
 
 		ModelCustomWorkbench modelCustomWorkbench = new ModelCustomWorkbench();
-		event.getModelRegistry().putObject(new ModelResourceLocation("randomthings:customWorkbench", "normal"), modelCustomWorkbench);
-		event.getModelRegistry().putObject(new ModelResourceLocation("randomthings:customWorkbench", "inventory"), modelCustomWorkbench);
+		event.getModelRegistry().putObject(new ModelResourceLocation("randomthings:customWorkbench", "normal"),
+				modelCustomWorkbench);
+		event.getModelRegistry().putObject(new ModelResourceLocation("randomthings:customWorkbench", "inventory"),
+				modelCustomWorkbench);
 
 		ModelRune runeBaseModel = new ModelRune();
 		event.getModelRegistry().putObject(new ModelResourceLocation("randomthings:runeBase", "normal"), runeBaseModel);
 
 		ModelInventoryRerouter inventoryRerouterModel = new ModelInventoryRerouter();
-		event.getModelRegistry().putObject(new ModelResourceLocation("randomthings:inventoryRerouter", "normal"), inventoryRerouterModel);
+		event.getModelRegistry().putObject(new ModelResourceLocation("randomthings:inventoryRerouter", "normal"),
+				inventoryRerouterModel);
 	}
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void textureStitch(TextureStitchEvent.Pre event)
-	{
-		try
-		{
+	public void textureStitch(TextureStitchEvent.Pre event) {
+		try {
 			ASMDataTable asmData = RandomThings.instance.getASMData();
 
 			Set<ASMData> atlasSet = asmData.getAll(AtlasSprite.class.getName());
 
-			for (ASMData data : atlasSet)
-			{
+			for (ASMData data : atlasSet) {
 				Class clazz = Class.forName(data.getClassName());
 				Field f = clazz.getDeclaredField(data.getObjectName());
 				f.setAccessible(true);
@@ -735,71 +821,59 @@ public class RTEventHandler
 
 				f.set(null, event.getMap().registerSprite(rl));
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			RandomThings.logger.log(Level.ERROR, "Error stitching extra textures");
 			e.printStackTrace();
 		}
 	}
 
 	@SubscribeEvent
-	public void chatEvent(ServerChatEvent event)
-	{
+	public void chatEvent(ServerChatEvent event) {
 		EntityPlayerMP player = event.getPlayer();
 		BlockPos below = player.getPosition().down();
 		IBlockState state = player.world.getBlockState(below);
 		ItemStack flooDust = player.getHeldItemMainhand();
 
-		if (!player.world.getEntitiesWithinAABB(EntityTemporaryFlooFireplace.class, player.getEntityBoundingBox().grow(0.5)).isEmpty())
-		{
+		if (!player.world
+				.getEntitiesWithinAABB(EntityTemporaryFlooFireplace.class, player.getEntityBoundingBox().grow(0.5))
+				.isEmpty()) {
 			String target = event.getMessage();
 			FlooNetworkHandler networkHandler = FlooNetworkHandler.get(player.world);
 
 			boolean success = networkHandler.teleport(player.world, null, null, player, target);
 
-			if (success)
-			{
+			if (success) {
 				event.setCanceled(true);
 			}
-		}
-		else if (state.getBlock() == ModBlocks.flooBrick)
-		{
+		} else if (state.getBlock() == ModBlocks.flooBrick) {
 			ItemStack pouch = InventoryUtil.getPlayerInventoryItem(ModItems.flooPouch, player);
-			boolean hasFlooInHand = (!flooDust.isEmpty() && flooDust.getItem() instanceof ItemIngredient && flooDust.getItemDamage() == ItemIngredient.INGREDIENT.FLOO_POWDER.id);
+			boolean hasFlooInHand = (!flooDust.isEmpty() && flooDust.getItem() instanceof ItemIngredient
+					&& flooDust.getItemDamage() == ItemIngredient.INGREDIENT.FLOO_POWDER.id);
 			boolean hasFlooPouch = !pouch.isEmpty() && ItemFlooPouch.getFlooCount(pouch) > 0;
 
-			if (player.capabilities.isCreativeMode || hasFlooPouch || hasFlooInHand)
-			{
+			if (player.capabilities.isCreativeMode || hasFlooPouch || hasFlooInHand) {
 				String target = event.getMessage();
 
 				TileEntityFlooBrick te = (TileEntityFlooBrick) player.world.getTileEntity(below);
 				UUID firePlaceUUID = te.getFirePlaceUid();
 
-				if (firePlaceUUID != null)
-				{
+				if (firePlaceUUID != null) {
 					FlooNetworkHandler networkHandler = FlooNetworkHandler.get(player.world);
 
 					TileEntity masterTE = networkHandler.getFirePlaceTE(player.world, firePlaceUUID);
 
-					if (masterTE instanceof TileEntityFlooBrick)
-					{
+					if (masterTE instanceof TileEntityFlooBrick) {
 						TileEntityFlooBrick masterBrick = ((TileEntityFlooBrick) masterTE);
 
-						if (masterBrick.isMaster())
-						{
-							boolean success = networkHandler.teleport(player.world, masterBrick.getPos(), masterBrick, player, target);
+						if (masterBrick.isMaster()) {
+							boolean success = networkHandler.teleport(player.world, masterBrick.getPos(), masterBrick,
+									player, target);
 
-							if (success)
-							{
-								if (!player.capabilities.isCreativeMode)
-								{
-									if (hasFlooInHand)
-									{
+							if (success) {
+								if (!player.capabilities.isCreativeMode) {
+									if (hasFlooInHand) {
 										flooDust.shrink(1);
-									}
-									else
-									{
+									} else {
 										ItemFlooPouch.setFlooCount(pouch, ItemFlooPouch.getFlooCount(pouch) - 1);
 									}
 								}
@@ -814,22 +888,16 @@ public class RTEventHandler
 			return;
 		}
 
-		if (!(player instanceof FakePlayer) && player.getGameProfile() != null)
-		{
+		if (!(player instanceof FakePlayer) && player.getGameProfile() != null) {
 
 			Iterator<TileEntityChatDetector> iterator = TileEntityChatDetector.detectors.iterator();
 
-			while (iterator.hasNext())
-			{
+			while (iterator.hasNext()) {
 				TileEntityChatDetector chatDetector = iterator.next();
-				if (chatDetector.isInvalid())
-				{
+				if (chatDetector.isInvalid()) {
 					iterator.remove();
-				}
-				else
-				{
-					if (chatDetector.checkMessage(event.getPlayer(), event.getMessage()))
-					{
+				} else {
+					if (chatDetector.checkMessage(event.getPlayer(), event.getMessage())) {
 						event.setCanceled(true);
 					}
 				}
@@ -837,17 +905,12 @@ public class RTEventHandler
 
 			Iterator<TileEntityGlobalChatDetector> iteratorGlobal = TileEntityGlobalChatDetector.detectors.iterator();
 
-			while (iteratorGlobal.hasNext())
-			{
+			while (iteratorGlobal.hasNext()) {
 				TileEntityGlobalChatDetector chatDetector = iteratorGlobal.next();
-				if (chatDetector.isInvalid())
-				{
+				if (chatDetector.isInvalid()) {
 					iteratorGlobal.remove();
-				}
-				else
-				{
-					if (chatDetector.checkMessage(event.getPlayer(), event.getMessage()))
-					{
+				} else {
+					if (chatDetector.checkMessage(event.getPlayer(), event.getMessage())) {
 						event.setCanceled(true);
 					}
 				}
@@ -857,63 +920,50 @@ public class RTEventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void itemTooltip(ItemTooltipEvent event)
-	{
-		if (event.getItemStack().hasTagCompound())
-		{
-			if (event.getItemStack().getTagCompound().hasKey("spectreAnchor"))
-			{
-				event.getToolTip().add(1, TextFormatting.DARK_AQUA.toString() + I18n.format("tooltip.spectreAnchor.item") + TextFormatting.RESET.toString());
+	public void itemTooltip(ItemTooltipEvent event) {
+		if (event.getItemStack().hasTagCompound()) {
+			if (event.getItemStack().getTagCompound().hasKey("spectreAnchor")) {
+				event.getToolTip().add(1, TextFormatting.DARK_AQUA.toString()
+						+ I18n.format("tooltip.spectreAnchor.item") + TextFormatting.RESET.toString());
 			}
 
-			if (event.getItemStack().getTagCompound().hasKey("luminousEnchantment"))
-			{
-				event.getToolTip().add(1, TextFormatting.YELLOW.toString() + I18n.format("tooltip.luminousEnchantment") + TextFormatting.RESET.toString());
+			if (event.getItemStack().getTagCompound().hasKey("luminousEnchantment")) {
+				event.getToolTip().add(1, TextFormatting.YELLOW.toString() + I18n.format("tooltip.luminousEnchantment")
+						+ TextFormatting.RESET.toString());
 			}
 		}
 	}
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void renderGameOverlay(RenderGameOverlayEvent event)
-	{
+	public void renderGameOverlay(RenderGameOverlayEvent event) {
 		if (event.getType() != null
-				&& event instanceof RenderGameOverlayEvent.Post)
-		{
+				&& event instanceof RenderGameOverlayEvent.Post) {
 			if (event
-					.getType() == RenderGameOverlayEvent.ElementType.ARMOR)
-			{
+					.getType() == RenderGameOverlayEvent.ElementType.ARMOR) {
 				renderLavaCharm(event);
-			}
-			else if (event
-					.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS)
-			{
+			} else if (event
+					.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
 				renderItemOverlay(event);
 			}
 		}
 	}
 
-	private void renderItemOverlay(RenderGameOverlayEvent event)
-	{
+	private void renderItemOverlay(RenderGameOverlayEvent event) {
 		ItemStack equippedItem;
 		ItemStack offHandItem;
 
 		Minecraft minecraft = Minecraft.getMinecraft();
 
-
-		if (!(equippedItem = minecraft.player.getHeldItemMainhand()).isEmpty())
-		{
-			if (equippedItem.getItem() == ModItems.redstoneTool)
-			{
+		if (!(equippedItem = minecraft.player.getHeldItemMainhand()).isEmpty()) {
+			if (equippedItem.getItem() == ModItems.redstoneTool) {
 				RayTraceResult objectMouseOver = minecraft.objectMouseOver;
 
-				if (objectMouseOver != null && objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK)
-				{
+				if (objectMouseOver != null && objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
 					IBlockState hitState = minecraft.world.getBlockState(objectMouseOver.getBlockPos());
 					Block hitBlock = hitState.getBlock();
 
-					if (hitBlock instanceof BlockRedstoneWire)
-					{
+					if (hitBlock instanceof BlockRedstoneWire) {
 						int width = event.getResolution().getScaledWidth();
 						int height = event.getResolution().getScaledHeight();
 
@@ -926,17 +976,13 @@ public class RTEventHandler
 						GlStateManager.enableBlend();
 					}
 				}
-			}
-			else if (equippedItem.getItem() == ModItems.ingredients && equippedItem.getItemDamage() == ItemIngredient.INGREDIENT.BIOME_SENSOR.id)
-			{
+			} else if (equippedItem.getItem() == ModItems.ingredients
+					&& equippedItem.getItemDamage() == ItemIngredient.INGREDIENT.BIOME_SENSOR.id) {
 				renderBiomeSensor(event);
-			}
-			else
-			{
+			} else {
 				Entity pointedEntity = ReflectionUtilClient.getPointedEntity(
 						net.minecraft.client.Minecraft.getMinecraft().entityRenderer);
-				if (equippedItem.getItem() == ModItems.timeInABottle && pointedEntity instanceof EntityEclipsedClock)
-				{
+				if (equippedItem.getItem() == ModItems.timeInABottle && pointedEntity instanceof EntityEclipsedClock) {
 					int targetTime = ((EntityEclipsedClock) pointedEntity).getTargetTime();
 
 					int stored = ItemTimeInABottle.getStoredTime(equippedItem);
@@ -946,8 +992,7 @@ public class RTEventHandler
 
 					int dif = (targetTime - (int) minecraft.world.getWorldTime()) % 24000;
 
-					if (dif < 0)
-					{
+					if (dif < 0) {
 						dif += 24000;
 					}
 
@@ -965,8 +1010,7 @@ public class RTEventHandler
 					GlStateManager.enableBlend();
 				}
 			}
-		}
-		else if (!(offHandItem = minecraft.player.getHeldItemOffhand()).isEmpty()) {
+		} else if (!(offHandItem = minecraft.player.getHeldItemOffhand()).isEmpty()) {
 			// Check off-hand for biome sensor
 			if (offHandItem.getItem() == ModItems.ingredients
 					&& offHandItem.getItemDamage() == ItemIngredient.INGREDIENT.BIOME_SENSOR.id) {
@@ -989,28 +1033,51 @@ public class RTEventHandler
 	}
 
 	@SubscribeEvent
-	public void anvilUpdate(AnvilUpdateEvent event)
-	{
-		if (!event.getLeft().isEmpty() && !event.getRight().isEmpty())
-		{
-			AnvilRecipe recipe = AnvilRecipeHandler.getRecipe(event.getLeft(), event.getRight());
+	public void anvilUpdate(AnvilUpdateEvent event) {
+		if (!event.getLeft().isEmpty() && !event.getRight().isEmpty()) {
+			// Check for divining rod repair
+			ItemStack left = event.getLeft();
+			ItemStack right = event.getRight();
 
-			if (recipe != null)
-			{
+			if (left.getItem() instanceof ItemDiviningRod) {
+				ItemDiviningRod rod = (ItemDiviningRod) left.getItem();
+
+				// Check if the repair item is valid
+				if (rod.getIsRepairable(left, right)) {
+					ItemStack repaired = left.copy();
+					int maxDamage = repaired.getMaxDamage();
+					int currentDamage = repaired.getItemDamage();
+
+					// Repair 50% of max durability
+					int repairAmount = maxDamage / 2;
+					int newDamage = Math.max(0, currentDamage - repairAmount);
+
+					repaired.setItemDamage(newDamage);
+					event.setOutput(repaired);
+
+					// Set cost (1 level per repair material used)
+					event.setCost(1);
+					event.setMaterialCost(1);
+					return;
+				}
+			}
+
+			// Check for custom anvil recipes
+			AnvilRecipe recipe = AnvilRecipeHandler.getRecipe(left, right);
+
+			if (recipe != null) {
 				event.setOutput(recipe.getOutput().copy());
 				event.setCost(recipe.getCost());
 			}
 		}
 	}
 
-	private boolean arePairs(Object o1, Object o2, Object o3, Object o4)
-	{
+	private boolean arePairs(Object o1, Object o2, Object o3, Object o4) {
 		return ((o1 == o3 && o2 == o4) || (o1 == o4) && (o2 == o3));
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void renderLavaCharm(RenderGameOverlayEvent event)
-	{
+	private void renderLavaCharm(RenderGameOverlayEvent event) {
 		ItemStack lavaProtector = ItemStack.EMPTY;
 		ItemStack lavaCharm = ItemStack.EMPTY;
 
@@ -1018,30 +1085,24 @@ public class RTEventHandler
 
 		lavaCharm = InventoryUtil.getBauble(ModItems.lavaCharm, player);
 
-		if (lavaCharm.isEmpty())
-		{
+		if (lavaCharm.isEmpty()) {
 			lavaCharm = InventoryUtil.getPlayerInventoryItem(ModItems.lavaCharm, player);
 		}
 
-		if (!lavaCharm.isEmpty())
-		{
+		if (!lavaCharm.isEmpty()) {
 			lavaProtector = lavaCharm;
 		}
 
 		ItemStack boots = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
-		if (!boots.isEmpty())
-		{
-			if (boots.getItem() == ModItems.lavaWader)
-			{
+		if (!boots.isEmpty()) {
+			if (boots.getItem() == ModItems.lavaWader) {
 				lavaProtector = boots;
 			}
 		}
 
-		if (!lavaProtector.isEmpty())
-		{
+		if (!lavaProtector.isEmpty()) {
 			NBTTagCompound compound = lavaProtector.getTagCompound();
-			if (compound != null)
-			{
+			if (compound != null) {
 				float charge = compound.getInteger("charge");
 				net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getMinecraft();
 				mc.renderEngine.bindTexture(new ResourceLocation("randomthings:textures/gui/lavaCharmBar.png"));
@@ -1058,10 +1119,8 @@ public class RTEventHandler
 				GuiIngameForge.left_height += 10;
 
 				GlStateManager.enableBlend();
-				for (int i = 0; i < count + 1; i++)
-				{
-					if (i == count + 1 - 1)
-					{
+				for (int i = 0; i < count + 1; i++) {
+					if (i == count + 1 - 1) {
 						float countFloat = charge / 2F / 10F + 10f;
 						GlStateManager.color(1, 1, 1, (countFloat) % ((int) (countFloat)));
 					}
@@ -1076,40 +1135,33 @@ public class RTEventHandler
 		}
 	}
 
-	private void handleLavaProtection(LivingAttackEvent event)
-	{
+	private void handleLavaProtection(LivingAttackEvent event) {
 		ItemStack lavaProtector = ItemStack.EMPTY;
 		ItemStack lavaCharm = ItemStack.EMPTY;
 
 		lavaCharm = InventoryUtil.getBauble(ModItems.lavaCharm, (EntityPlayer) event.getEntityLiving());
 
-		if (lavaCharm.isEmpty())
-		{
-			lavaCharm = InventoryUtil.getPlayerInventoryItem(ModItems.lavaCharm, (EntityPlayer) event.getEntityLiving());
+		if (lavaCharm.isEmpty()) {
+			lavaCharm = InventoryUtil.getPlayerInventoryItem(ModItems.lavaCharm,
+					(EntityPlayer) event.getEntityLiving());
 		}
 
-		if (!lavaCharm.isEmpty())
-		{
+		if (!lavaCharm.isEmpty()) {
 			lavaProtector = lavaCharm;
 		}
 
 		ItemStack boots = event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.FEET);
-		if (!boots.isEmpty())
-		{
-			if (boots.getItem() == ModItems.lavaWader)
-			{
+		if (!boots.isEmpty()) {
+			if (boots.getItem() == ModItems.lavaWader) {
 				lavaProtector = boots;
 			}
 		}
 
-		if (!lavaProtector.isEmpty())
-		{
+		if (!lavaProtector.isEmpty()) {
 			NBTTagCompound compound = lavaProtector.getTagCompound();
-			if (compound != null)
-			{
+			if (compound != null) {
 				int charge = compound.getInteger("charge");
-				if (charge > 0)
-				{
+				if (charge > 0) {
 					compound.setInteger("charge", charge - 1);
 					compound.setInteger("chargeCooldown", 40);
 					event.setCanceled(true);
@@ -1119,58 +1171,48 @@ public class RTEventHandler
 	}
 
 	@SubscribeEvent
-	public void livingAttacked(LivingAttackEvent event)
-	{
-		if (!event.getEntityLiving().world.isRemote)
-		{
-			if (!event.isCanceled() && event.getAmount() > 0 && event.getEntityLiving() instanceof EntityPlayerMP)
-			{
+	public void livingAttacked(LivingAttackEvent event) {
+		if (!event.getEntityLiving().world.isRemote) {
+			if (!event.isCanceled() && event.getAmount() > 0 && event.getEntityLiving() instanceof EntityPlayerMP) {
 				EntityPlayerMP player = (EntityPlayerMP) event.getEntityLiving();
 
-				if (event.getSource() == DamageSource.LAVA)
-				{
+				if (event.getSource() == DamageSource.LAVA) {
 					handleLavaProtection(event);
 				}
 
-				if (event.getSource().isFireDamage() && event.getSource() != DamageSource.LAVA)
-				{
+				if (event.getSource().isFireDamage() && event.getSource() != DamageSource.LAVA) {
 					handleFireProtection(event);
 				}
 
 				// Linking Orbs
 
-
 				LinkedHashSet<EntityLivingBase> distributedEntities = new LinkedHashSet<EntityLivingBase>();
-				for (TileEntityLinkOrb tlo : TileEntityLinkOrb.orbs)
-				{
-					if (!tlo.isInvalid() && !tlo.getWorld().isRemote)
-					{
+				for (TileEntityLinkOrb tlo : TileEntityLinkOrb.orbs) {
+					if (!tlo.isInvalid() && !tlo.getWorld().isRemote) {
 						UUID owner = tlo.getOwner();
 
-						if (owner != null && player.getGameProfile().getId().equals(owner))
-						{
+						if (owner != null && player.getGameProfile().getId().equals(owner)) {
 							World world = tlo.getWorld();
 
-							distributedEntities.addAll(world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(tlo.getPos()).grow(5), EntitySelectors.IS_ALIVE));
+							distributedEntities.addAll(world.getEntitiesWithinAABB(EntityLivingBase.class,
+									new AxisAlignedBB(tlo.getPos()).grow(5), EntitySelectors.IS_ALIVE));
 						}
 					}
 				}
 
 				distributedEntities.remove(player);
 
-				if (distributedEntities.size() > 0)
-				{
+				if (distributedEntities.size() > 0) {
 					float damage = event.getAmount();
 					float part = damage / distributedEntities.size();
 
-					System.out.println("Distributing " + damage + " damage to " + distributedEntities.size() + " entities with " + part + " per Entity");
+					System.out.println("Distributing " + damage + " damage to " + distributedEntities.size()
+							+ " entities with " + part + " per Entity");
 
-					while (damage > 0 && !distributedEntities.isEmpty())
-					{
+					while (damage > 0 && !distributedEntities.isEmpty()) {
 						Iterator<EntityLivingBase> iterator = distributedEntities.iterator();
 
-						while (iterator.hasNext())
-						{
+						while (iterator.hasNext()) {
 							EntityLivingBase next = iterator.next();
 
 							float entityHealth = next.getHealth();
@@ -1179,8 +1221,7 @@ public class RTEventHandler
 
 							next.attackEntityFrom(event.getSource(), dealtDamage);
 
-							if (next.isDead || next.getHealth() == 0)
-							{
+							if (next.isDead || next.getHealth() == 0) {
 								iterator.remove();
 							}
 
@@ -1188,36 +1229,27 @@ public class RTEventHandler
 						}
 					}
 
-					if (damage <= 0.1)
-					{
+					if (damage <= 0.1) {
 						event.setCanceled(true);
-					}
-					else
-					{
+					} else {
 						event.setCanceled(true);
 						player.attackEntityFrom(event.getSource(), damage);
 					}
 				}
 			}
 
-			if (!event.isCanceled() && event.getSource() instanceof EntityDamageSource && !(event.getSource() instanceof EntityDamageSourceIndirect))
-			{
+			if (!event.isCanceled() && event.getSource() instanceof EntityDamageSource
+					&& !(event.getSource() instanceof EntityDamageSourceIndirect)) {
 				EntityDamageSource damageSource = (EntityDamageSource) event.getSource();
 
-				if (damageSource.getTrueSource() != null && damageSource.getTrueSource() instanceof EntityLivingBase)
-				{
+				if (damageSource.getTrueSource() != null && damageSource.getTrueSource() instanceof EntityLivingBase) {
 					EntityLivingBase livingEntity = (EntityLivingBase) damageSource.getTrueSource();
 
-					if (livingEntity.isPotionActive(ModPotions.imbueFire))
-					{
+					if (livingEntity.isPotionActive(ModPotions.imbueFire)) {
 						event.getEntityLiving().setFire(10);
-					}
-					else if (livingEntity.isPotionActive(ModPotions.imbueWither))
-					{
+					} else if (livingEntity.isPotionActive(ModPotions.imbueWither)) {
 						event.getEntityLiving().addPotionEffect(new PotionEffect(MobEffects.WITHER, 5 * 20, 1));
-					}
-					else if (livingEntity.isPotionActive(ModPotions.imbuePoison))
-					{
+					} else if (livingEntity.isPotionActive(ModPotions.imbuePoison)) {
 						event.getEntityLiving().addPotionEffect(new PotionEffect(MobEffects.POISON, 10 * 20, 1));
 					}
 				}
@@ -1226,97 +1258,88 @@ public class RTEventHandler
 
 	}
 
-	private void handleFireProtection(LivingAttackEvent event)
-	{
+	private void handleFireProtection(LivingAttackEvent event) {
 		EntityPlayer player = (EntityPlayer) event.getEntityLiving();
 		ItemStack baubleSkull = InventoryUtil.getBauble(ModItems.obsidianSkullRing, player);
 		ItemStack inventorySkull = InventoryUtil.getPlayerInventoryItem(ModItems.obsidianSkull, player);
 		ItemStack obsidianBoots = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
 
-		if (!obsidianBoots.isEmpty() && !(obsidianBoots.getItem() == ModItems.obsidianWaterWalkingBoots || obsidianBoots.getItem() == ModItems.lavaWader))
-		{
+		if (!obsidianBoots.isEmpty() && !(obsidianBoots.getItem() == ModItems.obsidianWaterWalkingBoots
+				|| obsidianBoots.getItem() == ModItems.lavaWader)) {
 			obsidianBoots = ItemStack.EMPTY;
 		}
 
 		ItemStack skull = baubleSkull;
 
-		if (skull.isEmpty())
-		{
+		if (skull.isEmpty()) {
 			skull = inventorySkull;
 		}
 
-		if (skull.isEmpty())
-		{
+		if (skull.isEmpty()) {
 			skull = obsidianBoots;
 		}
 
-		if (!skull.isEmpty())
-		{
+		if (!skull.isEmpty()) {
 			float amount = event.getAmount();
 			float rngFloat = rng.nextFloat();
 
 			float chance = amount / 100;
 			chance *= amount * amount;
 
-			if (rngFloat > chance)
-			{
+			if (rngFloat > chance) {
 				event.setCanceled(true);
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public void useHoe(UseHoeEvent event)
-	{
+	public void useHoe(UseHoeEvent event) {
 		IBlockState state = event.getWorld().getBlockState(event.getPos());
 		Block block = state.getBlock();
-		if (block == ModBlocks.fertilizedDirt)
-		{
+		if (block == ModBlocks.fertilizedDirt) {
 			event.setResult(Result.ALLOW);
 			event.getWorld().setBlockState(event.getPos(), ModBlocks.fertilizedDirtTilled.getDefaultState());
-			event.getWorld().playSound(null, event.getPos().add(0.5, 0.5, 0.5), ModBlocks.fertilizedDirtTilled.getSoundType().getStepSound(), SoundCategory.BLOCKS, (ModBlocks.fertilizedDirtTilled.getSoundType().getVolume() + 1.0F) / 2.0F, ModBlocks.fertilizedDirtTilled.getSoundType().getPitch() * 0.8F);
+			event.getWorld().playSound(null, event.getPos().add(0.5, 0.5, 0.5),
+					ModBlocks.fertilizedDirtTilled.getSoundType().getStepSound(), SoundCategory.BLOCKS,
+					(ModBlocks.fertilizedDirtTilled.getSoundType().getVolume() + 1.0F) / 2.0F,
+					ModBlocks.fertilizedDirtTilled.getSoundType().getPitch() * 0.8F);
 		}
 	}
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void updateInputEvent(InputUpdateEvent event)
-	{
+	public void updateInputEvent(InputUpdateEvent event) {
 		EntityPlayer player = event.getEntityPlayer();
 		MovementInput input = event.getMovementInput();
 
 		PotionEffect effect;
-		if (player != null && (effect = player.getActivePotionEffect(ModPotions.collapse)) != null && effect.getAmplifier() == 0)
-		{
+		if (player != null && (effect = player.getActivePotionEffect(ModPotions.collapse)) != null
+				&& effect.getAmplifier() == 0) {
 			boolean left = input.leftKeyDown;
 			boolean right = input.rightKeyDown;
 
 			boolean forward = input.forwardKeyDown;
 			boolean backwards = input.backKeyDown;
 
-			if (left)
-			{
+			if (left) {
 				input.moveStrafe -= 2;
 				input.leftKeyDown = false;
 				input.rightKeyDown = true;
 			}
 
-			if (right)
-			{
+			if (right) {
 				input.moveStrafe += 2;
 				input.rightKeyDown = false;
 				input.leftKeyDown = true;
 			}
 
-			if (forward)
-			{
+			if (forward) {
 				input.moveForward -= 2;
 				input.forwardKeyDown = false;
 				input.backKeyDown = true;
 			}
 
-			if (backwards)
-			{
+			if (backwards) {
 				input.moveForward += 2;
 				input.backKeyDown = false;
 				input.forwardKeyDown = true;
@@ -1325,43 +1348,40 @@ public class RTEventHandler
 	}
 
 	@SubscribeEvent
-	public void livingUpdate(LivingUpdateEvent event)
-	{
-		if (!event.getEntityLiving().world.isRemote)
-		{
-			if (event.getEntityLiving() instanceof EntityPlayer)
-			{
+	public void livingUpdate(LivingUpdateEvent event) {
+		if (!event.getEntityLiving().world.isRemote) {
+			if (event.getEntityLiving() instanceof EntityPlayer) {
 				EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-				if (player.dimension == Internals.SPECTRE_ID)
-				{
+				if (player.dimension == Internals.SPECTRE_ID) {
 					SpectreHandler spectreHandler;
 
-					if ((spectreHandler = SpectreHandler.getInstance()) != null)
-					{
+					if ((spectreHandler = SpectreHandler.getInstance()) != null) {
 						spectreHandler.checkPosition((EntityPlayerMP) player);
 					}
 				}
 			}
-		}
-		else
-		{
+		} else {
 			spawnEntityFilterParticles(event);
 
-			if (event.getEntityLiving() instanceof EntityPlayer)
-			{
+			if (event.getEntityLiving() instanceof EntityPlayer) {
 				EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-				if (!player.isSneaking())
-				{
+				if (!player.isSneaking()) {
 					ItemStack boots = player.inventory.armorInventory.get(0);
-					if (!boots.isEmpty() && ((boots.getItem() == ModItems.waterWalkingBoots || boots.getItem() == ModItems.obsidianWaterWalkingBoots) || boots.getItem() == ModItems.lavaWader))
-					{
-						BlockPos liquid = new BlockPos(Math.floor(player.posX), Math.floor(player.posY), Math.floor(player.posZ));
-						BlockPos air = new BlockPos((int) player.posX, (int) (player.posY + player.height), (int) player.posZ);
+					if (!boots.isEmpty() && ((boots.getItem() == ModItems.waterWalkingBoots
+							|| boots.getItem() == ModItems.obsidianWaterWalkingBoots)
+							|| boots.getItem() == ModItems.lavaWader)) {
+						BlockPos liquid = new BlockPos(Math.floor(player.posX), Math.floor(player.posY),
+								Math.floor(player.posZ));
+						BlockPos air = new BlockPos((int) player.posX, (int) (player.posY + player.height),
+								(int) player.posZ);
 						Block liquidBlock = player.world.getBlockState(liquid).getBlock();
 						Material liquidMaterial = liquidBlock.getMaterial(player.world.getBlockState(liquid));
 
-						if ((liquidMaterial == Material.WATER || (boots.getItem() == ModItems.lavaWader && liquidMaterial == Material.LAVA)) && player.world.getBlockState(air).getBlock().isAir(player.world.getBlockState(air), player.world, air) && EntityUtil.isJumping(player))
-						{
+						if ((liquidMaterial == Material.WATER
+								|| (boots.getItem() == ModItems.lavaWader && liquidMaterial == Material.LAVA))
+								&& player.world.getBlockState(air).getBlock().isAir(player.world.getBlockState(air),
+										player.world, air)
+								&& EntityUtil.isJumping(player)) {
 							player.move(MoverType.SELF, 0, 0.22, 0);
 						}
 					}
@@ -1372,35 +1392,30 @@ public class RTEventHandler
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void spawnEntityFilterParticles(LivingUpdateEvent event)
-	{
+	private void spawnEntityFilterParticles(LivingUpdateEvent event) {
 		EntityPlayer player = net.minecraft.client.Minecraft.getMinecraft().player;
 
 		ItemStack equipped = player.getHeldItemMainhand();
 
-		if (!equipped.isEmpty() && equipped.getItem() instanceof IEntityFilterItem)
-		{
+		if (!equipped.isEmpty() && equipped.getItem() instanceof IEntityFilterItem) {
 			IEntityFilterItem filterInstance = (IEntityFilterItem) equipped.getItem();
-			if (filterInstance.apply(equipped, event.getEntityLiving()))
-			{
-				for (int i = 0; i < 1; ++i)
-				{
-					Particle particle =
-							net.minecraft.client.Minecraft.getMinecraft().effectRenderer
-									.spawnEffectParticle(EnumParticleTypes.PORTAL.ordinal(),
-											event.getEntityLiving().posX
-													+ (RTEventHandler.rng.nextDouble() - 0.5D)
-															* event.getEntityLiving().width,
-											event.getEntityLiving().posY
-													+ RTEventHandler.rng.nextDouble()
-															* event.getEntityLiving().height
-													- 0.25D,
-											event.getEntityLiving().posZ
-													+ (RTEventHandler.rng.nextDouble() - 0.5D)
-															* event.getEntityLiving().width,
-											(RTEventHandler.rng.nextDouble() - 0.5D) * 2.0D,
-											-RTEventHandler.rng.nextDouble(),
-											(RTEventHandler.rng.nextDouble() - 0.5D) * 2.0D);
+			if (filterInstance.apply(equipped, event.getEntityLiving())) {
+				for (int i = 0; i < 1; ++i) {
+					Particle particle = net.minecraft.client.Minecraft.getMinecraft().effectRenderer
+							.spawnEffectParticle(EnumParticleTypes.PORTAL.ordinal(),
+									event.getEntityLiving().posX
+											+ (RTEventHandler.rng.nextDouble() - 0.5D)
+													* event.getEntityLiving().width,
+									event.getEntityLiving().posY
+											+ RTEventHandler.rng.nextDouble()
+													* event.getEntityLiving().height
+											- 0.25D,
+									event.getEntityLiving().posZ
+											+ (RTEventHandler.rng.nextDouble() - 0.5D)
+													* event.getEntityLiving().width,
+									(RTEventHandler.rng.nextDouble() - 0.5D) * 2.0D,
+									-RTEventHandler.rng.nextDouble(),
+									(RTEventHandler.rng.nextDouble() - 0.5D) * 2.0D);
 					particle.setRBGColorF(0.2F, 0.2F, 1);
 				}
 			}
@@ -1408,53 +1423,47 @@ public class RTEventHandler
 	}
 
 	@SubscribeEvent
-	public void livingDeath(LivingDeathEvent event)
-	{
-		if (!event.getEntityLiving().world.isRemote)
-		{
-			if (event.getEntityLiving() instanceof EntityDragon)
-			{
+	public void livingDeath(LivingDeathEvent event) {
+		if (!event.getEntityLiving().world.isRemote) {
+			if (event.getEntityLiving() instanceof EntityDragon) {
 				RTWorldInformation rtInfo = RTWorldInformation.getInstance();
-				if (rtInfo != null)
-				{
+				if (rtInfo != null) {
 					rtInfo.setEnderDragonDefeated(true);
 				}
 			}
 
-			if (event.getSource().getTrueSource() != null && !(event.getSource().getTrueSource() instanceof FakePlayer) && event.getSource().getTrueSource() instanceof EntityPlayer && !(event.getEntity() instanceof EntitySpirit))
-			{
+			if (event.getSource().getTrueSource() != null && !(event.getSource().getTrueSource() instanceof FakePlayer)
+					&& event.getSource().getTrueSource() instanceof EntityPlayer
+					&& !(event.getEntity() instanceof EntitySpirit)) {
 				double chance = Numbers.SPIRIT_CHANCE_NORMAL;
 
 				RTWorldInformation rtInfo = RTWorldInformation.getInstance();
 
-				if (rtInfo != null)
-				{
-					if (rtInfo.isDragonDefeated())
-					{
+				if (rtInfo != null) {
+					if (rtInfo.isDragonDefeated()) {
 						chance += Numbers.SPIRIT_CHANCE_END_INCREASE;
 					}
 				}
 
-				if (event.getEntityLiving().world.canBlockSeeSky(event.getEntityLiving().getPosition()) && !event.getEntityLiving().world.isDaytime())
-				{
-					chance += event.getEntityLiving().world.getCurrentMoonPhaseFactor() / 100f * Numbers.SPIRIT_CHANCE_MOON_MULT;
+				if (event.getEntityLiving().world.canBlockSeeSky(event.getEntityLiving().getPosition())
+						&& !event.getEntityLiving().world.isDaytime()) {
+					chance += event.getEntityLiving().world.getCurrentMoonPhaseFactor() / 100f
+							* Numbers.SPIRIT_CHANCE_MOON_MULT;
 				}
 
-				if (Math.random() < chance)
-				{
-					event.getEntityLiving().world.spawnEntity(new EntitySpirit(event.getEntityLiving().world, event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ));
+				if (Math.random() < chance) {
+					event.getEntityLiving().world.spawnEntity(new EntitySpirit(event.getEntityLiving().world,
+							event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ));
 				}
 			}
 
-			if (event.getEntityLiving() instanceof EntityPlayer)
-			{
-				if (!(event.getEntityLiving() instanceof FakePlayer))
-				{
+			if (event.getEntityLiving() instanceof EntityPlayer) {
+				if (!(event.getEntityLiving() instanceof FakePlayer)) {
 					EntityPlayer player = (EntityPlayer) event.getEntityLiving();
 
-					if (!event.isCanceled())
-					{
-						player.world.spawnEntity(new EntitySoul(player.world, player.posX, player.posY, player.posZ, player.getGameProfile().getName()));
+					if (!event.isCanceled()) {
+						player.world.spawnEntity(new EntitySoul(player.world, player.posX, player.posY, player.posZ,
+								player.getGameProfile().getName()));
 					}
 				}
 			}
@@ -1462,29 +1471,23 @@ public class RTEventHandler
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void potentialSpawns(PotentialSpawns event)
-	{
-		if (event.getWorld().provider.getDimension() == Internals.SPECTRE_ID)
-		{
+	public void potentialSpawns(PotentialSpawns event) {
+		if (event.getWorld().provider.getDimension() == Internals.SPECTRE_ID) {
 			event.setCanceled(true);
 		}
 	}
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void renderWorldPost(RenderWorldLastEvent event)
-	{
+	public void renderWorldPost(RenderWorldLastEvent event) {
 		RandomThings.proxy.renderRedstoneInterfaceStuff(event.getPartialTicks());
 
-		net.minecraft.client.Minecraft mc =
-				FMLClientHandler.instance().getClient();
+		net.minecraft.client.Minecraft mc = FMLClientHandler.instance().getClient();
 		EntityPlayer player = mc.player;
-		if (player != null)
-		{
+		if (player != null) {
 			ItemStack itemStack = player.getHeldItemMainhand();
 
-			if (!itemStack.isEmpty())
-			{
+			if (!itemStack.isEmpty()) {
 				Item item = itemStack.getItem();
 
 				boolean validItem = false;
@@ -1493,8 +1496,7 @@ public class RTEventHandler
 				int targetY = 0;
 				int targetZ = 0;
 
-				if (item == ModItems.positionFilter && itemStack.getTagCompound() != null)
-				{
+				if (item == ModItems.positionFilter && itemStack.getTagCompound() != null) {
 					NBTTagCompound compound = itemStack.getTagCompound();
 
 					targetDimension = compound.getInteger("dimension");
@@ -1502,13 +1504,10 @@ public class RTEventHandler
 					targetY = compound.getInteger("filterY");
 					targetZ = compound.getInteger("filterZ");
 					validItem = true;
-				}
-				else if (item == ModItems.portKey)
-				{
+				} else if (item == ModItems.portKey) {
 					NBTTagCompound targetCompound = itemStack.getSubCompound("target");
 
-					if (targetCompound != null)
-					{
+					if (targetCompound != null) {
 						validItem = true;
 
 						targetDimension = targetCompound.getInteger("dimension");
@@ -1518,8 +1517,7 @@ public class RTEventHandler
 					}
 				}
 
-				if (validItem && player.dimension == targetDimension)
-				{
+				if (validItem && player.dimension == targetDimension) {
 					double playerX = player.prevPosX + (player.posX - player.prevPosX) * event.getPartialTicks();
 					double playerY = player.prevPosY + (player.posY - player.prevPosY) * event.getPartialTicks();
 					double playerZ = player.prevPosZ + (player.posZ - player.prevPosZ) * event.getPartialTicks();

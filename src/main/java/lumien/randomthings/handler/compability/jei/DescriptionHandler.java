@@ -17,7 +17,7 @@ import lumien.randomthings.item.ItemBase;
 import lumien.randomthings.item.ItemIngredient;
 import lumien.randomthings.item.ItemSpectreCharger;
 import lumien.randomthings.item.ModItems;
-import lumien.randomthings.config.Numbers;
+import lumien.randomthings.config.DiviningRods;
 import lumien.randomthings.item.diviningrod.ItemDiviningRod;
 import lumien.randomthings.item.diviningrod.RodType;
 import mezz.jei.api.IModRegistry;
@@ -30,12 +30,10 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class DescriptionHandler
-{
+public class DescriptionHandler {
 	static IModRegistry registry;
 
-	public static void addDescriptions(IModRegistry registry)
-	{
+	public static void addDescriptions(IModRegistry registry) {
 		DescriptionHandler.registry = registry;
 
 		Map<Object, String> overrideMap = new HashMap<>();
@@ -59,25 +57,39 @@ public class DescriptionHandler
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.BIOME_SENSOR.id));
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.EVIL_TEAR.id));
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.SPECTRE_INGOT.id));
-		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.SUPERLUBRICENT_TINCTURE.id));
+		stackBlackList
+				.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.SUPERLUBRICENT_TINCTURE.id));
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.FLOO_POWDER.id));
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.PLATE_BASE.id));
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.PRECIOUS_EMERALD.id));
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.SPECTRE_STRING.id));
 
-		for (int i = 0; i < ItemDiviningRod.types.size(); i++)
-		{
-			ItemStack stack = new ItemStack(ModItems.diviningRod, 1, i);
-			stackBlackList.add(stack);
-			String description = getDiviningRodDescription(ItemDiviningRod.types.get(i));
-			registry.addDescription(stack, description);
+		// Hide legacy divining rod from JEI
+		if (ModItems.diviningRodLegacy != null) {
+			stackBlackList.add(new ItemStack(ModItems.diviningRodLegacy, 1,
+					net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE));
 		}
 
-		removeDes(overrideMap, ModBlocks.spectreLeaf, ModBlocks.natureCore, ModBlocks.spectreLog, ModBlocks.spectrePlank, ModBlocks.specialChest, ModBlocks.superLubricentPlatform, ModBlocks.filteredSuperLubricentPlatform);
+		for (RodType type : ItemDiviningRod.types) {
+			ItemDiviningRod item = ItemDiviningRod.rodItems.get(type);
+			if (item != null) {
+				ItemStack stack = new ItemStack(item, 1);
+				stackBlackList.add(stack);
+				String description = getDiviningRodDescription(type);
+				registry.addDescription(stack, description);
+			}
+		}
+
+		removeDes(overrideMap, ModBlocks.spectreLeaf, ModBlocks.natureCore, ModBlocks.spectreLog,
+				ModBlocks.spectrePlank, ModBlocks.specialChest, ModBlocks.superLubricentPlatform,
+				ModBlocks.filteredSuperLubricentPlatform);
 
 		// Manually Add
-		registry.addDescription(new ItemStack(ModBlocks.blockDiaphanous, 1, OreDictionary.WILDCARD_VALUE), "tile.diaphanousBlock.info");
-		registry.addDescription(ItemEnchantedBook.getEnchantedItemStack(new EnchantmentData(ModEnchantments.magnetic, 1)), "enchantment.randomthings.magnetic.desc");
+		registry.addDescription(new ItemStack(ModBlocks.blockDiaphanous, 1, OreDictionary.WILDCARD_VALUE),
+				"tile.diaphanousBlock.info");
+		registry.addDescription(
+				ItemEnchantedBook.getEnchantedItemStack(new EnchantmentData(ModEnchantments.magnetic, 1)),
+				"enchantment.randomthings.magnetic.desc");
 
 		// Add spectre coils to override map to handle them specially
 		overrideMap.put(ModBlocks.spectreCoilNormal, null);
@@ -114,46 +126,35 @@ public class DescriptionHandler
 						ItemSpectreCharger.TIER.GENESIS.ordinal()),
 				getSpectreChargerDescription(ItemSpectreCharger.TIER.GENESIS));
 
-		Stream.concat(BlockBase.rtBlockList.stream(), ItemBase.rtItemList.stream()).forEach(new Consumer<Object>()
-		{
+		Stream.concat(BlockBase.rtBlockList.stream(), ItemBase.rtItemList.stream()).forEach(new Consumer<Object>() {
 			@Override
-			public void accept(Object t)
-			{
+			public void accept(Object t) {
 				NonNullList<ItemStack> subItems = NonNullList.create();
-				if (t instanceof Item)
-				{
+				if (t instanceof Item) {
 					Item item = (Item) t;
 
-					if (item.getCreativeTab() == RandomThings.instance.creativeTab)
-					{
+					if (item.getCreativeTab() == RandomThings.instance.creativeTab) {
 						item.getSubItems(RandomThings.instance.creativeTab, subItems);
 					}
-				}
-				else if (t instanceof Block)
-				{
+				} else if (t instanceof Block) {
 					Block block = (Block) t;
 
-					if (block.getCreativeTab() == RandomThings.instance.creativeTab)
-					{
+					if (block.getCreativeTab() == RandomThings.instance.creativeTab) {
 						block.getSubBlocks(RandomThings.instance.creativeTab, subItems);
 					}
 				}
 
-				if (!subItems.isEmpty())
-				{
-					if (overrideMap.containsKey(t))
-					{
+				if (!subItems.isEmpty()) {
+					if (overrideMap.containsKey(t)) {
 						String override = overrideMap.get(t);
 
-						if (override != null)
-						{
-							if (t instanceof Block)
-							{
-								registry.addDescription(new ItemStack((Block) t, 1, OreDictionary.WILDCARD_VALUE), override);
-							}
-							else if (t instanceof Item)
-							{
-								registry.addDescription(new ItemStack((Item) t, 1, OreDictionary.WILDCARD_VALUE), override);
+						if (override != null) {
+							if (t instanceof Block) {
+								registry.addDescription(new ItemStack((Block) t, 1, OreDictionary.WILDCARD_VALUE),
+										override);
+							} else if (t instanceof Item) {
+								registry.addDescription(new ItemStack((Item) t, 1, OreDictionary.WILDCARD_VALUE),
+										override);
 							}
 						}
 
@@ -161,22 +162,17 @@ public class DescriptionHandler
 					}
 				}
 
-				for (ItemStack is : subItems)
-				{
-					if (!is.isEmpty())
-					{
+				for (ItemStack is : subItems) {
+					if (!is.isEmpty()) {
 						boolean blackListed = false;
-						for (ItemStack b : stackBlackList)
-						{
-							if (ItemStack.areItemStacksEqual(b, is))
-							{
+						for (ItemStack b : stackBlackList) {
+							if (ItemStack.areItemStacksEqual(b, is)) {
 								blackListed = true;
 								break;
 							}
 						}
 
-						if (!blackListed)
-						{
+						if (!blackListed) {
 							registry.addDescription(is, is.getTranslationKey() + ".info");
 						}
 					}
@@ -185,25 +181,20 @@ public class DescriptionHandler
 		});
 	}
 
-	private static void add(Item item, String key)
-	{
+	private static void add(Item item, String key) {
 		registry.addDescription(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE), key);
 	}
 
-	private static void add(Block block, String key)
-	{
+	private static void add(Block block, String key) {
 		registry.addDescription(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE), key);
 	}
 
-	private static void add(ItemStack stack, String key)
-	{
+	private static void add(ItemStack stack, String key) {
 		registry.addDescription(stack, key);
 	}
 
-	private static void removeDes(Map<Object, String> overrideMap, Object... toRemove)
-	{
-		for (Object o : toRemove)
-		{
+	private static void removeDes(Map<Object, String> overrideMap, Object... toRemove) {
+		for (Object o : toRemove) {
 			overrideMap.put(o, null);
 		}
 	}
@@ -231,11 +222,10 @@ public class DescriptionHandler
 		String oreKey = "item.diviningRod.ore";
 		String oreTranslation = I18n.translateToLocal(oreKey);
 		if (!isUniversal && !oreTranslation.isEmpty()) {
-			oreTranslation =
-					oreTranslation.substring(0, 1).toUpperCase() + oreTranslation.substring(1);
+			oreTranslation = oreTranslation.substring(0, 1).toUpperCase() + oreTranslation.substring(1);
 		}
 		String oreName = formattedOreName + " " + oreTranslation;
-		int range = Numbers.DIVINING_ROD_RANGE;
+		int range = DiviningRods.RANGE;
 		int cubeSize = range + range + 1;
 		String rangeString = cubeSize + " x " + cubeSize;
 		String description = I18n.translateToLocalFormatted("item.diviningRod.info", oreName.trim(),
