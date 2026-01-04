@@ -64,13 +64,21 @@ public class DescriptionHandler
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.PLATE_BASE.id));
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.PRECIOUS_EMERALD.id));
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.SPECTRE_STRING.id));
+		
+		// Hide legacy divining rod from JEI
+		if (ModItems.diviningRodLegacy != null) {
+			stackBlackList.add(new ItemStack(ModItems.diviningRodLegacy, 1, net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE));
+		}
 
-		for (int i = 0; i < ItemDiviningRod.types.size(); i++)
+		for (RodType type : ItemDiviningRod.types)
 		{
-			ItemStack stack = new ItemStack(ModItems.diviningRod, 1, i);
-			stackBlackList.add(stack);
-			String description = getDiviningRodDescription(ItemDiviningRod.types.get(i));
-			registry.addDescription(stack, description);
+			ItemDiviningRod item = ItemDiviningRod.rodItems.get(type);
+			if (item != null) {
+				ItemStack stack = new ItemStack(item, 1);
+				stackBlackList.add(stack);
+				String description = getDiviningRodDescription(type);
+				registry.addDescription(stack, description);
+			}
 		}
 
 		removeDes(overrideMap, ModBlocks.spectreLeaf, ModBlocks.natureCore, ModBlocks.spectreLog, ModBlocks.spectrePlank, ModBlocks.specialChest, ModBlocks.superLubricentPlatform, ModBlocks.filteredSuperLubricentPlatform);

@@ -262,6 +262,9 @@ item.eclipsedClock.name=Eclipsed Clock
 
 item.diviningRod.name=Divining Rod
 item.diviningRodUniversal.name=Universal
+item.diviningRodLegacy.name=[LEGACY] Divining Rod
+item.diviningRodLegacy.migration=This item will be automatically converted to the new format when the world loads. If not, right-click this item to convert it.
+item.diviningRodLegacy.convertFailed=Failed to convert divining rod. Please check the logs.
 
 item.spectreCharger.normal.name=Spectre Charger
 item.spectreCharger.redstone.name=Redstone Spectre Charger

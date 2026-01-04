@@ -1,6 +1,6 @@
 package lumien.randomthings.item;
 
-import lumien.randomthings.item.diviningrod.ItemDiviningRod;
+import lumien.randomthings.item.diviningrod.ItemDiviningRodLegacy;
 import lumien.randomthings.item.spectretools.ItemSpectreAxe;
 import lumien.randomthings.item.spectretools.ItemSpectreHoe;
 import lumien.randomthings.item.spectretools.ItemSpectrePickaxe;
@@ -56,7 +56,8 @@ public class ModItems
 	public static ItemTimeInABottle timeInABottle;
 	public static ItemSpectreIlluminator spectreIlluminator;
 	public static ItemSpectreCharger spectreCharger;
-	public static ItemDiviningRod diviningRod;
+	// Divining rods are now registered individually - use ItemDiviningRod.rodItems to access them
+	public static ItemDiviningRodLegacy diviningRodLegacy;
 	public static ItemEclipsedClock eclipsedClock;
 	
 	public static ItemEnderBucket enderBucket;
@@ -127,7 +128,9 @@ public class ModItems
 		timeInABottle = new ItemTimeInABottle();
 		spectreIlluminator = new ItemSpectreIlluminator();
 		spectreCharger = new ItemSpectreCharger();
-		diviningRod = new ItemDiviningRod();
+		// Legacy divining rod for migration - registered with old name "diviningRod" for compatibility
+		diviningRodLegacy = new ItemDiviningRodLegacy();
+		// Divining rods are registered individually in ItemDiviningRod.preInit()
 		eclipsedClock = new ItemEclipsedClock();
 
 		grassSeeds = new ItemGrassSeeds();

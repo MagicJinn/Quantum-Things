@@ -2,6 +2,7 @@ package lumien.randomthings.item.diviningrod;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +12,12 @@ import lumien.randomthings.config.DiviningRods;
 import lumien.randomthings.handler.DiviningRodHandler;
 import lumien.randomthings.handler.compability.jei.DescriptionHandler;
 import lumien.randomthings.item.ItemBase;
-import lumien.randomthings.item.ModItems;
 import lumien.randomthings.lib.IRTItemColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.translation.I18n;
@@ -31,17 +32,22 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 	public static List<RodType> types;
 	public static Map<RodType, Boolean> availableTypes;
 	public static CombinedRodType universalRod;
+	public static Map<RodType, ItemDiviningRod> rodItems;
+	public static Map<Item, RodType> itemToRodType;
+
+	private RodType rodType;
 
 	static
 	{
 		types = new ArrayList<RodType>();
 		availableTypes = new LinkedHashMap<RodType, Boolean>();
+		rodItems = new LinkedHashMap<RodType, ItemDiviningRod>();
+		itemToRodType = new HashMap<Item, RodType>();
 	}
 
-	public ItemDiviningRod() {
-		super("diviningRod");
-
-		this.setHasSubtypes(true);
+	public ItemDiviningRod(String name, RodType rodType) {
+		super(name);
+		this.rodType = rodType;
 		this.setMaxStackSize(1);
 	}
 
@@ -58,6 +64,14 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 		}
 		universalRod = new CombinedRodType("universal", rods.toArray(new RodType[0]));
 		types.add(universalRod);
+
+		// Create individual item instances for each rod type
+		for (RodType type : types) {
+			String itemName = type.getName() + "diviningrod";
+			ItemDiviningRod item = new ItemDiviningRod(itemName, type);
+			rodItems.put(type, item);
+			itemToRodType.put(item, type);
+		}
 	}
 
 	public static void postInit() {
@@ -69,9 +83,7 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 	}
 
 	private static void registerRecipes() {
-		for (int i = 0; i < types.size(); i++) {
-			RodType type = types.get(i);
-
+		for (RodType type : types) {
 			// Skip universal rod - it has a special recipe
 			if (type.getName().equals("universal")) {
 				registerUniversalRecipe();
@@ -85,12 +97,12 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 
 			if (type instanceof OreRodType) {
 				OreRodType oreType = (OreRodType) type;
-				registerRodRecipe(oreType, i);
+				registerRodRecipe(oreType, type);
 			}
 		}
 	}
 
-	private static void registerRodRecipe(OreRodType rodType, int metadata) {
+	private static void registerRodRecipe(OreRodType rodType, RodType type) {
 		String recipeItem = rodType.getRecipeItem();
 		Object ingredient;
 
@@ -132,8 +144,12 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 				new net.minecraft.item.ItemStack(net.minecraft.init.Items.STICK);
 		net.minecraft.item.ItemStack spiderEye =
 				new net.minecraft.item.ItemStack(net.minecraft.init.Items.SPIDER_EYE);
-		net.minecraft.item.ItemStack result =
-				new net.minecraft.item.ItemStack(ModItems.diviningRod, 1, metadata);
+		ItemDiviningRod rodItem = rodItems.get(type);
+		if (rodItem == null) {
+			RandomThings.logger.log(Level.WARN, "Could not find item for divining rod type: " + rodType.getName());
+			return;
+		}
+		net.minecraft.item.ItemStack result = new net.minecraft.item.ItemStack(rodItem, 1);
 
 		net.minecraft.util.ResourceLocation recipeName = new net.minecraft.util.ResourceLocation(
 				"randomthings", "diviningrod_" + rodType.getName());
@@ -148,32 +164,38 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 		// Universal rod recipe uses the first 8 valid rods in a 3x3 pattern
 		List<net.minecraft.item.ItemStack> rodStacks =
 				new ArrayList<net.minecraft.item.ItemStack>();
-		for (int i = 0; i < types.size(); i++) {
-			RodType type = types.get(i);
+		for (RodType type : types) {
 			if (!(type instanceof CombinedRodType) && !type.getName().equals("universal")
 					&& availableTypes.get(type)) {
-				rodStacks.add(new net.minecraft.item.ItemStack(ModItems.diviningRod, 1, i));
-				if (rodStacks.size() >= 8) {
-					break; // Only need first 8
+				ItemDiviningRod rodItem = rodItems.get(type);
+				if (rodItem != null) {
+					rodStacks.add(new net.minecraft.item.ItemStack(rodItem, 1));
+					if (rodStacks.size() >= 8) {
+						break; // Only need first 8
+					}
 				}
 			}
 		}
 
-		// Find universal rod index
-		int universalIndex = -1;
-		for (int i = 0; i < types.size(); i++) {
-			if (types.get(i).getName().equals("universal")) {
-				universalIndex = i;
+		// Find universal rod
+		RodType universalType = null;
+		for (RodType type : types) {
+			if (type.getName().equals("universal")) {
+				universalType = type;
 				break;
 			}
 		}
 
-		if (universalIndex == -1) {
+		if (universalType == null) {
 			return;
 		}
 
-		net.minecraft.item.ItemStack result =
-				new net.minecraft.item.ItemStack(ModItems.diviningRod, 1, universalIndex);
+		ItemDiviningRod universalItem = rodItems.get(universalType);
+		if (universalItem == null) {
+			return;
+		}
+
+		net.minecraft.item.ItemStack result = new net.minecraft.item.ItemStack(universalItem, 1);
 		net.minecraft.item.ItemStack stick =
 				new net.minecraft.item.ItemStack(net.minecraft.init.Items.STICK);
 		net.minecraft.item.ItemStack slimeBall =
@@ -313,19 +335,12 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 	{
 		if (this.isInCreativeTab(tab))
 		{
-			if (types == null || availableTypes == null)
+			if (rodType != null && availableTypes != null)
 			{
-				return;
-			}
-			for (int i = 0; i < types.size(); i++) {
-				RodType type = types.get(i);
-				if (type == null) {
-					continue;
-				}
-				Boolean available = availableTypes.get(type);
+				Boolean available = availableTypes.get(rodType);
 				if (available != null && available)
 				{
-					items.add(new ItemStack(this, 1, i));
+					items.add(new ItemStack(this, 1));
 				}
 			}
 		}
@@ -334,8 +349,7 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 	@Override
 	public String getTranslationKey(ItemStack stack)
 	{
-		RodType type = types.get(stack.getItemDamage());
-		if (type.getName().equals("universal")) {
+		if (rodType != null && rodType.getName().equals("universal")) {
 			return "item.diviningRodUniversal";
 		}
 		return "item.diviningRod";
@@ -343,16 +357,18 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
-		RodType type = types.get(stack.getItemDamage());
+		if (rodType == null) {
+			return super.getItemStackDisplayName(stack);
+		}
 
-		if (type.getName().equals("universal")) {
+		if (rodType.getName().equals("universal")) {
 			String universalName = I18n.translateToLocal("item.diviningRodUniversal.name");
 			String rodName = I18n.translateToLocal("item.diviningRod.name");
 			return universalName + " " + rodName;
 		}
 
-		if (type instanceof OreRodType) {
-			OreRodType oreType = (OreRodType) type;
+		if (rodType instanceof OreRodType) {
+			OreRodType oreType = (OreRodType) rodType;
 			List<net.minecraft.item.ItemStack> ores = OreDictionary.getOres(oreType.oreName);
 
 			if (!ores.isEmpty()) {
@@ -390,8 +406,9 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 			if (player.getHeldItemMainhand() == stack || player.getHeldItemOffhand() == stack)
 			{
 				RodType type = getRodType(stack);
-
-				return DiviningRodHandler.get().shouldGlow(type);
+				if (type != null) {
+					return DiviningRodHandler.get().shouldGlow(type);
+				}
 			}
 		}
 
@@ -400,17 +417,22 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 
 	public static RodType getRodType(ItemStack stack)
 	{
-		return types.get(stack.getItemDamage());
+		if (stack.isEmpty()) {
+			return null;
+		}
+		Item item = stack.getItem();
+		if (item instanceof ItemDiviningRod) {
+			return ((ItemDiviningRod) item).rodType;
+		}
+		return itemToRodType.get(item);
 	}
 
 	@Override
 	public int getColorFromItemstack(ItemStack stack, int tintIndex)
 	{
-		int meta = stack.getItemDamage();
-		
-		if (tintIndex == 1 && meta < types.size())
+		if (tintIndex == 1 && rodType != null)
 		{
-			return types.get(meta).getItemColor().getRGB();
+			return rodType.getItemColor().getRGB();
 		}
 		else
 		{
@@ -424,13 +446,9 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor
 			ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 
-		int meta = stack.getItemDamage();
-		if (meta >= types.size()) {
-			return;
+		if (rodType != null) {
+			String description = DescriptionHandler.getDiviningRodDescription(rodType);
+			tooltip.add(description);
 		}
-
-		RodType rodType = types.get(meta);
-		String description = DescriptionHandler.getDiviningRodDescription(rodType);
-		tooltip.add(description);
 	}
 }
