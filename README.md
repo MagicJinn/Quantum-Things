@@ -55,7 +55,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Added the ability to configure a blacklist of entities that cannot be captured by the Summoning Pendulum.
 - Creative players can now capture any entity with the Summoning Pendulum, bypassing all restrictions.
 - Added a failure sound when the Summoning Pendulum blocks the capture of an entity.
-- Added optional durability to Divining Rods (disabled by default).
+- Added optional durability to Divining Rods, alongside Unbreaking and Mending eligibility (disabled by default).
 
 ### Fixes
 

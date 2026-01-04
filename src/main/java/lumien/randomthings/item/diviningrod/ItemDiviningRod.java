@@ -21,8 +21,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -537,24 +539,54 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor {
 	}
 
 	@Override
-	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		return isUnbreaking(stack) || isMending(stack);
+	public boolean isEnchantable(@Nonnull ItemStack stack) {
+		// Not enchantable if durability is disabled
+		return DiviningRods.DURABILITY_USAGE_SECONDS > 0.0;
 	}
 
 	@Override
-	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-		return isUnbreaking(stack) || isMending(stack);
+	public int getItemEnchantability() {
+		// Make unenchantable if durability is disabled
+		if (DiviningRods.DURABILITY_USAGE_SECONDS <= 0.0)
+			return 0;
+
+		return 1;
 	}
 
-	public boolean isUnbreaking(ItemStack stack) {
-		// Check if the book has the Unbreaking enchantment
-		return net.minecraft.enchantment.EnchantmentHelper
-				.getEnchantmentLevel(net.minecraft.init.Enchantments.UNBREAKING, stack) > 0;
+	@Override
+	public boolean canApplyAtEnchantingTable(@Nonnull ItemStack stack, @Nonnull Enchantment enchantment) {
+		// Not enchantable if durability is disabled
+		if (DiviningRods.DURABILITY_USAGE_SECONDS <= 0.0)
+			return false;
+
+		// Allow Unbreaking and Mending enchantments
+		return enchantment == Enchantments.UNBREAKING
+				|| enchantment == Enchantments.MENDING;
 	}
 
-	public boolean isMending(ItemStack stack) {
-		// Check if the book has the Mending enchantment
-		return net.minecraft.enchantment.EnchantmentHelper.getEnchantmentLevel(net.minecraft.init.Enchantments.MENDING,
-				stack) > 0;
+	@Override
+	public boolean isBookEnchantable(@Nonnull ItemStack stack, @Nonnull ItemStack book) {
+		// Not enchantable if durability is disabled
+		if (DiviningRods.DURABILITY_USAGE_SECONDS <= 0.0)
+			return false;
+
+		// Only allow enchanted books with Unbreaking and/or Mendin
+		if (book.isEmpty() || book.getItem() != Items.ENCHANTED_BOOK)
+			return false;
+
+		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(book);
+
+		// Book must contain at least one enchantment
+		if (enchantments.isEmpty())
+			return false;
+
+		for (Enchantment ench : enchantments.keySet()) {
+			if (ench != Enchantments.UNBREAKING && ench != Enchantments.MENDING) {
+				return false;
+			}
+		}
+
+		// If we got this far, the book has Unbreaking and/or Mending
+		return true;
 	}
 }
