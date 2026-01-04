@@ -10,9 +10,15 @@ import net.minecraftforge.common.util.EnumHelper;
 import org.lwjgl.opengl.GL11;
 
 public class ItemSpectreArmor extends ItemArmor {
-    public static ItemArmor.ArmorMaterial spectreArmorMaterial =
-            EnumHelper.addArmorMaterial("spectre", "randomthings:spectre", 35,
-                    new int[] {3, 9, 7, 3}, 22, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
+    public static ItemArmor.ArmorMaterial spectreArmorMaterial = EnumHelper.addArmorMaterial("spectre",
+            "randomthings:spectre", 35,
+            new int[] { 3, 9, 7, 3 }, 22, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 3.0F);
+
+    static {
+        if (spectreArmorMaterial.repairMaterial.isEmpty()) {
+            spectreArmorMaterial.setRepairItem(new ItemStack(ModItems.ingredients, 1, 3));
+        }
+    }
 
     public ItemSpectreArmor(EntityEquipmentSlot armorType) {
         super(spectreArmorMaterial, 0, armorType);
@@ -57,8 +63,6 @@ public class ItemSpectreArmor extends ItemArmor {
 
     @Override
     public int getColor(ItemStack stack) {
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         return 16777215; // White color
     }
 
@@ -79,4 +83,3 @@ public class ItemSpectreArmor extends ItemArmor {
         }
     }
 }
-
