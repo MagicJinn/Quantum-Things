@@ -155,6 +155,7 @@ import net.minecraftforge.event.world.BlockEvent.NeighborNotifyEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.event.world.WorldEvent.PotentialSpawns;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
@@ -169,6 +170,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToSe
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+public class RTEventHandler {
 	static Random rng = new Random();
 
 	public static int clientAnimationCounter;
@@ -176,8 +178,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 	private boolean spectreArmorStateTracker;
 
 	@SubscribeEvent
-	public void chunkLoad(ChunkEvent.Load event)
-	{
+	public void chunkLoad(ChunkEvent.Load event) {
 		if (event.getWorld().isRemote)
 			SpectreIlluminationClientHandler.loadChunk(event.getChunk());
 	}
@@ -185,7 +186,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 	@SubscribeEvent
 	public void chunkWatch(ChunkWatchEvent.Watch event) {
 		if (!event.getChunkInstance().getWorld().isRemote)
-			SpectreIlluminationHandler.get(event.getChunkInstance().getWorld()).startWatching(event.getChunkInstance(), event.getPlayer());
+			SpectreIlluminationHandler.get(event.getChunkInstance().getWorld()).startWatching(event.getChunkInstance(),
 					event.getPlayer());
 	}
 
@@ -201,8 +202,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 						.getSoundLevel(event.getSound().getCategory()) > 0) {
 			BlockPos soundPosition;
 
-			if (event.getSound() instanceof PositionedSound)
-			{
 			if (event.getSound() instanceof PositionedSound) {
 				PositionedSound ps = (PositionedSound) event.getSound();
 
