@@ -15,7 +15,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Creative players can now capture any entity with the Summoning Pendulum, bypassing all restrictions.
 - Added a failure sound when the Summoning Pendulum blocks the capture of an entity.
 - Added optional durability to Divining Rods, alongside Unbreaking and Mending eligibility (disabled by default).
-- Increased the Spectre Armor toughness to 3.0 from 1.0 (1 above diamond).
+- Increased the Spectre Armor toughness to 3.0 from 0.0 (1 above diamond).
   
 ### Fixes
 
