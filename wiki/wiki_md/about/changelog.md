@@ -14,10 +14,17 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Added the ability to configure a blacklist of entities that cannot be captured by the Summoning Pendulum.
 - Creative players can now capture any entity with the Summoning Pendulum, bypassing all restrictions.
 - Added a failure sound when the Summoning Pendulum blocks the capture of an entity.
+- Added optional durability to Divining Rods, alongside Unbreaking and Mending eligibility (disabled by default).
+- Increased the Spectre Armor toughness to 3.0 from 0.0 (1 above diamond).
   
 ### Fixes
 
 - Fixed the Summoning Pendulum being able to capture entities that are targeting you, but are not classified as monsters.
+- Fixed the Entity Detector not properly updating its power level through blocks when the power mode changed (introduced in 1.0.5).
+- Fixed a crash when the Item Filter tried to compare to an empty item stack.
+- Fixed Spectre Energy Injectors accepting infinite energy when confronted with high energy inputs, causing them to eat the energy.
+- Fixed Divining Rods being able to index-shift when adding or removing them, by flattening their registry names (technically introduced in 1.0.0, but not really).
+- Fixed Spectre Armor not having a repair item set (introduced in 1.0.2).
 
 ## 1.0.5
 

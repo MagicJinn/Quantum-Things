@@ -115,11 +115,9 @@ public class TileEntityEntityDetector extends TileEntityBase implements ITickabl
 		this.world.notifyNeighborsOfStateChange(pos, ModBlocks.entityDetector, false);
 
 		// STRONG mode can propagate power through solid blocks,
-		// so also notify adjacent blocks
-		if (powerMode == POWER_MODE.STRONG) {
-			for (EnumFacing facing : EnumFacing.VALUES) {
-				this.world.notifyNeighborsOfStateChange(this.pos.offset(facing), ModBlocks.entityDetector, false);
-			}
+		// so also notify adjacent blocks (regardless of power level)
+		for (EnumFacing facing : EnumFacing.VALUES) {
+			this.world.notifyNeighborsOfStateChange(this.pos.offset(facing), ModBlocks.entityDetector, false);
 		}
 	}
 

@@ -1,17 +1,22 @@
 package lumien.randomthings.config;
 
+import lumien.randomthings.lib.ConfigOption;
+
 public class DiviningRods {
         public static final String CATEGORY = "Divining Rods";
-        public static final String CONFIG_COMMENT =
-                        "Allows you to add divining rods to the game, or disable/remove existing ones.";
+        public static final String CONFIG_COMMENT = "Allows you to add divining rods to the game, or disable/remove existing ones.";
 
-        public static final String PROPERTY_COMMENT =
-                        "Format: oreDictionaryName,recipeItem,red,green,blue\n"
-                                        + "- oreDictionaryName: The ore dictionary name the rod detects (e.g., 'oreIron')\n"
-                                        + "- recipeItem: The item used in the crafting recipe (ore dictionary name or 'minecraft:itemname' for vanilla items)\n"
-                                        + "- red, green, blue: Color values (0-254) for the rod's visual appearance\n"
-                                        + "Note: For recipeItem in rod entries, only use 'minecraft:' prefix for vanilla items. Mod item prefixes (e.g., 'modname:item') do NOT work - use ore dictionary names instead.\n"
-                                        + "Note 2: When adding or removing a rod in an existing save, the indexes will shift, causing existing rods to change their type. A diamond rod could become a coal rod, for example.\n";
+        @ConfigOption(category = CATEGORY, name = "Range", comment = "The range (in blocks) that a Divining Rod searches in each direction from the player. A range of 5 means it searches an 11x11x11 cube centered on the player. WARNING: Setting this value too high can cause significant lag (client and server) while using the rod!")
+        public static int RANGE = 5;
+
+        @ConfigOption(category = CATEGORY, name = "DurabilityUsageSeconds", comment = "How many seconds of usage it takes for a Divining Rod to lose 1 durability point (Default = 0.0).")
+        public static double DURABILITY_USAGE_SECONDS = 0.0;
+
+        public static final String PROPERTY_COMMENT = "Format: oreDictionaryName,recipeItem,red,green,blue\n"
+                        + "- oreDictionaryName: The ore dictionary name the rod detects (e.g., 'oreIron')\n"
+                        + "- recipeItem: The item used in the crafting recipe (ore dictionary name or 'minecraft:itemname' for vanilla items)\n"
+                        + "- red, green, blue: Color values (0-254) for the rod's visual appearance\n"
+                        + "Note: For recipeItem in rod entries, only use 'minecraft:' prefix for vanilla items. Mod item prefixes (e.g., 'modname:item') do NOT work - use ore dictionary names instead.\n";
 
         public static String[] DEFAULT_RODS = {
                         // Vanilla ores
@@ -96,7 +101,6 @@ public class DiviningRods {
                         "oreEden,fragmentsEden,162,54,0", "oreBloodgem,gemBlood,162,31,95",
                         "oreSkythern,fragmentsSkythern,160,160,160",
 
-
                         // Sleepers are non functional until it has an oredict entry
                         // (modpacks can add it themselves, I won't).
                         // Silent Gear
@@ -112,6 +116,6 @@ public class DiviningRods {
                         // Aether II
                         "oreAmbrosium,shardAmbrosium,197,184,105",
                         "oreGravitite,ingotGravitite,127,51,105",
-                        "oreArkenium,ingotArkenium,150,150,150", "oreZanite,gemZanite,46,28,93"};
+                        "oreArkenium,ingotArkenium,150,150,150", "oreZanite,gemZanite,46,28,93" };
 
 }

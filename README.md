@@ -55,6 +55,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Added the ability to configure a blacklist of entities that cannot be captured by the Summoning Pendulum.
 - Creative players can now capture any entity with the Summoning Pendulum, bypassing all restrictions.
 - Added a failure sound when the Summoning Pendulum blocks the capture of an entity.
+- Added optional durability to Divining Rods, alongside Unbreaking and Mending eligibility (disabled by default).
 
 ### Fixes
 
@@ -100,6 +101,13 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Entity Detector having no clear difference between Weak and Strong power modes.
 - Fixed Spectre Leaves having their Decay flag set to true when placed.
 - Fixed the Summoning Pendulum being able to capture entities that are targeting you, but are not classified as monsters.
+- Fixed a crash when the Item Filter tried to compare to an empty item stack.
+- Fixed Spectre Energy Injectors accepting infinite energy when confronted with high energy inputs, causing them to eat the energy.
+- Fixed Divining Rods being able to index-shift when adding or removing them, by flattening their registry names.
+
+## Developing
+
+The workspace and setup are inherited from Lumien231's Random Things repository. The workspace is completely and utterly fucked up and ancient, so builds may randomly fail for no discernible reason. Sometimes, when the build does succeed, when loading the game some textures will be missing. If this happens, just rebuild. If the workspace becomes broken in some way, run `unfuck_workspace.bat` to reset the workspace. This is also helpful when you first cloned the repository and you want to set up the workspace from scratch.
 
 ### Reporting Issues
 

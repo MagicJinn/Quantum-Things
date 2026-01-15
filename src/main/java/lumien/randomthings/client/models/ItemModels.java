@@ -224,11 +224,16 @@ public class ItemModels
 	
 	private static void registerDiviningRods()
 	{
-		int meta = 0;
-		for (RodType r:ItemDiviningRod.types)
+		for (RodType type : ItemDiviningRod.types)
 		{
-			ModelLoader.setCustomModelResourceLocation(ModItems.diviningRod, meta, new ModelResourceLocation("randomthings:diviningrod", "inventory"));
-			meta++;
+			ItemDiviningRod item = ItemDiviningRod.rodItems.get(type);
+			if (item != null) {
+				ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation("randomthings:diviningrod", "inventory"));
+			}
+		}
+		// Register legacy divining rod model
+		if (ModItems.diviningRodLegacy != null) {
+			ModelLoader.setCustomModelResourceLocation(ModItems.diviningRodLegacy, 0, new ModelResourceLocation("randomthings:diviningrod", "inventory"));
 		}
 	}
 	

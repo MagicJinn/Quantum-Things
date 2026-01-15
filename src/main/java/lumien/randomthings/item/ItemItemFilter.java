@@ -85,6 +85,9 @@ public class ItemItemFilter extends ItemBase implements IEntityFilterItem
 
 		public boolean matchesItemStack(ItemStack stackToCheck)
 		{
+			if (stackToCheck == null || stackToCheck.isEmpty())
+				return false;
+
 			boolean matches = false;
 
 			for (int i = 0; i < filterInventory.getSizeInventory(); i++)
