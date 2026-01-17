@@ -56,6 +56,9 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Creative players can now capture any entity with the Summoning Pendulum, bypassing all restrictions.
 - Added a failure sound when the Summoning Pendulum blocks the capture of an entity.
 - Added optional durability to Divining Rods, alongside Unbreaking and Mending eligibility (disabled by default).
+- Changed the Redstone Activator to emit a sided signal based on the block face clicked. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
+- Reworked the internals of the (Advanced) Redstone Interface/Observer/Activator/Remote. This should improve redstone performance, even if you aren't using any of these blocks/items in your world. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
+- Changed the Redstone Interface & Observer to only send/receive signals from their target(s) once the target(s) are loaded. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
 
 ### Fixes
 
@@ -104,6 +107,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed a crash when the Item Filter tried to compare to an empty item stack.
 - Fixed Spectre Energy Injectors accepting infinite energy when confronted with high energy inputs, causing them to eat the energy.
 - Fixed Divining Rods being able to index-shift when adding or removing them, by flattening their registry names.
+- Fixed Redstone Tool sometimes showing ghost connections for Redstone Interface/Observers after being removed. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
 
 ## Developing
 
