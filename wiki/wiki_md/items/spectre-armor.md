@@ -31,7 +31,7 @@ When wearing Spectre Armor pieces, your player model will become transparent. Th
 
 ---
 
-Spectre Armor pieces are crafted in the [Imbuing Station](imbuing-station). Each recipe requires 3 Spectre Ingots and 1 Diamond Armor piece to create its Spectre Armor equivalent.
+Spectre Armor pieces are crafted in the [Imbuing Station](../blocks/imbuing-station). Each recipe requires 3 Spectre Ingots and 1 Diamond Armor piece to create its Spectre Armor equivalent.
 
 ![Spectre Armor Crafting Recipes](../images/crafting_spectre-armor.webp)
 
