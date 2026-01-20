@@ -13,26 +13,26 @@ public class EntityColoredSmokeFX extends Particle
 {
 	float smokeParticleScale;
 
-	public EntityColoredSmokeFX(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double p_i46347_8_, double p_i46347_10_, double p_i46347_12_)
+	public EntityColoredSmokeFX(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn)
 	{
-		this(worldIn, xCoordIn, yCoordIn, zCoordIn, p_i46347_8_, p_i46347_10_, p_i46347_12_, 1.0F);
+		this(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, 1.0F);
 	}
 
-	public EntityColoredSmokeFX(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double p_i46348_8_, double p_i46348_10_, double p_i46348_12_, float p_i46348_14_)
+	public EntityColoredSmokeFX(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, float scale)
 	{
 		super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0.0D, 0.0D, 0.0D);
 		this.motionX *= 0.10000000149011612D;
 		this.motionY *= 0.10000000149011612D;
 		this.motionZ *= 0.10000000149011612D;
-		this.motionX += p_i46348_8_;
-		this.motionY += p_i46348_10_;
-		this.motionZ += p_i46348_12_;
+		this.motionX += xSpeedIn;
+		this.motionY += ySpeedIn;
+		this.motionZ += zSpeedIn;
 		this.particleRed = this.particleGreen = this.particleBlue = (float) (Math.random() * 0.30000001192092896D);
 		this.particleScale *= 0.75F;
-		this.particleScale *= p_i46348_14_;
+		this.particleScale *= scale;
 		this.smokeParticleScale = this.particleScale;
 		this.particleMaxAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
-		this.particleMaxAge = (int) (this.particleMaxAge * p_i46348_14_);
+		this.particleMaxAge = (int) (this.particleMaxAge * scale);
 	}
 
 	/**

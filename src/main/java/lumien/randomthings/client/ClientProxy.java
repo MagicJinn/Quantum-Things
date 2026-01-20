@@ -139,9 +139,9 @@ public class ClientProxy extends CommonProxy
 				Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor()
 				{
 					@Override
-					public int colorMultiplier(IBlockState state, IBlockAccess p_186720_2_, BlockPos pos, int tintIndex)
+					public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
 					{
-						return blockColor.colorMultiplier(state, p_186720_2_, pos, tintIndex);
+						return blockColor.colorMultiplier(state, worldIn, pos, tintIndex);
 					}
 
 				}, (Block) entry.getValue());

@@ -25,7 +25,7 @@ public class RenderSoul extends Render
 		super(renderManager);
 	}
 
-	private void doRender(EntitySoul soul, double posX, double posY, double posZ, float p_76986_8_, float p_76986_9_)
+	private void doRender(EntitySoul soul, double posX, double posY, double posZ, float entityYaw, float partialTicks)
 	{
 		if (soul.render)
 		{
@@ -73,9 +73,9 @@ public class RenderSoul extends Render
 	}
 
 	@Override
-	public void doRender(Entity entity, double posX, double posY, double posZ, float p_76986_8_, float p_76986_9_)
+	public void doRender(Entity entity, double posX, double posY, double posZ, float entityYaw, float partialTicks)
 	{
-		doRender((EntitySoul) entity, posX, posY, posZ, p_76986_8_, p_76986_9_);
+		doRender((EntitySoul) entity, posX, posY, posZ, entityYaw, partialTicks);
 	}
 
 	@Override

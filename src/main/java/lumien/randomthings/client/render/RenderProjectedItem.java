@@ -24,10 +24,10 @@ public class RenderProjectedItem extends Render<EntityProjectedItem>
 	private final RenderItem itemRenderer;
 	private final Random random = new Random();
 
-	public RenderProjectedItem(RenderManager renderManagerIn, RenderItem p_i46167_2_)
+	public RenderProjectedItem(RenderManager renderManagerIn, RenderItem itemRenderer)
 	{
 		super(renderManagerIn);
-		this.itemRenderer = p_i46167_2_;
+		this.itemRenderer = itemRenderer;
 		this.shadowSize = 0.15F;
 		this.shadowOpaque = 0.75F;
 	}

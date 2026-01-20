@@ -6,9 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import com.mojang.authlib.GameProfile;
 
-import lumien.randomthings.config.Numbers;
 import lumien.randomthings.config.SpectreCoils;
-import lumien.randomthings.item.block.ItemBlockColored;
 import lumien.randomthings.item.block.ItemBlockSpectreCoil;
 import lumien.randomthings.lib.ILuminousBlock;
 import lumien.randomthings.lib.IRTBlockColor;
@@ -23,7 +21,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -153,7 +150,7 @@ public class BlockSpectreCoil extends BlockContainerBase implements ILuminousBlo
 	@Override
 	public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, EnumFacing side)
 	{
-		return func_181088_a(worldIn, pos, side.getOpposite());
+		return canPlaceBlock(worldIn, pos, side.getOpposite());
 	}
 
 	@Override
@@ -161,7 +158,7 @@ public class BlockSpectreCoil extends BlockContainerBase implements ILuminousBlo
 	{
 		for (EnumFacing enumfacing : EnumFacing.values())
 		{
-			if (func_181088_a(worldIn, pos, enumfacing))
+			if (canPlaceBlock(worldIn, pos, enumfacing))
 			{
 				return true;
 			}
@@ -170,9 +167,9 @@ public class BlockSpectreCoil extends BlockContainerBase implements ILuminousBlo
 		return false;
 	}
 
-	protected static boolean func_181088_a(World p_181088_0_, BlockPos p_181088_1_, EnumFacing p_181088_2_)
+	protected static boolean canPlaceBlock(World worldIn, BlockPos pos, EnumFacing direction)
 	{
-		return p_181088_2_ == EnumFacing.DOWN && isBlockEnergyStorage(p_181088_0_, p_181088_1_.down(), p_181088_2_) ? true : isBlockEnergyStorage(p_181088_0_, p_181088_1_.offset(p_181088_2_), p_181088_2_);
+		return direction == EnumFacing.DOWN && isBlockEnergyStorage(worldIn, pos.down(), direction) ? true : isBlockEnergyStorage(worldIn, pos.offset(direction), direction);
 	}
 
 	private static boolean isBlockEnergyStorage(World worldObj, BlockPos pos, EnumFacing facing)
@@ -194,7 +191,7 @@ public class BlockSpectreCoil extends BlockContainerBase implements ILuminousBlo
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
-		return func_181088_a(worldIn, pos, facing.getOpposite()) ? this.getDefaultState().withProperty(FACING, facing) : this.getDefaultState().withProperty(FACING, EnumFacing.DOWN);
+		return canPlaceBlock(worldIn, pos, facing.getOpposite()) ? this.getDefaultState().withProperty(FACING, facing) : this.getDefaultState().withProperty(FACING, EnumFacing.DOWN);
 	}
 
 	/**
@@ -203,7 +200,7 @@ public class BlockSpectreCoil extends BlockContainerBase implements ILuminousBlo
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block neighborBlock, BlockPos changedPos)
 	{
-		if (this.checkForDrop(worldIn, pos, state) && !func_181088_a(worldIn, pos, state.getValue(FACING).getOpposite()))
+		if (this.checkForDrop(worldIn, pos, state) && !canPlaceBlock(worldIn, pos, state.getValue(FACING).getOpposite()))
 		{
 			this.dropBlockAsItem(worldIn, pos, state, 0);
 			worldIn.setBlockToAir(pos);
@@ -278,7 +275,7 @@ public class BlockSpectreCoil extends BlockContainerBase implements ILuminousBlo
 	}
 
 	@Override
-	public int colorMultiplier(IBlockState state, IBlockAccess p_186720_2_, BlockPos pos, int tintIndex)
+	public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
 	{
 		return this.coilType.color;
 	}

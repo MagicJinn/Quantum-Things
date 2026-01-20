@@ -212,9 +212,9 @@ public class TileEntityAdvancedItemCollector extends TileEntityBase implements I
 	}
 
 	@Override
-	public void onInventoryChanged(IInventory p_76316_1_)
+	public void onInventoryChanged(IInventory invBasic)
 	{
-		ItemStack filterStack = p_76316_1_.getStackInSlot(0);
+		ItemStack filterStack = invBasic.getStackInSlot(0);
 
 		if (filterStack.isEmpty())
 		{

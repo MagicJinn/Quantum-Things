@@ -120,9 +120,9 @@ public class BlockInventoryTester extends BlockContainerBase
 		return false;
 	}
 
-	protected static boolean canPlaceAgainst(World p_181088_0_, BlockPos p_181088_1_, EnumFacing p_181088_2_)
+	protected static boolean canPlaceAgainst(World worldIn, BlockPos pos, EnumFacing direction)
 	{
-		return p_181088_2_ == EnumFacing.DOWN && isBlockInventory(p_181088_0_, p_181088_1_.down(), p_181088_2_) ? true : isBlockInventory(p_181088_0_, p_181088_1_.offset(p_181088_2_), p_181088_2_);
+		return direction == EnumFacing.DOWN && isBlockInventory(worldIn, pos.down(), direction) ? true : isBlockInventory(worldIn, pos.offset(direction), direction);
 	}
 
 	private static boolean isBlockInventory(World worldObj, BlockPos pos, EnumFacing facing)

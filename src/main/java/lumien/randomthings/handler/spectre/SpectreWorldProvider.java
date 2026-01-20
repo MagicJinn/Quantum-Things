@@ -21,7 +21,7 @@ public class SpectreWorldProvider extends WorldProvider
 	}
 
 	@Override
-	public float calculateCelestialAngle(long p_76563_1_, float p_76563_3_)
+	public float calculateCelestialAngle(long worldTime, float partialTicks)
 	{
 		return 0.5F;
 	}

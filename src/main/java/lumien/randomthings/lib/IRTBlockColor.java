@@ -6,5 +6,5 @@ import net.minecraft.world.IBlockAccess;
 
 public interface IRTBlockColor
 {
-	int colorMultiplier(IBlockState state, IBlockAccess p_186720_2_, BlockPos pos, int tintIndex);
+	int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex);
 }
