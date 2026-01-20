@@ -25,6 +25,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Fixed Spectre Energy Injectors accepting infinite energy when confronted with high energy inputs, causing them to eat the energy.
 - Fixed Divining Rods being able to index-shift when adding or removing them, by flattening their registry names (technically introduced in 1.0.0, but not really).
 - Fixed Spectre Armor not having a repair item set (introduced in 1.0.2).
+- Fixed Spectre Armor not having a description in JEI (introduced in 1.0.2).
 
 ## 1.0.5
 
