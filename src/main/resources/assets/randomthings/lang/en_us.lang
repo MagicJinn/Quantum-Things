@@ -606,6 +606,7 @@ item.spectrePickaxe.info=A Spectre Pickaxe has more durability & enchantibility 
 item.spectreAxe.info=A Spectre Axe has more durability & enchantibility than a diamond axe and also increases the block range of the player holding it by 3 blocks.
 item.spectreShovel.info=A Spectre Shovel has more durability & enchantibility than a diamond shovel and also increases the block range of the player holding it by 3 blocks.
 item.spectreHoe.info=A Spectre Hoe has more durability than a diamond hoe and also increases the block range of the player holding it by 3 blocks.
+item.spectreArmor.info=Spectre Armor provides superior protection compared to Diamond Armor, with higher defense, durability, and toughness. Wearing Spectre Armor pieces makes your player model transparent.
 item.runeDust.info=Decorative Colored dust that can be placed on top of other blocks.
 item.ingredient.ectoPlasm.info=Whenever an entity dies there's a small chance a Spirit will spawn, killing that Spirit using Magic (For Example Potions) yields 1-2 Ectoplasm.
 item.ingredient.luminousPowder.info=Besides being a crafting ingredient you can also combine luminous powder and enchanted items in a crafting table to make the enchantment glint glow in the dark.
