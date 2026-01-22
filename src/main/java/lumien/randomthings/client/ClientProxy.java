@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 
+import lumien.randomthings.handler.redstone.Connection;
+import lumien.randomthings.handler.redstone.IRedstoneConnectionProvider;
 import org.lwjgl.opengl.GL11;
 
 import lumien.randomthings.CommonProxy;
@@ -58,13 +60,9 @@ import lumien.randomthings.tileentity.TileEntityAncientFurnace;
 import lumien.randomthings.tileentity.TileEntityBiomeRadar;
 import lumien.randomthings.tileentity.TileEntityBlockDiaphanous;
 import lumien.randomthings.tileentity.TileEntityLinkOrb;
-import lumien.randomthings.tileentity.TileEntityRedstoneObserver;
 import lumien.randomthings.tileentity.TileEntitySpecialChest;
 import lumien.randomthings.tileentity.TileEntitySpectreEnergyInjector;
 import lumien.randomthings.tileentity.TileEntityVoxelProjector;
-import lumien.randomthings.tileentity.redstoneinterface.TileEntityAdvancedRedstoneInterface;
-import lumien.randomthings.tileentity.redstoneinterface.TileEntityBasicRedstoneInterface;
-import lumien.randomthings.tileentity.redstoneinterface.TileEntityRedstoneInterface;
 import lumien.randomthings.util.client.RenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -83,6 +81,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -293,79 +292,27 @@ public class ClientProxy extends CommonProxy
 		GlStateManager.pushMatrix();
 		{
 			worldRenderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-			ArrayList<TileEntityRedstoneInterface> interfaces = new ArrayList<>();
-			synchronized (TileEntityRedstoneInterface.lock)
-			{
-				interfaces.addAll(TileEntityRedstoneInterface.interfaces);
-			}
 
-			for (TileEntityRedstoneInterface redstoneInterface : interfaces)
-			{
-				if (!redstoneInterface.isInvalid() && redstoneInterface.getWorld().isRemote)
-				{
-					ArrayList<BlockPos> positions = new ArrayList<>();
+            List<Connection> connections = new ArrayList<>();
+            for (TileEntity tile : Minecraft.getMinecraft().world.loadedTileEntityList)
+            {
+                if (tile instanceof IRedstoneConnectionProvider)
+                {
+                    List<Connection> tileConnections = ((IRedstoneConnectionProvider) tile).getConnections();
+                    connections.addAll(tileConnections);
+                }
+            }
+            for (Connection connection : connections)
+            {
+                BlockPos target = connection.target();
+                BlockPos source = connection.source();
 
-					if (redstoneInterface instanceof TileEntityBasicRedstoneInterface)
-					{
-						TileEntityBasicRedstoneInterface simpleRedstoneInterface = (TileEntityBasicRedstoneInterface) redstoneInterface;
-						BlockPos position = simpleRedstoneInterface.getPos();
-						BlockPos target = simpleRedstoneInterface.getTarget();
-						if (target != null)
-						{
-							positions.add(target);
-							positions.add(position);
-						}
-					}
-					else if (redstoneInterface instanceof TileEntityAdvancedRedstoneInterface)
-					{
-						TileEntityAdvancedRedstoneInterface advancedRedstoneInterface = (TileEntityAdvancedRedstoneInterface) redstoneInterface;
-						BlockPos position = advancedRedstoneInterface.getPos();
-						Set<BlockPos> targets = advancedRedstoneInterface.getTargets();
-
-						for (BlockPos target : targets)
-						{
-							positions.add(target);
-							positions.add(position);
-						}
-					}
-
-					for (int i = 0; i < positions.size(); i += 2)
-					{
-						BlockPos target = positions.get(i);
-						BlockPos position = positions.get(i + 1);
-
-						if (position.distanceSq(player.getPosition()) < 256 || target.distanceSq(player.getPosition()) < 256)
-						{
-							worldRenderer.pos(target.getX() + 0.5 - playerX, target.getY() + 0.5 - playerY, target.getZ() + 0.5 - playerZ).color(255, 0, 0, 255).endVertex();
-							worldRenderer.pos(position.getX() + 0.5 - playerX, position.getY() + 0.5 - playerY, position.getZ() + 0.5 - playerZ).color(255, 0, 0, 255).endVertex();
-						}
-					}
-				}
-			}
-
-			ArrayList<TileEntityRedstoneObserver> observers = new ArrayList<>();
-			synchronized (TileEntityRedstoneObserver.loadedObservers)
-			{
-				observers.addAll(TileEntityRedstoneObserver.loadedObservers);
-			}
-
-			for (TileEntityRedstoneObserver redstoneObserver : observers)
-			{
-				if (!redstoneObserver.isInvalid())
-				{
-					BlockPos target = redstoneObserver.getTarget();
-					BlockPos position = redstoneObserver.getPos();
-
-					if (target != null)
-					{
-						if (target.distanceSq(player.getPosition()) < 256 || position.distanceSq(player.getPosition()) < 256)
-						{
-							worldRenderer.pos(target.getX() + 0.5 - playerX, target.getY() + 0.5 - playerY, target.getZ() + 0.5 - playerZ).color(255, 0, 0, 255).endVertex();
-							worldRenderer.pos(position.getX() + 0.5 - playerX, position.getY() + 0.5 - playerY, position.getZ() + 0.5 - playerZ).color(255, 0, 0, 255).endVertex();
-						}
-					}
-				}
-			}
+                if (source.distanceSq(player.getPosition()) < 256 || target.distanceSq(player.getPosition()) < 256)
+                {
+                    worldRenderer.pos(target.getX() + 0.5 - playerX, target.getY() + 0.5 - playerY, target.getZ() + 0.5 - playerZ).color(255, 0, 0, 255).endVertex();
+                    worldRenderer.pos(source.getX() + 0.5 - playerX, source.getY() + 0.5 - playerY, source.getZ() + 0.5 - playerZ).color(255, 0, 0, 255).endVertex();
+                }
+            }
 			tessellator.draw();
 		}
 		GlStateManager.popMatrix();

@@ -20,6 +20,7 @@ import lumien.randomthings.block.BlockCompressedSlimeBlock;
 import lumien.randomthings.block.BlockContactButton;
 import lumien.randomthings.block.BlockContactLever;
 import lumien.randomthings.block.ModBlocks;
+import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.client.models.blocks.ModelCustomWorkbench;
 import lumien.randomthings.client.models.blocks.ModelFluidDisplay;
 import lumien.randomthings.client.models.blocks.ModelInventoryRerouter;
@@ -38,7 +39,6 @@ import lumien.randomthings.handler.festival.FestivalHandler;
 import lumien.randomthings.handler.floo.FlooNetworkHandler;
 import lumien.randomthings.handler.magicavoxel.ClientModelLibrary;
 import lumien.randomthings.handler.magicavoxel.ServerModelLibrary;
-import lumien.randomthings.handler.redstonesignal.RedstoneSignalHandler;
 import lumien.randomthings.handler.spectre.SpectreHandler;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationClientHandler;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationHandler;
@@ -179,9 +179,29 @@ public class RTEventHandler {
 
 	@SubscribeEvent
 	public void chunkLoad(ChunkEvent.Load event) {
-		if (event.getWorld().isRemote)
-			SpectreIlluminationClientHandler.loadChunk(event.getChunk());
+        World world = event.getWorld();
+        if (world.isRemote) {
+            SpectreIlluminationClientHandler.loadChunk(event.getChunk());
+        }
+        else {
+            IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
+            if (manager != null)
+            {
+                manager.runScheduledTasks(event.getChunk().getPos());
+            }
+        }
 	}
+
+    @SubscribeEvent
+    public void chunkUnload(ChunkEvent.Unload event) {
+        World world = event.getWorld();
+        if (!world.isRemote) {
+            IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
+            if (manager != null) {
+                manager.invalidateTasks(event.getChunk().getPos());
+            }
+        }
+    }
 
 	@SubscribeEvent
 	public void chunkWatch(ChunkWatchEvent.Watch event) {
@@ -647,16 +667,18 @@ public class RTEventHandler {
 			ServerModelLibrary.getInstance().tick();
 			EscapeRopeHandler.getInstance().tick();
 		}
-
-		if (tickEvent instanceof WorldTickEvent) {
-			WorldTickEvent worldTickEvent = (WorldTickEvent) tickEvent;
-
-			if (worldTickEvent.phase == Phase.END && !worldTickEvent.world.isRemote
-					&& worldTickEvent.world.provider.getDimension() == 0) {
-				RedstoneSignalHandler.getHandler().tick();
-			}
-		}
 	}
+
+    @SuppressWarnings("DataFlowIssue")
+    @SubscribeEvent
+    public void onWorldTick(WorldTickEvent event) {
+        if (event.phase == Phase.END && !event.world.isRemote) {
+            IDynamicRedstoneManager manager = event.world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
+            if (manager != null && manager.hasTickingSignals()) {
+                manager.tick();
+            }
+        }
+    }
 
 	@SubscribeEvent
 	public void notifyNeighbors(NeighborNotifyEvent event) {

@@ -28,10 +28,13 @@ import static org.objectweb.asm.Opcodes.RETURN;
 import static org.objectweb.asm.Opcodes.SWAP;
 
 import java.util.Iterator;
+import java.util.ListIterator;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.common.base.Preconditions;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
@@ -1338,42 +1341,107 @@ public class ClassTransformer implements IClassTransformer
 		{
 			logger.log(Level.DEBUG, "- Found getRedstonePower (1/5)");
 
-			InsnList toInsert = new InsnList();
 
-			LabelNode l1 = new LabelNode(new Label());
-
-			toInsert.add(new VarInsnNode(ALOAD, 0));
-			toInsert.add(new VarInsnNode(ALOAD, 1));
-			toInsert.add(new VarInsnNode(ALOAD, 2));
-			toInsert.add(new MethodInsnNode(INVOKESTATIC, asmHandler, "getRedstonePower", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)I", false));
-			toInsert.add(new InsnNode(DUP));
-			toInsert.add(new JumpInsnNode(IFEQ, l1));
-			toInsert.add(new InsnNode(IRETURN));
-			toInsert.add(l1);
-			toInsert.add(new InsnNode(POP));
-
-			getRedstonePower.instructions.insert(toInsert);
+            ListIterator<AbstractInsnNode> itr = getRedstonePower.instructions.iterator();
+            // The index of the local variable we're capturing block into
+            int blockLocalIndex = getRedstonePower.maxLocals;
+            boolean capturedBlock = false;
+            while (itr.hasNext())
+            {
+                AbstractInsnNode insn = itr.next();
+                if (insn instanceof MethodInsnNode)
+                {
+                    MethodInsnNode methodIntruction = (MethodInsnNode) insn;
+                    // getBlock()
+                    if (methodIntruction.name.equals(MCPNames.method("func_177230_c")))
+                    {
+                        itr.add(new VarInsnNode(ASTORE, blockLocalIndex)); // create local block
+                        itr.add(new VarInsnNode(ALOAD, blockLocalIndex));
+                        capturedBlock = true;
+                        logger.debug("Captured local `block` in getRedstonePower()");
+                    }
+                    // getStrongPower() branch
+                    else if (methodIntruction.name.equals(MCPNames.method("func_175676_y")) && methodIntruction.desc.equals("(Lnet/minecraft/util/math/BlockPos;)I"))
+                    {
+                        if (!capturedBlock)
+                        {
+                            throw new IllegalStateException("Tried patching getRedstonePower(), but failed to capture local `block`!");
+                        }
+                        itr.add(new VarInsnNode(ALOAD, blockLocalIndex)); // block
+                        itr.add(new VarInsnNode(ALOAD, 0)); // world
+                        itr.add(new VarInsnNode(ALOAD, 1)); // pos
+                        itr.add(new VarInsnNode(ALOAD, 2)); // facing
+                        itr.add(new MethodInsnNode(INVOKESTATIC,
+                                asmHandler,
+                                "getRedstonePower",
+                                "(ILnet/minecraft/block/Block;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)I",
+                                false));
+                        logger.debug("Patched getStrongPower() branch in getRedstonePower()");
+                    }
+                    // getWeakPower() branch
+                    else if (methodIntruction.name.equals(MCPNames.method("func_185911_a")))
+                    {
+                        if (!capturedBlock)
+                        {
+                            throw new IllegalStateException("Tried patching getRedstonePower(), but failed to capture local `block`!");
+                        }
+                        itr.add(new VarInsnNode(ALOAD, blockLocalIndex)); // block
+                        itr.add(new VarInsnNode(ALOAD, 0)); // world
+                        itr.add(new VarInsnNode(ALOAD, 1)); // pos
+                        itr.add(new VarInsnNode(ALOAD, 2)); // facing
+                        itr.add(new MethodInsnNode(INVOKESTATIC,
+                                asmHandler,
+                                "getRedstonePower",
+                                "(ILnet/minecraft/block/Block;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)I",
+                                false));
+                        logger.debug("Patched getWeakPower() branch in getRedstonePower()");
+                    }
+                }
+            }
 		}
 
 		if (getStrongPower != null)
 		{
 			logger.log(Level.DEBUG, "- Found getStrongPower (2/5)");
 
-			InsnList toInsert = new InsnList();
-
-			LabelNode l1 = new LabelNode(new Label());
-
-			toInsert.add(new VarInsnNode(ALOAD, 0));
-			toInsert.add(new VarInsnNode(ALOAD, 1));
-			toInsert.add(new VarInsnNode(ALOAD, 2));
-			toInsert.add(new MethodInsnNode(INVOKESTATIC, asmHandler, "getStrongPower", "(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)I", false));
-			toInsert.add(new InsnNode(DUP));
-			toInsert.add(new JumpInsnNode(IFEQ, l1));
-			toInsert.add(new InsnNode(IRETURN));
-			toInsert.add(l1);
-			toInsert.add(new InsnNode(POP));
-
-			getStrongPower.instructions.insert(toInsert);
+            ListIterator<AbstractInsnNode> itr = getStrongPower.instructions.iterator();
+            // The index of the local variable we're capturing block into
+            int blockStateLocalIndex = getStrongPower.maxLocals;
+            boolean capturedBlockState = false;
+            while (itr.hasNext())
+            {
+                AbstractInsnNode insn = itr.next();
+                if (insn instanceof MethodInsnNode)
+                {
+                    MethodInsnNode methodIntruction = (MethodInsnNode) insn;
+                    // getBlockState()
+                    if (methodIntruction.name.equals(MCPNames.method("func_180495_p")))
+                    {
+                        itr.add(new VarInsnNode(ASTORE, blockStateLocalIndex)); // create local blockstate
+                        itr.add(new VarInsnNode(ALOAD, blockStateLocalIndex));
+                        capturedBlockState = true;
+                        logger.debug("Captured local `blockstate` in getStrongPower()");
+                    }
+                    // getStrongPower()
+                    else if (methodIntruction.name.equals(MCPNames.method("func_185893_b")))
+                    {
+                        if (!capturedBlockState)
+                        {
+                            throw new IllegalStateException("Tried patching getStrongPower(), but failed to capture local `blockstate`!");
+                        }
+                        itr.add(new VarInsnNode(ALOAD, blockStateLocalIndex)); // blockstate
+                        itr.add(new VarInsnNode(ALOAD, 0)); // world
+                        itr.add(new VarInsnNode(ALOAD, 1)); // pos
+                        itr.add(new VarInsnNode(ALOAD, 2)); // facing
+                        itr.add(new MethodInsnNode(INVOKESTATIC,
+                                asmHandler,
+                                "getStrongPower",
+                                "(ILnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)I",
+                                false));
+                        logger.debug("Patched getStrongPower()");
+                    }
+                }
+            }
 		}
 
 		if (isRainingAt != null)
