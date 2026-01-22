@@ -126,39 +126,39 @@ public class RenderArtificialEndPortal extends Render
 		}
 	}
 
-	protected int getPasses(double p_191286_1_)
+	protected int getPasses(double distanceSq)
 	{
 		int i;
 
-		if (p_191286_1_ > 36864.0D)
+		if (distanceSq > 36864.0D)
 		{
 			i = 1;
 		}
-		else if (p_191286_1_ > 25600.0D)
+		else if (distanceSq > 25600.0D)
 		{
 			i = 3;
 		}
-		else if (p_191286_1_ > 16384.0D)
+		else if (distanceSq > 16384.0D)
 		{
 			i = 5;
 		}
-		else if (p_191286_1_ > 9216.0D)
+		else if (distanceSq > 9216.0D)
 		{
 			i = 7;
 		}
-		else if (p_191286_1_ > 4096.0D)
+		else if (distanceSq > 4096.0D)
 		{
 			i = 9;
 		}
-		else if (p_191286_1_ > 1024.0D)
+		else if (distanceSq > 1024.0D)
 		{
 			i = 11;
 		}
-		else if (p_191286_1_ > 576.0D)
+		else if (distanceSq > 576.0D)
 		{
 			i = 13;
 		}
-		else if (p_191286_1_ > 256.0D)
+		else if (distanceSq > 256.0D)
 		{
 			i = 14;
 		}

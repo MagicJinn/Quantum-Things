@@ -1,12 +1,10 @@
 package lumien.randomthings.lib;
 
+import lumien.randomthings.randomthings.Tags;
+
 public class Reference {
-	public static final String MOD_ID = "randomthings";
-	public static final String MOD_NAME = "Quantum Things";
-	public static final String MOD_VERSION = "1.0.3";
-	public static final String MC_VERSION = "1.12.2";
-
-	public static final String MOD_FINGERPRINT = "";
-
-	public static final String MOD_AUTHOR = "MagicJinn, Lumien231";
+	public static final String MOD_ID = Tags.MOD_ID;
+	public static final String MOD_NAME = Tags.MOD_NAME;
+    public static final String MOD_VERSION = Tags.VERSION;
+    public static final String MC_VERSION = Tags.MC_VERSION;
 }

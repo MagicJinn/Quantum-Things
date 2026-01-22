@@ -16,47 +16,42 @@ public class RenderVoxelProjector extends TileEntitySpecialRenderer<TileEntityVo
 
 	}
 
-	public void func_180538_a(TileEntityVoxelProjector voxelProjector, double p_180538_2_, double p_180538_4_, double p_180538_6_, float p_180538_8_, int p_180538_9_)
+    @Override
+	public void render(TileEntityVoxelProjector te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
 	{
-		GlStateManager.pushMatrix();
-		GlStateManager.enableRescaleNormal();
+        GlStateManager.pushMatrix();
+        GlStateManager.enableRescaleNormal();
 
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-		GlStateManager.translate((float) p_180538_2_, (float) p_180538_4_ + 2.0F, (float) p_180538_6_);
+        GlStateManager.translate((float) x, (float) y + 2.0F, (float) z);
 
-		MagicaVoxelModel model = ClientModelLibrary.getInstance().getModel(voxelProjector.getModel());
-		if (model != null)
-		{
-			GlStateManager.translate(0.5, 0, 0.5);
-			int scale = voxelProjector.getScale();
-			GlStateManager.scale(scale, scale, scale);
-			GlStateManager.rotate(voxelProjector.getRenderModelRotation(p_180538_8_), 0, 1, 0);
-			GlStateManager.translate(-model.getSizeX() * 1F / 20F / 2f, 0, -model.getSizeZ() * 1F / 20F / 2f);
+        MagicaVoxelModel model = ClientModelLibrary.getInstance().getModel(te.getModel());
+        if (model != null)
+        {
+            GlStateManager.translate(0.5, 0, 0.5);
+            int scale = te.getScale();
+            GlStateManager.scale(scale, scale, scale);
+            GlStateManager.rotate(te.getRenderModelRotation(partialTicks), 0, 1, 0);
+            GlStateManager.translate(-model.getSizeX() * 1F / 20F / 2f, 0, -model.getSizeZ() * 1F / 20F / 2f);
 
-			model.getRenderModel(voxelProjector.randomize()).draw(voxelProjector.ambientLight());
+            model.getRenderModel(te.randomize()).draw(te.ambientLight());
 
-			GlStateManager.scale(-scale, -scale, -scale);
-		}
+            GlStateManager.scale(-scale, -scale, -scale);
+        }
 
-		GlStateManager.disableRescaleNormal();
+        GlStateManager.disableRescaleNormal();
 
-		GlStateManager.popMatrix();
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.popMatrix();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-		if (p_180538_9_ >= 0)
-		{
-			GlStateManager.matrixMode(5890);
-			GlStateManager.popMatrix();
-			GlStateManager.matrixMode(5888);
-		}
-	}
-
-	@Override
-	public void render(TileEntityVoxelProjector te, double x, double y, double z, float p_180535_8_, int p_180535_9_, float alpha)
-	{
-		this.func_180538_a(te, x, y, z, p_180535_8_, p_180535_9_);
-	}
+        if (destroyStage >= 0)
+        {
+            GlStateManager.matrixMode(5890);
+            GlStateManager.popMatrix();
+            GlStateManager.matrixMode(5888);
+        }
+    }
 
 	@Override
 	public boolean isGlobalRenderer(TileEntityVoxelProjector voxelProjector)

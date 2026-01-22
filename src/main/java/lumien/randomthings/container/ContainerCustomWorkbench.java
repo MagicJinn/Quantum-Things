@@ -9,9 +9,9 @@ import net.minecraft.world.World;
 public class ContainerCustomWorkbench extends ContainerWorkbench
 {
 
-	public ContainerCustomWorkbench(InventoryPlayer playerInventory, World worldIn, BlockPos p_i45800_3_)
+	public ContainerCustomWorkbench(InventoryPlayer playerInventory, World worldIn, BlockPos posIn)
 	{
-		super(playerInventory, worldIn, p_i45800_3_);
+		super(playerInventory, worldIn, posIn);
 	}
 
 	@Override

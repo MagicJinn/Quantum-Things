@@ -79,7 +79,7 @@ public class BlockQuartzGlass extends BlockBase
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean p_185477_7_)
+	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean isActualState)
 	{
 		AxisAlignedBB blockBox = state.getCollisionBoundingBox(worldIn, pos);
 		AxisAlignedBB axisalignedbb = blockBox.offset(pos);

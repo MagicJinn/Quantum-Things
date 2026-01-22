@@ -61,7 +61,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.MOD_VERSION,
 		acceptedMinecraftVersions = Reference.MC_VERSION,
-		certificateFingerprint = Reference.MOD_FINGERPRINT,
 		dependencies = "after:jei@[4.7.11.100,);",
 		guiFactory = "lumien.randomthings.client.ModGuiFactory")
 public class RandomThings implements LoadingCallback

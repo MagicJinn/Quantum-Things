@@ -136,7 +136,7 @@ public class BlockCompressedSlimeBlock extends BlockBase implements ISuperLubric
 	}
 
 	@Override
-	public int colorMultiplier(IBlockState state, IBlockAccess p_186720_2_, BlockPos pos, int tintIndex)
+	public int colorMultiplier(IBlockState state, IBlockAccess worldIn, BlockPos pos, int tintIndex)
 	{
 		return compressionColors[state.getValue(COMPRESSION)];
 	}

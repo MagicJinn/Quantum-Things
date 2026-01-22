@@ -51,6 +51,10 @@ public class DescriptionHandler {
 		overrideMap.put(ModItems.grassSeeds, "item.grassSeeds.info");
 		overrideMap.put(ModItems.runeDust, "item.runeDust.info");
 		overrideMap.put(ModItems.spectreCharger, null);
+		overrideMap.put(ModItems.spectreHelmet, "item.spectreArmor.info");
+		overrideMap.put(ModItems.spectreChestplate, "item.spectreArmor.info");
+		overrideMap.put(ModItems.spectreLeggings, "item.spectreArmor.info");
+		overrideMap.put(ModItems.spectreBoots, "item.spectreArmor.info");
 		overrideMap.put(ModBlocks.ancientBrick, null);
 
 		List<ItemStack> stackBlackList = new ArrayList<>();

@@ -83,11 +83,11 @@ public class ItemEmeraldCompass extends ItemBase
 			}
 
 			@SideOnly(Side.CLIENT)
-			private double wobble(World p_185093_1_, double p_185093_2_)
+			private double wobble(World world, double p_185093_2_)
 			{
-				if (p_185093_1_.getTotalWorldTime() != this.lastUpdateTick)
+				if (world.getTotalWorldTime() != this.lastUpdateTick)
 				{
-					this.lastUpdateTick = p_185093_1_.getTotalWorldTime();
+					this.lastUpdateTick = world.getTotalWorldTime();
 					double d0 = p_185093_2_ - this.rotation;
 					d0 = d0 % (Math.PI * 2D);
 					d0 = MathHelper.clamp(d0, -1.0D, 1.0D);

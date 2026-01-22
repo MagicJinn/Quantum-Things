@@ -15,7 +15,8 @@ p {
     margin-top: 0;
 }
 
-img, video {
+img,
+video {
     padding: 4px;
     max-width: 96%;
     max-height: 96%;
@@ -202,7 +203,7 @@ nav a:hover {
 #mobile-menu-toggle {
     display: none;
     position: fixed;
-    bottom: 10px;
+    bottom: 40px;
     left: 10px;
     z-index: 1001;
     background-color: #9c53e8;
@@ -258,7 +259,7 @@ nav a:hover {
         padding-right: 10px;
         padding-bottom: 60px;
     }
-    
+
     body.menu-open #mobile-menu-toggle {
         display: none;
     }
