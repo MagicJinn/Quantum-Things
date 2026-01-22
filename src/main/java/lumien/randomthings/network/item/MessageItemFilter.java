@@ -22,13 +22,13 @@ public class MessageItemFilter implements ServerboundMessage
     @Override
     public void readPacketData(PacketBuffer buf)
     {
-        buttonPressed = buf.readInt();
+        buttonPressed = buf.readVarInt();
     }
 
     @Override
     public void writePacketData(PacketBuffer buf)
     {
-        buf.writeInt(buttonPressed);
+        buf.writeVarInt(buttonPressed);
     }
 
     @Override

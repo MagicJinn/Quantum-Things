@@ -27,16 +27,16 @@ public class MessageSpectreIllumination implements ClientboundMessage
     @Override
     public void readPacketData(PacketBuffer buf)
     {
-        dimension = buf.readInt();
-        chunkLong = buf.readLong();
+        dimension = buf.readVarInt();
+        chunkLong = buf.readVarLong();
         illuminated = buf.readBoolean();
     }
 
     @Override
     public void writePacketData(PacketBuffer buf)
     {
-        buf.writeInt(dimension);
-        buf.writeLong(chunkLong);
+        buf.writeVarInt(dimension);
+        buf.writeVarLong(chunkLong);
         buf.writeBoolean(illuminated);
     }
 

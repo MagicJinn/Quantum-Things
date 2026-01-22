@@ -29,7 +29,7 @@ public class MessageFlooParticles implements ClientboundMessage
     @Override
     public void readPacketData(PacketBuffer buf)
     {
-        int size = buf.readInt();
+        int size = buf.readVarInt();
         brickPositions = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++)
@@ -41,7 +41,7 @@ public class MessageFlooParticles implements ClientboundMessage
     @Override
     public void writePacketData(PacketBuffer buf)
     {
-        buf.writeInt(brickPositions.size());
+        buf.writeVarInt(brickPositions.size());
 
         for (BlockPos pos : brickPositions)
         {

@@ -63,16 +63,16 @@ public class MessageVoxelProjector extends TileGuiPacket<TileEntityVoxelProjecto
         switch (value)
         {
             case MODEL_ROTATION:
-                this.newModelRotation = buf.readInt();
+                this.newModelRotation = buf.readVarInt();
                 break;
             case MODEL:
                 this.newModel = ByteBufUtils.readUTF8String(buf);
                 break;
             case SCALE:
-                this.newScale = buf.readInt();
+                this.newScale = buf.readVarInt();
                 break;
             case ROTATION_SPEED:
-                this.newRotationSpeed = buf.readInt();
+                this.newRotationSpeed = buf.readVarInt();
                 break;
             case AMBIENT_LIGHT:
                 this.newAmbientLight = buf.readBoolean();
@@ -93,16 +93,16 @@ public class MessageVoxelProjector extends TileGuiPacket<TileEntityVoxelProjecto
         switch (value)
         {
             case MODEL_ROTATION:
-                buf.writeInt(newModelRotation);
+                buf.writeVarInt(newModelRotation);
                 break;
             case MODEL:
                 ByteBufUtils.writeUTF8String(buf, newModel);
                 break;
             case SCALE:
-                buf.writeInt(newScale);
+                buf.writeVarInt(newScale);
                 break;
             case ROTATION_SPEED:
-                buf.writeInt(newRotationSpeed);
+                buf.writeVarInt(newRotationSpeed);
                 break;
             case AMBIENT_LIGHT:
                 buf.writeBoolean(newAmbientLight);

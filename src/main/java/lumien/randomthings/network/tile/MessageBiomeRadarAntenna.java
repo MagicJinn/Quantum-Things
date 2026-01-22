@@ -33,7 +33,7 @@ public class MessageBiomeRadarAntenna implements ClientboundMessage
     public void readPacketData(PacketBuffer buf)
     {
         pos = buf.readBlockPos();
-        int numBiomes = buf.readInt();
+        int numBiomes = buf.readVarInt();
         for (int i = 0; i < numBiomes; i++)
         {
             antennaBiomes[i] = ByteBufUtils.readUTF8String(buf);
@@ -54,7 +54,7 @@ public class MessageBiomeRadarAntenna implements ClientboundMessage
             }
         }
 
-        buf.writeInt(numBiomes);
+        buf.writeVarInt(numBiomes);
         for (String antennaBiome : antennaBiomes)
         {
             if (antennaBiome != null)

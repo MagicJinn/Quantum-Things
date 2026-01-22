@@ -35,14 +35,14 @@ public class MessageAnalogEmitter extends TileGuiPacket<TileEntityAnalogEmitter>
     public void readPacketData(PacketBuffer buf)
     {
         super.readPacketData(buf);
-        level = buf.readInt();
+        level = buf.readVarInt();
     }
 
     @Override
     public void writePacketData(PacketBuffer buf)
     {
         super.writePacketData(buf);
-        buf.writeInt(level);
+        buf.writeVarInt(level);
     }
 
     @Override

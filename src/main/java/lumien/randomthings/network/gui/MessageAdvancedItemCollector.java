@@ -34,14 +34,14 @@ public class MessageAdvancedItemCollector extends TileGuiPacket<TileEntityAdvanc
     public void readPacketData(PacketBuffer buf)
     {
         super.readPacketData(buf);
-        buttonPressed = buf.readInt();
+        buttonPressed = buf.readVarInt();
     }
 
     @Override
     public void writePacketData(PacketBuffer buf)
     {
         super.writePacketData(buf);
-        buf.writeInt(buttonPressed);
+        buf.writeVarInt(buttonPressed);
     }
 
     @Override

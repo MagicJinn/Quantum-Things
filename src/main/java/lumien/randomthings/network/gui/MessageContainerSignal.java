@@ -22,13 +22,13 @@ public class MessageContainerSignal implements ServerboundMessage
     @Override
     public void readPacketData(PacketBuffer buf)
     {
-        signal = buf.readInt();
+        signal = buf.readVarInt();
     }
 
     @Override
     public void writePacketData(PacketBuffer buf)
     {
-        buf.writeInt(signal);
+        buf.writeVarInt(signal);
     }
 
     @Override

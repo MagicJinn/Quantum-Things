@@ -25,13 +25,13 @@ public class MessageEclipsedClock implements ClientboundMessage
     @Override
     public void readPacketData(PacketBuffer buf)
     {
-        entityID = buf.readInt();
+        entityID = buf.readVarInt();
     }
 
     @Override
     public void writePacketData(PacketBuffer buf)
     {
-        buf.writeInt(entityID);
+        buf.writeVarInt(entityID);
     }
 
     @Override

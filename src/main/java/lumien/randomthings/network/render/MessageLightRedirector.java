@@ -30,14 +30,14 @@ public class MessageLightRedirector implements ClientboundMessage
     @Override
     public void readPacketData(PacketBuffer buf)
     {
-        dimension = buf.readInt();
+        dimension = buf.readVarInt();
         pos = buf.readBlockPos();
     }
 
     @Override
     public void writePacketData(PacketBuffer buf)
     {
-        buf.writeInt(dimension);
+        buf.writeVarInt(dimension);
         buf.writeBlockPos(pos);
     }
 

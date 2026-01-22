@@ -28,14 +28,14 @@ public class MessagePlayedSound implements ServerboundMessage
     public void readPacketData(PacketBuffer buf)
     {
         soundName = ByteBufUtils.readUTF8String(buf);
-        recorderSlot = buf.readInt();
+        recorderSlot = buf.readVarInt();
     }
 
     @Override
     public void writePacketData(PacketBuffer buf)
     {
         ByteBufUtils.writeUTF8String(buf, soundName);
-        buf.writeInt(recorderSlot);
+        buf.writeVarInt(recorderSlot);
     }
 
     @Override

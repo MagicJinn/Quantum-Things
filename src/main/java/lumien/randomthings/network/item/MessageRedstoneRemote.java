@@ -33,14 +33,14 @@ public class MessageRedstoneRemote implements ServerboundMessage
     public void readPacketData(PacketBuffer buf)
     {
         usingHand = buf.readEnumValue(EnumHand.class);
-        slotUsed = buf.readInt();
+        slotUsed = buf.readVarInt();
     }
 
     @Override
     public void writePacketData(PacketBuffer buf)
     {
         buf.writeEnumValue(usingHand);
-        buf.writeInt(slotUsed);
+        buf.writeVarInt(slotUsed);
     }
 
     @Override

@@ -33,8 +33,8 @@ public class MessagePotionVaporizerParticles implements ClientboundMessage
     @Override
     public void readPacketData(PacketBuffer buf)
     {
-        color = buf.readInt();
-        int numBlocks = buf.readInt();
+        color = buf.readVarInt();
+        int numBlocks = buf.readVarInt();
         for (int i = 0; i < numBlocks; i++)
         {
             affectedBlocks.add(buf.readBlockPos());
@@ -44,8 +44,8 @@ public class MessagePotionVaporizerParticles implements ClientboundMessage
     @Override
     public void writePacketData(PacketBuffer buf)
     {
-        buf.writeInt(color);
-        buf.writeInt(affectedBlocks.size());
+        buf.writeVarInt(color);
+        buf.writeVarInt(affectedBlocks.size());
         for (BlockPos pos : affectedBlocks)
         {
             buf.writeBlockPos(pos);

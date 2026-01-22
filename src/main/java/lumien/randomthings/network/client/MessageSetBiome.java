@@ -28,16 +28,16 @@ public class MessageSetBiome implements ClientboundMessage
     public void readPacketData(PacketBuffer buf)
     {
         pos = buf.readBlockPos();
-        biomeId = buf.readInt();
-        dimension = buf.readInt();
+        biomeId = buf.readVarInt();
+        dimension = buf.readVarInt();
     }
 
     @Override
     public void writePacketData(PacketBuffer buf)
     {
         buf.writeBlockPos(pos);
-        buf.writeInt(biomeId);
-        buf.writeInt(dimension);
+        buf.writeVarInt(biomeId);
+        buf.writeVarInt(dimension);
     }
 
     @Override

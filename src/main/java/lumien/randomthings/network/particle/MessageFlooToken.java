@@ -31,7 +31,7 @@ public class MessageFlooToken implements ClientboundMessage
     @Override
     public void readPacketData(PacketBuffer buf)
     {
-        dimension = buf.readInt();
+        dimension = buf.readVarInt();
         posX = buf.readDouble();
         posY = buf.readDouble();
         posZ = buf.readDouble();
@@ -40,7 +40,7 @@ public class MessageFlooToken implements ClientboundMessage
     @Override
     public void writePacketData(PacketBuffer buf)
     {
-        buf.writeInt(this.dimension);
+        buf.writeVarInt(this.dimension);
         buf.writeDouble(this.posX);
         buf.writeDouble(this.posY);
         buf.writeDouble(this.posZ);

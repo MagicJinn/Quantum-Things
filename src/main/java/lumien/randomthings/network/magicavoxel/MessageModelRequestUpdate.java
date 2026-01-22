@@ -28,16 +28,16 @@ public class MessageModelRequestUpdate implements ClientboundMessage
     public void readPacketData(PacketBuffer buf)
     {
         modelName = ByteBufUtils.readUTF8String(buf);
-        modelSize = buf.readInt();
-        paletteSize = buf.readInt();
+        modelSize = buf.readVarInt();
+        paletteSize = buf.readVarInt();
     }
 
     @Override
     public void writePacketData(PacketBuffer buf)
     {
         ByteBufUtils.writeUTF8String(buf, this.modelName);
-        buf.writeInt(this.modelSize);
-        buf.writeInt(this.paletteSize);
+        buf.writeVarInt(this.modelSize);
+        buf.writeVarInt(this.paletteSize);
     }
 
     @Override
