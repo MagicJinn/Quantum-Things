@@ -6,9 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import lumien.randomthings.handler.festival.Festival.STATE;
-import lumien.randomthings.network.MessageUtil;
-import lumien.randomthings.util.ReflectionUtil;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.Items;
@@ -25,6 +22,10 @@ import net.minecraft.village.Village;
 import net.minecraft.village.VillageDoorInfo;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
+
+import lumien.randomthings.handler.festival.Festival.STATE;
+import lumien.randomthings.network.MessageUtil;
+import lumien.randomthings.util.ReflectionUtil;
 
 public class FestivalHandler extends WorldSavedData
 {

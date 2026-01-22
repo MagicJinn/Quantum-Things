@@ -47,7 +47,7 @@ public class GuiAdvancedItemCollector extends GuiContainerBase
 
 		MessageAdvancedItemCollector message = new MessageAdvancedItemCollector(button.id, advancedItemCollector.getPos());
 
-		PacketHandler.INSTANCE.sendToServer(message);
+		PacketHandler.instance().sendToServer(message);
 	}
 
 	@Override

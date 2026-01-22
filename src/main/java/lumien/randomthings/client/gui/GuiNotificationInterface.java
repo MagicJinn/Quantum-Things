@@ -132,6 +132,6 @@ public class GuiNotificationInterface extends GuiContainerBase implements GuiRes
 		TileEntityNotificationInterface te = (TileEntityNotificationInterface) ((ContainerTE) this.inventorySlots).getTE();
 
 		MessageNotificationInterface message = new MessageNotificationInterface(newTitle, newDescription, te.getPos());
-		PacketHandler.INSTANCE.sendToServer(message);
+		PacketHandler.instance().sendToServer(message);
 	}
 }

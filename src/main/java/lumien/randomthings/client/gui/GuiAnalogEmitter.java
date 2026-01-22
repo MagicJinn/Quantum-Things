@@ -80,7 +80,7 @@ public class GuiAnalogEmitter extends GuiContainerBase
 
 		if (newLevel > 0 && newLevel < 16 && newLevel != analogEmitter.emitLevel)
 		{
-			PacketHandler.INSTANCE.sendToServer(new MessageAnalogEmitter(analogEmitter.getPos(), (byte) newLevel));
+			PacketHandler.instance().sendToServer(new MessageAnalogEmitter(analogEmitter.getPos(), (byte) newLevel));
 		}
 	}
 }

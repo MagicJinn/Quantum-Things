@@ -105,6 +105,6 @@ public class GuiSoundRecorder extends GuiContainerBase implements IStringCallbac
 	{
 		MessageSelectSound msg = new MessageSelectSound(string);
 
-		PacketHandler.INSTANCE.sendToServer(msg);
+		PacketHandler.instance().sendToServer(msg);
 	}
 }

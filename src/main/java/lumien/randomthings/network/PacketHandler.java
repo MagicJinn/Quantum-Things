@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
+import com.google.common.base.Preconditions;
 import lumien.randomthings.lib.Reference;
 import lumien.randomthings.network.client.MessageEclipsedClock;
 import lumien.randomthings.network.client.MessageNotification;
@@ -37,11 +38,19 @@ import lumien.randomthings.network.tile.MessageBiomeRadarAntenna;
 
 public class PacketHandler
 {
-	public static SimpleNetworkWrapper INSTANCE = null;
+	private static SimpleNetworkWrapper INSTANCE = null;
     private static int packetId = 0;
+
+    public static SimpleNetworkWrapper instance()
+    {
+        Preconditions.checkNotNull(INSTANCE, "Tried to get packet handler before it was initialized!");
+        return INSTANCE;
+    }
 
 	public static void init()
 	{
+        if (INSTANCE != null) return;
+
         INSTANCE = new SimpleNetworkWrapper(Reference.MOD_ID.toLowerCase());
 
         // Client -> Server
@@ -79,12 +88,12 @@ public class PacketHandler
 
     public static <M extends ClientboundMessage, R extends IMessage> void clientBound(IMessageHandler<M, R> handler, Class<M> messageClass)
     {
-        INSTANCE.registerMessage(handler, messageClass, nextId(), Side.CLIENT);
+        instance().registerMessage(handler, messageClass, nextId(), Side.CLIENT);
     }
 
     public static <M extends ServerboundMessage, R extends IMessage> void serverBound(IMessageHandler<M, R> handler, Class<M> messageClass)
     {
-        INSTANCE.registerMessage(handler, messageClass, nextId(), Side.SERVER);
+        instance().registerMessage(handler, messageClass, nextId(), Side.SERVER);
     }
 
     public static int nextId()

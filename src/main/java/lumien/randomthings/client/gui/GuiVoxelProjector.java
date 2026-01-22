@@ -71,7 +71,7 @@ public class GuiVoxelProjector extends GuiContainerBase implements IStringCallba
 					MessageVoxelProjector message = new MessageVoxelProjector(GuiVoxelProjector.this.te.getPos());
 					message.setModelRotation(rotation);
 
-					PacketHandler.INSTANCE.sendToServer(message);
+					PacketHandler.instance().sendToServer(message);
 				}
 			}
 		}));
@@ -91,7 +91,7 @@ public class GuiVoxelProjector extends GuiContainerBase implements IStringCallba
 					MessageVoxelProjector message = new MessageVoxelProjector(GuiVoxelProjector.this.te.getPos());
 					message.setScale(scale);
 
-					PacketHandler.INSTANCE.sendToServer(message);
+					PacketHandler.instance().sendToServer(message);
 				}
 			}
 		}));
@@ -111,7 +111,7 @@ public class GuiVoxelProjector extends GuiContainerBase implements IStringCallba
 					MessageVoxelProjector message = new MessageVoxelProjector(GuiVoxelProjector.this.te.getPos());
 					message.setRotationSpeed(rotationSpeed);
 
-					PacketHandler.INSTANCE.sendToServer(message);
+					PacketHandler.instance().sendToServer(message);
 				}
 			}
 		}));
@@ -155,7 +155,7 @@ public class GuiVoxelProjector extends GuiContainerBase implements IStringCallba
 	{
 		MessageVoxelProjector message = new MessageVoxelProjector(this.te.getPos());
 		message.setModel(string);
-		PacketHandler.INSTANCE.sendToServer(message);
+		PacketHandler.instance().sendToServer(message);
 	}
 
 	@Override
@@ -168,7 +168,7 @@ public class GuiVoxelProjector extends GuiContainerBase implements IStringCallba
 			toggleAmbientLight.toggle();
 			MessageVoxelProjector message = new MessageVoxelProjector(this.te.getPos());
 			message.setAmbientLight(toggleAmbientLight.getValue());
-			PacketHandler.INSTANCE.sendToServer(message);
+			PacketHandler.instance().sendToServer(message);
 		}
 
 		if (button == toggleRandomizer)
@@ -176,7 +176,7 @@ public class GuiVoxelProjector extends GuiContainerBase implements IStringCallba
 			toggleRandomizer.toggle();
 			MessageVoxelProjector message = new MessageVoxelProjector(this.te.getPos());
 			message.setRandomize(toggleRandomizer.getValue());
-			PacketHandler.INSTANCE.sendToServer(message);
+			PacketHandler.instance().sendToServer(message);
 		}
 	}
 

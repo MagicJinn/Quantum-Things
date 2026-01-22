@@ -67,7 +67,7 @@ public class GuiOnlineDetector extends GuiContainerBase
 		if (this.usernameInput.textboxKeyTyped(par1, pressedKey))
 		{
 			MessageOnlineDetector packet = new MessageOnlineDetector(usernameInput.getText(), te.getPos());
-			PacketHandler.INSTANCE.sendToServer(packet);
+			PacketHandler.instance().sendToServer(packet);
 		}
 	}
 

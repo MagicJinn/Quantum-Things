@@ -54,7 +54,7 @@ public class GuiBlockDestabilizer extends GuiContainerBase
 		if (button.id == 2)
 		{
 			MessageContainerSignal message = new MessageContainerSignal(2);
-			PacketHandler.INSTANCE.sendToServer(message);
+			PacketHandler.instance().sendToServer(message);
 		}
 	}
 

@@ -46,7 +46,7 @@ public class GuiExtractionPlate extends GuiContainerBase
 		super.actionPerformed(button);
 
 		MessageContainerSignal message = new MessageContainerSignal(button.id);
-		PacketHandler.INSTANCE.sendToServer(message);
+		PacketHandler.instance().sendToServer(message);
 	}
 
 	@Override

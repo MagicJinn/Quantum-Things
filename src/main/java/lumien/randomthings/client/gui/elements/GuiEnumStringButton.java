@@ -54,7 +54,7 @@ public class GuiEnumStringButton<E extends Enum> extends GuiButton
 		if (super.mousePressed(mc, mouseX, mouseY))
 		{
 			MessageContainerSignal message = new MessageContainerSignal(this.id);
-			PacketHandler.INSTANCE.sendToServer(message);
+			PacketHandler.instance().sendToServer(message);
 
 			return true;
 		}

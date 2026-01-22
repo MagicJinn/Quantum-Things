@@ -118,7 +118,7 @@ public class GuiChunkAnalyzer extends GuiContainerBase
 			// Start
 			MessageChunkAnalyzer msg = new MessageChunkAnalyzer(ACTION.START);
 
-			PacketHandler.INSTANCE.sendToServer(msg);
+			PacketHandler.instance().sendToServer(msg);
 		}
 	}
 

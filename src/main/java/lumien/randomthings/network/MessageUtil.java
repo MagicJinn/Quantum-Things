@@ -7,53 +7,38 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class MessageUtil
 {
-	public static void sendToAllWatchingPos(World worldObj, BlockPos pos, IMessage message)
+	public static void sendToAllWatchingPos(World world, BlockPos pos, IMessage message)
 	{
-		if (worldObj.isBlockLoaded(pos))
-		{
-			try
-			{
-				Chunk c = worldObj.getChunk(pos);
+		if (!world.isBlockLoaded(pos)) return;
 
-				PlayerChunkMap playerManager = ((WorldServer) worldObj).getPlayerChunkMap();
-
-				PlayerChunkMapEntry playerInstance = playerManager.getEntry(c.x, c.z);
-				if (playerInstance != null)
-				{
-					playerInstance.sendPacket(PacketHandler.INSTANCE.getPacketFrom(message));
-				}
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
+        PacketHandler.instance().sendToAllTracking(message, new NetworkRegistry.TargetPoint(world.provider.getDimension(),
+                pos.getX(), pos.getY(), pos.getZ(), 0));
 	}
 
-	public static void sendToAllWatchingPos(World worldObj, BlockPos pos, Packet packet)
+	public static void sendToAllWatchingPos(World world, BlockPos pos, Packet<?> packet)
 	{
-		if (worldObj.isBlockLoaded(pos))
-		{
-			try
-			{
-				Chunk c = worldObj.getChunk(pos);
+		if (!world.isBlockLoaded(pos)) return;
 
-				PlayerChunkMap playerManager = ((WorldServer) worldObj).getPlayerChunkMap();
+        try
+        {
+            Chunk c = world.getChunk(pos);
 
-				PlayerChunkMapEntry playerInstance = playerManager.getEntry(c.x, c.z);
-				if (playerInstance != null)
-				{
-					playerInstance.sendPacket(packet);
-				}
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
+            PlayerChunkMap playerManager = ((WorldServer) world).getPlayerChunkMap();
+
+            PlayerChunkMapEntry playerInstance = playerManager.getEntry(c.x, c.z);
+            if (playerInstance != null)
+            {
+                playerInstance.sendPacket(packet);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 	}
 }

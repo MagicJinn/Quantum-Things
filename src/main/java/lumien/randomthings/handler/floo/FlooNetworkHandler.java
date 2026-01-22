@@ -143,7 +143,7 @@ public class FlooNetworkHandler extends WorldSavedData
 
 						MessageUtil.sendToAllWatchingPos(player.world, targetPos, p2);
 
-						PacketHandler.INSTANCE.sendTo(p2, player);
+						PacketHandler.instance().sendTo(p2, player);
 
 						return true;
 					}

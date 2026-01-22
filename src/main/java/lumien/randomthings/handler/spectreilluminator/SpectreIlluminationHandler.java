@@ -79,7 +79,7 @@ public class SpectreIlluminationHandler extends WorldSavedData
 		{
 			MessageSpectreIllumination msg = new MessageSpectreIllumination(c.getWorld().provider.getDimension(), cp, true);
 			
-			PacketHandler.INSTANCE.sendTo(msg, player);
+			PacketHandler.instance().sendTo(msg, player);
 		}
 	}
 

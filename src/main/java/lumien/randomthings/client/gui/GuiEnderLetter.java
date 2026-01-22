@@ -70,7 +70,7 @@ public class GuiEnderLetter extends GuiContainerBase
 		if (!oldReceiver.equals(receiverName.getText()))
 		{
 			oldReceiver = receiverName.getText();
-			PacketHandler.INSTANCE.sendToServer(new MessageEnderLetter(oldReceiver));
+			PacketHandler.instance().sendToServer(new MessageEnderLetter(oldReceiver));
 		}
 	}
 

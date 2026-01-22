@@ -253,7 +253,7 @@ public class RTEventHandler {
 						if (stack.getItem() == ModItems.soundRecorder) {
 							MessagePlayedSound msg = new MessagePlayedSound(
 									event.getSound().getSoundLocation().toString(), slot);
-							PacketHandler.INSTANCE.sendToServer(msg);
+							PacketHandler.instance().sendToServer(msg);
 						} else if (stack.getItem() == ModItems.portableSoundDampener) {
 							InventoryItem inv = ItemPortableSoundDampener.getInventory(stack);
 

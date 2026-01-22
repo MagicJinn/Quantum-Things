@@ -59,7 +59,7 @@ public class GuiEntityDetector extends GuiContainerBase
 
 		MessageEntityDetector message = new MessageEntityDetector(button.id, entityDetector.getPos());
 
-		PacketHandler.INSTANCE.sendToServer(message);
+		PacketHandler.instance().sendToServer(message);
 	}
 
 	@Override

@@ -121,7 +121,7 @@ public class ServerModelLibrary
 						if (toSend != null)
 						{
 							MessageModelData message = new MessageModelData(request.modelName, toSend);
-							request.netHandler.sendPacket(PacketHandler.INSTANCE.getPacketFrom(message));
+							request.netHandler.sendPacket(PacketHandler.instance().getPacketFrom(message));
 						}
 					}
 				}
@@ -250,6 +250,6 @@ public class ServerModelLibrary
 			updateMessage.setData(modelName, -1, -1);
 		}
 
-		serverHandler.sendPacket(PacketHandler.INSTANCE.getPacketFrom(updateMessage));
+		serverHandler.sendPacket(PacketHandler.instance().getPacketFrom(updateMessage));
 	}
 }

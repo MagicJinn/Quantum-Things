@@ -40,7 +40,7 @@ public class GuiTriggerButton extends GuiButton
 		if (super.mousePressed(mc, mouseX, mouseY))
 		{
 			MessageContainerSignal message = new MessageContainerSignal(this.id + (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? shiftOffset : 0));
-			PacketHandler.INSTANCE.sendToServer(message);
+			PacketHandler.instance().sendToServer(message);
 
 			return true;
 		}

@@ -69,7 +69,7 @@ public class GuiAdvancedRedstoneRepeater extends GuiContainerBase
 		}
 
 		MessageContainerSignal message = new MessageContainerSignal(button.id + mod);
-		PacketHandler.INSTANCE.sendToServer(message);
+		PacketHandler.instance().sendToServer(message);
 	}
 
 	@Override

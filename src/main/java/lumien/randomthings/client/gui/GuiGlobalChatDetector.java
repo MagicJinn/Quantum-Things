@@ -117,6 +117,6 @@ public class GuiGlobalChatDetector extends GuiContainerBase
 	private void updateTE()
 	{
 		MessageGlobalChatDetector packet = new MessageGlobalChatDetector(chatMessageInput.getText(), consumeButton.getValue(), te.getPos());
-		PacketHandler.INSTANCE.sendToServer(packet);
+		PacketHandler.instance().sendToServer(packet);
 	}
 }

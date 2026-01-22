@@ -29,7 +29,7 @@ public class ContainerVoxelProjector extends Container
 				listMessage.addModel(modelName);
 			}
 
-			PacketHandler.INSTANCE.sendTo(listMessage, (EntityPlayerMP) listener);
+			PacketHandler.instance().sendTo(listMessage, (EntityPlayerMP) listener);
 		}
 	}
 

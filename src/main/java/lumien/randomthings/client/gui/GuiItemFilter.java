@@ -70,7 +70,7 @@ public class GuiItemFilter extends GuiContainerBase
 		}
 
 		MessageItemFilter message = new MessageItemFilter(pressedButton.id);
-		PacketHandler.INSTANCE.sendToServer(message);
+		PacketHandler.instance().sendToServer(message);
 	}
 
 	@Override

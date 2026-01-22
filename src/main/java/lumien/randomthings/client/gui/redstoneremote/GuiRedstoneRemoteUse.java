@@ -65,7 +65,7 @@ public class GuiRedstoneRemoteUse extends GuiContainerBase
 			if (slotButton != null && slotButton == button)
 			{
 				MessageRedstoneRemote message = new MessageRedstoneRemote(using, slotButton.id);
-				PacketHandler.INSTANCE.sendToServer(message);
+				PacketHandler.instance().sendToServer(message);
 
 				break;
 			}

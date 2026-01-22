@@ -50,7 +50,7 @@ public class TileEntityNotificationInterface extends TileEntityBase implements I
 			{
 				MessageNotification message = new MessageNotification(title, description, getItemHandler().getStackInSlot(0));
 
-				PacketHandler.INSTANCE.sendTo(message, player);
+				PacketHandler.instance().sendTo(message, player);
 			}
 		}
 	}

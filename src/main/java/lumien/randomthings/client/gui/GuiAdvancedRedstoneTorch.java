@@ -52,7 +52,7 @@ public class GuiAdvancedRedstoneTorch extends GuiContainerBase
 		super.actionPerformed(button);
 
 		MessageContainerSignal message = new MessageContainerSignal(button.id + (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? 4 : 0));
-		PacketHandler.INSTANCE.sendToServer(message);
+		PacketHandler.instance().sendToServer(message);
 	}
 
 	@Override

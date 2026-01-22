@@ -206,7 +206,7 @@ public class ClientModelLibrary
 
 					MessageModelRequest requestMessage = new MessageModelRequest(modelName);
 
-					PacketHandler.INSTANCE.sendToServer(requestMessage);
+					PacketHandler.instance().sendToServer(requestMessage);
 
 					modelRequests.put(modelName, request);
 				}

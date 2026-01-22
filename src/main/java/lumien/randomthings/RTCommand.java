@@ -190,7 +190,7 @@ public class RTCommand extends CommandBase
 			ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName)));
 
 			MessageNotification message = new MessageNotification(title, body, itemStack);
-			PacketHandler.INSTANCE.sendTo(message, playerEntity);
+			PacketHandler.instance().sendTo(message, playerEntity);
 		}
 		else if (args[0].equals("fireplaces"))
 		{
