@@ -1,213 +1,331 @@
 package lumien.randomthings.tileentity.redstoneinterface;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.UUID;
 
-import lumien.randomthings.tileentity.TileEntityBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class TileEntityRedstoneInterface extends TileEntityBase implements ITickable
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Preconditions;
+import lumien.randomthings.capability.redstone.IDynamicRedstone;
+import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
+import lumien.randomthings.handler.redstone.Connection;
+import lumien.randomthings.handler.redstone.IRedstoneConnectionProvider;
+import lumien.randomthings.handler.redstone.component.IRedstoneWriter;
+import lumien.randomthings.handler.redstone.signal.RedstoneSignal;
+import lumien.randomthings.handler.redstone.signal.RemovalSignal;
+import lumien.randomthings.handler.redstone.source.IDynamicRedstoneSource;
+import lumien.randomthings.handler.redstone.source.RedstoneSource;
+import lumien.randomthings.tileentity.TileEntityBase;
+import lumien.randomthings.util.Lazy;
+import lumien.randomthings.util.WorldUtil;
+
+import static lumien.randomthings.handler.redstone.source.RedstoneSource.SOURCE_KEY;
+
+public abstract class TileEntityRedstoneInterface extends TileEntityBase implements IDynamicRedstoneSource, IRedstoneConnectionProvider, IRedstoneWriter
 {
-	public static Set<TileEntityRedstoneInterface> interfaces =
-			Collections.newSetFromMap(new WeakHashMap<TileEntityRedstoneInterface, Boolean>());
+    public static final EnumSet<RedstoneSource.Type> INTERFACE_SOURCE = EnumSet.of(RedstoneSource.Type.INTERFACE);
 
-	public static Object lock = new Object();
+    @Nonnull
+    private Lazy<Optional<IDynamicRedstoneManager>> redstoneManager;
+    @Nonnull
+    protected UUID sourceId;
 
-	HashMap<EnumFacing, Integer> weakPower;
-	HashMap<EnumFacing, Integer> strongPower;
+    public TileEntityRedstoneInterface()
+    {
+        redstoneManager = Lazy.empty();
+        sourceId = UUID.randomUUID();
+    }
 
-	boolean firstTick = true;
+    protected abstract Set<BlockPos> getTargets();
 
-	public TileEntityRedstoneInterface()
-	{
-		synchronized (lock)
-		{
-			interfaces.add(this);
-		}
+    @Override
+    public void onLoad()
+    {
+        if (world.isRemote) return;
 
-		weakPower = new HashMap<>();
-		strongPower = new HashMap<>();
+        redstoneManager = Lazy.ofCapability(world, IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE);
+        sendSignalsToAll(getTargets());
+    }
 
-		for (EnumFacing facing : EnumFacing.values())
-		{
-			strongPower.put(facing, -1);
-		}
-
-		for (EnumFacing facing : EnumFacing.values())
-		{
-			weakPower.put(facing, -1);
-		}
-	}
-
-	@Override
-	public void update()
-	{
-		if (firstTick)
-		{
-			firstTick = false;
-
-			if (weakPower.get(EnumFacing.DOWN) == -1)
-			{
-				updateRedstoneState(Blocks.REDSTONE_BLOCK);
-			}
-		}
-	}
-
-	@Override
-	public void onChunkUnload()
-	{
-		this.invalidate();
-	}
-
-	@Override
-	public void writeDataToNBT(NBTTagCompound compound, boolean sync)
-	{
-		NBTTagCompound weakPowerCompound = new NBTTagCompound();
-		NBTTagCompound strongPowerCompound = new NBTTagCompound();
-
-		for (EnumFacing facing : EnumFacing.values())
-		{
-			weakPowerCompound.setInteger(facing.ordinal() + "", weakPower.get(facing));
-			strongPowerCompound.setInteger(facing.ordinal() + "", strongPower.get(facing));
-		}
-
-		compound.setTag("weakPowerCompound", weakPowerCompound);
-		compound.setTag("strongPowerCompound", strongPowerCompound);
-	}
-
-	@Override
-	public void readDataFromNBT(NBTTagCompound compound, boolean sync)
-	{
-		NBTTagCompound weakPowerCompound = compound.getCompoundTag("weakPowerCompound");
-		NBTTagCompound strongPowerCompound = compound.getCompoundTag("strongPowerCompound");
-
-		for (EnumFacing facing : EnumFacing.values())
-		{
-			weakPower.put(facing, weakPowerCompound.getInteger(facing.ordinal() + ""));
-			strongPower.put(facing, strongPowerCompound.getInteger(facing.ordinal() + ""));
-		}
-	}
-
-	public static int getRedstonePower(World blockWorld, BlockPos pos, EnumFacing facing)
-	{
-		synchronized (lock)
-		{
-			int totalPower = 0;
-
-			BlockPos checkingBlock = pos.offset(facing.getOpposite());
-
-			// Create a snapshot copy to avoid ConcurrentModificationException
-			for (TileEntityRedstoneInterface redstoneInterface : new ArrayList<>(interfaces))
-			{
-				if (!redstoneInterface.isInvalid() && redstoneInterface.world == blockWorld && redstoneInterface.isTargeting(checkingBlock))
-				{
-					int remotePower = redstoneInterface.weakPower.get(facing);
-
-					if (remotePower > totalPower)
-					{
-						totalPower = remotePower;
-					}
-				}
-			}
-
-			return totalPower;
-		}
-	}
-
-	public static int getStrongPower(World blockWorld, BlockPos pos, EnumFacing facing)
-	{
-		synchronized (lock)
-		{
-			int totalPower = 0;
-
-			BlockPos checkingBlock = pos.offset(facing.getOpposite());
-
-			// Create a snapshot copy to avoid ConcurrentModificationException
-			for (TileEntityRedstoneInterface redstoneInterface : new ArrayList<>(interfaces))
-			{
-				if (!redstoneInterface.isInvalid() && redstoneInterface.world == blockWorld && redstoneInterface.isTargeting(checkingBlock))
-				{
-					int remotePower = redstoneInterface.strongPower.get(facing);
-
-					if (remotePower > totalPower)
-					{
-						totalPower = remotePower;
-					}
-				}
-			}
-			
-			return totalPower;
-		}
-	}
-
-	protected abstract void notifyTargets(Block neighborBlock);
-
-	static HashSet<BlockPos> notifiedPositions = new HashSet<>();
-
-	@Override
+    @Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block neighborBlock, BlockPos changedPos)
 	{
-		if (notifiedPositions.contains(this.pos))
-		{
-			return;
-		}
+        if (world.isRemote) return;
 
-		notifiedPositions.add(this.pos);
-
-		updateRedstoneState(neighborBlock);
-
-		notifiedPositions.remove(this.pos);
+		BlockPos direction = changedPos.subtract(pos);
+        EnumFacing side = EnumFacing.getFacingFromVector(direction.getX(), direction.getY(), direction.getZ());
+        sendSidedSignal(side, neighborBlock, getTargets());
 	}
 
-	private void updateRedstoneState(Block neighbor)
-	{
-		boolean changed = false;
-		for (EnumFacing facing : EnumFacing.values())
-		{
-			int oldStrong = strongPower.get(facing);
-			int newStrong;
-			strongPower.put(facing, (newStrong = world.getStrongPower(this.pos.offset(facing), facing)));
-			if (oldStrong != newStrong)
-			{
-				changed = true;
-			}
+    /**
+     * Sends the signal received by this interface to its targets on the specified side.
+     * @param signalDir The side the received signal is coming from, relative to this tile.
+     * @param signalBlock The block sending the signal.
+     * @param targets The targets' positions.
+     */
+    private void sendSidedSignal(EnumFacing signalDir, Block signalBlock, Set<BlockPos> targets)
+    {
+        if (targets.isEmpty()) return;
 
-			int oldWeak = weakPower.get(facing);
-			int newWeak;
-			weakPower.put(facing, (newWeak = world.getRedstonePower(this.pos.offset(facing), facing)));
+        EnumMap<EnumFacing, SignalInfo> signals = gatherSignals(null);
+        SignalInfo signalInfo = signals.get(signalDir);
+        int weakLevel = signalInfo.weakLevel;
+        int strongLevel = signalInfo.strongLevel;
 
-			if (oldWeak != newWeak)
-			{
-				changed = true;
-			}
-		}
+        for (BlockPos targetPos : targets)
+        {
+            if (!world.isBlockLoaded(targetPos))
+            {
+                // Schedule all-sided task for when targetPos is loaded
+                redstoneManager.get().ifPresent(manager ->
+                        manager.scheduleTask(targetPos, pos,
+                                () -> this.sendSignalsTo(targetPos, signals)));
+                continue;
+            }
 
-		if (changed)
-		{
-			notifyTargets(neighbor);
-		}
-	}
+            Block targetBlock = world.getBlockState(targetPos).getBlock();
+            if (weakLevel > 0 || strongLevel > 0)
+            {
+                setRedstoneLevel(signalBlock, targetPos, signalDir, weakLevel, strongLevel);
+            }
+            else
+            {
+                deactivate(signalBlock, targetPos, signalDir);
+            }
+            // Update target's neighbors
+            if (WorldUtil.isNeighboring(targetPos, pos))
+            {
+                // Don't recursively update signal -> interface -> signal -> ...
+                world.notifyNeighborsOfStateExcept(targetPos, targetBlock, signalDir.getOpposite());
+            }
+            else
+            {
+                world.notifyNeighborsOfStateChange(targetPos, targetBlock, false);
+            }
+        }
+    }
 
-	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
-	{
-		super.breakBlock(worldIn, pos, state);
+    /**
+     * Send all signals to the target, waiting for the target to be loaded.
+     * @param targetPos The target position.
+     */
+    private void sendSignalsTo(BlockPos targetPos, EnumMap<EnumFacing, SignalInfo> signals)
+    {
+        if (!world.isBlockLoaded(targetPos))
+        {
+            // Schedule self for when targetPos is loaded
+            redstoneManager.get().ifPresent(manager ->
+                    manager.scheduleTask(targetPos, pos,
+                            () -> this.sendSignalsTo(targetPos, signals)));
+            return;
+        }
 
-		this.invalidate();
+        // Now get the loaded target's state
+        Block targetBlock = world.getBlockState(targetPos).getBlock();
+        for (EnumFacing side : EnumFacing.VALUES)
+        {
+            SignalInfo signalInfo = signals.get(side);
+            int weakLevel = signalInfo.weakLevel;
+            int strongLevel = signalInfo.strongLevel;
+            Block signalBlock = signalInfo.signalBlock;
 
-		notifyTargets(Blocks.REDSTONE_BLOCK);
-	}
+            if (weakLevel > 0 || strongLevel > 0)
+            {
+                setRedstoneLevel(signalBlock, targetPos, side, weakLevel, strongLevel);
+            }
+            else
+            {
+                deactivate(signalBlock, targetPos, side);
+            }
+        }
+        // Update target's neighbors
+        world.notifyNeighborsOfStateChange(targetPos, targetBlock, false);
+    }
 
-	protected abstract boolean isTargeting(BlockPos pos);
+    /**
+     * Sends all signals received by this interface to all specified targets.
+     * @param targets The targets' positions.
+     */
+    public void sendSignalsToAll(Set<BlockPos> targets)
+    {
+        if (world.isRemote || targets.isEmpty()) return;
+
+        EnumMap<EnumFacing, SignalInfo> signals = gatherSignals(null);
+        for (BlockPos target : targets)
+        {
+            sendSignalsTo(target, signals);
+        }
+    }
+
+    @Override
+    public void onChunkUnload()
+    {
+        super.onChunkUnload();
+        invalidateTargets(getTargets());
+    }
+
+    @Override
+    public void invalidate()
+    {
+        super.invalidate();
+        invalidateTargets(getTargets());
+    }
+
+    protected void invalidateTargets(Set<BlockPos> targets)
+    {
+        if (world.isRemote || targets.isEmpty()) return;
+
+        // Blocks.AIR to always deactivate
+        EnumMap<EnumFacing, SignalInfo> signals = gatherSignals(Blocks.AIR);
+        for (BlockPos target : targets)
+        {
+            sendSignalsTo(target, signals);
+        }
+    }
+
+    @Override
+    public void writeDataToNBT(NBTTagCompound compound, boolean sync)
+    {
+        super.writeDataToNBT(compound, sync);
+
+        compound.setUniqueId(SOURCE_KEY, sourceId);
+    }
+
+    @Override
+    public void readDataFromNBT(NBTTagCompound compound, boolean sync)
+    {
+        super.readDataFromNBT(compound, sync);
+
+        if (compound.hasUniqueId(SOURCE_KEY))
+        {
+            UUID sourceId = compound.getUniqueId(SOURCE_KEY);
+            Preconditions.checkNotNull(sourceId);
+            this.sourceId = sourceId;
+        }
+        else
+        {
+            sourceId = UUID.randomUUID();
+        }
+    }
+
+    /* Dynamic redstone */
+
+    @Nonnull
+    @Override
+    public Optional<IDynamicRedstone> getDynamicRedstoneFor(Block block, BlockPos pos, EnumFacing side)
+    {
+        return redstoneManager.get()
+                .map(manager -> manager.getDynamicRedstone(pos.offset(side), side, block, INTERFACE_SOURCE));
+    }
+
+    @Override
+    public void setRedstoneLevel(Block block, BlockPos pos, EnumFacing side, int weakLevel, int strongLevel)
+    {
+        getDynamicRedstoneFor(block, pos, side).ifPresent(dynamicRedstone ->
+                dynamicRedstone.setRedstoneLevel(new RedstoneSignal(TileEntityRedstoneInterface.this, weakLevel, strongLevel)));
+    }
+
+    @Override
+    public void deactivate(Block block, BlockPos pos, EnumFacing side)
+    {
+        getDynamicRedstoneFor(block, pos, side).ifPresent(dynamicRedstone ->
+                dynamicRedstone.setRedstoneLevel(new RemovalSignal(TileEntityRedstoneInterface.this, dynamicRedstone.isStrongSignal())));
+    }
+
+    @Override
+    public RedstoneSource.Type getType()
+    {
+        return RedstoneSource.Type.INTERFACE;
+    }
+
+    @Override
+    public UUID getId()
+    {
+        Preconditions.checkNotNull(sourceId);
+        return sourceId;
+    }
+
+    @Nullable
+    @Override
+    public BlockPos getSourcePos()
+    {
+        return pos;
+    }
+
+    /* Connection provider */
+
+    @Override
+    public List<Connection> getConnections()
+    {
+        List<Connection> connections = new ArrayList<>();
+        for (BlockPos targetPos : getTargets())
+        {
+            Connection connection = new Connection(pos, targetPos);
+            connections.add(connection);
+        }
+        return connections;
+    }
+
+    /**
+     * Gather neighboring signals of this interface.
+     * @param blockOverride A block to override all signal info with, null to use the in-world block.
+     * @return An {@link EnumMap} of signals' sides mapped to their {@link SignalInfo}.
+     */
+    private EnumMap<EnumFacing, SignalInfo> gatherSignals(@Nullable Block blockOverride)
+    {
+        EnumMap<EnumFacing, SignalInfo> signalInfos = new EnumMap<>(EnumFacing.class);
+
+        // Gather signal info
+        for (EnumFacing side : EnumFacing.VALUES)
+        {
+            BlockPos signalPos = pos.offset(side);
+            int weakLevel = world.getRedstonePower(signalPos, side);
+            int strongLevel = world.getStrongPower(signalPos, side);
+            Block signalBlock = blockOverride != null ? blockOverride : world.getBlockState(signalPos).getBlock();
+
+            signalInfos.put(side, new SignalInfo(weakLevel, strongLevel, signalBlock));
+        }
+        return signalInfos;
+    }
+
+    /**
+     * Signal info for a neighbor of the interface.
+     */
+    private static class SignalInfo
+    {
+        final int weakLevel;
+        final int strongLevel;
+        final Block signalBlock;
+
+        private SignalInfo(int weakLevel, int strongLevel, Block signalBlock)
+        {
+            this.weakLevel = weakLevel;
+            this.strongLevel = strongLevel;
+            this.signalBlock = signalBlock;
+        }
+
+        @Override
+        public String toString()
+        {
+            return MoreObjects.toStringHelper(this)
+                    .add("weakLevel", weakLevel)
+                    .add("strongLevel", strongLevel)
+                    .add("signalBlock", signalBlock)
+                    .toString();
+        }
+    }
 }

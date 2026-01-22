@@ -2,21 +2,20 @@ package lumien.randomthings.handler;
 
 import java.awt.Color;
 import java.lang.reflect.Field;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
-import org.apache.logging.log4j.Level;
-
-import lumien.randomthings.RandomThings;
 import lumien.randomthings.asm.MCPNames;
 import lumien.randomthings.block.BlockTriggerGlass;
 import lumien.randomthings.block.ModBlocks;
+import lumien.randomthings.capability.redstone.IDynamicRedstone;
+import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.enchantment.ModEnchantments;
 import lumien.randomthings.config.Internals;
-import lumien.randomthings.handler.redstonesignal.RedstoneSignalHandler;
+import lumien.randomthings.handler.redstone.source.RedstoneSource;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationClientHandler;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationHandler;
 import lumien.randomthings.item.ItemIngredient;
@@ -30,7 +29,6 @@ import lumien.randomthings.tileentity.TileEntityLightRedirector;
 import lumien.randomthings.tileentity.TileEntityPeaceCandle;
 import lumien.randomthings.tileentity.TileEntityRainShield;
 import lumien.randomthings.tileentity.TileEntitySlimeCube;
-import lumien.randomthings.tileentity.redstoneinterface.TileEntityRedstoneInterface;
 import lumien.randomthings.util.ItemUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
@@ -73,9 +71,11 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import static lumien.randomthings.handler.redstone.source.RedstoneSource.Type.*;
+
 public class AsmHandler
 {
-	static Random rng = new Random();
+    public static final EnumSet<RedstoneSource.Type> ALLOWED_REDSTONE_SOURCES = EnumSet.of(INTERFACE, ITEM);
 
 	static Field fluidRenderer;
 	static
@@ -486,15 +486,85 @@ public class AsmHandler
 		return pos;
 	}
 
-	public static int getRedstonePower(World worldObj, BlockPos pos, EnumFacing facing)
+    /**
+     * {@link World#getRedstonePower(BlockPos, EnumFacing)}
+     * <br>
+     * Old code:
+     * <pre>
+     * {@code
+     * IBlockState iblockstate1 = this.getBlockState(pos);
+     * return iblockstate1.getBlock().shouldCheckWeakPower(iblockstate1, this, pos, facing) ?
+     *     this.getStrongPower(pos) : iblockstate1.getWeakPower(this, pos, facing);
+     * }
+     * </pre>
+     * New code:
+     * <pre>
+     * {@code
+     * IBlockState iblockstate1 = this.getBlockState(pos);
+     * Block block = iblockstate1.getBlock();
+     * return block.shouldCheckWeakPower(iblockstate1, this, pos, facing) ?
+     *     AsmHandler.getRedstonePower(this.getStrongPower(pos), block, world, pos, facing) :
+     *     AsmHandler.getRedstonePower(iblockstate1.getWeakPower(this, pos, facing), block, world, pos, facing);
+     * }
+     * </pre>
+     * <p>
+     *     This basically changes the return value(s) to {@code Math.max(dynamicWeakPower, originalReturnValue)}.
+     * </p>
+     */
+	public static int getRedstonePower(int original, Block block, World world, BlockPos pos, EnumFacing side)
 	{
-		return Math.max(TileEntityRedstoneInterface.getRedstonePower(worldObj, pos, facing), worldObj.isRemote ? 0 : (FMLCommonHandler.instance().getMinecraftServerInstance() != null ? RedstoneSignalHandler.getHandler().getStrongPower(worldObj, pos, facing) : 0));
+        if (original >= 15)
+        {
+            return original;
+        }
+        IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
+        if (manager != null && manager.hasDynamicSignals())
+        {
+            IDynamicRedstone signal = manager.getDynamicRedstone(pos, side, block, ALLOWED_REDSTONE_SOURCES);
+            int value = signal.getRedstoneLevel(false);
+            if (value > 0)
+            {
+                return Math.max(value, original);
+            }
+        }
+        return original;
 	}
 
-	public static int getStrongPower(World worldObj, BlockPos pos, EnumFacing facing)
-	{
-		return Math.max(TileEntityRedstoneInterface.getStrongPower(worldObj, pos, facing), worldObj.isRemote ? 0 : (FMLCommonHandler.instance().getMinecraftServerInstance() != null ? RedstoneSignalHandler.getHandler().getStrongPower(worldObj, pos, facing) : 0));
-	}
+    /**
+     * {@link World#getStrongPower(BlockPos, EnumFacing)}
+     * <br>
+     * Old code:
+     * <pre>
+     * {@code
+     * return this.getBlockState(pos).getStrongPower(this, pos, direction);
+     * }
+     * </pre>
+     * New code:
+     * <pre>
+     * {@code
+     * IBlockState state = this.getBlockState(pos);
+     * return AsmHandler.getStrongPower(state.getStrongPower(this, pos, direction), state, this, pos, direction);
+     * }
+     * </pre>
+     */
+    public static int getStrongPower(int original, IBlockState state, World world, BlockPos pos, EnumFacing side)
+    {
+        if (original >= 15)
+        {
+            return original;
+        }
+        IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
+        if (manager != null && manager.hasDynamicSignals())
+        {
+            IDynamicRedstone signal = manager.getDynamicRedstone(pos, side, state.getBlock(), ALLOWED_REDSTONE_SOURCES);
+            int value = signal.getRedstoneLevel(true);
+            if (value > 0)
+            {
+                return Math.max(value, original);
+            }
+        }
+        return original;
+    }
 
 	// Returns whether to cancel normal behaviour
 	public static boolean addCollisionBoxesToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB mask, List list, Entity collidingEntity)

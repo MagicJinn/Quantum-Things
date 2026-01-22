@@ -288,6 +288,13 @@ public class WorldUtil
 		return pos.getX() >= -30000000 && pos.getZ() >= -30000000 && pos.getX() < 30000000 && pos.getZ() < 30000000 && pos.getY() >= 0 && pos.getY() < 256;
 	}
 
+    public static boolean isNeighboring(BlockPos pos1, BlockPos pos2)
+    {
+        return Math.abs(pos1.getX() - pos2.getX()) +
+                Math.abs(pos1.getY() - pos2.getY()) +
+                Math.abs(pos1.getZ() - pos2.getZ()) == 1;
+    }
+
 	public static BlockPos getHeighestPos(World worldObj, int x, int z)
 	{
 		int startY = worldObj.getChunk(new BlockPos(x, 0, z)).getTopFilledSegment() + 16;
