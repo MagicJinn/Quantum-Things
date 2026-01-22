@@ -13,6 +13,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;
@@ -245,7 +246,9 @@ public class TileEntityRedstoneObserver extends TileEntityBase implements IDynam
     public int getRedstoneLevel(Block block, BlockPos pos, EnumFacing side, boolean strongPower)
     {
         return getDynamicRedstoneFor(block, pos, side)
-                .map(dynamicRedstone -> dynamicRedstone.getRedstoneLevel(strongPower)).orElse(0);
+                .map(dynamicRedstone -> dynamicRedstone.getRedstoneLevel(strongPower))
+                .map(level -> MathHelper.clamp(level, 0, 15))
+                .orElse(0);
     }
 
     @Override
