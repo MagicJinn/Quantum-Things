@@ -26,7 +26,7 @@ public class RemovalSignal extends RedstoneSignal
     public static boolean isRemovalSignal(RedstoneSignal signal)
     {
         return signal instanceof RemovalSignal &&
-                signal.isStrong() ? signal.strongLevel == REMOVE_SIGNAL : signal.weakLevel == REMOVE_SIGNAL;
+                (signal.isStrong() ? signal.strongLevel == REMOVE_SIGNAL : signal.weakLevel == REMOVE_SIGNAL);
     }
 
     @Override
