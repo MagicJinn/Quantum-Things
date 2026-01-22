@@ -6,16 +6,13 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import com.google.common.collect.Lists;
-
 import lumien.randomthings.client.gui.elements.GuiScanResultList;
 import lumien.randomthings.container.ContainerChunkAnalyzer;
 import lumien.randomthings.handler.RTEventHandler;
 import lumien.randomthings.handler.chunkanalyzer.ChunkAnalyzerResult;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.RandomThingsNetworkWrapper;
-import lumien.randomthings.network.messages.MessageChunkAnalyzer;
-import lumien.randomthings.network.messages.MessageChunkAnalyzer.ACTION;
+import lumien.randomthings.network.item.MessageChunkAnalyzer;
+import lumien.randomthings.network.item.MessageChunkAnalyzer.ACTION;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;

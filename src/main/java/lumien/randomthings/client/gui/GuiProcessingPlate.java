@@ -2,17 +2,12 @@ package lumien.randomthings.client.gui;
 
 import java.io.IOException;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import lumien.randomthings.client.gui.elements.GuiEnumButton;
 import lumien.randomthings.client.gui.elements.GuiFacingButton;
-import lumien.randomthings.container.ContainerAdvancedRedstoneRepeater;
 import lumien.randomthings.container.ContainerProcessingPlate;
-import lumien.randomthings.container.ContainerTE;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageContainerSignal;
-import lumien.randomthings.tileentity.TileEntityAdvancedRedstoneRepeater;
+import lumien.randomthings.network.gui.MessageContainerSignal;
 import lumien.randomthings.tileentity.TileEntityProcessingPlate;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -21,7 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 public class GuiProcessingPlate extends GuiContainerBase
 {

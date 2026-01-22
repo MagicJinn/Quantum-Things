@@ -12,7 +12,7 @@ import lumien.randomthings.client.gui.elements.GuiStringList;
 import lumien.randomthings.container.ContainerVoxelProjector;
 import lumien.randomthings.lib.IStringCallback;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageVoxelProjector;
+import lumien.randomthings.network.gui.MessageVoxelProjector;
 import lumien.randomthings.tileentity.TileEntityVoxelProjector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;

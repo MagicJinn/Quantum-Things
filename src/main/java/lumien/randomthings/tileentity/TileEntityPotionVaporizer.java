@@ -10,7 +10,7 @@ import lumien.randomthings.block.BlockPotionVaporizer;
 import lumien.randomthings.config.Numbers;
 import lumien.randomthings.lib.ISlotFilter;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessagePotionVaporizerParticles;
+import lumien.randomthings.network.render.MessagePotionVaporizerParticles;
 import lumien.randomthings.util.WorldUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;

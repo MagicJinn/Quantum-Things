@@ -10,7 +10,7 @@ import lumien.randomthings.client.gui.elements.GuiCustomButton;
 import lumien.randomthings.client.gui.elements.GuiPowerModeButton;
 import lumien.randomthings.container.ContainerEntityDetector;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageEntityDetector;
+import lumien.randomthings.network.gui.MessageEntityDetector;
 import lumien.randomthings.tileentity.TileEntityEntityDetector;
 import lumien.randomthings.tileentity.TileEntityEntityDetector.FILTER;
 import net.minecraft.client.gui.GuiButton;

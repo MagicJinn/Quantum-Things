@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import lumien.randomthings.container.ContainerAdvancedRedstoneTorch;
 import lumien.randomthings.container.ContainerTE;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageContainerSignal;
+import lumien.randomthings.network.gui.MessageContainerSignal;
 import lumien.randomthings.tileentity.TileEntityAdvancedRedstoneTorch;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;

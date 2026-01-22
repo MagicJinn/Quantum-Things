@@ -16,7 +16,7 @@ import lumien.randomthings.item.ItemPositionFilter;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.lib.IOpable;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageNotification;
+import lumien.randomthings.network.client.MessageNotification;
 import lumien.randomthings.tileentity.TileEntityBase;
 import lumien.randomthings.worldgen.WorldGenAncientFurnace;
 import net.minecraft.command.CommandBase;

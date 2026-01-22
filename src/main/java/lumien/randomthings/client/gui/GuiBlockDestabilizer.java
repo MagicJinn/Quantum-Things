@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 import lumien.randomthings.client.gui.elements.GuiBoolButton;
 import lumien.randomthings.container.ContainerBlockDestabilizer;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageContainerSignal;
+import lumien.randomthings.network.gui.MessageContainerSignal;
 import lumien.randomthings.tileentity.TileEntityBlockDestabilizer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiButtonImage;

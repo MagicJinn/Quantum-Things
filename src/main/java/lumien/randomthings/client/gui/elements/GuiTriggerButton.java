@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.lwjgl.input.Keyboard;
 
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageContainerSignal;
+import lumien.randomthings.network.gui.MessageContainerSignal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;

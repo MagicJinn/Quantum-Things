@@ -11,7 +11,7 @@ import lumien.randomthings.container.ContainerEmptyContainer;
 import lumien.randomthings.container.inventories.InventoryItem;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageRedstoneRemote;
+import lumien.randomthings.network.item.MessageRedstoneRemote;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;

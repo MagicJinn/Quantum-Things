@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import lumien.randomthings.container.ContainerNotificationInterface;
 import lumien.randomthings.container.ContainerTE;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageNotificationInterface;
+import lumien.randomthings.network.gui.MessageNotificationInterface;
 import lumien.randomthings.tileentity.TileEntityNotificationInterface;
 import net.minecraft.client.gui.GuiPageButtonList.GuiResponder;
 import net.minecraft.client.gui.GuiTextField;

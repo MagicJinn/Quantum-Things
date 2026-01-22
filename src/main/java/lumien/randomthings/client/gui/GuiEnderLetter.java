@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import lumien.randomthings.container.ContainerEnderLetter;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageEnderLetter;
+import lumien.randomthings.network.item.MessageEnderLetter;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;

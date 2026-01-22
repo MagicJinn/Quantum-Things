@@ -6,7 +6,7 @@ import lumien.randomthings.client.gui.elements.GuiCustomButton;
 import lumien.randomthings.container.ContainerItemFilter;
 import lumien.randomthings.item.ItemItemFilter.ItemFilterRepresentation;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageItemFilter;
+import lumien.randomthings.network.item.MessageItemFilter;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;

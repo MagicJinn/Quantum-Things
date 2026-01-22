@@ -2,7 +2,7 @@ package lumien.randomthings.container;
 
 import lumien.randomthings.handler.magicavoxel.ServerModelLibrary;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.magicavoxel.MessageModelList;
+import lumien.randomthings.network.magicavoxel.MessageModelList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;

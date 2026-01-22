@@ -4,8 +4,8 @@ import java.util.HashSet;
 
 import lumien.randomthings.network.MessageUtil;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageSpectreIllumination;
-import net.minecraft.entity.player.EntityPlayer;
+import lumien.randomthings.network.client.MessageSpectreIllumination;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;

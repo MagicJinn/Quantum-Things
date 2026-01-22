@@ -5,15 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import akka.io.Tcp.Message;
 import io.netty.buffer.ByteBuf;
 import lumien.randomthings.client.ModSounds;
 import lumien.randomthings.item.ItemTimeInABottle;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.network.MessageUtil;
-import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageEclipsedClock;
-import net.minecraft.client.Minecraft;
+import lumien.randomthings.network.client.MessageEclipsedClock;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +19,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumFacing;

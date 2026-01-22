@@ -9,7 +9,7 @@ import lumien.randomthings.item.ItemBiomeCrystal;
 import lumien.randomthings.item.ItemPositionFilter;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.network.MessageUtil;
-import lumien.randomthings.network.messages.sync.MessageBiomeRadarAntenna;
+import lumien.randomthings.network.tile.MessageBiomeRadarAntenna;
 import lumien.randomthings.util.client.RenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

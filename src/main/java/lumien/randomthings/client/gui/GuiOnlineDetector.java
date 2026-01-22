@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import lumien.randomthings.container.ContainerEmptyContainer;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageOnlineDetector;
+import lumien.randomthings.network.gui.MessageOnlineDetector;
 import lumien.randomthings.tileentity.TileEntityOnlineDetector;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
