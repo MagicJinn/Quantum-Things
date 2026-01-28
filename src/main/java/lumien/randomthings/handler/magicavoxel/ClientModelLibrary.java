@@ -20,7 +20,7 @@ import lumien.randomthings.RandomThings;
 import lumien.randomthings.config.VoxelProjector;
 import lumien.randomthings.handler.magicavoxel.ClientModelRequest.STATE;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.magicavoxel.MessageModelRequest;
+import lumien.randomthings.network.magicavoxel.MessageModelRequest;
 import net.minecraft.client.Minecraft;
 
 public class ClientModelLibrary
@@ -206,7 +206,7 @@ public class ClientModelLibrary
 
 					MessageModelRequest requestMessage = new MessageModelRequest(modelName);
 
-					PacketHandler.INSTANCE.sendToServer(requestMessage);
+					PacketHandler.instance().sendToServer(requestMessage);
 
 					modelRequests.put(modelName, request);
 				}

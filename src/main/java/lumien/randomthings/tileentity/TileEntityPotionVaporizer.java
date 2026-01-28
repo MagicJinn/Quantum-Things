@@ -10,7 +10,7 @@ import lumien.randomthings.block.BlockPotionVaporizer;
 import lumien.randomthings.config.Numbers;
 import lumien.randomthings.lib.ISlotFilter;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessagePotionVaporizerParticles;
+import lumien.randomthings.network.render.MessagePotionVaporizerParticles;
 import lumien.randomthings.util.WorldUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
@@ -301,7 +301,7 @@ public class TileEntityPotionVaporizer extends TileEntityBase implements ITickab
 			particleBlocks = new ArrayList<>(particleBlocks.subList(0, count));
 			MessagePotionVaporizerParticles message = new MessagePotionVaporizerParticles(
 					new ArrayList<>(particleBlocks), currentPotionEffect.getPotion().getLiquidColor());
-			PacketHandler.INSTANCE.sendToAllAround(message, new TargetPoint(this.world.provider.getDimension(), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 32));
+			PacketHandler.instance().sendToAllAround(message, new TargetPoint(this.world.provider.getDimension(), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 32));
 		}
 	}
 

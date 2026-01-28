@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import lumien.randomthings.container.ContainerAdvancedItemCollector;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageAdvancedItemCollector;
+import lumien.randomthings.network.gui.MessageAdvancedItemCollector;
 import lumien.randomthings.tileentity.TileEntityAdvancedItemCollector;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -47,7 +47,7 @@ public class GuiAdvancedItemCollector extends GuiContainerBase
 
 		MessageAdvancedItemCollector message = new MessageAdvancedItemCollector(button.id, advancedItemCollector.getPos());
 
-		PacketHandler.INSTANCE.sendToServer(message);
+		PacketHandler.instance().sendToServer(message);
 	}
 
 	@Override

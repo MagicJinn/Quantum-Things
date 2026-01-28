@@ -30,6 +30,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Fixed Spectre Armor not having a repair item set (introduced in 1.0.2).
 - Fixed Spectre Armor not having a description in JEI (introduced in 1.0.2).
 - Fixed Redstone Tool sometimes showing ghost connections for Redstone Interface/Observers after being removed. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
+- Fixed various `ConcurrentModificationException`s that could occur when handling network messages. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/24))
 - Fixed the Returning Block of Sticks not dropping its returning variant when broken.
 
 ## 1.0.5

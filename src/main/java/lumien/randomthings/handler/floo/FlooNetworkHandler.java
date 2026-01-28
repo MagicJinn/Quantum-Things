@@ -8,7 +8,7 @@ import java.util.UUID;
 import info.debatty.java.stringsimilarity.Levenshtein;
 import lumien.randomthings.network.MessageUtil;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageFlooParticles;
+import lumien.randomthings.network.particle.MessageFlooParticles;
 import lumien.randomthings.tileentity.TileEntityFlooBrick;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -143,7 +143,7 @@ public class FlooNetworkHandler extends WorldSavedData
 
 						MessageUtil.sendToAllWatchingPos(player.world, targetPos, p2);
 
-						PacketHandler.INSTANCE.sendTo(p2, player);
+						PacketHandler.instance().sendTo(p2, player);
 
 						return true;
 					}

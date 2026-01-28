@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import lumien.randomthings.container.ContainerAdvancedRedstoneRepeater;
 import lumien.randomthings.container.ContainerTE;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageContainerSignal;
+import lumien.randomthings.network.gui.MessageContainerSignal;
 import lumien.randomthings.tileentity.TileEntityAdvancedRedstoneRepeater;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -69,7 +69,7 @@ public class GuiAdvancedRedstoneRepeater extends GuiContainerBase
 		}
 
 		MessageContainerSignal message = new MessageContainerSignal(button.id + mod);
-		PacketHandler.INSTANCE.sendToServer(message);
+		PacketHandler.instance().sendToServer(message);
 	}
 
 	@Override

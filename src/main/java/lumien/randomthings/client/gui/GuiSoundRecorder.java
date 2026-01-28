@@ -11,7 +11,7 @@ import lumien.randomthings.container.ContainerSoundRecorder;
 import lumien.randomthings.item.ItemSoundRecorder;
 import lumien.randomthings.lib.IStringCallback;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageSelectSound;
+import lumien.randomthings.network.gui.MessageSelectSound;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -105,6 +105,6 @@ public class GuiSoundRecorder extends GuiContainerBase implements IStringCallbac
 	{
 		MessageSelectSound msg = new MessageSelectSound(string);
 
-		PacketHandler.INSTANCE.sendToServer(msg);
+		PacketHandler.instance().sendToServer(msg);
 	}
 }

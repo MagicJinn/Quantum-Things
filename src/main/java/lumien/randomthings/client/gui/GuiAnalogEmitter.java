@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 import lumien.randomthings.container.ContainerEmptyContainer;
 import lumien.randomthings.lib.Colors;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageAnalogEmitter;
+import lumien.randomthings.network.gui.MessageAnalogEmitter;
 import lumien.randomthings.tileentity.TileEntityAnalogEmitter;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -80,7 +80,7 @@ public class GuiAnalogEmitter extends GuiContainerBase
 
 		if (newLevel > 0 && newLevel < 16 && newLevel != analogEmitter.emitLevel)
 		{
-			PacketHandler.INSTANCE.sendToServer(new MessageAnalogEmitter(analogEmitter.getPos(), newLevel));
+			PacketHandler.instance().sendToServer(new MessageAnalogEmitter(analogEmitter.getPos(), newLevel));
 		}
 	}
 }

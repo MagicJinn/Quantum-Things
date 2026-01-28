@@ -8,7 +8,7 @@ import java.util.List;
 import com.google.common.base.Predicate;
 
 import lumien.randomthings.network.MessageUtil;
-import lumien.randomthings.network.messages.MessageSetBiome;
+import lumien.randomthings.network.client.MessageSetBiome;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;

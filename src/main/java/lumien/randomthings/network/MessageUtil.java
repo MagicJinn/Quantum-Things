@@ -1,6 +1,5 @@
 package lumien.randomthings.network;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.network.Packet;
 import net.minecraft.server.management.PlayerChunkMap;
 import net.minecraft.server.management.PlayerChunkMapEntry;
@@ -8,69 +7,38 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class MessageUtil
 {
-	public static void writeBlockPos(BlockPos pos, ByteBuf buffer)
+	public static void sendToAllWatchingPos(World world, BlockPos pos, IMessage message)
 	{
-		buffer.writeInt(pos.getX());
-		buffer.writeInt(pos.getY());
-		buffer.writeInt(pos.getZ());
+		if (!world.isBlockLoaded(pos)) return;
+
+        PacketHandler.instance().sendToAllTracking(message, new NetworkRegistry.TargetPoint(world.provider.getDimension(),
+                pos.getX(), pos.getY(), pos.getZ(), 0));
 	}
 
-	public static BlockPos readBlockPos(ByteBuf buffer)
+	public static void sendToAllWatchingPos(World world, BlockPos pos, Packet<?> packet)
 	{
-		int x = buffer.readInt();
-		int y = buffer.readInt();
-		int z = buffer.readInt();
+		if (!world.isBlockLoaded(pos)) return;
 
-		return new BlockPos(x, y, z);
-	}
+        try
+        {
+            Chunk c = world.getChunk(pos);
 
-	public static void sendToAllWatchingPos(World worldObj, BlockPos pos, IMessage message)
-	{
-		if (worldObj.isBlockLoaded(pos))
-		{
-			try
-			{
-				Chunk c = worldObj.getChunk(pos);
+            PlayerChunkMap playerManager = ((WorldServer) world).getPlayerChunkMap();
 
-				PlayerChunkMap playerManager = ((WorldServer) worldObj).getPlayerChunkMap();
-
-				PlayerChunkMapEntry playerInstance = playerManager.getEntry(c.x, c.z);
-				if (playerInstance != null)
-				{
-					playerInstance.sendPacket(PacketHandler.INSTANCE.getPacketFrom(message));
-				}
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public static void sendToAllWatchingPos(World worldObj, BlockPos pos, Packet packet)
-	{
-		if (worldObj.isBlockLoaded(pos))
-		{
-			try
-			{
-				Chunk c = worldObj.getChunk(pos);
-
-				PlayerChunkMap playerManager = ((WorldServer) worldObj).getPlayerChunkMap();
-
-				PlayerChunkMapEntry playerInstance = playerManager.getEntry(c.x, c.z);
-				if (playerInstance != null)
-				{
-					playerInstance.sendPacket(packet);
-				}
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
+            PlayerChunkMapEntry playerInstance = playerManager.getEntry(c.x, c.z);
+            if (playerInstance != null)
+            {
+                playerInstance.sendPacket(packet);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 	}
 }

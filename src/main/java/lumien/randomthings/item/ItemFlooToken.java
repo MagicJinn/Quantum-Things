@@ -5,7 +5,7 @@ import java.util.List;
 import lumien.randomthings.client.particles.ParticleFlooFlame;
 import lumien.randomthings.entitys.EntityTemporaryFlooFireplace;
 import lumien.randomthings.network.MessageUtil;
-import lumien.randomthings.network.messages.MessageFlooToken;
+import lumien.randomthings.network.particle.MessageFlooToken;
 import lumien.randomthings.util.ReflectionUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;

@@ -1,7 +1,7 @@
 package lumien.randomthings.block;
 
 import lumien.randomthings.network.MessageUtil;
-import lumien.randomthings.network.messages.MessageLightRedirector;
+import lumien.randomthings.network.render.MessageLightRedirector;
 import lumien.randomthings.tileentity.TileEntityLightRedirector;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;

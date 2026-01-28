@@ -4,13 +4,12 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageContainerSignal;
+import lumien.randomthings.network.gui.MessageContainerSignal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GuiEnumStringButton<E extends Enum> extends GuiButton
@@ -55,7 +54,7 @@ public class GuiEnumStringButton<E extends Enum> extends GuiButton
 		if (super.mousePressed(mc, mouseX, mouseY))
 		{
 			MessageContainerSignal message = new MessageContainerSignal(this.id);
-			PacketHandler.INSTANCE.sendToServer(message);
+			PacketHandler.instance().sendToServer(message);
 
 			return true;
 		}

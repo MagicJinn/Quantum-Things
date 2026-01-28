@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import lumien.randomthings.lib.IRedstoneSensitive;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageNotification;
+import lumien.randomthings.network.client.MessageNotification;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -50,7 +50,7 @@ public class TileEntityNotificationInterface extends TileEntityBase implements I
 			{
 				MessageNotification message = new MessageNotification(title, description, getItemHandler().getStackInSlot(0));
 
-				PacketHandler.INSTANCE.sendTo(message, player);
+				PacketHandler.instance().sendTo(message, player);
 			}
 		}
 	}

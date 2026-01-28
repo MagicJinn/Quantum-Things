@@ -19,8 +19,8 @@ import org.apache.logging.log4j.Level;
 import lumien.randomthings.RandomThings;
 import lumien.randomthings.config.VoxelProjector;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.magicavoxel.MessageModelData;
-import lumien.randomthings.network.messages.magicavoxel.MessageModelRequestUpdate;
+import lumien.randomthings.network.magicavoxel.MessageModelData;
+import lumien.randomthings.network.magicavoxel.MessageModelRequestUpdate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.util.ResourceLocation;
@@ -120,8 +120,8 @@ public class ServerModelLibrary
 
 						if (toSend != null)
 						{
-							MessageModelData message = new MessageModelData(request.modelName, toSend.length, toSend);
-							request.netHandler.sendPacket(PacketHandler.INSTANCE.getPacketFrom(message));
+							MessageModelData message = new MessageModelData(request.modelName, toSend);
+							request.netHandler.sendPacket(PacketHandler.instance().getPacketFrom(message));
 						}
 					}
 				}
@@ -250,6 +250,6 @@ public class ServerModelLibrary
 			updateMessage.setData(modelName, -1, -1);
 		}
 
-		serverHandler.sendPacket(PacketHandler.INSTANCE.getPacketFrom(updateMessage));
+		serverHandler.sendPacket(PacketHandler.instance().getPacketFrom(updateMessage));
 	}
 }

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.lwjgl.input.Keyboard;
 
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageContainerSignal;
+import lumien.randomthings.network.gui.MessageContainerSignal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -40,7 +40,7 @@ public class GuiTriggerButton extends GuiButton
 		if (super.mousePressed(mc, mouseX, mouseY))
 		{
 			MessageContainerSignal message = new MessageContainerSignal(this.id + (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? shiftOffset : 0));
-			PacketHandler.INSTANCE.sendToServer(message);
+			PacketHandler.instance().sendToServer(message);
 
 			return true;
 		}

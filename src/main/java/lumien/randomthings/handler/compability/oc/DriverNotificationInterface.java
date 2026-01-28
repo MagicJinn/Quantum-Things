@@ -8,7 +8,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.prefab.DriverSidedTileEntity;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageNotification;
+import lumien.randomthings.network.client.MessageNotification;
 import lumien.randomthings.tileentity.TileEntityNotificationInterface;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -61,7 +61,7 @@ public class DriverNotificationInterface extends DriverSidedTileEntity
 				{
 					MessageNotification message = new MessageNotification(title, description, iconStack);
 
-					PacketHandler.INSTANCE.sendTo(message, player);
+					PacketHandler.instance().sendTo(message, player);
 				}
 			}
 

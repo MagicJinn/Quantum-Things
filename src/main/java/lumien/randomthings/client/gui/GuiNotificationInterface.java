@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import lumien.randomthings.container.ContainerNotificationInterface;
 import lumien.randomthings.container.ContainerTE;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageNotificationInterface;
+import lumien.randomthings.network.gui.MessageNotificationInterface;
 import lumien.randomthings.tileentity.TileEntityNotificationInterface;
 import net.minecraft.client.gui.GuiPageButtonList.GuiResponder;
 import net.minecraft.client.gui.GuiTextField;
@@ -132,6 +132,6 @@ public class GuiNotificationInterface extends GuiContainerBase implements GuiRes
 		TileEntityNotificationInterface te = (TileEntityNotificationInterface) ((ContainerTE) this.inventorySlots).getTE();
 
 		MessageNotificationInterface message = new MessageNotificationInterface(newTitle, newDescription, te.getPos());
-		PacketHandler.INSTANCE.sendToServer(message);
+		PacketHandler.instance().sendToServer(message);
 	}
 }

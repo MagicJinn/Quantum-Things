@@ -57,7 +57,7 @@ import lumien.randomthings.lib.Colors;
 import lumien.randomthings.lib.IEntityFilterItem;
 import lumien.randomthings.lib.IExplosionImmune;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessagePlayedSound;
+import lumien.randomthings.network.item.MessagePlayedSound;
 import lumien.randomthings.potion.ModPotions;
 import lumien.randomthings.recipes.anvil.AnvilRecipe;
 import lumien.randomthings.recipes.anvil.AnvilRecipeHandler;
@@ -273,7 +273,7 @@ public class RTEventHandler {
 						if (stack.getItem() == ModItems.soundRecorder) {
 							MessagePlayedSound msg = new MessagePlayedSound(
 									event.getSound().getSoundLocation().toString(), slot);
-							PacketHandler.INSTANCE.sendToServer(msg);
+							PacketHandler.instance().sendToServer(msg);
 						} else if (stack.getItem() == ModItems.portableSoundDampener) {
 							InventoryItem inv = ItemPortableSoundDampener.getInventory(stack);
 

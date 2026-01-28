@@ -4,17 +4,12 @@ import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
 
-import lumien.randomthings.client.gui.elements.GuiBoolButton;
-import lumien.randomthings.client.gui.elements.GuiEnumButton;
 import lumien.randomthings.client.gui.elements.GuiEnumStringButton;
-import lumien.randomthings.container.ContainerBlockDestabilizer;
 import lumien.randomthings.container.ContainerIgniter;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageContainerSignal;
-import lumien.randomthings.tileentity.TileEntityBlockDestabilizer;
+import lumien.randomthings.network.gui.MessageContainerSignal;
 import lumien.randomthings.tileentity.TileEntityIgniter;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiButtonImage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -52,7 +47,7 @@ public class GuiIgniter extends GuiContainerBase
 		if (button.id == 0)
 		{
 			MessageContainerSignal message = new MessageContainerSignal(2);
-			PacketHandler.INSTANCE.sendToServer(message);
+			PacketHandler.instance().sendToServer(message);
 		}
 	}
 

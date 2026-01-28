@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import lumien.randomthings.container.ContainerAdvancedRedstoneTorch;
 import lumien.randomthings.container.ContainerTE;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageContainerSignal;
+import lumien.randomthings.network.gui.MessageContainerSignal;
 import lumien.randomthings.tileentity.TileEntityAdvancedRedstoneTorch;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -52,7 +52,7 @@ public class GuiAdvancedRedstoneTorch extends GuiContainerBase
 		super.actionPerformed(button);
 
 		MessageContainerSignal message = new MessageContainerSignal(button.id + (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? 4 : 0));
-		PacketHandler.INSTANCE.sendToServer(message);
+		PacketHandler.instance().sendToServer(message);
 	}
 
 	@Override

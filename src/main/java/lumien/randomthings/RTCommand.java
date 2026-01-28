@@ -16,7 +16,7 @@ import lumien.randomthings.item.ItemPositionFilter;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.lib.IOpable;
 import lumien.randomthings.network.PacketHandler;
-import lumien.randomthings.network.messages.MessageNotification;
+import lumien.randomthings.network.client.MessageNotification;
 import lumien.randomthings.tileentity.TileEntityBase;
 import lumien.randomthings.worldgen.WorldGenAncientFurnace;
 import net.minecraft.command.CommandBase;
@@ -190,7 +190,7 @@ public class RTCommand extends CommandBase
 			ItemStack itemStack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName)));
 
 			MessageNotification message = new MessageNotification(title, body, itemStack);
-			PacketHandler.INSTANCE.sendTo(message, playerEntity);
+			PacketHandler.instance().sendTo(message, playerEntity);
 		}
 		else if (args[0].equals("fireplaces"))
 		{
