@@ -154,6 +154,22 @@ nav a:hover {
     user-select: none;
 }
 
+#random-page {
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    color: #b4b4b4;
+    text-decoration: none;
+    margin-top: -10px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+#random-page:hover {
+    color: #9c53e8;
+}
+
 #container_content {
     position: absolute;
     left: 300px;

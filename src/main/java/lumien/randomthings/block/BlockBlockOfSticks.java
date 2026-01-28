@@ -60,6 +60,11 @@ public class BlockBlockOfSticks extends BlockBase
 	}
 
 	@Override
+	public int damageDropped(IBlockState state) {
+		return state.getValue(RETURNING) ? 1 : 0;
+	}
+
+	@Override
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer(this, new IProperty[] { RETURNING });

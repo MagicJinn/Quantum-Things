@@ -109,6 +109,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Divining Rods being able to index-shift when adding or removing them, by flattening their registry names.
 - Fixed Redstone Tool sometimes showing ghost connections for Redstone Interface/Observers after being removed. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
 - Fixed various `ConcurrentModificationException`s that could occur when handling network messages. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/24))
+- Fixed the Returning Block of Sticks not dropping its returning variant when broken.
 
 ### Reporting Issues
 

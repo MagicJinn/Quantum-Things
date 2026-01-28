@@ -540,6 +540,10 @@ class WikiBuilder:
         print("Generating robots.txt...")
         self._generate_robots_txt()
         
+        # Generate pages.json for random page feature
+        print("Generating pages.json...")
+        self._generate_pages_json()
+        
         print("-" * 60)
         print(f"Build complete! Site saved to: {self.output_dir.absolute()}")
         print(f"\nTotal pages built:")
@@ -584,6 +588,20 @@ Sitemap: {self.base_url}/sitemap.xml
 """
         robots_path = self.output_dir / "robots.txt"
         robots_path.write_text(robots_content, encoding='utf-8')
+    
+    def _generate_pages_json(self):
+        """Generate pages.json for random page feature."""
+        all_pages = []
+        for category in self.config['categories']:
+            for page_info in self.pages[category]:
+                all_pages.append({
+                    'title': page_info['title'],
+                    'slug': page_info['slug'],
+                    'category': category
+                })
+        
+        pages_json_path = self.output_dir / "assets" / "pages.json"
+        pages_json_path.write_text(json.dumps(all_pages, indent=2), encoding='utf-8')
 
 def main():
     builder = WikiBuilder()
