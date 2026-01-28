@@ -22,7 +22,6 @@ This page documents the changes and fixes made in Quantum Things, compared to th
   
 ### Fixes
 
-- Fixed the Returning Block of Sticks not dropping its returning variant when broken.
 - Fixed the Summoning Pendulum being able to capture entities that are targeting you, but are not classified as monsters.
 - Fixed the Entity Detector not properly updating its power level through blocks when the power mode changed (introduced in 1.0.5).
 - Fixed a crash when the Item Filter tried to compare to an empty item stack.
@@ -31,6 +30,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Fixed Spectre Armor not having a repair item set (introduced in 1.0.2).
 - Fixed Spectre Armor not having a description in JEI (introduced in 1.0.2).
 - Fixed Redstone Tool sometimes showing ghost connections for Redstone Interface/Observers after being removed. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
+- Fixed the Returning Block of Sticks not dropping its returning variant when broken.
 
 ## 1.0.5
 
