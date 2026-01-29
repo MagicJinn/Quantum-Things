@@ -530,6 +530,13 @@ public class AsmHandler
         return original;
 	}
 
+    // Simple passthrough for compat
+    public static int getRedstonePower(World world, BlockPos pos, EnumFacing facing)
+    {
+        Block block = world.getBlockState(pos).getBlock();
+        return getRedstonePower(0, block, world, pos, facing);
+    }
+
     /**
      * {@link World#getStrongPower(BlockPos, EnumFacing)}
      * <br>
@@ -564,6 +571,13 @@ public class AsmHandler
             }
         }
         return original;
+    }
+
+    // Simple passthrough for compat
+    public static int getStrongPower(World world, BlockPos pos, EnumFacing facing)
+    {
+        IBlockState state = world.getBlockState(pos);
+        return getStrongPower(0, state, world, pos, facing);
     }
 
 	// Returns whether to cancel normal behaviour
