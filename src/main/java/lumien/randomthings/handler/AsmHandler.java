@@ -530,7 +530,14 @@ public class AsmHandler
         return original;
 	}
 
-    // Simple passthrough for compat
+	/**
+	 * Passthrough that delegates to
+	 * {@link #getRedstonePower(int, Block, World, BlockPos, EnumFacing)}.
+	 *
+	 * @deprecated Only present for compatibility with FluidloggedAPI. Use the
+	 *             overload that accepts an initial power value instead.
+	 */
+	@Deprecated
     public static int getRedstonePower(World world, BlockPos pos, EnumFacing facing)
     {
         Block block = world.getBlockState(pos).getBlock();
@@ -573,7 +580,14 @@ public class AsmHandler
         return original;
     }
 
-    // Simple passthrough for compat
+	/**
+	 * Passthrough that delegates to
+	 * {@link #getStrongPower(int, IBlockState, World, BlockPos, EnumFacing)}.
+	 *
+	 * @deprecated Only present for compatibility with FluidloggedAPI. Use the
+	 *             overload that accepts an initial power value instead.
+	 */
+	@Deprecated
     public static int getStrongPower(World world, BlockPos pos, EnumFacing facing)
     {
         IBlockState state = world.getBlockState(pos);
