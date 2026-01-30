@@ -7,6 +7,12 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.0.7 (In development)
+
+# Fixes
+
+- Fixes FluidloggedAPI incompatibility caused by method signature changes in the wireless redstone rework (introduced in 1.0.6).
+
 ## 1.0.6
 
 ### Changes
