@@ -262,6 +262,8 @@ item.eclipsedClock.name=日蚀时钟
 
 item.diviningRod.name=占卜棒
 item.diviningRodUniversal.name=通用
+item.diviningRodLegacy.name=[旧版] 占卜棒
+item.diviningRodLegacy.migration=持有时将自动转换为新格式。
 
 item.spectreCharger.normal.name=通灵充电器
 item.spectreCharger.redstone.name=红石通灵充电器

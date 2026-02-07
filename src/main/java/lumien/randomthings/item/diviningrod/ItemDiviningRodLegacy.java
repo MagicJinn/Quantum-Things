@@ -8,13 +8,13 @@ import lumien.randomthings.item.ItemBase;
 import lumien.randomthings.lib.IRTItemColor;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -76,24 +76,27 @@ public class ItemDiviningRodLegacy extends ItemBase implements IRTItemColor {
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-		ItemStack stack = playerIn.getHeldItem(handIn);
+	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+		super.onUpdate(stack, worldIn, entityIn, itemSlot, isSelected);
+		convertWhenHeld(stack, worldIn, entityIn);
+	}
 
-		if (worldIn.isRemote)
-			return ActionResult.newResult(net.minecraft.util.EnumActionResult.SUCCESS, stack);
-
-		// Convert the legacy rod to the new item
-		ItemStack converted = convertLegacyRod(stack);
-
+	// Convert legacy divining rods to new item when held
+	private void convertWhenHeld(ItemStack stack, World worldIn, Entity entityIn) {
+		if (worldIn.isRemote || !(entityIn instanceof EntityPlayer))
+			return;
+		EntityPlayer player = (EntityPlayer) entityIn;
+		boolean inMain = player.getHeldItemMainhand() == stack;
+		boolean inOff = player.getHeldItemOffhand() == stack;
+		if (!inMain && !inOff)
+			return;
+		ItemStack converted = convertLegacyRod(stack, "Held");
 		if (converted != stack) {
-			// Successfully converted
-			playerIn.setHeldItem(handIn, converted);
-			return ActionResult.newResult(net.minecraft.util.EnumActionResult.SUCCESS, converted);
+			if (inMain)
+				player.setHeldItem(EnumHand.MAIN_HAND, converted);
+			else
+				player.setHeldItem(EnumHand.OFF_HAND, converted);
 		}
-
-		// Failed to convert
-		playerIn.sendMessage(new TextComponentTranslation("item.diviningRodLegacy.convertFailed"));
-		return ActionResult.newResult(net.minecraft.util.EnumActionResult.FAIL, stack);
 	}
 
 	/**
@@ -144,10 +147,6 @@ public class ItemDiviningRodLegacy extends ItemBase implements IRTItemColor {
 		RandomThings.logger.log(Level.INFO, context + "converted legacy rod (metadata " + metadata + ", type "
 				+ type.getName() + ") to new item: " + newItem.getRegistryName());
 		return newStack;
-	}
-
-	private ItemStack convertLegacyRod(ItemStack oldStack) {
-		return convertLegacyRod(oldStack, "Player");
 	}
 
 	@Override

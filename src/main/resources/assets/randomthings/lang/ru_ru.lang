@@ -262,6 +262,8 @@ item.eclipsedClock.name=Затмеваемые часы
 
 item.diviningRod.name=Предсказывающий стержень
 item.diviningRodUniversal.name=Универсальный
+item.diviningRodLegacy.name=[УСТАРЕВШИЙ] Предсказывающий стержень
+item.diviningRodLegacy.migration=Этот предмет будет автоматически преобразован в новый формат при удержании в руке.
 
 item.spectreCharger.normal.name=Призрачное зарядное устройство
 item.spectreCharger.redstone.name=Редстоуновое призрачное зарядное устройство

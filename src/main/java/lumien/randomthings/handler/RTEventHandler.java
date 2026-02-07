@@ -51,7 +51,6 @@ import lumien.randomthings.item.ItemSpectreArmor;
 import lumien.randomthings.item.ItemTimeInABottle;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.item.diviningrod.ItemDiviningRod;
-import lumien.randomthings.item.diviningrod.ItemDiviningRodLegacy;
 import lumien.randomthings.lib.AtlasSprite;
 import lumien.randomthings.lib.Colors;
 import lumien.randomthings.lib.IEntityFilterItem;
@@ -406,172 +405,11 @@ public class RTEventHandler {
 		LootHandler.addLoot(event);
 	}
 
-	private static final java.util.Set<World> migratedWorlds = java.util.Collections
-			.synchronizedSet(new java.util.HashSet<>());
-
-	@SubscribeEvent
-	public void worldLoad(WorldEvent.Load event) {
-		World world = event.getWorld();
-		if (world.isRemote)
-			return; // Only run on server
-
-		// Mark this world as needing migration
-		migratedWorlds.remove(world);
-	}
-
-	@SubscribeEvent
-	public void worldTick(WorldTickEvent event) {
-		if (event.phase != Phase.END || event.world.isRemote)
-			return;
-
-		// Check if this world needs migration (only once per world load)
-		if (!migratedWorlds.contains(event.world)) {
-			migratedWorlds.add(event.world);
-			migrateLegacyDiviningRods(event.world);
-		}
-	}
-
 	@SubscribeEvent
 	public void playerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
 		if (event.player.world.isRemote)
 			return;
-
-		// Also migrate when player logs in (in case they weren't loaded during world
-		// load)
-		EntityPlayer player = event.player;
-		int migratedCount = migrateInventory(player.inventory);
-
-		ItemStack offhand = player.getHeldItemOffhand();
-		if (isLegacyDiviningRod(offhand)) {
-			ItemStack migratedStack = migrateLegacyRod(offhand);
-			if (migratedStack != offhand) {
-				player.setHeldItem(EnumHand.OFF_HAND, migratedStack);
-				migratedCount++;
-			}
-		}
-
-		if (migratedCount > 0) {
-			RandomThings.logger.log(Level.INFO, "Migrated " + migratedCount + " legacy divining rod(s) from player "
-					+ player.getName() + " on login");
-		}
-
-		ItemTimeInABottle.syncBottledTimeToClient(player);
-	}
-
-	private void migrateLegacyDiviningRods(World world) {
-		int migratedCount = 0;
-
-		RandomThings.logger.log(Level.INFO,
-				"Starting legacy divining rod migration for world " + world.provider.getDimension());
-
-		// Migrate all players' inventories
-		for (EntityPlayer player : world.playerEntities) {
-			// Main inventory (includes main hand)
-			int playerMigrated = migrateInventory(player.inventory);
-
-			// Also check offhand
-			ItemStack offhand = player.getHeldItemOffhand();
-			if (isLegacyDiviningRod(offhand)) {
-				ItemStack migrated = migrateLegacyRod(offhand);
-				if (migrated != offhand) {
-					player.setHeldItem(EnumHand.OFF_HAND, migrated);
-					playerMigrated++;
-				}
-			}
-			if (playerMigrated > 0) {
-				RandomThings.logger.log(Level.INFO,
-						"Migrated " + playerMigrated + " legacy rod(s) from player " + player.getName());
-			}
-
-			migratedCount += playerMigrated;
-		}
-
-		// Migrate item entities on the ground
-		for (EntityItem entityItem : world.getEntities(EntityItem.class, EntitySelectors.IS_ALIVE)) {
-			ItemStack stack = entityItem.getItem();
-			if (isLegacyDiviningRod(stack)) {
-				ItemStack migrated = migrateLegacyRod(stack);
-				if (migrated != stack) {
-					entityItem.setItem(migrated);
-					migratedCount++;
-				}
-			}
-		}
-
-		// Migrate tile entity inventories
-		for (TileEntity te : world.loadedTileEntityList) {
-			if (te instanceof net.minecraft.inventory.IInventory) {
-				int teMigrated = migrateInventory((net.minecraft.inventory.IInventory) te);
-				migratedCount += teMigrated;
-				if (teMigrated > 0) {
-					RandomThings.logger.log(Level.INFO,
-							"Migrated " + teMigrated + " legacy rod(s) from tile entity at " + te.getPos());
-				}
-			}
-		}
-
-		if (migratedCount > 0) {
-			RandomThings.logger.log(Level.INFO, "Successfully migrated " + migratedCount
-					+ " legacy divining rod(s) in world " + world.provider.getDimension());
-		}
-	}
-
-	private boolean isLegacyDiviningRod(ItemStack stack) {
-		if (stack.isEmpty())
-			return false;
-
-		Item item = stack.getItem();
-		if (item == null)
-			return false;
-
-		// Check if it's the legacy item class
-		if (item instanceof ItemDiviningRodLegacy)
-			return true;
-
-		// Check by registry name
-		// old items have registry name randomthings:diviningRod
-		ResourceLocation registryName = item.getRegistryName();
-		if (registryName != null) {
-			String name = registryName.toString();
-			// Check for old registry name
-			if (name.equals("randomthings:diviningRod") || name.equals("diviningRod")) {
-				// Make sure it's not one of the new individual items
-				if (!(item instanceof ItemDiviningRod))
-					return true;
-			}
-		}
-
-		return false;
-	}
-
-	private int migrateInventory(IInventory inventory) {
-		int migrated = 0;
-		for (int i = 0; i < inventory.getSizeInventory(); i++) {
-			ItemStack stack = inventory.getStackInSlot(i);
-			if (isLegacyDiviningRod(stack)) {
-				ItemStack migratedStack = migrateLegacyRod(stack);
-				if (migratedStack != stack) {
-					inventory.setInventorySlotContents(i, migratedStack);
-					migrated++;
-				}
-			}
-		}
-		return migrated;
-	}
-
-	private ItemStack migrateLegacyRod(ItemStack oldStack) {
-		if (oldStack.isEmpty() || !isLegacyDiviningRod(oldStack))
-			return oldStack;
-
-		Item oldItem = oldStack.getItem();
-		ResourceLocation oldRegistryName = oldItem != null ? oldItem.getRegistryName() : null;
-		int metadata = oldStack.getItemDamage();
-
-		RandomThings.logger.log(Level.INFO, "Migrating legacy divining rod: registry=" + oldRegistryName + ", metadata="
-				+ metadata + ", count=" + oldStack.getCount());
-
-		// Use the static method from ItemDiviningRodLegacy
-		return ItemDiviningRodLegacy.convertLegacyRod(oldStack, "World load");
+		ItemTimeInABottle.syncBottledTimeToClient(event.player);
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
