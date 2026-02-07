@@ -7,9 +7,15 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.0.8 (In development)
+
+### Changes
+
+- Changed Time in a Bottle to store bottled time per player (in a global capability) instead of in the item's NBT. Time is no longer tied to the physical bottle. (This may break custom recipes or mod integrations that rely on the item's NBT. If you are a mod/pack dev, plan accordingly before updating.)
+
 ## 1.0.7
 
-# Fixes
+### Fixes
 
 - Fixes FluidloggedAPI incompatibility caused by method signature changes in the wireless redstone rework (introduced in 1.0.6).
 

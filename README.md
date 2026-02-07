@@ -59,6 +59,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Changed the Redstone Activator to emit a sided signal based on the block face clicked. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
 - Reworked the internals of the (Advanced) Redstone Interface/Observer/Activator/Remote. This should improve redstone performance, even if you aren't using any of these blocks/items in your world. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
 - Changed the Redstone Interface & Observer to only send/receive signals from their target(s) once the target(s) are loaded. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
+- Changed Time in a Bottle to store bottled time per player (in a global capability) instead of in the item's NBT. Time is no longer tied to the physical bottle. (This may break custom recipes or mod integrations that rely on the item's NBT. If you are a mod/pack dev, plan accordingly before updating.)
 
 ### Fixes
 
