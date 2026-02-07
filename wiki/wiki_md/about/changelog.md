@@ -13,6 +13,10 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 - Changed Time in a Bottle to store bottled time per player (in a global capability) instead of in the item's NBT. Time is no longer tied to the physical bottle. (This may break custom recipes or mod integrations that rely on the item's NBT. If you are a mod/pack dev, plan accordingly before updating.)
 
+### Fixes
+
+- Possibly fixed wavey tile entities when using Time in a Bottle (testing required).
+
 ## 1.0.7
 
 ### Fixes

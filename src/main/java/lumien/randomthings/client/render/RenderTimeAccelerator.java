@@ -70,18 +70,19 @@ public class RenderTimeAccelerator extends Render<EntityTimeAccelerator>
 
 		int timeRate = entity.getTimeRate();
 
-		float progress = (2) * (RTEventHandler.clientAnimationCounter + partialTicks);
+		float progress = 2.0f * (RTEventHandler.clientAnimationCounter + partialTicks);
 
 		for (EnumFacing facing : EnumFacing.VALUES)
 		{
 			GlStateManager.translate(facing.getDirectionVec().getX() / 1.9D, facing.getDirectionVec().getY() / 1.9D,
 					facing.getDirectionVec().getZ() / 1.9D);
 
-			float rotX = facing.getDirectionVec().getX();
-			float rotY = facing.getDirectionVec().getY();
-			float rotZ = facing.getDirectionVec().getZ();
+			float faceAngle = facing.getHorizontalAngle();
+			GlStateManager.rotate(faceAngle, 0, 1, 0);
+			if (facing.getAxis() != EnumFacing.Axis.Y) {
+				GlStateManager.rotate(90, 1, 0, 0);
+			}
 
-			GlStateManager.rotate(90, rotZ, rotY, rotX);
 			GlStateManager.rotate(progress, 0, 1, 0);
 
 			MKRRenderUtil.renderCircleDecTriInner(0.05, innerFunction.tt(progress), 33, (i) -> {
@@ -123,7 +124,10 @@ public class RenderTimeAccelerator extends Render<EntityTimeAccelerator>
 			}
 
 			GlStateManager.rotate(-progress, 0, 1, 0);
-			GlStateManager.rotate(-90, rotZ, rotY, rotX);
+			if (facing.getAxis() != EnumFacing.Axis.Y) {
+				GlStateManager.rotate(-90, 1, 0, 0);
+			}
+			GlStateManager.rotate(-faceAngle, 0, 1, 0);
 
 			GlStateManager.translate(-facing.getDirectionVec().getX() / 1.9D, -facing.getDirectionVec().getY() / 1.9D,
 					-facing.getDirectionVec().getZ() / 1.9D);
