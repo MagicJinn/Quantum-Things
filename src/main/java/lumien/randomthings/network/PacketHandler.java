@@ -7,6 +7,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import com.google.common.base.Preconditions;
 import lumien.randomthings.lib.Reference;
+import lumien.randomthings.network.client.MessageBottledTimeSync;
 import lumien.randomthings.network.client.MessageEclipsedClock;
 import lumien.randomthings.network.client.MessageNotification;
 import lumien.randomthings.network.client.MessageSetBiome;
@@ -84,6 +85,7 @@ public class PacketHandler
 		clientBound(new MessageFlooToken.Handler(), MessageFlooToken.class);
 		clientBound(new MessageSpectreIllumination.Handler(), MessageSpectreIllumination.class);
 		clientBound(new MessageEclipsedClock.Handler(), MessageEclipsedClock.class);
+		clientBound(new MessageBottledTimeSync.Handler(), MessageBottledTimeSync.class);
 	}
 
     public static <M extends ClientboundMessage, R extends IMessage> void clientBound(IMessageHandler<M, R> handler, Class<M> messageClass)

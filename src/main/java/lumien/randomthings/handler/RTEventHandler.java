@@ -454,6 +454,8 @@ public class RTEventHandler {
 			RandomThings.logger.log(Level.INFO, "Migrated " + migratedCount + " legacy divining rod(s) from player "
 					+ player.getName() + " on login");
 		}
+
+		ItemTimeInABottle.syncBottledTimeToClient(player);
 	}
 
 	private void migrateLegacyDiviningRods(World world) {
@@ -1007,7 +1009,7 @@ public class RTEventHandler {
 				if (equippedItem.getItem() == ModItems.timeInABottle && pointedEntity instanceof EntityEclipsedClock) {
 					int targetTime = ((EntityEclipsedClock) pointedEntity).getTargetTime();
 
-					int stored = ItemTimeInABottle.getStoredTime(equippedItem);
+					long stored = ItemTimeInABottle.getStoredTime(minecraft.player);
 
 					int width = event.getResolution().getScaledWidth();
 					int height = event.getResolution().getScaledHeight();

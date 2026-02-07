@@ -5,13 +5,17 @@ import java.util.Optional;
 
 import lumien.randomthings.config.Numbers;
 import lumien.randomthings.entitys.EntityTimeAccelerator;
+import lumien.randomthings.capability.bottledtime.IBottledTime;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayerMP;
+import lumien.randomthings.network.PacketHandler;
+import lumien.randomthings.network.client.MessageBottledTimeSync;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -25,6 +29,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemTimeInABottle extends ItemBase
 {
+	// Increased limit (68 years) but still safe enough to prevent overflow
+	private static final long MAX_BOTTLED_TIME_TICKS = 42949672940L;
 
 	public ItemTimeInABottle()
 	{
@@ -39,10 +45,15 @@ public class ItemTimeInABottle extends ItemBase
 	{
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 
-		NBTTagCompound timeData = stack.getOrCreateSubCompound("timeData");
-		int storedTime = timeData.getInteger("storedTime");
+		EntityPlayer player = Minecraft.getMinecraft().player;
+		long storedTime = 0;
+		if (player != null) {
+			IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+			if (cap != null)
+				storedTime = cap.getBottledTime();
+		}
 
-		int storedSeconds = storedTime / 20;
+		int storedSeconds = (int) (storedTime / 20);
 
 		int hours = storedSeconds / 3600;
 		int minutes = (storedSeconds % 3600) / 60;
@@ -60,44 +71,21 @@ public class ItemTimeInABottle extends ItemBase
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
-		if (!worldIn.isRemote)
-		{
+		if (!worldIn.isRemote && entityIn instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) entityIn;
+			IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+			if (cap == null)
+				return;
+
 			int secondWorth = Numbers.TIME_IN_A_BOTTLE_SECOND;
-			
-			if (secondWorth == 0 || worldIn.getTotalWorldTime() % secondWorth == 0)
-			{
-				NBTTagCompound timeData = stack.getOrCreateSubCompound("timeData");
+			long worldTime = worldIn.getTotalWorldTime();
+			boolean cycle = secondWorth == 0 || worldTime % secondWorth == 0;
 
-				if (timeData.getInteger("storedTime") < 622080000)
-				{
-					timeData.setInteger("storedTime", timeData.getInteger("storedTime") + 20);
-				}
-			}
-
-			if (worldIn.getTotalWorldTime() % 60 == 0)
-			{
-				if (entityIn instanceof EntityPlayer)
-				{
-					EntityPlayer player = (EntityPlayer) entityIn;
-
-					for (int i = 0; i < player.inventory.getSizeInventory(); i++)
-					{
-						ItemStack invStack = player.inventory.getStackInSlot(i);
-
-						if (invStack.getItem() == this && invStack != stack)
-						{
-							NBTTagCompound otherTimeData = invStack.getOrCreateSubCompound("timeData");
-							NBTTagCompound myTimeData = stack.getOrCreateSubCompound("timeData");
-
-							int myTime = myTimeData.getInteger("storedTime");
-							int theirTime = otherTimeData.getInteger("storedTime");
-							
-							if (myTime < theirTime)
-							{
-								myTimeData.setInteger("storedTime", 0);
-							}
-						}
-					}
+			if (cycle && cap.getLastAddedWorldTime() != worldTime) {
+				if (cap.getBottledTime() < MAX_BOTTLED_TIME_TICKS) {
+					cap.setBottledTime(cap.getBottledTime() + 20);
+					cap.setLastAddedWorldTime(worldTime);
+					syncBottledTimeToClient(player);
 				}
 			}
 		}
@@ -126,15 +114,17 @@ public class ItemTimeInABottle extends ItemBase
 
 					int timeRequired = nextRate / 2 * 20 * 30;
 
-					NBTTagCompound timeData = me.getSubCompound("timeData");
-					int timeAvailable = timeData.getInteger("storedTime");
+					IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+					long timeAvailable = cap != null ? cap.getBottledTime() : 0;
 
 					if (timeAvailable >= timeRequired || player.capabilities.isCreativeMode)
 					{
 						int timeAdded = (nextRate * usedUpTime - currentRate * usedUpTime) / nextRate;
 
-						if (!player.capabilities.isCreativeMode)
-							timeData.setInteger("storedTime", timeAvailable - timeRequired);
+						if (!player.capabilities.isCreativeMode && cap != null) {
+							cap.setBottledTime(timeAvailable - timeRequired);
+							syncBottledTimeToClient(player);
+						}
 
 						eta.setTimeRate(nextRate);
 						eta.setRemainingTime(eta.getRemainingTime() + timeAdded);
@@ -167,13 +157,15 @@ public class ItemTimeInABottle extends ItemBase
 			}
 			else
 			{
-				NBTTagCompound timeData = me.getSubCompound("timeData");
-				int timeAvailable = timeData.getInteger("storedTime");
+				IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+				long timeAvailable = cap != null ? cap.getBottledTime() : 0;
 
 				if (timeAvailable >= 20 * 30 || player.capabilities.isCreativeMode)
 				{
-					if (!player.capabilities.isCreativeMode)
-						timeData.setInteger("storedTime", timeAvailable - 20 * 30);
+					if (!player.capabilities.isCreativeMode && cap != null) {
+						cap.setBottledTime(timeAvailable - 20 * 30);
+						syncBottledTimeToClient(player);
+					}
 
 					EntityTimeAccelerator n = new EntityTimeAccelerator(world, pos, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 
@@ -191,17 +183,29 @@ public class ItemTimeInABottle extends ItemBase
 		return EnumActionResult.SUCCESS;
 	}
 	
-	public static int getStoredTime(ItemStack is)
+	// Get the stored time from the player's capability
+	public static long getStoredTime(EntityPlayer player)
 	{
-		NBTTagCompound timeData = is.getSubCompound("timeData");
-		int timeAvailable = timeData.getInteger("storedTime");
-		
-		return timeAvailable;
+		IBottledTime cap = player != null ? player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null) : null;
+		return cap != null ? cap.getBottledTime() : 0;
 	}
-	
-	public static void setStoredTime(ItemStack is, int time)
+
+	// Set the stored time in the player's capability
+	public static void setStoredTime(EntityPlayer player, long time) {
+		IBottledTime cap = player != null ? player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null) : null;
+		if (cap != null) {
+			cap.setBottledTime(time);
+			syncBottledTimeToClient(player);
+		}
+	}
+
+	// Send the current bottled time to the client so tooltip updates
+	public static void syncBottledTimeToClient(EntityPlayer player)
 	{
-		NBTTagCompound timeData = is.getSubCompound("timeData");
-		timeData.setInteger("storedTime",time);
+		if (player == null || player.world.isRemote)
+			return;
+		IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+		if (cap != null && player instanceof EntityPlayerMP)
+			PacketHandler.instance().sendTo(new MessageBottledTimeSync(cap.getBottledTime()), (EntityPlayerMP) player);
 	}
 }

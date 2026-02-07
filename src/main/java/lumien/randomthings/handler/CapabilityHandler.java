@@ -2,6 +2,8 @@ package lumien.randomthings.handler;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -12,6 +14,9 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import lumien.randomthings.capability.ICapability;
+import lumien.randomthings.capability.bottledtime.BottledTimeProvider;
+import lumien.randomthings.capability.bottledtime.BottledTimeStorage;
+import lumien.randomthings.capability.bottledtime.IBottledTime;
 import lumien.randomthings.handler.redstone.DynamicRedstoneManager;
 import lumien.randomthings.capability.redstone.DynamicRedstoneManagerProvider;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
@@ -21,6 +26,7 @@ public class CapabilityHandler
     public CapabilityHandler()
     {
         registerCapability(IDynamicRedstoneManager.class, new DynamicRedstoneManager());
+        registerCapability(IBottledTime.class, new BottledTimeStorage());
     }
 
     public <T extends ICapability<T>> void registerCapability(Class<T> clazz, T defaultImpl)
@@ -51,6 +57,15 @@ public class CapabilityHandler
         if (!event.getCapabilities().containsKey(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE_KEY))
         {
             event.addCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE_KEY, new DynamicRedstoneManagerProvider(event.getObject()));
+        }
+    }
+
+    @SubscribeEvent
+    public void attachEntityCapability(AttachCapabilitiesEvent<Entity> event)
+    {
+        if (event.getObject() instanceof EntityPlayer && !event.getCapabilities().containsKey(IBottledTime.CAPABILITY_BOTTLED_TIME_KEY))
+        {
+            event.addCapability(IBottledTime.CAPABILITY_BOTTLED_TIME_KEY, new BottledTimeProvider());
         }
     }
 }
