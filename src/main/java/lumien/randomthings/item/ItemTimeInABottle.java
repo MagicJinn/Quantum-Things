@@ -16,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -31,6 +32,10 @@ public class ItemTimeInABottle extends ItemBase
 {
 	// Increased limit (68 years) but still safe enough to prevent overflow
 	private static final long MAX_BOTTLED_TIME_TICKS = 42949672940L;
+
+	// Legacy NBT from when time was stored on the item
+	private static final String LEGACY_NBT_TIMEDATA = "timeData";
+	private static final String LEGACY_NBT_STORED_TIME = "storedTime";
 
 	public ItemTimeInABottle()
 	{
@@ -77,6 +82,9 @@ public class ItemTimeInABottle extends ItemBase
 			if (cap == null)
 				return;
 
+			// Migrate legacy NBT time to global capability
+			migrateLegacyNbtToCapability(stack, cap, player);
+
 			int secondWorth = Numbers.TIME_IN_A_BOTTLE_SECOND;
 			long worldTime = worldIn.getTotalWorldTime();
 			boolean cycle = secondWorth == 0 || worldTime % secondWorth == 0;
@@ -88,6 +96,32 @@ public class ItemTimeInABottle extends ItemBase
 					syncBottledTimeToClient(player);
 				}
 			}
+		}
+	}
+
+	// Migrates legacy NBT to the new capability system
+	private void migrateLegacyNbtToCapability(ItemStack stack, IBottledTime cap, EntityPlayer player) {
+		NBTTagCompound timeData = stack.getSubCompound(LEGACY_NBT_TIMEDATA);
+		if (timeData == null || !timeData.hasKey(LEGACY_NBT_STORED_TIME))
+			return;
+
+		long legacyTicks = timeData.getInteger(LEGACY_NBT_STORED_TIME) & 0xFFFFFFFFL;
+		if (legacyTicks <= 0)
+			return;
+
+		long current = cap.getBottledTime();
+		long added = Math.min(legacyTicks, MAX_BOTTLED_TIME_TICKS - current);
+		if (added > 0) {
+			cap.setBottledTime(current + added);
+			syncBottledTimeToClient(player);
+		}
+
+		// Clear legacy NBT so we don't migrate again. Remove compound if empty.
+		timeData.removeTag(LEGACY_NBT_STORED_TIME);
+		if (timeData.isEmpty()) {
+			NBTTagCompound root = stack.getTagCompound();
+			if (root != null)
+				root.removeTag(LEGACY_NBT_TIMEDATA);
 		}
 	}
 
