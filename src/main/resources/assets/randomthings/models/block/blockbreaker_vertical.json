@@ -2,6 +2,6 @@
     "parent": "block/orientable_vertical",
     "textures": {
         "front": "randomthings:blocks/blockbreaker/front",
-        "side": "randomthings:blocks/blockbreaker/side"
+        "side": "minecraft:blocks/furnace_top"
     }
 }

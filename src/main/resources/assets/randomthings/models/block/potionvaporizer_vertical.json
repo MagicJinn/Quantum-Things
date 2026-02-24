@@ -2,6 +2,6 @@
     "parent": "block/orientable_vertical",
     "textures": {
         "front": "randomthings:blocks/potionvaporizer/front",
-        "side": "randomthings:blocks/potionvaporizer/side"
+        "side": "minecraft:blocks/furnace_top"
     }
 }

@@ -46,6 +46,17 @@ public class ModelRune implements IBakedModel
 			int[][] runeData = ((IExtendedBlockState) state).getValue(BlockRuneBase.RUNE_DATA);
 			boolean[] connectionData = ((IExtendedBlockState) state).getValue(BlockRuneBase.CONNECTION_DATA);
 
+			// Debug world / missing extended state can leave these null
+			if (runeData == null || connectionData == null || runeData.length == 0 || runeData[0].length == 0)
+			{
+				return new ArrayList<>();
+			}
+			TextureAtlasSprite sprite = Visual.FLAT_RUNES ? runeBaseFlat : runeBase;
+			if (sprite == null)
+			{
+				return new ArrayList<>();
+			}
+
 			CacheEntry entry = new CacheEntry(runeData, connectionData);
 
 			List<BakedQuad> quadList = modelCache.getIfPresent(entry);
@@ -178,7 +189,8 @@ public class ModelRune implements IBakedModel
 	@Override
 	public TextureAtlasSprite getParticleTexture()
 	{
-		return Visual.FLAT_RUNES ? runeBaseFlat : runeBase;
+		TextureAtlasSprite s = Visual.FLAT_RUNES ? runeBaseFlat : runeBase;
+		return s != null ? s : net.minecraft.client.Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
 	}
 
 	@Override
