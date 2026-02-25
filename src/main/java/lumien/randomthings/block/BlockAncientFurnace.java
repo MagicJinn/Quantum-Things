@@ -1,20 +1,36 @@
 package lumien.randomthings.block;
 
-import lumien.randomthings.lib.INoItem;
+import lumien.randomthings.config.Features;
 import lumien.randomthings.tileentity.TileEntityAncientFurnace;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
-public class BlockAncientFurnace extends BlockContainerBase implements INoItem
+public class BlockAncientFurnace extends BlockContainerBase
 {
 
 	protected BlockAncientFurnace()
 	{
 		super("ancientFurnace", Material.ROCK);
+	}
 
-		this.setBlockUnbreakable().setResistance(6000000.0F);
+	@Override
+	public float getBlockHardness(IBlockState blockState, World worldIn, BlockPos pos) {
+		return Features.ANCIENT_BRICK_DROP_ITEMS ? 2.0F : -1.0F;
+	}
+
+	@Override
+	public float getExplosionResistance(Entity exploder) {
+		return Features.ANCIENT_BRICK_DROP_ITEMS ? 2.0F : (this.blockResistance / 5.0F);
+	}
+
+	@Override
+	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion) {
+		return Features.ANCIENT_BRICK_DROP_ITEMS ? 2.0F : 6000000.0F;
 	}
 
 	@Override
@@ -22,5 +38,4 @@ public class BlockAncientFurnace extends BlockContainerBase implements INoItem
 	{
 		return new TileEntityAncientFurnace();
 	}
-
 }

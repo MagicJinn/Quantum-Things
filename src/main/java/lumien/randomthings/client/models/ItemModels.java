@@ -94,6 +94,7 @@ public class ItemModels
 		registerBlock(ModBlocks.sidedRedstone);
 		registerBlock(ModBlocks.spectreLens);
 		registerBlock(ModBlocks.spectreEnergyInjector);
+		registerBlock(ModBlocks.ancientFurnace);
 
 		registerBlock(ModBlocks.acceleratorPlate);
 		registerBlock(ModBlocks.acceleratorPlateDirectional);
@@ -362,6 +363,7 @@ public class ItemModels
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.ancientBrick), 1, new ModelResourceLocation("randomthings:ancientBrick/default", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.ancientBrick), 2, new ModelResourceLocation("randomthings:ancientBrick/empty", "inventory"));
 		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.ancientBrick), 3, new ModelResourceLocation("randomthings:ancientBrick/full", "inventory"));
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.ancientBrick), 4, new ModelResourceLocation("randomthings:ancientBrick/output", "inventory"));
 	}
 
 	private static void registerPlatforms()
