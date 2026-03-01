@@ -89,7 +89,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -1287,25 +1286,13 @@ public class RTEventHandler {
 	@SubscribeEvent
 	public void livingDeath(LivingDeathEvent event) {
 		if (!event.getEntityLiving().world.isRemote) {
-			if (event.getEntityLiving() instanceof EntityDragon) {
-				RTWorldInformation rtInfo = RTWorldInformation.getInstance();
-				if (rtInfo != null) {
-					rtInfo.setEnderDragonDefeated(true);
-				}
-			}
-
 			if (event.getSource().getTrueSource() != null && !(event.getSource().getTrueSource() instanceof FakePlayer)
 					&& event.getSource().getTrueSource() instanceof EntityPlayer
 					&& !(event.getEntity() instanceof EntitySpirit)) {
 				double chance = Numbers.SPIRIT_CHANCE_NORMAL;
 
-				RTWorldInformation rtInfo = RTWorldInformation.getInstance();
-
-				if (rtInfo != null) {
-					if (rtInfo.isDragonDefeated()) {
-						chance += Numbers.SPIRIT_CHANCE_END_INCREASE;
-					}
-				}
+				if (RTWorldInformation.isDragonDefeated())
+					chance += Numbers.SPIRIT_CHANCE_END_INCREASE;
 
 				if (event.getEntityLiving().world.canBlockSeeSky(event.getEntityLiving().getPosition())
 						&& !event.getEntityLiving().world.isDaytime()) {

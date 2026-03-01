@@ -62,6 +62,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Changed Time in a Bottle to store bottled time per player (in a global capability) instead of in the item's NBT. Time is no longer tied to the physical bottle. (This may break custom recipes or mod integrations that rely on the item's NBT. If you are a mod/pack dev, plan accordingly before updating.)
 - Re-used vanilla textures for the Potion Vaporizer and Block Breaker, instead of copying vanilla textures.
 - Added the ability to configure whether Ancient Brick blocks can be broken and will drop their item forms, allowing you to remove them, use them as decoration, or rebuild them elsewhere.
+- Simplified and improved the logic (and performance slightly) for checking if the Ender Dragon has been defeated. It should now also register the dragon death even when the mod is not installed.
 
 ### Fixes
 

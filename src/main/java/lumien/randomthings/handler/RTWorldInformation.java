@@ -2,68 +2,42 @@ package lumien.randomthings.handler;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.world.DimensionType;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import lumien.randomthings.RandomThings;
 
-public class RTWorldInformation extends WorldSavedData
+/**
+ * Reads world-level information from vanilla save data (e.g. level.dat).
+ * No mod-specific persistence; does not extend WorldSavedData.
+ */
+public class RTWorldInformation
 {
-	public static final String ID = "RTWorldInfo";
+	/** Cache: once true it stays true for this run; avoids repeated NBT reads. */
+	private static boolean dragonDefeatedCached = false;
 
-	private boolean enderDragonDefeated = false;
-
-	public RTWorldInformation(String name)
+	/**
+	 * Reads whether the Ender Dragon has been defeated from vanilla level.dat:
+	 * Data > DimensionData > The End > DragonFight > DragonKilled (byte)
+	 */
+	public static boolean isDragonDefeated()
 	{
-		super(name);
-	}
+		// if the result is cached, return it
+		if (dragonDefeatedCached)
+			return true;
 
-	public RTWorldInformation()
-	{
-		this(ID);
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		this.enderDragonDefeated = nbt.getBoolean("enderDragonDefeated");
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-	{
-		nbt.setBoolean("enderDragonDefeated", enderDragonDefeated);
-
-		return nbt;
-	}
-
-	public boolean isDragonDefeated()
-	{
-		return enderDragonDefeated;
-	}
-
-	public void setEnderDragonDefeated(boolean defeated)
-	{
-		if (defeated != enderDragonDefeated)
-		{
-			enderDragonDefeated = defeated;
-			this.markDirty();
-		}
-	}
-
-	public static RTWorldInformation getInstance()
-	{
 		WorldServer world = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(0);
-		if (world != null)
-		{
-			WorldSavedData handler = world.getMapStorage().getOrLoadData(RTWorldInformation.class, ID);
-			if (handler == null)
-			{
-				handler = new RTWorldInformation();
-				world.getMapStorage().setData(ID, handler);
-			}
+		if (world == null)
+			return false;
 
-			return (RTWorldInformation) handler;
-		}
+		NBTTagCompound endData = world.getWorldInfo().getDimensionData(DimensionType.THE_END.getId());
+		if (endData == null || !endData.hasKey("DragonFight"))
+			return false;
 
-		return null;
+		// get the dragon fight data
+		NBTTagCompound dragonFight = endData.getCompoundTag("DragonFight");
+		// cache the result
+		dragonDefeatedCached = dragonFight.getByte("DragonKilled") != 0;
+
+		return dragonDefeatedCached;
 	}
 }
