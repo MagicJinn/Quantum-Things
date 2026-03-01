@@ -89,20 +89,6 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy
 {
-	static Field itemColorsField;
-	static
-	{
-		try
-		{
-			itemColorsField = Minecraft.class.getDeclaredField(MCPNames.field("field_184128_aI"));
-			itemColorsField.setAccessible(true);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	@Override
 	public boolean canBeCollidedWith(EntitySoul soul)
 	{
@@ -150,10 +136,9 @@ public class ClientProxy extends CommonProxy
 				final IRTItemColor itemColor = (IRTItemColor) entry.getKey();
 				try
 				{
-					ItemColors itemColors = (ItemColors) itemColorsField.get(Minecraft.getMinecraft());
+					ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
 					itemColors.registerItemColorHandler(new IItemColor()
 					{
-
 						@Override
 						public int colorMultiplier(ItemStack stack, int tintIndex)
 						{
@@ -163,10 +148,6 @@ public class ClientProxy extends CommonProxy
 					}, (Item) entry.getValue());
 				}
 				catch (IllegalArgumentException e)
-				{
-					e.printStackTrace();
-				}
-				catch (IllegalAccessException e)
 				{
 					e.printStackTrace();
 				}

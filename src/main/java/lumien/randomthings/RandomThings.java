@@ -114,7 +114,6 @@ public class RandomThings implements LoadingCallback
 
 		RTEventHandler eventHandler = new RTEventHandler();
 		MinecraftForge.EVENT_BUS.register(eventHandler);
-		net.minecraftforge.fml.common.FMLCommonHandler.instance().bus().register(eventHandler);
 
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
 
