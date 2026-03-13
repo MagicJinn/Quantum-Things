@@ -1,6 +1,5 @@
 package lumien.randomthings;
 
-import lumien.randomthings.entitys.EntitySoul;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class CommonProxy
@@ -17,11 +16,6 @@ public class CommonProxy
 
 	public void registerRenderers()
 	{
-	}
-
-	public boolean canBeCollidedWith(EntitySoul soul)
-	{
-		return false;
 	}
 
 	public boolean isPlayerOnline(String username)

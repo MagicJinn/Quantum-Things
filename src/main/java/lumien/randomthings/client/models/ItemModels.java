@@ -131,7 +131,6 @@ public class ItemModels
 		registerItem(ModItems.obsidianWaterWalkingBoots);
 		registerItem(ModItems.magicHood);
 		registerItem(ModItems.bottleOfAir);
-		registerItem(ModItems.rezStone);
 		registerItem(ModItems.enderLetter);
 		registerItem(ModItems.entityFilter);
 		registerItem(ModItems.itemFilter);

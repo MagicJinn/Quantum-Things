@@ -15,6 +15,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Re-used vanilla textures for the Potion Vaporizer and Block Breaker, instead of copying vanilla textures.
 - Added the ability to configure whether Ancient Brick blocks can be broken and will drop their item forms, allowing you to remove them, use them as decoration, or rebuild them elsewhere.
 - Simplified and improved the logic (and performance slightly) for checking if the Ender Dragon has been defeated. It should now also register the dragon death even when the mod is not installed.
+- Removed the unimplemented and unfinished RezStone (Blood Stone) item and the Revive Circle entity.
 
 ### Fixes
 
