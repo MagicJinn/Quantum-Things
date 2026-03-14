@@ -1,17 +1,13 @@
 package lumien.randomthings.item;
 
-import java.util.List;
 import java.util.Optional;
 
 import lumien.randomthings.config.Numbers;
 import lumien.randomthings.entitys.EntityTimeAccelerator;
 import lumien.randomthings.capability.bottledtime.IBottledTime;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import lumien.randomthings.network.PacketHandler;
 import lumien.randomthings.network.client.MessageBottledTimeSync;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -25,8 +21,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemTimeInABottle extends ItemBase
 {
@@ -42,29 +36,6 @@ public class ItemTimeInABottle extends ItemBase
 		super("timeInABottle");
 
 		this.setMaxStackSize(1);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn)
-	{
-		super.addInformation(stack, worldIn, tooltip, flagIn);
-
-		EntityPlayer player = Minecraft.getMinecraft().player;
-		long storedTime = 0;
-		if (player != null) {
-			IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
-			if (cap != null)
-				storedTime = cap.getBottledTime();
-		}
-
-		int storedSeconds = (int) (storedTime / 20);
-
-		int hours = storedSeconds / 3600;
-		int minutes = (storedSeconds % 3600) / 60;
-		int seconds = storedSeconds % 60;
-
-		tooltip.add(I18n.format("tooltip.timeInABottle", hours, minutes, seconds));
 	}
 
 	@Override

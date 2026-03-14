@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import lumien.randomthings.util.WorldUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.World;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
@@ -22,17 +23,17 @@ public class SpectreIlluminationClientHandler
 		illuminatedChunks.remove(ChunkPos.asLong(chunk.x, chunk.z));
 	}
 
-	public static void setIlluminated(long chunkLong, boolean illuminated)
-	{
-		boolean changed = false;
-		if (illuminated)
-			changed = illuminatedChunks.add(chunkLong);
-		else
-			changed = illuminatedChunks.remove(chunkLong);
-
-		// Only update light if the chunk state changed
-		if (changed)
-			SpectreIlluminationHelper.lightUpdateChunk(Minecraft.getMinecraft().world,
-					WorldUtil.getChunkPosFromLong(chunkLong));
-	}
+	public static void setIlluminated(World world, long chunkLong, boolean illuminated)  
+    {  
+        boolean changed = false;  
+        if (illuminated)  
+            changed = illuminatedChunks.add(chunkLong);  
+        else  
+            changed = illuminatedChunks.remove(chunkLong);  
+  
+        // Only update light if the chunk state changed
+        if (changed)  
+            SpectreIlluminationHelper.lightUpdateChunk(world,  
+                    WorldUtil.getChunkPosFromLong(chunkLong));  
+    }
 }

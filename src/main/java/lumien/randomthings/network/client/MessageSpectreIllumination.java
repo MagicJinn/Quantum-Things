@@ -45,7 +45,7 @@ public class MessageSpectreIllumination implements ClientboundMessage
     {
         if (player.world.provider.getDimension() != dimension) return;
 
-        SpectreIlluminationClientHandler.setIlluminated(chunkLong, illuminated);
+        SpectreIlluminationClientHandler.setIlluminated(player.world, chunkLong, illuminated);
     }
 
     public static class Handler extends NoReplyHandler<MessageSpectreIllumination> {}

@@ -78,7 +78,7 @@ public class EntitySoul extends Entity implements IEntityAdditionalSpawnData
 	@Override
 	public boolean canBeCollidedWith()
 	{
-		return false;
+		return true;
 	}
 
 	@Override

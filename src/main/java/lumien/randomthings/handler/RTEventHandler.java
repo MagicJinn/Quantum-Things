@@ -20,6 +20,7 @@ import lumien.randomthings.block.BlockCompressedSlimeBlock;
 import lumien.randomthings.block.BlockContactButton;
 import lumien.randomthings.block.BlockContactLever;
 import lumien.randomthings.block.ModBlocks;
+import lumien.randomthings.capability.bottledtime.IBottledTime;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.client.models.blocks.ModelCustomWorkbench;
 import lumien.randomthings.client.models.blocks.ModelFluidDisplay;
@@ -175,20 +176,25 @@ public class RTEventHandler {
 
 	private boolean spectreArmorStateTracker;
 
-	@SubscribeEvent
-	public void chunkLoad(ChunkEvent.Load event) {
-        World world = event.getWorld();
-        if (world.isRemote) {
-            SpectreIlluminationClientHandler.loadChunk(event.getChunk());
-        }
-        else {
-            IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);
-            if (manager != null)
-            {
-                manager.runScheduledTasks(event.getChunk().getPos());
-            }
-        }
-	}
+	@SubscribeEvent  
+    public void chunkLoad(ChunkEvent.Load event) {  
+        World world = event.getWorld();  
+        if (world.isRemote) {  
+            handleChunkLoadClient(event);  
+        }  
+        else {  
+            IDynamicRedstoneManager manager = world.getCapability(IDynamicRedstoneManager.CAPABILITY_DYNAMIC_REDSTONE, null);  
+            if (manager != null)  
+            {  
+                manager.runScheduledTasks(event.getChunk().getPos());  
+            }  
+        }  
+    }  
+  
+    @SideOnly(Side.CLIENT)  
+    private void handleChunkLoadClient(ChunkEvent.Load event) {  
+        SpectreIlluminationClientHandler.loadChunk(event.getChunk());  
+    }
 
     @SubscribeEvent
     public void chunkUnload(ChunkEvent.Unload event) {
@@ -779,21 +785,36 @@ public class RTEventHandler {
 		}
 	}
 
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void itemTooltip(ItemTooltipEvent event) {
-		if (event.getItemStack().hasTagCompound()) {
-			if (event.getItemStack().getTagCompound().hasKey("spectreAnchor")) {
-				event.getToolTip().add(1, TextFormatting.DARK_AQUA.toString()
-						+ I18n.format("tooltip.spectreAnchor.item") + TextFormatting.RESET.toString());
-			}
-
-			if (event.getItemStack().getTagCompound().hasKey("luminousEnchantment")) {
-				event.getToolTip().add(1, TextFormatting.YELLOW.toString() + I18n.format("tooltip.luminousEnchantment")
-						+ TextFormatting.RESET.toString());
-			}
-		}
-	}
+	@SubscribeEvent  
+    @SideOnly(Side.CLIENT)  
+    public void itemTooltip(ItemTooltipEvent event) {  
+        if (event.getItemStack().getItem() instanceof ItemTimeInABottle) {  
+            EntityPlayer player = event.getEntityPlayer();  
+            long storedTime = 0;  
+            if (player != null) {  
+                IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);  
+                if (cap != null)  
+                    storedTime = cap.getBottledTime();  
+            }  
+            int storedSeconds = (int) (storedTime / 20);  
+            int hours = storedSeconds / 3600;  
+            int minutes = (storedSeconds % 3600) / 60;  
+            int seconds = storedSeconds % 60;  
+            event.getToolTip().add(I18n.format("tooltip.timeInABottle", hours, minutes, seconds));  
+        }  
+  
+        if (event.getItemStack().hasTagCompound()) {  
+            if (event.getItemStack().getTagCompound().hasKey("spectreAnchor")) {  
+                event.getToolTip().add(1, TextFormatting.DARK_AQUA.toString()  
+                        + I18n.format("tooltip.spectreAnchor.item") + TextFormatting.RESET.toString());  
+            }  
+  
+            if (event.getItemStack().getTagCompound().hasKey("luminousEnchantment")) {  
+                event.getToolTip().add(1, TextFormatting.YELLOW.toString() + I18n.format("tooltip.luminousEnchantment")  
+                        + TextFormatting.RESET.toString());  
+            }  
+        }  
+    }
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
@@ -810,6 +831,7 @@ public class RTEventHandler {
 		}
 	}
 
+    @SideOnly(Side.CLIENT)
 	private void renderItemOverlay(RenderGameOverlayEvent event) {
 		ItemStack equippedItem;
 		ItemStack offHandItem;
@@ -880,6 +902,7 @@ public class RTEventHandler {
 		}
 	}
 
+    @SideOnly(Side.CLIENT)
 	private void renderBiomeSensor(RenderGameOverlayEvent event) {
 		Minecraft minecraft = Minecraft.getMinecraft();
 		Biome b = minecraft.world.getBiome(minecraft.player.getPosition());
@@ -1285,36 +1308,35 @@ public class RTEventHandler {
 
 	@SubscribeEvent
 	public void livingDeath(LivingDeathEvent event) {
-		if (event.getEntityLiving().world.isRemote)
-			return;
+		if (!event.getEntityLiving().world.isRemote) {
+			if (event.getSource().getTrueSource() != null && !(event.getSource().getTrueSource() instanceof FakePlayer)
+					&& event.getSource().getTrueSource() instanceof EntityPlayer
+					&& !(event.getEntity() instanceof EntitySpirit)) {
+				double chance = Numbers.SPIRIT_CHANCE_NORMAL;
 
-		if (event.getSource().getTrueSource() != null && !(event.getSource().getTrueSource() instanceof FakePlayer)
-				& event.getSource().getTrueSource() instanceof EntityPlayer
-				& !(event.getEntity() instanceof EntitySpirit)) {
-			double chance = Numbers.SPIRIT_CHANCE_NORMAL;
+				if (RTWorldInformation.isDragonDefeated())
+					chance += Numbers.SPIRIT_CHANCE_END_INCREASE;
 
-			if (RTWorldInformation.isDragonDefeated())
-				chance += Numbers.SPIRIT_CHANCE_END_INCREASE;
+				if (event.getEntityLiving().world.canBlockSeeSky(event.getEntityLiving().getPosition())
+						&& !event.getEntityLiving().world.isDaytime()) {
+					chance += event.getEntityLiving().world.getCurrentMoonPhaseFactor() / 100f
+							* Numbers.SPIRIT_CHANCE_MOON_MULT;
+				}
 
-			if (event.getEntityLiving().world.canBlockSeeSky(event.getEntityLiving().getPosition())
-					&& !event.getEntityLiving().world.isDaytime()) {
-				chance += event.getEntityLiving().world.getCurrentMoonPhaseFactor() / 100f
-						* Numbers.SPIRIT_CHANCE_MOON_MULT;
+				if (Math.random() < chance) {
+					event.getEntityLiving().world.spawnEntity(new EntitySpirit(event.getEntityLiving().world,
+							event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ));
+				}
 			}
 
-			if (Math.random() < chance) {
-				event.getEntityLiving().world.spawnEntity(new EntitySpirit(event.getEntityLiving().world,
-						event.getEntity().posX, event.getEntity().posY, event.getEntity().posZ));
-			}
-		}
+			if (event.getEntityLiving() instanceof EntityPlayer) {
+				if (!(event.getEntityLiving() instanceof FakePlayer)) {
+					EntityPlayer player = (EntityPlayer) event.getEntityLiving();
 
-		if (event.getEntityLiving() instanceof EntityPlayer) {
-			if (!(event.getEntityLiving() instanceof FakePlayer)) {
-				EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-
-				if (!event.isCanceled()) {
-					player.world.spawnEntity(new EntitySoul(player.world, player.posX, player.posY, player.posZ,
-							player.getGameProfile().getName()));
+					if (!event.isCanceled()) {
+						player.world.spawnEntity(new EntitySoul(player.world, player.posX, player.posY, player.posZ,
+								player.getGameProfile().getName()));
+					}
 				}
 			}
 		}
@@ -1395,6 +1417,7 @@ public class RTEventHandler {
 		}
 	}
 
+    @SideOnly(Side.CLIENT)
 	private boolean toggleSpectreGL(int armorPieces, boolean enable) {
 		if (armorPieces <= 0)
 			return false;
@@ -1443,6 +1466,7 @@ public class RTEventHandler {
 		return pieces;
 	}
 
+    @SideOnly(Side.CLIENT)
 	private float getRelevantArmorAlpha(int armorPieces) {
 		if (Visual.FANCY_SPECTRE_ARMOR_TRANSPARENCY)
 			return 1.0F - (armorPieces / 6.0F);
