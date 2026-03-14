@@ -29,7 +29,6 @@ public class ModItems
 	public static ItemMagicHood magicHood;
 	public static ItemImbue imbue;
 	public static ItemBottleOfAir bottleOfAir;
-	public static ItemRezStone rezStone;
 	public static ItemEnderLetter enderLetter;
 	public static ItemEntityFilter entityFilter;
 	public static ItemIngredient ingredients;
@@ -99,7 +98,6 @@ public class ModItems
 		magicHood = new ItemMagicHood();
 		imbue = new ItemImbue();
 		bottleOfAir = new ItemBottleOfAir();
-		rezStone = new ItemRezStone();
 		enderLetter = new ItemEnderLetter();
 		entityFilter = new ItemEntityFilter();
 		ingredients = new ItemIngredient();

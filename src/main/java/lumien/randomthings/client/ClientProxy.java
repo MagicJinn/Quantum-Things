@@ -52,7 +52,6 @@ import lumien.randomthings.entitys.EntityThrownWeatherEgg;
 import lumien.randomthings.entitys.EntityTimeAccelerator;
 import lumien.randomthings.entitys.EntityWeatherCloud;
 import lumien.randomthings.item.ItemIngredient;
-import lumien.randomthings.item.ItemRezStone;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.lib.IRTBlockColor;
 import lumien.randomthings.lib.IRTItemColor;
@@ -90,20 +89,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy
 {
-	@Override
-	public boolean canBeCollidedWith(EntitySoul soul)
-	{
-		ItemStack equipped = Minecraft.getMinecraft().player.getHeldItemMainhand();
-		if (equipped != null && equipped.getItem() instanceof ItemRezStone)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
+	
 	HashMap<Object, Object> scheduledColorRegister = new HashMap<>();
 
 	@Override
