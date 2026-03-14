@@ -26,7 +26,6 @@ import lumien.randomthings.client.render.RenderFallingBlockSpecial;
 import lumien.randomthings.client.render.RenderGoldenChicken;
 import lumien.randomthings.client.render.RenderLinkOrb;
 import lumien.randomthings.client.render.RenderProjectedItem;
-import lumien.randomthings.client.render.RenderReviveCircle;
 import lumien.randomthings.client.render.RenderSoul;
 import lumien.randomthings.client.render.RenderSpecialChest;
 import lumien.randomthings.client.render.RenderSpectreEnergyInjector;
@@ -43,7 +42,6 @@ import lumien.randomthings.entitys.EntityFallingBlockSpecial;
 import lumien.randomthings.entitys.EntityGoldenChicken;
 import lumien.randomthings.entitys.EntityGoldenEgg;
 import lumien.randomthings.entitys.EntityProjectedItem;
-import lumien.randomthings.entitys.EntityReviveCircle;
 import lumien.randomthings.entitys.EntitySoul;
 import lumien.randomthings.entitys.EntitySpectreIlluminator;
 import lumien.randomthings.entitys.EntitySpirit;
@@ -174,7 +172,6 @@ public class ClientProxy extends CommonProxy
 	public void registerRenderers()
 	{
 		RenderingRegistry.registerEntityRenderingHandler(EntitySoul.class, new RenderSoul(Minecraft.getMinecraft().getRenderManager()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityReviveCircle.class, new RenderReviveCircle(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntitySpirit.class, new RenderSpirit(Minecraft.getMinecraft().getRenderManager(), new ModelSlime(16), 0.25F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityArtificialEndPortal.class, new RenderArtificialEndPortal(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityProjectedItem.class, new RenderProjectedItem(Minecraft.getMinecraft().getRenderManager(), Minecraft.getMinecraft().getRenderItem()));

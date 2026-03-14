@@ -23,6 +23,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Fixed a crash in the Debug World when it tried to render invalid rune textures.
 - Fixed certain textures having a white-ish tint applied (introduced in 1.0.2).
 - Fixed a rare crash when migrating Divining Rods from the old to the new system (introduced in 1.0.6).
+- Fixed multiple crashes when loading the mod on servers. (Introduced in ???) ([courtesy of DeliciousBread481](https://github.com/MagicJinn/Quantum-Things/pull/32))
 
 ## 1.0.7
 
