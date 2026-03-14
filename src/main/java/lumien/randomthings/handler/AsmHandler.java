@@ -97,7 +97,7 @@ public class AsmHandler
 
 		if (world instanceof ChunkCache)
 		{
-			isClient = true;
+			isClient = FMLCommonHandler.instance().getSide().isClient();
 		}
 		else if (world instanceof World)
 		{

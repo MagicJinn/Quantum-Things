@@ -26,6 +26,7 @@ import lumien.randomthings.client.render.RenderFallingBlockSpecial;
 import lumien.randomthings.client.render.RenderGoldenChicken;
 import lumien.randomthings.client.render.RenderLinkOrb;
 import lumien.randomthings.client.render.RenderProjectedItem;
+import lumien.randomthings.client.render.RenderReviveCircle;
 import lumien.randomthings.client.render.RenderSoul;
 import lumien.randomthings.client.render.RenderSpecialChest;
 import lumien.randomthings.client.render.RenderSpectreEnergyInjector;
@@ -42,6 +43,7 @@ import lumien.randomthings.entitys.EntityFallingBlockSpecial;
 import lumien.randomthings.entitys.EntityGoldenChicken;
 import lumien.randomthings.entitys.EntityGoldenEgg;
 import lumien.randomthings.entitys.EntityProjectedItem;
+import lumien.randomthings.entitys.EntityReviveCircle;
 import lumien.randomthings.entitys.EntitySoul;
 import lumien.randomthings.entitys.EntitySpectreIlluminator;
 import lumien.randomthings.entitys.EntitySpirit;
@@ -50,9 +52,11 @@ import lumien.randomthings.entitys.EntityThrownWeatherEgg;
 import lumien.randomthings.entitys.EntityTimeAccelerator;
 import lumien.randomthings.entitys.EntityWeatherCloud;
 import lumien.randomthings.item.ItemIngredient;
+import lumien.randomthings.item.ItemRezStone;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.lib.IRTBlockColor;
 import lumien.randomthings.lib.IRTItemColor;
+import lumien.randomthings.network.ClientboundMessage;
 import lumien.randomthings.tileentity.TileEntityAncientFurnace;
 import lumien.randomthings.tileentity.TileEntityBiomeRadar;
 import lumien.randomthings.tileentity.TileEntityBlockDiaphanous;
@@ -86,6 +90,19 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy
 {
+	@Override
+	public boolean canBeCollidedWith(EntitySoul soul)
+	{
+		ItemStack equipped = Minecraft.getMinecraft().player.getHeldItemMainhand();
+		if (equipped != null && equipped.getItem() instanceof ItemRezStone)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 	HashMap<Object, Object> scheduledColorRegister = new HashMap<>();
 
@@ -171,6 +188,7 @@ public class ClientProxy extends CommonProxy
 	public void registerRenderers()
 	{
 		RenderingRegistry.registerEntityRenderingHandler(EntitySoul.class, new RenderSoul(Minecraft.getMinecraft().getRenderManager()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityReviveCircle.class, new RenderReviveCircle(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntitySpirit.class, new RenderSpirit(Minecraft.getMinecraft().getRenderManager(), new ModelSlime(16), 0.25F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityArtificialEndPortal.class, new RenderArtificialEndPortal(Minecraft.getMinecraft().getRenderManager()));
 		RenderingRegistry.registerEntityRenderingHandler(EntityProjectedItem.class, new RenderProjectedItem(Minecraft.getMinecraft().getRenderManager(), Minecraft.getMinecraft().getRenderItem()));
@@ -285,4 +303,10 @@ public class ClientProxy extends CommonProxy
 		GlStateManager.popAttrib();
 		Minecraft.getMinecraft().entityRenderer.enableLightmap();
 	}
+	
+    @Override  
+    public void scheduleClientMessage(ClientboundMessage message)  
+    {  
+        Minecraft.getMinecraft().addScheduledTask(() -> message.handleOnClient(Minecraft.getMinecraft().player));  
+    }
 }
