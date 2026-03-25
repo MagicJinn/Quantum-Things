@@ -7,6 +7,16 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.0.9
+
+### Changes
+
+- Added `/rt timeinabottle <playername> <add|query|set|subtract> [seconds]` commands for managing stored Time in a Bottle values.
+
+### Fixes
+
+- Fixed Time in a Bottle bottled time resetting on death or when returning from the End by copying/syncing the bottled time player capability during player cloning (introduced in 1.0.8).
+
 ## 1.0.8
 
 ### Changes
