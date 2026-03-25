@@ -429,8 +429,25 @@ public class RTEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void playerClone(PlayerEvent.Clone event) {
-		if (event.isWasDeath() && !event.isCanceled() && event.getOriginal() != null
-				&& !(event.getEntityPlayer() instanceof FakePlayer)
+		if (event.isCanceled() || event.getOriginal() == null || (event.getEntityPlayer() instanceof FakePlayer)) {
+			return;
+		}
+
+		// Persist capability data across respawn and End return
+		{
+			EntityPlayer oldPlayer = event.getOriginal();
+			EntityPlayer newPlayer = event.getEntityPlayer();
+
+			IBottledTime oldCap = oldPlayer.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+			IBottledTime newCap = newPlayer.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+			if (oldCap != null && newCap != null) {
+				newCap.setBottledTime(oldCap.getBottledTime());
+				newCap.setLastAddedWorldTime(oldCap.getLastAddedWorldTime());
+				ItemTimeInABottle.syncBottledTimeToClient(newPlayer);
+			}
+		}
+
+		if (event.isWasDeath()
 				&& !event.getEntityPlayer().world.getGameRules().getBoolean("keepInventory")) {
 			EntityPlayer oldPlayer = event.getOriginal();
 			EntityPlayer newPlayer = event.getEntityPlayer();
