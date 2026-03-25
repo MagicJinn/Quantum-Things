@@ -11,7 +11,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 ### Changes
 
-- Added `/rt timeinabottle <playername> <add|query|set|subtract> [seconds]` commands for managing stored Time in a Bottle values.
+- Added `/rt timeinabottle <playername> <add|query|set|subtract> [number]` commands for managing stored Time in a Bottle values.
 
 ### Fixes
 
