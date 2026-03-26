@@ -54,7 +54,8 @@ public class DescriptionHandler {
 		overrideMap.put(ModItems.spectreChestplate, "item.spectreArmor.info");
 		overrideMap.put(ModItems.spectreLeggings, "item.spectreArmor.info");
 		overrideMap.put(ModItems.spectreBoots, "item.spectreArmor.info");
-		overrideMap.put(ModBlocks.ancientBrick, null);
+		overrideMap.put(ModBlocks.ancientBrick, "tile.ancientFurnace.info");
+		overrideMap.put(ModBlocks.ancientFurnace, "tile.ancientFurnace.info");
 
 		List<ItemStack> stackBlackList = new ArrayList<>();
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.BIOME_SENSOR.id));
@@ -66,6 +67,7 @@ public class DescriptionHandler {
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.PLATE_BASE.id));
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.PRECIOUS_EMERALD.id));
 		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.SPECTRE_STRING.id));
+		stackBlackList.add(new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.OBSIDIAN_STICK.id));
 
 		// Hide legacy divining rod from JEI
 		if (ModItems.diviningRodLegacy != null) {

@@ -545,6 +545,7 @@ tile.advancedRedstoneRepeater.info=一种可自由设置的红石中继器。
 tile.translucentLuminousBlock.info=一种通透的荧光方块。
 tile.soundBox.info=通过提供红石信号并插入音乐模块即可播放对应的音乐。
 tile.soundDampener.info=通过将对应音乐模块放置在隔音器的GUI中，以其为中心的10个方块内的对应音乐模块所播放的音乐将被阻断。
+tile.ancientFurnace.info=远古熔炉会稀有地生成在寒冷生物群系中。对顶部使用下界之星即可激活，它会融化附近的积雪，最后以一次爆炸结束。
 tile.globalChatDetector.info=全局聊天检测器，顾名思义它的检测范围不限于单体。值得注意的是，要使用它你还必须在其中插入对应玩家的身份证。
 tile.advancedRedstoneTorch_on.info=高级红石火把与常规红石火把不同的是，它只能发出15或者0的信号，并且可以随意调整信号的强度；激活时为绿色，红色则为断开。
 tile.diaphanousBlock.info=通透方块会根据其与玩家的距离而改变不透明度，默认情况下它没有碰撞体积且玩家靠近会消失（将其放入工作台可转为"反向通透方块"，效果恰巧相反）。若将其与任意方块在工作台合成可改变外观。
