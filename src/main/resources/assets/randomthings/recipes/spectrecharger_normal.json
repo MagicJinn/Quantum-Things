@@ -13,12 +13,12 @@
       "item": "minecraft:iron_bars"
     },
     "I": {
-      "item": "randomthings:ingredient",
-      "data": 3
+      "type": "forge:ore_dict",
+      "ore": "ingotSpectre"
     },
     "S": {
-      "item": "randomthings:ingredient",
-      "data": 12
+      "type": "forge:ore_dict",
+      "ore": "stringSpectre"
     }
   },
   "result": {

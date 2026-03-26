@@ -1,24 +1,29 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        "B",
-        "W",
-        "O"
+      "B",
+      "W",
+      "O"
     ],
     "key": {
-        "B": {
-            "item": "randomthings:biomecrystal"
-        },
-        "W": {
-            "type": "forge:ore_dict",
-            "ore": "blockWool"
-        },
-        "O": {
-            "item": "randomthings:ingredient",
-            "data": 14
-        }
-    },
+      "B": {
+          "item": "randomthings:biomecrystal"
+      },
+      "W": {
+          "type": "forge:ore_dict",
+          "ore": "wool"
+          },
+      "O": [{
+              "type": "forge:ore_dict",
+              "ore": "stickObsidian"
+          },
+          {
+              "type": "forge:ore_dict",
+              "ore": "obsidianRod"
+          }
+      ]
+      },
     "result": {
         "item": "randomthings:biomepainter"
     }
-}
+    }

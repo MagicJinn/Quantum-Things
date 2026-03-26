@@ -7,8 +7,8 @@
   ],
   "key": {
     "S": {
-      "item": "randomthings:ingredient",
-      "data": 3
+      "type": "forge:ore_dict",
+      "ore": "ingotSpectre"
     },
     "E": {
       "item": "minecraft:emerald"

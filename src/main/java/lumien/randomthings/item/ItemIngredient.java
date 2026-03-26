@@ -80,6 +80,10 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 		super("ingredient");
 
 		this.setHasSubtypes(true);
+		OreDictionary.registerOre("ingotSpectre", new ItemStack(this, 1, INGREDIENT.SPECTRE_INGOT.id));
+		OreDictionary.registerOre("stringSpectre", new ItemStack(this, 1, INGREDIENT.SPECTRE_STRING.id));
+		OreDictionary.registerOre("stickObsidian", new ItemStack(this, 1, INGREDIENT.OBSIDIAN_STICK.id));
+		OreDictionary.registerOre("obsidianRod", new ItemStack(this, 1, INGREDIENT.OBSIDIAN_STICK.id));
 
 		BehaviorProjectileDispense pro = new BehaviorProjectileDispense()
 		{

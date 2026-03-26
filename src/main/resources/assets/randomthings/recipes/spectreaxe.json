@@ -7,13 +7,18 @@
   ],
   "key": {
     "S": {
-      "item": "randomthings:ingredient",
-      "data": 3
+      "type": "forge:ore_dict",
+      "ore": "ingotSpectre"
     },
-    "O": {
-      "item": "randomthings:ingredient",
-      "data": 14
-    }
+    "O": [{
+        "type": "forge:ore_dict",
+        "ore": "stickObsidian"
+      },
+      {
+        "type": "forge:ore_dict",
+        "ore": "obsidianRod"
+      }
+    ]
   },
   "result": {
     "item": "randomthings:spectreaxe"
