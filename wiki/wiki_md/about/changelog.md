@@ -13,6 +13,10 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 - Added the ability to configure the chance for a Spectre Leaf to drop an Ectoplasm.
 
+### Fixes
+
+- Gave the Ancient Furnace a proper description in JEI (introduced in 1.0.8).
+
 ## 1.0.9
 
 ### Changes
