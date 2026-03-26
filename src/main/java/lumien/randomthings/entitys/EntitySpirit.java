@@ -85,14 +85,13 @@ public class EntitySpirit extends EntityFlying
 
 					ItemStack equipped;
 					if (player != null && (equipped = player.getHeldItemMainhand()) != null
-						&& equipped.getItem() == ModItems.spectreSword)
-				{
-					return super.attackEntityFrom(source, amount);
+							&& equipped.getItem() == ModItems.spectreSword) {
+						return super.attackEntityFrom(source, amount);
+					}
 				}
 			}
 		}
-	}
-	if (!source.isMagicDamage() && source != DamageSource.OUT_OF_WORLD && !source.isCreativePlayer()) {
+		if (!source.isMagicDamage() && source != DamageSource.OUT_OF_WORLD && !source.isCreativePlayer()) {
 			return false;
 		}
 
