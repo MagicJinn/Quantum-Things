@@ -12,6 +12,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 ### Changes
 
 - Added the ability to configure the chance for a Spectre Leaf to drop an Ectoplasm.
+- Added ore dictionary support for various items and crafting recipes, improving compatibility with other mods and modpacks.
 
 ### Fixes
 
@@ -25,7 +26,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 ### Fixes
 
-- Fixed Time in a Bottle bottled time resetting on death or when returning from the End by copying/syncing the bottled time player capability during player cloning (introduced in 1.0.8).
+- Fixed Time in a Bottle bottled time resetting on death or when returning from the End (introduced in 1.0.8).
 
 ## 1.0.8
 
