@@ -123,6 +123,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed the Returning Block of Sticks not dropping its returning variant when broken.
 - Possibly fixed wavey tile entities when using Time in a Bottle (testing required).
 - Fixed a crash in the Debug World when it tried to render invalid rune textures.
+- Fixed Curse Of Binding enchanted items being able to be removed from the player's armor slots when using the Player Interface.
 
 ### Reporting Issues
 

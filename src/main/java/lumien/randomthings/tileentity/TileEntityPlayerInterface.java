@@ -2,6 +2,7 @@ package lumien.randomthings.tileentity;
 
 import java.util.UUID;
 
+import lumien.randomthings.util.PlayerInterfaceInvWrapper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ContainerPlayer;
@@ -44,6 +45,7 @@ public class TileEntityPlayerInterface extends TileEntityBase
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
@@ -57,7 +59,9 @@ public class TileEntityPlayerInterface extends TileEntityBase
 
 			if (facing == EnumFacing.UP)
 			{
-				return (T) new RangedWrapper(new InvWrapper(playerInventory), 36, 40);
+				// We use our custom inv wrapper to prevent Curse Of Binding items from being
+				// removed from the players armor slots (adding is fine)
+				return (T) new RangedWrapper(new PlayerInterfaceInvWrapper(playerInventory), 36, 40);
 			}
 			else if (facing == EnumFacing.DOWN)
 			{

@@ -20,6 +20,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 ### Fixes
 
 - Gave the Ancient Furnace a proper description in JEI (introduced in 1.0.8).
+- Fixed Curse Of Binding enchanted items being able to be removed from the player's armor slots when using the Player Interface.
 
 ## 1.0.9
 
