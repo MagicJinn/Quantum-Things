@@ -65,6 +65,11 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Simplified and improved the logic (and performance slightly) for checking if the Ender Dragon has been defeated. It should now also register the dragon death even when the mod is not installed.
 - Removed the unimplemented and unfinished RezStone (Blood Stone) item and the Revive Circle entity.
 - Added `/rt timeinabottle <playername> <add|query|set|subtract> [number]` commands for managing stored Time in a Bottle values.
+- Added the ability to configure the chance for a Spectre Leaf to drop an Ectoplasm.
+- Added ore dictionary support for various items and crafting recipes, improving compatibility with other mods and modpacks.
+- Added the ability to configure whether Spectre Tools should be disabled.
+- Added the ability to configure whether Spectre Armor should be disabled.
+- Added the ability to configure whether Luminous Blocks should emit light (disabled by default).
 
 ### Fixes
 

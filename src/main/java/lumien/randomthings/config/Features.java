@@ -44,4 +44,7 @@ public class Features {
 
 	@ConfigOption(category = CATEGORY, name = "DisableSpectreArmor", comment = "Whether all Spectre Armor should be disabled. Removes the recipes and items from the game.")
 	public static boolean DISABLE_SPECTRE_ARMOR = false;
+
+	@ConfigOption(category = CATEGORY, name = "LuminousBlocksEmitLight", comment = "Whether the Luminous and Luminous Translucent blocks should emit light.")
+	public static boolean LUMINOUS_BLOCKS_EMIT_LIGHT = false;
 }
