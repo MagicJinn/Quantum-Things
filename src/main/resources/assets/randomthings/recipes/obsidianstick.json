@@ -5,9 +5,10 @@
         "O"
     ],
     "key": {
-        "O": {
-            "item": "minecraft:obsidian"
-        }
+        "O": [{
+            "type": "forge:ore_dict",
+            "ore": "obsidian"
+        }]
     },
     "result": {
         "item": "randomthings:ingredient",
