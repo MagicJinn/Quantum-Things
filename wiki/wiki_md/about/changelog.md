@@ -7,6 +7,12 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.1.0
+
+### Changes
+
+- Added the ability to configure the chance for a Spectre Leaf to drop an Ectoplasm.
+
 ## 1.0.9
 
 ### Changes

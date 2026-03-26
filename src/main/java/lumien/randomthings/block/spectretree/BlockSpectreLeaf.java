@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 
 import lumien.randomthings.block.BlockBase;
 import lumien.randomthings.block.ModBlocks;
+import lumien.randomthings.config.Numbers;
 import lumien.randomthings.item.ItemIngredient;
 import lumien.randomthings.item.ModItems;
 import net.minecraft.block.Block;
@@ -286,7 +287,8 @@ public class BlockSpectreLeaf extends Block implements net.minecraftforge.common
 
 	protected void dropApple(World worldIn, BlockPos pos, IBlockState state)
 	{
-		if (worldIn.rand.nextInt(55) == 0)
+		// +1 to prevent the chance from being 0
+		if (worldIn.rand.nextInt(Numbers.SPECTRE_LEAF_DROP_CHANCE + 1) == 0)
 		{
 			spawnAsEntity(worldIn, pos,
 					new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.ECTO_PLASM.id));
