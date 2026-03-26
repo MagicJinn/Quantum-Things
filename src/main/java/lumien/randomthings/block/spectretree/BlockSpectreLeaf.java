@@ -287,9 +287,10 @@ public class BlockSpectreLeaf extends Block implements net.minecraftforge.common
 
 	protected void dropApple(World worldIn, BlockPos pos, IBlockState state)
 	{
-		// +1 to prevent the chance from being 0
-		if (worldIn.rand.nextInt(Numbers.SPECTRE_LEAF_DROP_CHANCE + 1) == 0)
-		{
+		if (Numbers.SPECTRE_LEAF_DROP_CHANCE <= 0)
+			return;
+
+		if (worldIn.rand.nextInt(Numbers.SPECTRE_LEAF_DROP_CHANCE) == 0) {
 			spawnAsEntity(worldIn, pos,
 					new ItemStack(ModItems.ingredients, 1, ItemIngredient.INGREDIENT.ECTO_PLASM.id));
 		}
