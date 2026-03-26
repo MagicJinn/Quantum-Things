@@ -1,15 +1,16 @@
 package lumien.randomthings.item;
 
+import lumien.randomthings.config.Features;
 import lumien.randomthings.item.diviningrod.ItemDiviningRodLegacy;
 import lumien.randomthings.item.spectretools.ItemSpectreAxe;
 import lumien.randomthings.item.spectretools.ItemSpectreHoe;
 import lumien.randomthings.item.spectretools.ItemSpectrePickaxe;
 import lumien.randomthings.item.spectretools.ItemSpectreShovel;
 import lumien.randomthings.item.spectretools.ItemSpectreSword;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-public class ModItems
-{
+public class ModItems {
 	public static ItemStableEnderpearl stableEnderpearl;
 	public static ItemBiomeCrystal biomeCrystal;
 	public static ItemPositionFilter positionFilter;
@@ -55,10 +56,11 @@ public class ModItems
 	public static ItemTimeInABottle timeInABottle;
 	public static ItemSpectreIlluminator spectreIlluminator;
 	public static ItemSpectreCharger spectreCharger;
-	// Divining rods are now registered individually - use ItemDiviningRod.rodItems to access them
+	// Divining rods are now registered individually - use ItemDiviningRod.rodItems
+	// to access them
 	public static ItemDiviningRodLegacy diviningRodLegacy;
 	public static ItemEclipsedClock eclipsedClock;
-	
+
 	public static ItemEnderBucket enderBucket;
 	public static ItemReinforcedEnderBucket reinforcedEnderBucket;
 
@@ -79,8 +81,7 @@ public class ModItems
 	public static ItemBiomeCapsule biomeCapsule;
 	public static ItemBiomePainter biomePainter;
 
-	public static void load(FMLPreInitializationEvent event)
-	{
+	public static void load(FMLPreInitializationEvent event) {
 		stableEnderpearl = new ItemStableEnderpearl();
 		biomeCrystal = new ItemBiomeCrystal();
 		positionFilter = new ItemPositionFilter();
@@ -126,7 +127,8 @@ public class ModItems
 		timeInABottle = new ItemTimeInABottle();
 		spectreIlluminator = new ItemSpectreIlluminator();
 		spectreCharger = new ItemSpectreCharger();
-		// Legacy divining rod for migration - registered with old name "diviningRod" for compatibility
+		// Legacy divining rod for migration - registered with old name "diviningRod"
+		// for compatibility
 		diviningRodLegacy = new ItemDiviningRodLegacy();
 		// Divining rods are registered individually in ItemDiviningRod.preInit()
 		eclipsedClock = new ItemEclipsedClock();
@@ -135,15 +137,21 @@ public class ModItems
 
 		spectreKey = new ItemSpectreKey();
 		spectreAnchor = new ItemSpectreAnchor();
-		spectreSword = new ItemSpectreSword();
-		spectrePickaxe = new ItemSpectrePickaxe();
-		spectreAxe = new ItemSpectreAxe();
-		spectreShovel = new ItemSpectreShovel();
-		spectreHoe = new ItemSpectreHoe();
-		spectreHelmet = new ItemSpectreArmor(net.minecraft.inventory.EntityEquipmentSlot.HEAD);
-		spectreChestplate = new ItemSpectreArmor(net.minecraft.inventory.EntityEquipmentSlot.CHEST);
-		spectreLeggings = new ItemSpectreArmor(net.minecraft.inventory.EntityEquipmentSlot.LEGS);
-		spectreBoots = new ItemSpectreArmor(net.minecraft.inventory.EntityEquipmentSlot.FEET);
+
+		if (!Features.DISABLE_SPECTRE_TOOLS) {
+			spectreSword = new ItemSpectreSword();
+			spectrePickaxe = new ItemSpectrePickaxe();
+			spectreAxe = new ItemSpectreAxe();
+			spectreShovel = new ItemSpectreShovel();
+			spectreHoe = new ItemSpectreHoe();
+		}
+
+		if (!Features.DISABLE_SPECTRE_ARMOR) {
+			spectreHelmet = new ItemSpectreArmor(EntityEquipmentSlot.HEAD);
+			spectreChestplate = new ItemSpectreArmor(EntityEquipmentSlot.CHEST);
+			spectreLeggings = new ItemSpectreArmor(EntityEquipmentSlot.LEGS);
+			spectreBoots = new ItemSpectreArmor(EntityEquipmentSlot.FEET);
+		}
 
 		runeDust = new ItemRuneDust();
 

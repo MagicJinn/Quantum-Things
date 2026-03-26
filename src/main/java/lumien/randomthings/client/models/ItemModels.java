@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
+import lumien.randomthings.config.Features;
 
 public class ItemModels
 {
@@ -137,7 +138,6 @@ public class ItemModels
 		registerItem(ModItems.spectreKey);
 		registerItem(ModItems.redstoneRemote);
 		registerItem(ModItems.spectreAnchor);
-		registerItem(ModItems.spectreSword);
 		registerItem(ModItems.goldenCompass);
 		registerItem(ModItems.blazeAndSteel);
 		registerItem(ModItems.superLubricentBoots);
@@ -154,14 +154,19 @@ public class ItemModels
 		registerItem(ModItems.timeInABottle);
 		registerItem(ModItems.spectreIlluminator);
 
-		registerItem(ModItems.spectrePickaxe);
-		registerItem(ModItems.spectreShovel);
-		registerItem(ModItems.spectreAxe);
-		registerItem(ModItems.spectreHoe);
-		registerItem(ModItems.spectreHelmet);
-		registerItem(ModItems.spectreChestplate);
-		registerItem(ModItems.spectreLeggings);
-		registerItem(ModItems.spectreBoots);
+		if (!Features.DISABLE_SPECTRE_TOOLS) {
+			registerItem(ModItems.spectreSword);
+			registerItem(ModItems.spectrePickaxe);
+			registerItem(ModItems.spectreShovel);
+			registerItem(ModItems.spectreAxe);
+			registerItem(ModItems.spectreHoe);
+		}
+		if (!Features.DISABLE_SPECTRE_ARMOR) {
+			registerItem(ModItems.spectreHelmet);
+			registerItem(ModItems.spectreChestplate);
+			registerItem(ModItems.spectreLeggings);
+			registerItem(ModItems.spectreBoots);
+		}
 
 		registerItem(ModItems.biomeCapsule);
 		registerItem(ModItems.biomePainter);

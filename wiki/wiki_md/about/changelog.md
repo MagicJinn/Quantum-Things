@@ -13,6 +13,8 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 - Added the ability to configure the chance for a Spectre Leaf to drop an Ectoplasm.
 - Added ore dictionary support for various items and crafting recipes, improving compatibility with other mods and modpacks.
+- Added the ability to configure whether Spectre Tools should be disabled.
+- Added the ability to configure whether Spectre Armor should be disabled.
 
 ### Fixes
 

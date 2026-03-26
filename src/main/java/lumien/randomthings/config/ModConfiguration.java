@@ -38,7 +38,7 @@ public class ModConfiguration
 			loadSummoningPendulumBlacklist();
 
 			markDiviningRodsRequiresRestart();
-			markSpectreDimensionRequiresRestart();
+			markThingsRequiresRestart();
 		}
 	}
 
@@ -64,7 +64,7 @@ public class ModConfiguration
 		loadSummoningPendulumBlacklist();
 
 		markDiviningRodsRequiresRestart();
-		markSpectreDimensionRequiresRestart();
+		markThingsRequiresRestart();
 
 		if (configuration.hasCategory("Divining Rods")) {
 			configuration.getCategory("Divining Rods").setComment(DiviningRods.CONFIG_COMMENT);
@@ -208,16 +208,25 @@ public class ModConfiguration
 	}
 
 	/**
-	 * Marks the Features and Internals configuration properties as requiring a Minecraft restart.
-	 * This is necessary because the spectre dimension configs affect world registration and
-	 * initialization.
+	 * Marks various configuration properties as requiring a Minecraft restart. This
+	 * is necessary because the config affects item/recipe/dimension registration.
 	 */
-	private void markSpectreDimensionRequiresRestart() {
+	private void markThingsRequiresRestart() {
 		if (configuration != null && configuration.hasCategory(Features.CATEGORY)) {
 			Property spectreDimensionProp =
 					configuration.getCategory(Features.CATEGORY).get("SpectreDimension");
 			if (spectreDimensionProp != null) {
 				spectreDimensionProp.setRequiresMcRestart(true);
+			}
+
+			Property disableSpectreToolsProp = configuration.getCategory(Features.CATEGORY).get("DisableSpectreTools");
+			if (disableSpectreToolsProp != null) {
+				disableSpectreToolsProp.setRequiresMcRestart(true);
+			}
+
+			Property disableSpectreArmorProp = configuration.getCategory(Features.CATEGORY).get("DisableSpectreArmor");
+			if (disableSpectreArmorProp != null) {
+				disableSpectreArmorProp.setRequiresMcRestart(true);
 			}
 		}
 

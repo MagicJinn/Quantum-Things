@@ -26,6 +26,7 @@ import lumien.randomthings.client.models.blocks.ModelCustomWorkbench;
 import lumien.randomthings.client.models.blocks.ModelFluidDisplay;
 import lumien.randomthings.client.models.blocks.ModelInventoryRerouter;
 import lumien.randomthings.client.models.blocks.ModelRune;
+import lumien.randomthings.config.Features;
 import lumien.randomthings.config.Internals;
 import lumien.randomthings.config.Numbers;
 import lumien.randomthings.config.Visual;
@@ -1461,6 +1462,9 @@ public class RTEventHandler {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void renderPlayerPre(RenderPlayerEvent.Pre event) {
+		if (Features.DISABLE_SPECTRE_ARMOR)
+			return;
+
 		int armorPieces = getSpectreArmorPieces(event.getEntityPlayer());
 		spectreArmorStateTracker = toggleSpectreGL(armorPieces, true);
 	}
@@ -1468,6 +1472,9 @@ public class RTEventHandler {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void renderPlayerPost(RenderPlayerEvent.Post event) {
+		if (Features.DISABLE_SPECTRE_ARMOR)
+			return;
+
 		if (spectreArmorStateTracker) {
 			toggleSpectreGL(1, false);
 		}

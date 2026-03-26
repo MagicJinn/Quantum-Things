@@ -3,6 +3,7 @@ package lumien.randomthings.entitys;
 import java.util.Random;
 import javax.annotation.Nonnull;
 import lumien.randomthings.config.Numbers;
+import lumien.randomthings.config.Features;
 import lumien.randomthings.item.ItemIngredient;
 import lumien.randomthings.item.ModItems;
 import net.minecraft.entity.Entity;
@@ -75,25 +76,23 @@ public class EntitySpirit extends EntityFlying
 	}
 
 	@Override
-	public boolean attackEntityFrom(@Nonnull DamageSource source, float amount)
-	{
-		if (source instanceof EntityDamageSource)
-		{
-			EntityDamageSource eds = (EntityDamageSource) source;
-			if (eds.getDamageType().equals("player") && eds.getTrueSource() instanceof EntityPlayer)
-			{
-				EntityPlayer player = (EntityPlayer) eds.getTrueSource();
+	public boolean attackEntityFrom(@Nonnull DamageSource source, float amount) {
+		if (source instanceof EntityDamageSource) {
+			if (!Features.DISABLE_SPECTRE_TOOLS) {
+				EntityDamageSource eds = (EntityDamageSource) source;
+				if (eds.getDamageType().equals("player") && eds.getTrueSource() instanceof EntityPlayer) {
+					EntityPlayer player = (EntityPlayer) eds.getTrueSource();
 
-				ItemStack equipped;
-				if (player != null && (equipped = player.getHeldItemMainhand()) != null
+					ItemStack equipped;
+					if (player != null && (equipped = player.getHeldItemMainhand()) != null
 						&& equipped.getItem() == ModItems.spectreSword)
 				{
 					return super.attackEntityFrom(source, amount);
 				}
 			}
 		}
-		if (!source.isMagicDamage() && source != DamageSource.OUT_OF_WORLD && !source.isCreativePlayer())
-		{
+	}
+	if (!source.isMagicDamage() && source != DamageSource.OUT_OF_WORLD && !source.isCreativePlayer()) {
 			return false;
 		}
 

@@ -38,4 +38,10 @@ public class Features {
 	public static final String SUMMONING_PENDULUM_BLACKLIST_COMMENT = "List of entity resource locations that cannot be captured by the Summoning Pendulum. Format: modid:entityname. Example: minecraft:villager, randomthings:spirit.";
 
 	public static String[] SUMMONING_PENDULUM_BLACKLIST = new String[0];
+
+	@ConfigOption(category = CATEGORY, name = "DisableSpectreTools", comment = "Whether all Spectre Tools should be disabled. Removes the recipes and items from the game.")
+	public static boolean DISABLE_SPECTRE_TOOLS = false;
+
+	@ConfigOption(category = CATEGORY, name = "DisableSpectreArmor", comment = "Whether all Spectre Armor should be disabled. Removes the recipes and items from the game.")
+	public static boolean DISABLE_SPECTRE_ARMOR = false;
 }

@@ -11,6 +11,7 @@ import lumien.randomthings.RandomThings;
 import lumien.randomthings.block.BlockBase;
 import lumien.randomthings.block.BlockSpectreCoil;
 import lumien.randomthings.block.ModBlocks;
+import lumien.randomthings.config.Features;
 import lumien.randomthings.config.SpectreCoils;
 import lumien.randomthings.enchantment.ModEnchantments;
 import lumien.randomthings.item.ItemBase;
@@ -50,10 +51,12 @@ public class DescriptionHandler {
 		overrideMap.put(ModItems.grassSeeds, "item.grassSeeds.info");
 		overrideMap.put(ModItems.runeDust, "item.runeDust.info");
 		overrideMap.put(ModItems.spectreCharger, null);
-		overrideMap.put(ModItems.spectreHelmet, "item.spectreArmor.info");
-		overrideMap.put(ModItems.spectreChestplate, "item.spectreArmor.info");
-		overrideMap.put(ModItems.spectreLeggings, "item.spectreArmor.info");
-		overrideMap.put(ModItems.spectreBoots, "item.spectreArmor.info");
+		if (!Features.DISABLE_SPECTRE_ARMOR) {
+			overrideMap.put(ModItems.spectreHelmet, "item.spectreArmor.info");
+			overrideMap.put(ModItems.spectreChestplate, "item.spectreArmor.info");
+			overrideMap.put(ModItems.spectreLeggings, "item.spectreArmor.info");
+			overrideMap.put(ModItems.spectreBoots, "item.spectreArmor.info");
+		}
 		overrideMap.put(ModBlocks.ancientBrick, "tile.ancientFurnace.info");
 		overrideMap.put(ModBlocks.ancientFurnace, "tile.ancientFurnace.info");
 
