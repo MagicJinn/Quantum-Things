@@ -1,6 +1,7 @@
 package lumien.randomthings.handler.redstone.scheduling;
 
 import javax.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -41,7 +42,8 @@ public class TaskScheduler implements ITaskScheduler
 
         // Unloaded chunk is the source chunk/column
         // Create a copy to avoid ConcurrentModificationException
-        for (ChunkPos requiredChunk : new ArrayList<>(scheduledTasks.rowKeySet())) 
+        for (Map.Entry<ChunkPos, Map<ChunkPos, TaskGroup>> requiredChunkToTasks : new ArrayList<>(
+                scheduledTasks.rowMap().entrySet()))
         {
             Map<ChunkPos, TaskGroup> sourceChunkToTasks = requiredChunkToTasks.getValue();
             sourceChunkToTasks.remove(unloadedChunkPos);
