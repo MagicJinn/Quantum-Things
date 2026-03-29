@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 
 import lumien.randomthings.CommonProxy;
 import lumien.randomthings.asm.MCPNames;
+import lumien.randomthings.client.particles.ParticleFlooFlame;
 import lumien.randomthings.client.models.ItemModels;
 import lumien.randomthings.client.models.blocks.BlockModels;
 import lumien.randomthings.client.render.RenderAncientFurnace;
@@ -65,6 +66,7 @@ import lumien.randomthings.util.client.RenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.model.ModelSlime;
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -82,6 +84,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
@@ -292,4 +295,32 @@ public class ClientProxy extends CommonProxy
     {  
         Minecraft.getMinecraft().addScheduledTask(() -> message.handleOnClient(Minecraft.getMinecraft().player));  
     }
+
+	@Override
+	public void spawnFlooFlameParticles(World world, List<BlockPos> brickPositions) {
+		for (BlockPos pos : brickPositions) {
+			for (int i = 0; i < 50; i++) {
+				Particle particle = new ParticleFlooFlame(world,
+						pos.getX() + Math.random(), pos.getY() + 1 + Math.random(), pos.getZ() + Math.random(),
+						0, Math.random() * 0.1, 0);
+				Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+			}
+		}
+	}
+
+	@Override
+	public void spawnFlooTokenParticles(World world, int dimension, double posX, double posY, double posZ) {
+		if (world.provider.getDimension() != dimension)
+			return;
+
+		for (double modX = -1; modX <= 1; modX += 0.05) {
+			for (double modZ = -1; modZ <= 1; modZ += 0.05) {
+				ParticleFlooFlame particle = new ParticleFlooFlame(world,
+						posX + modX + (Math.random() * 0.1 - 0.05), posY - 1,
+						posZ + modZ + (Math.random() * 0.1 - 0.05),
+						0, Math.random() * 0.3 + 0.1, 0);
+				Minecraft.getMinecraft().effectRenderer.addEffect(particle);
+			}
+		}
+	}
 }

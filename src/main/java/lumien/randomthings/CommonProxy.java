@@ -1,7 +1,11 @@
 package lumien.randomthings;
 
+import java.util.List;
+
 import lumien.randomthings.entitys.EntitySoul;
 import lumien.randomthings.network.ClientboundMessage;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class CommonProxy
@@ -37,5 +41,11 @@ public class CommonProxy
 	public void scheduleClientMessage(ClientboundMessage message)  
     {  
     
-    }
+	}
+
+	public void spawnFlooFlameParticles(World world, List<BlockPos> brickPositions) {
+	}
+
+	public void spawnFlooTokenParticles(World world, int dimension, double posX, double posY, double posZ) {
+	}
 }
