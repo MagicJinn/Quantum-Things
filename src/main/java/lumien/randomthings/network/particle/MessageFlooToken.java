@@ -10,6 +10,8 @@ import net.minecraft.world.World;
 import com.google.common.base.Preconditions;
 import lumien.randomthings.client.particles.ParticleFlooFlame;
 import lumien.randomthings.network.ClientboundMessage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageFlooToken implements ClientboundMessage
 {
@@ -46,6 +48,7 @@ public class MessageFlooToken implements ClientboundMessage
         buf.writeDouble(this.posZ);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void handleOnClient(@Nonnull EntityPlayer player)
     {
