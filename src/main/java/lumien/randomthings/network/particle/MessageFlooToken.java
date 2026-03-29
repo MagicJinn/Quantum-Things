@@ -2,13 +2,12 @@ package lumien.randomthings.network.particle;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 
 import com.google.common.base.Preconditions;
-import lumien.randomthings.client.particles.ParticleFlooFlame;
+import lumien.randomthings.RandomThings;
 import lumien.randomthings.network.ClientboundMessage;
 
 public class MessageFlooToken implements ClientboundMessage
@@ -52,18 +51,7 @@ public class MessageFlooToken implements ClientboundMessage
         World world = player.world;
         Preconditions.checkNotNull(world);
 
-        if (world.provider.getDimension() != dimension) return;
-
-        for (double modX = -1; modX <= 1; modX += 0.05)
-        {
-            for (double modZ = -1; modZ <= 1; modZ += 0.05)
-            {
-                ParticleFlooFlame particle = new ParticleFlooFlame(world,
-                        posX + modX + (Math.random() * 0.1 - 0.05), posY - 1, posZ + modZ + (Math.random() * 0.1 - 0.05),
-                        0, Math.random() * 0.3 + 0.1, 0);
-                Minecraft.getMinecraft().effectRenderer.addEffect(particle);
-            }
-        }
+        RandomThings.proxy.spawnFlooTokenParticles(world, dimension, posX, posY, posZ);
     }
 
     public static class Handler extends NoReplyHandler<MessageFlooToken> {}
