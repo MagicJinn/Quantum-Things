@@ -21,6 +21,9 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 - Gave the Ancient Furnace a proper description in JEI (introduced in 1.0.8).
 - Fixed Curse Of Binding enchanted items being able to be removed from the player's armor slots when using the Player Interface.
+- Fixed a ConcurrentModificationException related to redstone scheduling (introduced in 1.0.6).
+- Fixed a NoClassDefFoundError when using the Floo Token on dedicated servers (introduced in 1.0.6) (Courtesy of [Irgendwer](https://github.com/MagicJinn/Quantum-Things/pull/48)).
+- Fixed several log crashes when using the Floo Token (introduced in 1.0.6).
 
 ## 1.0.9
 
