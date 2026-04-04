@@ -2,7 +2,6 @@ package lumien.randomthings.handler.redstone.scheduling;
 
 import javax.annotation.Nonnull;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import net.minecraft.util.math.BlockPos;
@@ -41,13 +40,7 @@ public class TaskScheduler implements ITaskScheduler
         if (!scheduledTasks.containsColumn(unloadedChunkPos)) return;
 
         // Unloaded chunk is the source chunk/column
-        // Create a copy to avoid ConcurrentModificationException
-        for (Map.Entry<ChunkPos, Map<ChunkPos, TaskGroup>> requiredChunkToTasks : new ArrayList<>(
-                scheduledTasks.rowMap().entrySet()))
-        {
-            Map<ChunkPos, TaskGroup> sourceChunkToTasks = requiredChunkToTasks.getValue();
-            sourceChunkToTasks.remove(unloadedChunkPos);
-        }
+        scheduledTasks.column(unloadedChunkPos).clear();
     }
 
     @Override
