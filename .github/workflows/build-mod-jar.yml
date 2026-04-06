@@ -3,7 +3,11 @@ name: Build Mod Jar Artifacts
 on:  
   push:  
     branches: [ main ]  
+    paths-ignore:
+      - 'wiki/**'
   pull_request:  
+    paths-ignore:
+      - 'wiki/**'
   workflow_dispatch:  
   
 jobs:  

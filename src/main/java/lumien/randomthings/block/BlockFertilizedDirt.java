@@ -20,6 +20,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class BlockFertilizedDirt extends BlockBase
 {
@@ -41,6 +42,10 @@ public class BlockFertilizedDirt extends BlockBase
 			this.setLightOpacity(255);
 			this.setCreativeTab(null);
 			this.useNeighborBrightness = true;
+		}
+		else {
+			OreDictionary.registerOre("fertilizedDirt", this);
+			OreDictionary.registerOre("dirt", this);
 		}
 	}
 
