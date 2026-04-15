@@ -40,6 +40,6 @@ public class Numbers {
 	@ConfigOption(category = CATEGORY, name = "PotionVaporizerMaxBlocks", comment = "The maximum number of blocks a Potion Vaporizer can affect")
 	public static int POTION_VAPORIZER_MAX_BLOCKS = 100;
 
-	@ConfigOption(category = CATEGORY, name = "SpectreLeafDropChance", comment = "The chance for a Spectre Leaf to drop an Ectoplasm (Default = 54, lower is more common, disabled = 0)")
+	@ConfigOption(category = CATEGORY, name = "SpectreLeafDropChance", comment = "The chance for a Spectre Leaf to drop an Ectoplasm (Default = 55, lower is more common, disabled = 0)")
 	public static int SPECTRE_LEAF_DROP_CHANCE = 55;
 }
