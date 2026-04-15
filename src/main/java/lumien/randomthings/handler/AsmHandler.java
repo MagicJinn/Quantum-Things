@@ -61,7 +61,6 @@ import net.minecraft.util.ReportedException;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
@@ -78,6 +77,9 @@ public class AsmHandler
 {
     public static final EnumSet<RedstoneSource.Type> ALLOWED_REDSTONE_SOURCES = EnumSet.of(INTERFACE, ITEM);
 
+	private static final ThreadLocal<LightValueQueryCache> LIGHT_VALUE_QUERY_CACHE = ThreadLocal
+			.withInitial(LightValueQueryCache::new);
+
 	static Field fluidRenderer;
 	static
 	{
@@ -91,67 +93,76 @@ public class AsmHandler
 
 	public static int overrideLightValue(Block b, IBlockState state, IBlockAccess world, BlockPos pos)
 	{
-		if (Features.DISABLE_SPECTRE_ILLUMINATOR)
+		if (Features.DISABLE_SPECTRE_ILLUMINATOR || state.getBlock() instanceof BlockAir)
 			return -1;
 
-		if (state.getBlock() instanceof BlockAir)
-			return -1;
-
-		boolean isClient;
-
-		if (world instanceof ChunkCache)
-		{
-			isClient = FMLCommonHandler.instance().getSide().isClient();
-		}
-		else if (world instanceof World)
-		{
-			isClient = ((World) world).isRemote;
-		}
-		else
-		{
-			isClient = FMLCommonHandler.instance().getEffectiveSide().isClient();
+		if (world instanceof World) {
+			World worldObj = (World) world;
+			return worldObj.isRemote ? overrideLightValueClient(pos) : overrideLightValueServer(worldObj, pos);
 		}
 
-		if (isClient)
-		{
-			return overrideLightValueClient(b, state, world, pos);
-		}
-		else
-		{
-			if (world instanceof World)
-			{
-				World worldObj = (World) world;
-
-				SpectreIlluminationHandler handler = SpectreIlluminationHandler.get(worldObj);
-
-				if (handler.isIlluminated(pos))
-				{
-					return 14;
-				}
-			}
-		}
+		// Fallback for non-World IBlockAccess implementations.
+		if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+			return overrideLightValueClient(pos);
 
 		return -1;
 	}
 
-	private static int overrideLightValueClient(Block b, IBlockState state, IBlockAccess world, BlockPos pos)
-	{
-		if (Features.DISABLE_SPECTRE_ILLUMINATOR)
-			return -1;
+	private static int overrideLightValueClient(BlockPos pos) {
+		long chunkLong = ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4);
+		LightValueQueryCache cache = LIGHT_VALUE_QUERY_CACHE.get();
+		if (cache.lastClientChunkLong == chunkLong) {
+			return cache.lastClientIlluminated ? 15 : -1;
+		}
 
-		return SpectreIlluminationClientHandler.isIlluminated(pos) ? 15 : -1;
+		boolean illuminated = SpectreIlluminationClientHandler.isIlluminatedChunk(chunkLong);
+		cache.lastClientChunkLong = chunkLong;
+		cache.lastClientIlluminated = illuminated;
+
+		return illuminated ? 15 : -1;
+	}
+
+	private static int overrideLightValueServer(World worldObj, BlockPos pos) {
+		long chunkLong = ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4);
+		LightValueQueryCache cache = LIGHT_VALUE_QUERY_CACHE.get();
+		if (cache.lastServerWorld == worldObj && cache.lastServerChunkLong == chunkLong) {
+			return cache.lastServerIlluminated ? 14 : -1;
+		}
+
+		SpectreIlluminationHandler handler;
+		if (cache.lastServerWorld == worldObj && cache.lastServerHandler != null) {
+			handler = cache.lastServerHandler;
+		}
+		else {
+			handler = SpectreIlluminationHandler.get(worldObj);
+			cache.lastServerWorld = worldObj;
+			cache.lastServerHandler = handler;
+		}
+
+		boolean illuminated = handler.isIlluminatedChunk(chunkLong);
+		cache.lastServerChunkLong = chunkLong;
+		cache.lastServerIlluminated = illuminated;
+
+		return illuminated ? 14 : -1;
+	}
+
+	private static class LightValueQueryCache
+	{
+		World lastServerWorld;
+		SpectreIlluminationHandler lastServerHandler;
+		long lastServerChunkLong = Long.MIN_VALUE;
+		boolean lastServerIlluminated;
+
+		long lastClientChunkLong = Long.MIN_VALUE;
+		boolean lastClientIlluminated;
 	}
 
 	public static boolean overrideFallThrough(boolean original, IBlockState state)
 	{
 		if (state == ModBlocks.triggerGlass.getDefaultState().withProperty(BlockTriggerGlass.TRIGGERED, true))
-		{
 			return true;
-		}
 		else
-		{
 			return original;
-		}
 	}
 
 	public static void modifyValidSpawningChunks(EnumCreatureType creatureType, List<ChunkPos> positions)

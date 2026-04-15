@@ -1,6 +1,7 @@
 package lumien.randomthings.handler.spectreilluminator;
 
-import java.util.HashSet;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 
 import lumien.randomthings.network.MessageUtil;
 import lumien.randomthings.network.PacketHandler;
@@ -20,7 +21,7 @@ public class SpectreIlluminationHandler extends WorldSavedData
 {
 	final static String ID = "RTSIH";
 
-	HashSet<Long> illuminatedChunks;
+	LongSet illuminatedChunks;
 
 	public SpectreIlluminationHandler()
 	{
@@ -31,7 +32,7 @@ public class SpectreIlluminationHandler extends WorldSavedData
 	{
 		super(id);
 		
-		illuminatedChunks = new HashSet<Long>();
+		illuminatedChunks = new LongOpenHashSet();
 	}
 
 	public static SpectreIlluminationHandler get(World worldObj)
@@ -62,7 +63,7 @@ public class SpectreIlluminationHandler extends WorldSavedData
 	{
 		NBTTagList list = new NBTTagList();
 
-		for (Long cp : illuminatedChunks)
+		for (long cp : illuminatedChunks)
 		{
 			list.appendTag(new NBTTagLong(cp));
 		}
@@ -85,7 +86,12 @@ public class SpectreIlluminationHandler extends WorldSavedData
 
 	public boolean isIlluminated(BlockPos pos)
 	{
-		return illuminatedChunks.contains(ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4));
+		return isIlluminatedChunk(ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4));
+	}
+
+	public boolean isIlluminatedChunk(long chunkLong)
+	{
+		return illuminatedChunks.contains(chunkLong);
 	}
 
 	@SuppressWarnings("null")

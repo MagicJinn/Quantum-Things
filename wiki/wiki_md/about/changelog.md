@@ -24,6 +24,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Fixed crashes and duplication issues when pistons moved tile-entity blocks with Quark movable tile entities enabled. Affected blocks: Advanced Item Collector, Advanced Redstone Interface, Biome Radar, Diaphanous Block, Entity Detector, Filtered Super Lubricent Platform, Iron Dropper, Light Redirector, Sound Box, and Block Breaker.
 - Fixed Diaphanous Block dropping its item when broken in Creative Mode.
 - Fixed not all Custom Workbench variants being visible in the Creative Tab and JEI.
+- Massively improved Spectre Illuminator performance and reduced overhead of the Spectre Illuminator system (even when there are no Spectre Illuminators in the world).
 
 ## 1.1.0
 

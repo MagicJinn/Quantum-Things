@@ -15,7 +15,12 @@ public class SpectreIlluminationClientHandler
 	
 	public static boolean isIlluminated(BlockPos pos)
 	{
-		return illuminatedChunks.contains(ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4));
+		return isIlluminatedChunk(ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4));
+	}
+
+	public static boolean isIlluminatedChunk(long chunkLong)
+	{
+		return illuminatedChunks.contains(chunkLong);
 	}
 
 	public static void loadChunk(Chunk chunk)

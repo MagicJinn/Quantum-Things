@@ -87,6 +87,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Improved Spectre Illuminator position finding performance.
 - Improved Spectre Illuminator isIlluminated() performance [courtesy of Desoroxxx](https://github.com/MagicJinn/Quantum-Things/pull/17).
 - Improved Spectre Illuminator setIlluminated() performance.
+- Massively improved Spectre Illuminator performance and reduced overhead of the Spectre Illuminator system (even when there are no Spectre Illuminators in the world).
 - Fixed Nature Core being able to spawn underwater.
 - Fixed Nature and Water Chest not having breaking particles.
 - Fixed Magic Beans growing infinitely in Cubic Chunks worlds (limited to 512).
