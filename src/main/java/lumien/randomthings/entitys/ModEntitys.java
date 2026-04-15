@@ -1,6 +1,7 @@
 package lumien.randomthings.entitys;
 
 import lumien.randomthings.RandomThings;
+import lumien.randomthings.config.Features;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -20,7 +21,9 @@ public class ModEntitys
 		registerEntity(EntityThrownWeatherEgg.class, "thrownWeatherEgg", 8, RandomThings.instance, 64, 10, true);
 		registerEntity(EntityWeatherCloud.class, "weatherCloud", 9, RandomThings.instance, 160, 10, true);
 		registerEntity(EntityTimeAccelerator.class, "timeAccelerator", 10, RandomThings.instance, 64, 10, false);
-		registerEntity(EntitySpectreIlluminator.class, "spectreIlluminator", 11, RandomThings.instance, 160, 3, true);
+		if (!Features.DISABLE_SPECTRE_ILLUMINATOR)
+			registerEntity(EntitySpectreIlluminator.class, "spectreIlluminator", 11, RandomThings.instance, 160, 3,
+					true);
 		registerEntity(EntityEclipsedClock.class, "eclipsedClock", 12, RandomThings.instance, 160, Integer.MAX_VALUE, false);
 		registerEntity(EntityBiomeCapsule.class, "biomeCapsule", 13, RandomThings.instance, 80, 20,
 				true);

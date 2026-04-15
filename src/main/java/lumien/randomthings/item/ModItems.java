@@ -125,7 +125,10 @@ public class ModItems {
 		chunkAnalyzer = new ItemChunkAnalyzer();
 		flooPouch = new ItemFlooPouch();
 		timeInABottle = new ItemTimeInABottle();
-		spectreIlluminator = new ItemSpectreIlluminator();
+
+		if (!Features.DISABLE_SPECTRE_ILLUMINATOR)
+			spectreIlluminator = new ItemSpectreIlluminator();
+
 		spectreCharger = new ItemSpectreCharger();
 		// Legacy divining rod for migration - registered with old name "diviningRod"
 		// for compatibility

@@ -1,4 +1,7 @@
 {
+  "conditions": [{
+    "type": "randomthings:spectre_illuminator_enabled"
+  }],
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "EGE",

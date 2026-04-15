@@ -152,7 +152,9 @@ public class ItemModels
 		registerItem(ModItems.chunkAnalyzer);
 		registerItem(ModItems.flooPouch);
 		registerItem(ModItems.timeInABottle);
-		registerItem(ModItems.spectreIlluminator);
+
+		if (!Features.DISABLE_SPECTRE_ILLUMINATOR)
+			registerItem(ModItems.spectreIlluminator);
 
 		if (!Features.DISABLE_SPECTRE_TOOLS) {
 			registerItem(ModItems.spectreSword);

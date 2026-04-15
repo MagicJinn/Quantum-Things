@@ -13,6 +13,7 @@ import lumien.randomthings.block.BlockTriggerGlass;
 import lumien.randomthings.block.ModBlocks;
 import lumien.randomthings.capability.redstone.IDynamicRedstone;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
+import lumien.randomthings.config.Features;
 import lumien.randomthings.enchantment.ModEnchantments;
 import lumien.randomthings.config.Internals;
 import lumien.randomthings.handler.redstone.source.RedstoneSource;
@@ -90,6 +91,9 @@ public class AsmHandler
 
 	public static int overrideLightValue(Block b, IBlockState state, IBlockAccess world, BlockPos pos)
 	{
+		if (Features.DISABLE_SPECTRE_ILLUMINATOR)
+			return -1;
+
 		if (state.getBlock() instanceof BlockAir)
 			return -1;
 
@@ -125,17 +129,6 @@ public class AsmHandler
 					return 14;
 				}
 			}
-			else
-			{
-				// RandomThings.logger.log(Level.DEBUG, "Am on Server
-				// but have no World!?");
-				// RandomThings.logger.log(Level.DEBUG, " - " +
-				// world.getClass().getName());
-				//
-				// new RuntimeException().printStackTrace();
-
-				// Probably Fine
-			}
 		}
 
 		return -1;
@@ -143,6 +136,9 @@ public class AsmHandler
 
 	private static int overrideLightValueClient(Block b, IBlockState state, IBlockAccess world, BlockPos pos)
 	{
+		if (Features.DISABLE_SPECTRE_ILLUMINATOR)
+			return -1;
+
 		return SpectreIlluminationClientHandler.isIlluminated(pos) ? 15 : -1;
 	}
 

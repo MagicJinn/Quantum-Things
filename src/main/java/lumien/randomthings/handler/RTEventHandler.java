@@ -194,6 +194,9 @@ public class RTEventHandler {
   
     @SideOnly(Side.CLIENT)  
     private void handleChunkLoadClient(ChunkEvent.Load event) {  
+		if (Features.DISABLE_SPECTRE_ILLUMINATOR)
+			return;
+
         SpectreIlluminationClientHandler.loadChunk(event.getChunk());  
     }
 
@@ -210,6 +213,9 @@ public class RTEventHandler {
 
 	@SubscribeEvent
 	public void chunkWatch(ChunkWatchEvent.Watch event) {
+		if (Features.DISABLE_SPECTRE_ILLUMINATOR)
+			return;
+
 		if (!event.getChunkInstance().getWorld().isRemote)
 			SpectreIlluminationHandler.get(event.getChunkInstance().getWorld()).startWatching(event.getChunkInstance(),
 					event.getPlayer());

@@ -225,7 +225,8 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 				}
 			}
 		}
-		else if (ingredient == INGREDIENT.BLACKOUT_POWDER && !worldIn.isRemote)
+		else if (ingredient == INGREDIENT.BLACKOUT_POWDER && !worldIn.isRemote
+				&& !Features.DISABLE_SPECTRE_ILLUMINATOR)
 		{
 			SpectreIlluminationHandler handler = SpectreIlluminationHandler.get(worldIn);
 
@@ -245,7 +246,9 @@ public class ItemIngredient extends ItemBase implements IRTItemColor
 					first.setDead();
 
 					BlockPos spawnPos = pos.offset(facing);
-					worldIn.spawnEntity(new EntityItem(worldIn, spawnPos.getX() + 0.5, spawnPos.getY() + 0.5, spawnPos.getZ() + 0.5, new ItemStack(ModItems.spectreIlluminator)));
+					if (ModItems.spectreIlluminator != null)
+						worldIn.spawnEntity(new EntityItem(worldIn, spawnPos.getX() + 0.5, spawnPos.getY() + 0.5,
+								spawnPos.getZ() + 0.5, new ItemStack(ModItems.spectreIlluminator)));
 				}
 
 				handler.toggleChunk(worldIn, pos);
