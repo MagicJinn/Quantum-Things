@@ -228,6 +228,11 @@ public class ModConfiguration
 			if (disableSpectreArmorProp != null) {
 				disableSpectreArmorProp.setRequiresMcRestart(true);
 			}
+
+			Property disableSpectreIlluminatorProp = configuration.getCategory(Features.CATEGORY).get("DisableSpectreIlluminator");
+			if (disableSpectreIlluminatorProp != null) {
+				disableSpectreIlluminatorProp.setRequiresMcRestart(true);
+			}
 		}
 
 		if (configuration != null && configuration.hasCategory(Internals.CATEGORY)) {
