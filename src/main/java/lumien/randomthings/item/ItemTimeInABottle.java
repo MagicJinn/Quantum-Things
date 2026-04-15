@@ -2,6 +2,7 @@ package lumien.randomthings.item;
 
 import java.util.Optional;
 
+import lumien.randomthings.config.Features;
 import lumien.randomthings.config.Numbers;
 import lumien.randomthings.entitys.EntityTimeAccelerator;
 import lumien.randomthings.capability.bottledtime.IBottledTime;
@@ -30,6 +31,9 @@ public class ItemTimeInABottle extends ItemBase
 	// Legacy NBT from when time was stored on the item
 	private static final String LEGACY_NBT_TIMEDATA = "timeData";
 	private static final String LEGACY_NBT_STORED_TIME = "storedTime";
+	private static final String BOTTLE_LAST_HOLDER = "lastHolder";
+	private static final String BOTTLE_LAST_HOLDER_UUID = "uuid";
+	private static final String BOTTLE_LAST_HOLDER_NAME = "name";
 
 	public ItemTimeInABottle()
 	{
@@ -49,11 +53,19 @@ public class ItemTimeInABottle extends ItemBase
 	{
 		if (!worldIn.isRemote && entityIn instanceof EntityPlayer) {
 			EntityPlayer player = (EntityPlayer) entityIn;
-			IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
-			if (cap == null)
-				return;
+			updateLastHolderMetadata(stack, player);
 
-			// Migrate legacy NBT time to global capability
+			if (Features.LEGACY_TIME_IN_A_BOTTLE) {
+				runLegacyBottleUpdate(stack, worldIn, player);
+				return;
+			}
+
+			IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+			if (cap == null) {
+				return;
+			}
+
+			// Migrate old per-item NBT time into global capability when legacy mode is disabled.
 			migrateLegacyNbtToCapability(stack, cap, player);
 
 			int secondWorth = Numbers.TIME_IN_A_BOTTLE_SECOND;
@@ -70,7 +82,36 @@ public class ItemTimeInABottle extends ItemBase
 		}
 	}
 
-	// Migrates legacy NBT to the new capability system
+	private void runLegacyBottleUpdate(ItemStack stack, World worldIn, EntityPlayer player)
+	{
+		migrateCapabilityToLegacyNbt(stack, player);
+
+		int secondWorth = Numbers.TIME_IN_A_BOTTLE_SECOND;
+		long worldTime = worldIn.getTotalWorldTime();
+		boolean cycle = secondWorth == 0 || worldTime % secondWorth == 0;
+
+		if (cycle) {
+			long current = getLegacyStoredTime(stack);
+			if (current < MAX_BOTTLED_TIME_TICKS) {
+				setLegacyStoredTime(stack, Math.min(MAX_BOTTLED_TIME_TICKS, current + 20L));
+			}
+		}
+
+		if (worldTime % 60 == 0) {
+			for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+				ItemStack invStack = player.inventory.getStackInSlot(i);
+				if (invStack.getItem() == this && invStack != stack) {
+					long myTime = getLegacyStoredTime(stack);
+					long theirTime = getLegacyStoredTime(invStack);
+					if (myTime < theirTime) {
+						setLegacyStoredTime(stack, 0);
+					}
+				}
+			}
+		}
+	}
+
+	// Migrates legacy NBT to the current capability system
 	private void migrateLegacyNbtToCapability(ItemStack stack, IBottledTime cap, EntityPlayer player) {
 		NBTTagCompound timeData = stack.getSubCompound(LEGACY_NBT_TIMEDATA);
 		if (timeData == null || !timeData.hasKey(LEGACY_NBT_STORED_TIME))
@@ -96,6 +137,70 @@ public class ItemTimeInABottle extends ItemBase
 		}
 	}
 
+	// Moves global capability time into bottle NBT when legacy mode is active.
+	private void migrateCapabilityToLegacyNbt(ItemStack stack, EntityPlayer player)
+	{
+		IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+		if (cap == null) {
+			return;
+		}
+
+		long capabilityTicks = cap.getBottledTime();
+		if (capabilityTicks > 0) {
+			long currentBottle = getLegacyStoredTime(stack);
+			long merged = Math.min(MAX_BOTTLED_TIME_TICKS, currentBottle + capabilityTicks);
+			setLegacyStoredTime(stack, merged);
+			cap.setBottledTime(0);
+			syncBottledTimeToClient(player);
+		}
+	}
+
+	private void updateLastHolderMetadata(ItemStack stack, EntityPlayer player)
+	{
+		NBTTagCompound root = stack.getTagCompound();
+		if (root == null) {
+			root = new NBTTagCompound();
+			stack.setTagCompound(root);
+		}
+
+		NBTTagCompound holder = root.getCompoundTag(BOTTLE_LAST_HOLDER);
+		if (player.getUniqueID() != null) {
+			holder.setString(BOTTLE_LAST_HOLDER_UUID, player.getUniqueID().toString());
+		}
+		holder.setString(BOTTLE_LAST_HOLDER_NAME, player.getName());
+		root.setTag(BOTTLE_LAST_HOLDER, holder);
+	}
+
+	public static Optional<String> getLastHolderUuid(ItemStack stack)
+	{
+		if (stack == null || stack.isEmpty() || !stack.hasTagCompound()) {
+			return Optional.empty();
+		}
+
+		NBTTagCompound holder = stack.getTagCompound().getCompoundTag(BOTTLE_LAST_HOLDER);
+		if (!holder.hasKey(BOTTLE_LAST_HOLDER_UUID)) {
+			return Optional.empty();
+		}
+
+		String uuid = holder.getString(BOTTLE_LAST_HOLDER_UUID);
+		return uuid == null || uuid.isEmpty() ? Optional.empty() : Optional.of(uuid);
+	}
+
+	public static Optional<String> getLastHolderName(ItemStack stack)
+	{
+		if (stack == null || stack.isEmpty() || !stack.hasTagCompound()) {
+			return Optional.empty();
+		}
+
+		NBTTagCompound holder = stack.getTagCompound().getCompoundTag(BOTTLE_LAST_HOLDER);
+		if (!holder.hasKey(BOTTLE_LAST_HOLDER_NAME)) {
+			return Optional.empty();
+		}
+
+		String name = holder.getString(BOTTLE_LAST_HOLDER_NAME);
+		return name == null || name.isEmpty() ? Optional.empty() : Optional.of(name);
+	}
+
 	@Override
 	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
 	{
@@ -119,16 +224,14 @@ public class ItemTimeInABottle extends ItemBase
 
 					int timeRequired = nextRate / 2 * 20 * 30;
 
-					IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
-					long timeAvailable = cap != null ? cap.getBottledTime() : 0;
+					long timeAvailable = getStoredTime(me, player);
 
 					if (timeAvailable >= timeRequired || player.capabilities.isCreativeMode)
 					{
 						int timeAdded = (nextRate * usedUpTime - currentRate * usedUpTime) / nextRate;
 
-						if (!player.capabilities.isCreativeMode && cap != null) {
-							cap.setBottledTime(timeAvailable - timeRequired);
-							syncBottledTimeToClient(player);
+						if (!player.capabilities.isCreativeMode) {
+							setStoredTime(me, player, timeAvailable - timeRequired);
 						}
 
 						eta.setTimeRate(nextRate);
@@ -162,14 +265,12 @@ public class ItemTimeInABottle extends ItemBase
 			}
 			else
 			{
-				IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
-				long timeAvailable = cap != null ? cap.getBottledTime() : 0;
+				long timeAvailable = getStoredTime(me, player);
 
 				if (timeAvailable >= 20 * 30 || player.capabilities.isCreativeMode)
 				{
-					if (!player.capabilities.isCreativeMode && cap != null) {
-						cap.setBottledTime(timeAvailable - 20 * 30);
-						syncBottledTimeToClient(player);
+					if (!player.capabilities.isCreativeMode) {
+						setStoredTime(me, player, timeAvailable - 20 * 30);
 					}
 
 					EntityTimeAccelerator n = new EntityTimeAccelerator(world, pos, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
@@ -191,17 +292,61 @@ public class ItemTimeInABottle extends ItemBase
 	// Get the stored time from the player's capability
 	public static long getStoredTime(EntityPlayer player)
 	{
-		IBottledTime cap = player != null ? player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null) : null;
-		return cap != null ? cap.getBottledTime() : 0;
+		return getStoredTime(ItemStack.EMPTY, player);
 	}
 
 	// Set the stored time in the player's capability
 	public static void setStoredTime(EntityPlayer player, long time) {
+		setStoredTime(ItemStack.EMPTY, player, time);
+	}
+
+	public static long getStoredTime(ItemStack stack, EntityPlayer player)
+	{
+		if (Features.LEGACY_TIME_IN_A_BOTTLE) {
+			return getLegacyStoredTime(stack);
+		}
+
+		IBottledTime cap = player != null ? player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null) : null;
+		return cap != null ? cap.getBottledTime() : 0;
+	}
+
+	public static void setStoredTime(ItemStack stack, EntityPlayer player, long time)
+	{
+		long clamped = Math.max(0L, Math.min(MAX_BOTTLED_TIME_TICKS, time));
+		if (Features.LEGACY_TIME_IN_A_BOTTLE) {
+			setLegacyStoredTime(stack, clamped);
+			return;
+		}
+
 		IBottledTime cap = player != null ? player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null) : null;
 		if (cap != null) {
-			cap.setBottledTime(time);
+			cap.setBottledTime(clamped);
 			syncBottledTimeToClient(player);
 		}
+	}
+
+	public static long getLegacyStoredTime(ItemStack stack)
+	{
+		if (stack == null || stack.isEmpty()) {
+			return 0L;
+		}
+
+		NBTTagCompound timeData = stack.getSubCompound(LEGACY_NBT_TIMEDATA);
+		if (timeData == null || !timeData.hasKey(LEGACY_NBT_STORED_TIME)) {
+			return 0L;
+		}
+
+		return timeData.getInteger(LEGACY_NBT_STORED_TIME) & 0xFFFFFFFFL;
+	}
+
+	public static void setLegacyStoredTime(ItemStack stack, long time)
+	{
+		if (stack == null || stack.isEmpty()) {
+			return;
+		}
+
+		NBTTagCompound timeData = stack.getOrCreateSubCompound(LEGACY_NBT_TIMEDATA);
+		timeData.setInteger(LEGACY_NBT_STORED_TIME, (int) Math.max(0L, Math.min(MAX_BOTTLED_TIME_TICKS, time)));
 	}
 
 	// Send the current bottled time to the client so tooltip updates

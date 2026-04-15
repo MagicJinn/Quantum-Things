@@ -50,4 +50,7 @@ public class Features {
 
 	@ConfigOption(category = CATEGORY, name = "LuminousBlocksEmitLight", comment = "Whether the Luminous and Luminous Translucent blocks should emit light.")
 	public static boolean LUMINOUS_BLOCKS_EMIT_LIGHT = false;
+
+	@ConfigOption(category = CATEGORY, name = "LegacyTimeInABottle", comment = "Reverts Time in a Bottle to legacy per-item storage via NBT instead of global player storage.")
+	public static boolean LEGACY_TIME_IN_A_BOTTLE = false;
 }
