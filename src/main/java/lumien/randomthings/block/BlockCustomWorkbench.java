@@ -1,7 +1,9 @@
 package lumien.randomthings.block;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lumien.randomthings.container.ContainerCustomWorkbench;
 import lumien.randomthings.tileentity.TileEntityCustomWorkbench;
 import lumien.randomthings.util.WorldUtil;
@@ -18,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -117,21 +120,51 @@ public class BlockCustomWorkbench extends BlockContainerBase
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(CreativeTabs tab, NonNullList list)
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
-		for (BlockPlanks.EnumType type : BlockPlanks.EnumType.values())
-		{
-			ItemStack workBench = new ItemStack(this);
+		Set<String> addedVariants = new HashSet<>();
+		for (ItemStack orePlank : OreDictionary.getOres("plankWood")) {
+			if (orePlank.isEmpty())
+				continue;
 
-			NBTTagCompound compound = new NBTTagCompound();
-
-			workBench.setTagCompound(compound);
-
-			compound.setString("woodName", "minecraft:planks");
-			compound.setInteger("woodMeta", type.ordinal());
-
-			list.add(workBench);
+			int meta = orePlank.getItemDamage();
+			if (meta == OreDictionary.WILDCARD_VALUE) {
+				NonNullList<ItemStack> subItems = NonNullList.create();
+				Item item = orePlank.getItem();
+				item.getSubItems(item.getCreativeTab(), subItems);
+				for (ItemStack subItem : subItems) {
+					addWorkbenchVariant(list, addedVariants, subItem);
+				}
+			} else {
+				addWorkbenchVariant(list, addedVariants, orePlank);
+			}
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void addWorkbenchVariant(NonNullList<ItemStack> list, Set<String> addedVariants, ItemStack woodStack) {
+		if (woodStack.isEmpty())
+			return;
+
+		Block woodBlock = Block.getBlockFromItem(woodStack.getItem());
+		if (woodBlock == null || woodBlock == Blocks.AIR)
+			return;
+
+		ResourceLocation registryName = woodBlock.getRegistryName();
+		if (registryName == null)
+			return;
+
+		int woodMeta = woodStack.getItemDamage();
+		String variantKey = registryName.toString() + "#" + woodMeta;
+		if (!addedVariants.add(variantKey))
+			return;
+
+		ItemStack workBench = new ItemStack(this);
+		NBTTagCompound compound = new NBTTagCompound();
+		workBench.setTagCompound(compound);
+		compound.setString("woodName", registryName.toString());
+		compound.setInteger("woodMeta", woodMeta);
+		list.add(workBench);
 	}
 
 	@Override
