@@ -187,6 +187,7 @@ public class RandomThings implements LoadingCallback
 	public void serverStarting(FMLServerStartingEvent event)
 	{
 		event.registerServerCommand(new RTCommand());
+		event.registerServerCommand(new QTCommand());
 		ServerModelLibrary.getInstance().refresh();
 	}
 
