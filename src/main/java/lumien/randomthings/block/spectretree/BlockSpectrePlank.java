@@ -18,7 +18,7 @@ public class BlockSpectrePlank extends BlockBase
 {
 	public BlockSpectrePlank()
 	{
-		super("spectreplank", Material.WOOD);
+		super("spectrePlank", Material.WOOD);
 
 		this.setLightOpacity(3);
 		this.setHardness(2.0F).setResistance(5.0F);

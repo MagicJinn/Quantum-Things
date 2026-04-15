@@ -34,7 +34,7 @@ public class BlockSpectrePlankSlab extends BlockSlab {
 	public BlockSpectrePlankSlab(String registryName, BlockSpectrePlankSlab doubleSlabBlock) {
 		super(Material.WOOD);
 
-		this.setTranslationKey(registryName);
+		this.setTranslationKey("spectreslab".equals(registryName) ? "spectreSlab" : registryName);
 		this.setRegistryName(new ResourceLocation("randomthings", registryName));
 		this.setCreativeTab(RandomThings.creativeTab);
 		this.setHardness(2.0F);
