@@ -1,0 +1,8 @@
+{
+  "parent": "block/inner_stairs",
+  "textures": {
+    "bottom": "randomthings:blocks/spectreplank",
+    "top": "randomthings:blocks/spectreplank",
+    "side": "randomthings:blocks/spectreplank"
+  }
+}

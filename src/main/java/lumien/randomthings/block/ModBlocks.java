@@ -17,7 +17,12 @@ import lumien.randomthings.block.redstoneinterface.BlockAdvancedRedstoneInterfac
 import lumien.randomthings.block.redstoneinterface.BlockBasicRedstoneInterface;
 import lumien.randomthings.block.spectretree.BlockSpectreLeaf;
 import lumien.randomthings.block.spectretree.BlockSpectreLog;
+import lumien.randomthings.block.spectretree.BlockSpectrePlankFence;
+import lumien.randomthings.block.spectretree.BlockSpectrePlankFenceGate;
 import lumien.randomthings.block.spectretree.BlockSpectrePlank;
+import lumien.randomthings.block.spectretree.BlockSpectrePlankSlab;
+import lumien.randomthings.block.spectretree.BlockSpectrePlankSlabDouble;
+import lumien.randomthings.block.spectretree.BlockSpectrePlankStairs;
 import lumien.randomthings.block.spectretree.BlockSpectreSapling;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
@@ -107,6 +112,11 @@ public class ModBlocks
 	public static BlockFlooBrick flooBrick;
 
 	public static BlockSpectrePlank spectrePlank;
+	public static BlockSpectrePlankStairs spectreStairs;
+	public static BlockSpectrePlankSlab spectreSlab;
+	public static BlockSpectrePlankSlabDouble spectreSlabDouble;
+	public static BlockSpectrePlankFence spectreFence;
+	public static BlockSpectrePlankFenceGate spectreFenceGate;
 	public static BlockSpectreSapling spectreSapling;
 	public static BlockSpectreLog spectreLog;
 	public static BlockSpectreLeaf spectreLeaf;
@@ -233,6 +243,11 @@ public class ModBlocks
 		flooBrick = new BlockFlooBrick();
 
 		spectrePlank = new BlockSpectrePlank();
+		spectreStairs = new BlockSpectrePlankStairs();
+		spectreSlabDouble = new BlockSpectrePlankSlabDouble();
+		spectreSlab = new BlockSpectrePlankSlab("spectreslab", spectreSlabDouble);
+		spectreFence = new BlockSpectrePlankFence();
+		spectreFenceGate = new BlockSpectrePlankFenceGate();
 		spectreSapling = new BlockSpectreSapling();
 		spectreLog = new BlockSpectreLog();
 		spectreLeaf = new BlockSpectreLeaf();

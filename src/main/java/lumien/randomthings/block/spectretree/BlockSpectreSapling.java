@@ -33,7 +33,7 @@ public class BlockSpectreSapling extends BlockBush
 	{
 		this.setDefaultState(this.blockState.getBaseState().withProperty(STAGE, Integer.valueOf(0)));
 
-		BlockBase.registerBlock("spectreSapling", this);
+		BlockBase.registerBlock("spectresapling", this);
 
 		this.setHardness(0.0F);
 		this.setSoundType(SoundType.PLANT);

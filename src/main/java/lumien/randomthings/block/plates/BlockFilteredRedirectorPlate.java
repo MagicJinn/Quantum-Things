@@ -46,8 +46,10 @@ public class BlockFilteredRedirectorPlate extends BlockContainerBase
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
-		TileEntityFilteredRedirectorPlate tileentity = (TileEntityFilteredRedirectorPlate) worldIn.getTileEntity(pos);
-		InventoryHelper.dropInventoryItems(worldIn, pos, tileentity.getInventory());
+		TileEntity teRaw = worldIn.getTileEntity(pos);
+		if (teRaw instanceof TileEntityFilteredRedirectorPlate)
+			InventoryHelper.dropInventoryItems(worldIn, pos,
+					((TileEntityFilteredRedirectorPlate) teRaw).getInventory());
 
 		super.breakBlock(worldIn, pos, state);
 	}
@@ -170,7 +172,12 @@ public class BlockFilteredRedirectorPlate extends BlockContainerBase
 
 		if ((facing == inputSide || facing == inputSide.getOpposite()) && facing == roughMovingFacing)
 		{
-			TileEntityFilteredRedirectorPlate te = (TileEntityFilteredRedirectorPlate) worldIn.getTileEntity(pos);
+			TileEntity teRaw = worldIn.getTileEntity(pos);
+			if (!(teRaw instanceof TileEntityFilteredRedirectorPlate))
+			{
+				return;
+			}
+			TileEntityFilteredRedirectorPlate te = (TileEntityFilteredRedirectorPlate) teRaw;
 
 			EntityFilterItemStack[] filter = te.getFilter();
 

@@ -89,7 +89,8 @@ public class DescriptionHandler {
 		}
 
 		removeDes(overrideMap, ModBlocks.spectreLeaf, ModBlocks.natureCore, ModBlocks.spectreLog,
-				ModBlocks.spectrePlank, ModBlocks.specialChest, ModBlocks.superLubricentPlatform,
+				ModBlocks.spectrePlank, ModBlocks.spectreStairs, ModBlocks.spectreSlab, ModBlocks.spectreFence,
+				ModBlocks.spectreFenceGate, ModBlocks.specialChest, ModBlocks.superLubricentPlatform,
 				ModBlocks.filteredSuperLubricentPlatform);
 
 		// Manually Add

@@ -112,6 +112,10 @@ public class ItemModels
 		registerBlock(ModBlocks.spectreLeaf);
 		registerBlock(ModBlocks.spectreLog);
 		registerBlock(ModBlocks.spectrePlank);
+		registerBlock(ModBlocks.spectreStairs);
+		registerBlock(ModBlocks.spectreSlab);
+		registerBlock(ModBlocks.spectreFence);
+		registerBlock(ModBlocks.spectreFenceGate);
 		registerBlock(ModBlocks.spectreSapling);
 
 		registerBlock(ModBlocks.itemCollector);

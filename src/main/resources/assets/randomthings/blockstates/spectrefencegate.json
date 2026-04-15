@@ -1,0 +1,20 @@
+{
+  "multipart": [
+    { "when": { "facing": "north", "in_wall": "false", "open": "false" }, "apply": { "model": "randomthings:spectrefencegate_closed" } },
+    { "when": { "facing": "east", "in_wall": "false", "open": "false" }, "apply": { "model": "randomthings:spectrefencegate_closed", "y": 90, "uvlock": true } },
+    { "when": { "facing": "south", "in_wall": "false", "open": "false" }, "apply": { "model": "randomthings:spectrefencegate_closed", "y": 180, "uvlock": true } },
+    { "when": { "facing": "west", "in_wall": "false", "open": "false" }, "apply": { "model": "randomthings:spectrefencegate_closed", "y": 270, "uvlock": true } },
+    { "when": { "facing": "north", "in_wall": "true", "open": "false" }, "apply": { "model": "randomthings:spectrefencegate_wall_closed" } },
+    { "when": { "facing": "east", "in_wall": "true", "open": "false" }, "apply": { "model": "randomthings:spectrefencegate_wall_closed", "y": 90, "uvlock": true } },
+    { "when": { "facing": "south", "in_wall": "true", "open": "false" }, "apply": { "model": "randomthings:spectrefencegate_wall_closed", "y": 180, "uvlock": true } },
+    { "when": { "facing": "west", "in_wall": "true", "open": "false" }, "apply": { "model": "randomthings:spectrefencegate_wall_closed", "y": 270, "uvlock": true } },
+    { "when": { "facing": "north", "in_wall": "false", "open": "true" }, "apply": { "model": "randomthings:spectrefencegate_open" } },
+    { "when": { "facing": "east", "in_wall": "false", "open": "true" }, "apply": { "model": "randomthings:spectrefencegate_open", "y": 90, "uvlock": true } },
+    { "when": { "facing": "south", "in_wall": "false", "open": "true" }, "apply": { "model": "randomthings:spectrefencegate_open", "y": 180, "uvlock": true } },
+    { "when": { "facing": "west", "in_wall": "false", "open": "true" }, "apply": { "model": "randomthings:spectrefencegate_open", "y": 270, "uvlock": true } },
+    { "when": { "facing": "north", "in_wall": "true", "open": "true" }, "apply": { "model": "randomthings:spectrefencegate_wall_open" } },
+    { "when": { "facing": "east", "in_wall": "true", "open": "true" }, "apply": { "model": "randomthings:spectrefencegate_wall_open", "y": 90, "uvlock": true } },
+    { "when": { "facing": "south", "in_wall": "true", "open": "true" }, "apply": { "model": "randomthings:spectrefencegate_wall_open", "y": 180, "uvlock": true } },
+    { "when": { "facing": "west", "in_wall": "true", "open": "true" }, "apply": { "model": "randomthings:spectrefencegate_wall_open", "y": 270, "uvlock": true } }
+  ]
+}

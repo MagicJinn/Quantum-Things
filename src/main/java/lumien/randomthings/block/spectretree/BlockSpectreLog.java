@@ -34,7 +34,7 @@ public class BlockSpectreLog extends BlockRotatedPillar
 
 		this.setDefaultState(this.blockState.getBaseState().withProperty(LOG_AXIS, BlockSpectreLog.EnumAxis.Y));
 
-		BlockBase.registerBlock("spectreLog", this);
+		BlockBase.registerBlock("spectrelog", this);
 
 		OreDictionary.registerOre("logWood", this);
 	}
