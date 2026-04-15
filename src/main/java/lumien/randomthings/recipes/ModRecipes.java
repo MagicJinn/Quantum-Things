@@ -43,7 +43,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.RecipeSorter;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.RecipeSorter.Category;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.IRegistryDelegate;
@@ -1017,74 +1016,5 @@ public class ModRecipes
 		RecipeSorter.register("diaphanousInvert", diaphanousInvertRecipe.getClass(), Category.SHAPELESS, "");
 		ForgeRegistries.RECIPES.register(diaphanousInvertRecipe);
 
-		// Spectre Tools recipes (moved from JSON to code)
-		// This avoids recipe-parse errors when tools are disabled via config.
-		if (!Features.DISABLE_SPECTRE_TOOLS) {
-			final ResourceLocation recipeGroup = new ResourceLocation("randomthings", "recipes");
-			final String[] obsidianStickCandidates = new String[] { "stickObsidian", "obsidianRod" };
-
-			if (ModItems.spectreSword != null) {
-				for (String obsidianStickCandidate : obsidianStickCandidates) {
-					ShapedOreRecipe spectreSwordRecipe = new ShapedOreRecipe(recipeGroup,
-							new ItemStack(ModItems.spectreSword),
-							" S ", " S ", " O ",
-							'S', "ingotSpectre",
-							'O', obsidianStickCandidate);
-					String registrySuffix = obsidianStickCandidate.toLowerCase();
-					spectreSwordRecipe.setRegistryName(new ResourceLocation("randomthings", "spectresword_" + registrySuffix));
-					ForgeRegistries.RECIPES.register(spectreSwordRecipe);
-				}
-			}
-
-			if (ModItems.spectrePickaxe != null) {
-				for (String obsidianStickCandidate : obsidianStickCandidates) {
-					ShapedOreRecipe spectrePickaxeRecipe = new ShapedOreRecipe(recipeGroup,
-							new ItemStack(ModItems.spectrePickaxe),
-							"SSS", " O ", " O ",
-							'S', "ingotSpectre",
-							'O', obsidianStickCandidate);
-					String registrySuffix = obsidianStickCandidate.toLowerCase();
-					spectrePickaxeRecipe.setRegistryName(new ResourceLocation("randomthings", "spectrepickaxe_" + registrySuffix));
-					ForgeRegistries.RECIPES.register(spectrePickaxeRecipe);
-				}
-			}
-
-			if (ModItems.spectreAxe != null) {
-				for (String obsidianStickCandidate : obsidianStickCandidates) {
-					ShapedOreRecipe spectreAxeRecipe = new ShapedOreRecipe(recipeGroup, new ItemStack(ModItems.spectreAxe),
-							"SS ", "SO ", " O ",
-							'S', "ingotSpectre",
-							'O', obsidianStickCandidate);
-					String registrySuffix = obsidianStickCandidate.toLowerCase();
-					spectreAxeRecipe.setRegistryName(new ResourceLocation("randomthings", "spectreaxe_" + registrySuffix));
-					ForgeRegistries.RECIPES.register(spectreAxeRecipe);
-				}
-			}
-
-			if (ModItems.spectreShovel != null) {
-				for (String obsidianStickCandidate : obsidianStickCandidates) {
-					ShapedOreRecipe spectreShovelRecipe = new ShapedOreRecipe(recipeGroup,
-							new ItemStack(ModItems.spectreShovel),
-							" S ", " O ", " O ",
-							'S', "ingotSpectre",
-							'O', obsidianStickCandidate);
-					String registrySuffix = obsidianStickCandidate.toLowerCase();
-					spectreShovelRecipe.setRegistryName(new ResourceLocation("randomthings", "spectreshovel_" + registrySuffix));
-					ForgeRegistries.RECIPES.register(spectreShovelRecipe);
-				}
-			}
-
-			if (ModItems.spectreHoe != null) {
-				for (String obsidianStickCandidate : obsidianStickCandidates) {
-					ShapedOreRecipe spectreHoeRecipe = new ShapedOreRecipe(recipeGroup, new ItemStack(ModItems.spectreHoe),
-							"SS", " O", " O",
-							'S', "ingotSpectre",
-							'O', obsidianStickCandidate);
-					String registrySuffix = obsidianStickCandidate.toLowerCase();
-					spectreHoeRecipe.setRegistryName(new ResourceLocation("randomthings", "spectrehoe_" + registrySuffix));
-					ForgeRegistries.RECIPES.register(spectreHoeRecipe);
-				}
-			}
-		}
 	}
 }

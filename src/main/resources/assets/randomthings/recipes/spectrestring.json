@@ -14,7 +14,8 @@
       "item": "minecraft:string"
     },
     "D": {
-      "item": "minecraft:diamond"
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
     }
   },
   "result": {

@@ -1,5 +1,6 @@
 {
   "conditions": {
+    "spectre_tools_enabled": "lumien.randomthings.recipes.RecipeConditionSpectreToolsEnabled$Factory",
     "spectre_illuminator_enabled": "lumien.randomthings.recipes.RecipeConditionSpectreIlluminatorEnabled$Factory"
   }
 }
