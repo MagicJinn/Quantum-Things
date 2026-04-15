@@ -15,9 +15,12 @@ This item allows you to accelerate the rate at which blocks tick. It passively c
 
 You can use the following commands to manage the stored time in a bottle:
 
-- `/rt timeinabottle <playername> <add|query|set|subtract> [number]`
+- `/rt timeinabottle <playername> <add|query|set|subtract> <time><s|m|h|d>`
+- `/qt timeinabottle transfer <playername> <time><s|m|h|d>`
 
 By default, number is interpreted as seconds. You can use the following suffixes to specify the unit: s, m, h, d. The command can be used by any players with operator permissions, and is meant to replace the old nbt system, where time could be read and changed from the item nbt.
+
+Players can use the transfer command to move their stored time directly to another player. Any player can execute this command, regardless of operator status. In legacy mode, both the source and target player must have a Time in a Bottle in their inventory.
 
 ### Examples
 
@@ -25,6 +28,7 @@ By default, number is interpreted as seconds. You can use the following suffixes
 - `/rt timeinabottle player query` - Query the stored time in a bottle for player.
 - `/rt timeinabottle player set 1h` - Set the stored time in a bottle for player to 1 hour.
 - `/rt timeinabottle player subtract 30s` - Subtract 30 seconds from player's Time in a Bottle.
+- `/qt timeinabottle transfer player 10m` - Transfer up to 10 minutes of your stored time to player.
 
 ## Crafting
 
