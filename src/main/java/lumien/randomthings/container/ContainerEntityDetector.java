@@ -56,7 +56,10 @@ public class ContainerEntityDetector extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
-		return this.worldObj.getTileEntity(this.pos) != entityDetector ? false : playerIn.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D;
+		return entityDetector != null
+				&& !entityDetector.isInvalid()
+				&& this.worldObj.getTileEntity(this.pos) == entityDetector
+				&& playerIn.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D;
 	}
 
 	@Override

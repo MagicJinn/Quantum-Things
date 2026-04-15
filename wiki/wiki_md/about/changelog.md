@@ -7,6 +7,23 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.2.0
+
+### Changes
+
+- Added Legacy mode for Time in a Bottle, allowing you to revert to the old per-item storage via NBT instead of global player storage.
+- Added `/qt` as an alias for `/rt`.
+- Added `/rt timeinabottle transfer <playername> <time><s|m|h|d>` to let players transfer their stored Time in a Bottle value to other players.
+- Time in a Bottle now stores the last player to hold it, useful for modpack developers to track who uses it in a recipe.
+- Added the ability to configure whether Spectre Illuminators should be disabled.
+- Added ore dictionary support to many more recipes and items.
+- Added Spectre variants of Stairs, Fences, Fence Gates and Slabs.
+
+### Fixes
+
+- Fixed crashes and duplication issues when pistons moved tile-entity blocks with Quark movable tile entities enabled. Affected blocks: Advanced Item Collector, Advanced Redstone Interface, Biome Radar, Diaphanous Block, Entity Detector, Filtered Super Lubricent Platform, Iron Dropper, Light Redirector, Sound Box, and Block Breaker.
+- Fixed Diaphanous Block dropping its item when broken in Creative Mode.
+
 ## 1.1.0
 
 ### Changes

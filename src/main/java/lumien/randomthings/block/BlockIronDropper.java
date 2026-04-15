@@ -42,7 +42,7 @@ public class BlockIronDropper extends BlockContainerBase
 	{
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 
-		if (tileentity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))
+		if (tileentity != null && tileentity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP))
 		{
 			InventoryUtil.dropItemHandlerItems(worldIn, pos, tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP));
 		}

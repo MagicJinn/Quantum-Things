@@ -42,7 +42,10 @@ public abstract class ContainerTE<E extends TileEntity> extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
-		return te != null && playerIn.world.getTileEntity(te.getPos()) == te && playerIn.getDistanceSq(this.te.getPos().getX() + 0.5D, this.te.getPos().getY() + 0.5D, this.te.getPos().getZ() + 0.5D) <= 64.0D;
+		return te != null
+				&& !te.isInvalid()
+				&& playerIn.world.getTileEntity(te.getPos()) == te
+				&& playerIn.getDistanceSq(this.te.getPos().getX() + 0.5D, this.te.getPos().getY() + 0.5D, this.te.getPos().getZ() + 0.5D) <= 64.0D;
 	}
 
 	@Override

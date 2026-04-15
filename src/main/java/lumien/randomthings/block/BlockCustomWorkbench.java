@@ -39,6 +39,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class BlockCustomWorkbench extends BlockContainerBase
 {
@@ -50,6 +51,8 @@ public class BlockCustomWorkbench extends BlockContainerBase
 
 		this.setHardness(2.5F);
 		this.setSoundType(SoundType.WOOD);
+
+		OreDictionary.registerOre("workbench", this);
 	}
 
 	/**

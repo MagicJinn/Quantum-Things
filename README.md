@@ -59,7 +59,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Changed the Redstone Activator to emit a sided signal based on the block face clicked. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
 - Reworked the internals of the (Advanced) Redstone Interface/Observer/Activator/Remote. This should improve redstone performance, even if you aren't using any of these blocks/items in your world. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
 - Changed the Redstone Interface & Observer to only send/receive signals from their target(s) once the target(s) are loaded. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
-- Changed Time in a Bottle to store bottled time per player (in a global capability) instead of in the item's NBT. Time is no longer tied to the physical bottle. (This may break custom recipes or mod integrations that rely on the item's NBT. If you are a mod/pack dev, plan accordingly before updating.)
+- Changed Time in a Bottle to store bottled time per player (in a global capability) instead of in the item's NBT. Time is no longer tied to the physical bottle. (This may break custom recipes or mod integrations that rely on the item's NBT. If you are a mod/pack dev, plan accordingly before updating.). A legacy mode is available to revert to the old per-item storage via NBT.
 - Re-used vanilla textures for the Potion Vaporizer and Block Breaker, instead of copying vanilla textures.
 - Added the ability to configure whether Ancient Brick blocks can be broken and will drop their item forms, allowing you to remove them, use them as decoration, or rebuild them elsewhere.
 - Simplified and improved the logic (and performance slightly) for checking if the Ender Dragon has been defeated. It should now also register the dragon death even when the mod is not installed.
@@ -69,6 +69,10 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Added ore dictionary support for various items and crafting recipes, improving compatibility with other mods and modpacks.
 - Added the ability to configure whether Spectre Tools should be disabled.
 - Added the ability to configure whether Luminous Blocks should emit light (disabled by default).
+- Added `/qt` as an alias for `/rt`.
+- Added `/rt timeinabottle transfer <playername> <time><s|m|h|d>` to let players transfer their stored Time in a Bottle value to other players.
+- Added the ability to configure whether Spectre Illuminators should be disabled.
+- Added Spectre variants of Stairs, Fences, Fence Gates and Slabs.
 
 ### Fixes
 
@@ -123,6 +127,8 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Possibly fixed wavey tile entities when using Time in a Bottle (testing required).
 - Fixed a crash in the Debug World when it tried to render invalid rune textures.
 - Fixed Curse Of Binding enchanted items being able to be removed from the player's armor slots when using the Player Interface.
+- Fixed crashes and duplication issues when pistons moved tile-entity blocks with Quark movable tile entities enabled. Affected blocks: Advanced Item Collector, Advanced Redstone Interface, Biome Radar, Diaphanous Block, Entity Detector, Filtered Super Lubricent Platform, Iron Dropper, Light Redirector, Sound Box, and Block Breaker.
+- Fixed Diaphanous Block dropping its item when broken in Creative Mode.
 
 ### Reporting Issues
 

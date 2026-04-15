@@ -99,7 +99,10 @@ public class BlockLightRedirector extends BlockContainerBase
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
-		((TileEntityLightRedirector) worldIn.getTileEntity(pos)).broken();
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (te instanceof TileEntityLightRedirector)
+			((TileEntityLightRedirector) te).broken();
+
 		super.breakBlock(worldIn, pos, state);
 	}
 

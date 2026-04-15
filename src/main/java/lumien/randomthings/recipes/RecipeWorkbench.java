@@ -16,7 +16,8 @@ public class RecipeWorkbench extends ShapedOreRecipe
 
 	public RecipeWorkbench()
 	{
-		super(new ResourceLocation("randomthings", "recipes"), new ItemStack(ModBlocks.customWorkbench), "www", "wxw", "www", 'w', "plankWood", 'x', Blocks.CRAFTING_TABLE);
+		super(new ResourceLocation("randomthings", "recipes"), new ItemStack(ModBlocks.customWorkbench), "www", "wxw",
+				"www", 'w', "plankWood", 'x', "workbench");
 
 		this.setRegistryName(new ResourceLocation("randomthings", "customWorkbench"));
 	}
@@ -34,11 +35,13 @@ public class RecipeWorkbench extends ShapedOreRecipe
 			{
 				ItemStack is = inv.getStackInSlot(i);
 
-				if (!is.isEmpty() && !(is.getItem() == Item.getItemFromBlock(Blocks.CRAFTING_TABLE)))
+				if (!is.isEmpty() && !net.minecraftforge.oredict.OreDictionary.containsMatch(false,
+						net.minecraftforge.oredict.OreDictionary.getOres("workbench"), is))
 				{
 					if (!stack.isEmpty())
 					{
-						if (!(ItemStack.areItemsEqual(stack, is)) || is.getMetadata() > 15 && !(is.getItem() instanceof ItemBlock))
+						if (!(ItemStack.areItemsEqual(stack, is))
+								|| (is.getMetadata() > 15 && !(is.getItem() instanceof ItemBlock)))
 						{
 							return false;
 						}

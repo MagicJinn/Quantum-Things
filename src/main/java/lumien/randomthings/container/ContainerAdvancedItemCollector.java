@@ -56,7 +56,10 @@ public class ContainerAdvancedItemCollector extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
-		return this.worldObj.getTileEntity(this.pos) != advancedItemCollector ? false : playerIn.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D;
+		return advancedItemCollector != null
+				&& !advancedItemCollector.isInvalid()
+				&& this.worldObj.getTileEntity(this.pos) == advancedItemCollector
+				&& playerIn.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D;
 	}
 
 	@Override

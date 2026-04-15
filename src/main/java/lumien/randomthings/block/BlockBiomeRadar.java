@@ -42,11 +42,12 @@ public class BlockBiomeRadar extends BlockContainerBase implements IRTBlockColor
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
-		TileEntityBiomeRadar radar = (TileEntityBiomeRadar) worldIn.getTileEntity(pos);
-
-		if (!radar.getCurrentCrystal().isEmpty())
-		{
-			WorldUtil.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), radar.getCurrentCrystal());
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (te instanceof TileEntityBiomeRadar) {
+			TileEntityBiomeRadar radar = (TileEntityBiomeRadar) te;
+			if (!radar.getCurrentCrystal().isEmpty()) {
+				WorldUtil.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), radar.getCurrentCrystal());
+			}
 		}
 
 		super.breakBlock(worldIn, pos, state);
@@ -85,7 +86,10 @@ public class BlockBiomeRadar extends BlockContainerBase implements IRTBlockColor
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		ItemStack equipped = playerIn.getHeldItemMainhand();
-		TileEntityBiomeRadar biomeRadar = (TileEntityBiomeRadar) worldIn.getTileEntity(pos);
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (!(te instanceof TileEntityBiomeRadar))
+			return false;
+		TileEntityBiomeRadar biomeRadar = (TileEntityBiomeRadar) te;
 
 		if (biomeRadar.getState() == STATE.IDLE)
 		{

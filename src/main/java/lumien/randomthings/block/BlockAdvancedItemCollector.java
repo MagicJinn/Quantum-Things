@@ -44,8 +44,10 @@ public class BlockAdvancedItemCollector extends BlockContainerBase
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
-		TileEntityAdvancedItemCollector tileentity = (TileEntityAdvancedItemCollector) worldIn.getTileEntity(pos);
-		InventoryHelper.dropInventoryItems(worldIn, pos, tileentity.getInventory());
+		TileEntity tileentity = worldIn.getTileEntity(pos);
+		if (tileentity instanceof TileEntityAdvancedItemCollector)
+			InventoryHelper.dropInventoryItems(worldIn, pos,
+					((TileEntityAdvancedItemCollector) tileentity).getInventory());
 
 		super.breakBlock(worldIn, pos, state);
 	}

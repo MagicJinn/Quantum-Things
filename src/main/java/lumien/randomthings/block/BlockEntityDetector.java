@@ -39,9 +39,10 @@ public class BlockEntityDetector extends BlockContainerBase
 	@Override
 	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
-		TileEntityEntityDetector te = (TileEntityEntityDetector) blockAccess.getTileEntity(pos);
-		if (te == null)
+		TileEntity teRaw = blockAccess.getTileEntity(pos);
+		if (!(teRaw instanceof TileEntityEntityDetector))
 			return 0;
+		TileEntityEntityDetector te = (TileEntityEntityDetector) teRaw;
 
 		// Return the power level based on the current power mode
 		return te.getPowerLevel();
@@ -50,9 +51,10 @@ public class BlockEntityDetector extends BlockContainerBase
 	@Override
 	public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
 	{
-		TileEntityEntityDetector te = (TileEntityEntityDetector) blockAccess.getTileEntity(pos);
-		if (te == null)
+		TileEntity teRaw = blockAccess.getTileEntity(pos);
+		if (!(teRaw instanceof TileEntityEntityDetector))
 			return 0;
+		TileEntityEntityDetector te = (TileEntityEntityDetector) teRaw;
 
 		if (te.isPowered() && te.getPowerMode() == TileEntityEntityDetector.POWER_MODE.STRONG)
 		{
@@ -96,15 +98,18 @@ public class BlockEntityDetector extends BlockContainerBase
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
-		TileEntityEntityDetector tileentity = (TileEntityEntityDetector) worldIn.getTileEntity(pos);
-		InventoryHelper.dropInventoryItems(worldIn, pos, tileentity.getInventory());
-
-		if (tileentity.getPowerMode() == TileEntityEntityDetector.POWER_MODE.STRONG)
+		TileEntity teRaw = worldIn.getTileEntity(pos);
+		if (teRaw instanceof TileEntityEntityDetector)
 		{
+			TileEntityEntityDetector tileentity = (TileEntityEntityDetector) teRaw;
+			InventoryHelper.dropInventoryItems(worldIn, pos, tileentity.getInventory());
 
-			for (EnumFacing facing : EnumFacing.VALUES)
+			if (tileentity.getPowerMode() == TileEntityEntityDetector.POWER_MODE.STRONG)
 			{
-				worldIn.notifyNeighborsOfStateChange(pos.offset(facing), ModBlocks.entityDetector, false);
+				for (EnumFacing facing : EnumFacing.VALUES)
+				{
+					worldIn.notifyNeighborsOfStateChange(pos.offset(facing), ModBlocks.entityDetector, false);
+				}
 			}
 		}
 

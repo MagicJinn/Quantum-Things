@@ -104,12 +104,13 @@ public class BlockFilteredSuperLubricentPlatform extends BlockContainerBase impl
 			if (collidingEntity instanceof EntityItem)
 			{
 				EntityItem ei = (EntityItem) collidingEntity;
+				TileEntity tileEntity = worldIn.getTileEntity(pos);
+				if (tileEntity instanceof TileEntityFilteredSuperLubricentPlatform) {
+					ItemFilterRepresentation repres = ((TileEntityFilteredSuperLubricentPlatform) tileEntity)
+							.getRepres();
 
-				ItemFilterRepresentation repres = ((TileEntityFilteredSuperLubricentPlatform) worldIn.getTileEntity(pos)).getRepres();
-
-				if (repres != null && repres.matchesItemStack(ei.getItem()))
-				{
-					return;
+					if (repres != null && repres.matchesItemStack(ei.getItem()))
+						return;
 				}
 			}
 

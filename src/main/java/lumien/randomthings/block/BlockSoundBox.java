@@ -51,7 +51,10 @@ public class BlockSoundBox extends BlockContainerBase
 	{
 		boolean hasPattern = state.getValue(HAS_PATTERN);
 
-		TileEntitySoundBox te = (TileEntitySoundBox) worldIn.getTileEntity(pos);
+		TileEntity teRaw = worldIn.getTileEntity(pos);
+		if (!(teRaw instanceof TileEntitySoundBox))
+			return false;
+		TileEntitySoundBox te = (TileEntitySoundBox) teRaw;
 
 		if (te.hasPattern())
 		{

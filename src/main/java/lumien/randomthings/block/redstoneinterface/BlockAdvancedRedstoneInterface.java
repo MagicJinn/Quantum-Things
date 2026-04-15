@@ -35,8 +35,12 @@ public class BlockAdvancedRedstoneInterface extends BlockRedstoneInterface
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
-		TileEntityAdvancedRedstoneInterface tileentity = (TileEntityAdvancedRedstoneInterface) worldIn.getTileEntity(pos);
-		InventoryHelper.dropInventoryItems(worldIn, pos, tileentity.getTargetInventory());
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		if (tileEntity instanceof TileEntityAdvancedRedstoneInterface)
+		{
+			TileEntityAdvancedRedstoneInterface tileentity = (TileEntityAdvancedRedstoneInterface) tileEntity;
+			InventoryHelper.dropInventoryItems(worldIn, pos, tileentity.getTargetInventory());
+		}
 
 		super.breakBlock(worldIn, pos, state);
 	}

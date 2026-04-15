@@ -8,6 +8,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,11 +19,17 @@ import net.minecraftforge.items.SlotItemHandler;
 public class ContainerImbuingStation extends Container
 {
 	TileEntityImbuingStation te;
+	BlockPos pos;
+	World world;
+	TileEntity expectedTileEntity;
 	public int lastImbuingProgress;
 
 	public ContainerImbuingStation(EntityPlayer player, World world, int x, int y, int z)
 	{
-		this.te = (TileEntityImbuingStation) world.getTileEntity(new BlockPos(x, y, z));
+		this.world = world;
+		this.pos = new BlockPos(x, y, z);
+		this.te = (TileEntityImbuingStation) world.getTileEntity(this.pos);
+		expectedTileEntity = te;
 
 		IItemHandler itemHandler = te.getItemHandler();
 
@@ -212,7 +219,10 @@ public class ContainerImbuingStation extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer)
 	{
-		return true;
+		return entityplayer.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D
+				&& expectedTileEntity != null
+				&& !expectedTileEntity.isInvalid()
+				&& this.world.getTileEntity(this.pos) == expectedTileEntity;
 	}
 
 	@Override

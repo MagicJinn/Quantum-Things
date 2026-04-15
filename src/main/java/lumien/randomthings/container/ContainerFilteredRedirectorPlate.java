@@ -11,6 +11,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -18,11 +19,15 @@ public class ContainerFilteredRedirectorPlate extends Container
 {
 	TileEntityFilteredRedirectorPlate filteredRedirectorPlate;
 	BlockPos pos;
+	World world;
+	TileEntity expectedTileEntity;
 
 	public ContainerFilteredRedirectorPlate(EntityPlayer player, World world, int x, int y, int z)
 	{
+		this.world = world;
 		this.pos = new BlockPos(x, y, z);
 		filteredRedirectorPlate = (TileEntityFilteredRedirectorPlate) world.getTileEntity(this.pos);
+		expectedTileEntity = filteredRedirectorPlate;
 
 		IInventory inventory = filteredRedirectorPlate.getInventory();
 
@@ -212,7 +217,10 @@ public class ContainerFilteredRedirectorPlate extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
-		return playerIn.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D;
+		return playerIn.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D
+				&& expectedTileEntity != null
+				&& !expectedTileEntity.isInvalid()
+				&& this.world.getTileEntity(this.pos) == expectedTileEntity;
 	}
 
 }

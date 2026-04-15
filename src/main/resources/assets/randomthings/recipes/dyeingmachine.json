@@ -23,7 +23,8 @@
       "ore": "woolBlack"
     },
     "C": {
-      "item": "minecraft:crafting_table"
+      "type": "forge:ore_dict",
+      "ore": "workbench"
     }
   },
   "result": {

@@ -156,7 +156,7 @@ public class ContainerNotificationInterface extends ContainerTE<TileEntityNotifi
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
-		return true;
+		return super.canInteractWith(playerIn);
 	}
 
 	@Override

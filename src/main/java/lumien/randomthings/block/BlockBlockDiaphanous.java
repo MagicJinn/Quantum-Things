@@ -15,6 +15,7 @@ import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -56,25 +57,46 @@ public class BlockBlockDiaphanous extends BlockContainerBase
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
-		TileEntityBlockDiaphanous te = (TileEntityBlockDiaphanous) worldIn.getTileEntity(pos);
+		super.breakBlock(worldIn, pos, state);
+	}
 
+	private ItemStack createDiaphanousStack(World worldIn, BlockPos pos)
+	{
 		ItemStack drop = new ItemStack(this);
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
 
+		if (!(tileEntity instanceof TileEntityBlockDiaphanous))
+		{
+			return drop;
+		}
+
+		TileEntityBlockDiaphanous te = (TileEntityBlockDiaphanous) tileEntity;
 		IBlockState displayState = te.getDisplayState();
+		NBTTagCompound tagCompound = new NBTTagCompound();
+		drop.setTagCompound(tagCompound);
 
-		drop.setTagCompound(new NBTTagCompound());
+		ResourceLocation registryName = displayState.getBlock().getRegistryName();
+		tagCompound.setString("block", registryName != null ? registryName.toString() : "minecraft:stone");
+		tagCompound.setInteger("meta", displayState.getBlock().getMetaFromState(displayState));
+		tagCompound.setBoolean("inverted", te.isInverted());
 
-		drop.getTagCompound().setString("block", displayState.getBlock().getRegistryName().toString());
-		drop.getTagCompound().setInteger("meta", displayState.getBlock().getMetaFromState(displayState));
-		drop.getTagCompound().setBoolean("inverted", te.isInverted());
+		return drop;
+	}
 
-		WorldUtil.spawnItemStack(worldIn, pos, drop);
+	@Override
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
+	{
+		if (!player.capabilities.isCreativeMode && !world.isRemote && willHarvest)
+		{
+			WorldUtil.spawnItemStack(world, pos, createDiaphanousStack(world, pos));
+		}
+
+		return super.removedByPlayer(state, world, pos, player, willHarvest);
 	}
 
 	@Override
 	public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
 	{
-
 	}
 	
 	@Override

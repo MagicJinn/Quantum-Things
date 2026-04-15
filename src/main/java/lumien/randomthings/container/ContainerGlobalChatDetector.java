@@ -3,29 +3,21 @@ package lumien.randomthings.container;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.tileentity.TileEntityGlobalChatDetector;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerGlobalChatDetector extends Container
+public class ContainerGlobalChatDetector extends ContainerTE<TileEntityGlobalChatDetector>
 {
 	IItemHandler itemHandler;
-	BlockPos pos;
-	World world;
-	TileEntityGlobalChatDetector expectedTileEntity;
 
 	public ContainerGlobalChatDetector(EntityPlayer player, World world, int x, int y, int z)
 	{
-		this.world = world;
-		this.pos = new BlockPos(x, y, z);
-		TileEntityGlobalChatDetector te = (TileEntityGlobalChatDetector) world.getTileEntity(this.pos);
-		expectedTileEntity = te;
+		super(player, world, x, y, z);
 		itemHandler = te.getItemHandler();
 		for (int i = 0; i < 9; i++)
 		{
@@ -202,11 +194,8 @@ public class ContainerGlobalChatDetector extends Container
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer playerIn)
+	public void signal(int signal)
 	{
-		return playerIn.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D
-				&& expectedTileEntity != null
-				&& !expectedTileEntity.isInvalid()
-				&& this.world.getTileEntity(this.pos) == expectedTileEntity;
+		// No synced signal handling required for this container.
 	}
 }

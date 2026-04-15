@@ -8,6 +8,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -34,10 +35,16 @@ public class ContainerPotionVaporizer extends Container
 	int lastFuelBurn;
 
 	TileEntityPotionVaporizer potionVaporizer;
+	BlockPos pos;
+	World world;
+	TileEntity expectedTileEntity;
 
 	public ContainerPotionVaporizer(EntityPlayer player, World world, int x, int y, int z)
 	{
-		potionVaporizer = (TileEntityPotionVaporizer) world.getTileEntity(new BlockPos(x, y, z));
+		this.world = world;
+		this.pos = new BlockPos(x, y, z);
+		potionVaporizer = (TileEntityPotionVaporizer) world.getTileEntity(this.pos);
+		expectedTileEntity = potionVaporizer;
 		IItemHandler itemHandler = potionVaporizer.getItemHandler();
 
 		this.addSlotToContainer(new SlotItemHandler(itemHandler, 0, 80, 53));
@@ -242,7 +249,10 @@ public class ContainerPotionVaporizer extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
-		return true;
+		return playerIn.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D
+				&& expectedTileEntity != null
+				&& !expectedTileEntity.isInvalid()
+				&& this.world.getTileEntity(this.pos) == expectedTileEntity;
 	}
 
 	@Override
