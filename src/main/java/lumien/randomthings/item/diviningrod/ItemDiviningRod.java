@@ -107,9 +107,8 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor {
 			}
 
 			// Skip if not available
-			if (!availableTypes.get(type)) {
+			if (!availableTypes.get(type))
 				continue;
-			}
 
 			if (type instanceof OreRodType) {
 				OreRodType oreType = (OreRodType) type;
@@ -246,9 +245,8 @@ public class ItemDiviningRod extends ItemBase implements IRTItemColor {
 				DiviningRods.DEFAULT_RODS, DiviningRods.PROPERTY_COMMENT);
 
 		for (String rodEntry : configRods) {
-			if (rodEntry == null || rodEntry.trim().isEmpty()) {
+			if (rodEntry == null || rodEntry.trim().isEmpty())
 				continue;
-			}
 
 			String[] parts = rodEntry.split(",");
 			if (parts.length != 5) {

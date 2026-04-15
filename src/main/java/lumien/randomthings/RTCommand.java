@@ -149,9 +149,7 @@ public class RTCommand extends CommandBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		if (args.length == 0)
-		{
 			return;
-		}
 
 		boolean isPublicTransfer = args[0].equals(SUB_TIME_IN_A_BOTTLE) && args.length >= 2
 				&& args[1].equals(TIB_MODE_TRANSFER);

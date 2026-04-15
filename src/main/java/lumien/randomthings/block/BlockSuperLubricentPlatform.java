@@ -100,9 +100,7 @@ public class BlockSuperLubricentPlatform extends BlockBase implements ISuperLubr
 			}
 		}
 		else
-		{
 			return;
-		}
 
 		super.addCollisionBoxToList(state, worldIn, pos, mask, list, collidingEntity, isActualState);
 	}

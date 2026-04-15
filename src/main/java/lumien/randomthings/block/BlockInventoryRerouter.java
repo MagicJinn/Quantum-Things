@@ -83,9 +83,7 @@ public class BlockInventoryRerouter extends BlockContainerBase
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block neighborBlock, BlockPos changedPos)
 	{
 		if (circleSet.contains(pos))
-		{
 			return;
-		}
 
 		EnumFacing facing = state.getValue(FACING);
 		BlockPos offset = pos.offset(facing);

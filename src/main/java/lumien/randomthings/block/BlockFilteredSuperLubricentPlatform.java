@@ -130,9 +130,7 @@ public class BlockFilteredSuperLubricentPlatform extends BlockContainerBase impl
 			}
 		}
 		else
-		{
 			return;
-		}
 
 		super.addCollisionBoxToList(state, worldIn, pos, mask, list, collidingEntity, isActualState);
 	}

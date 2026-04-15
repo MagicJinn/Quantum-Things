@@ -49,9 +49,7 @@ public class BlockBeanStalk extends BlockBase implements IPlantable
 	public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
 	{
 		if (entityIn.onGround || entityIn.collidedVertically)
-		{
 			return;
-		}
 
 		double speed = strongMagic ? 0.5 : 0.2;
 

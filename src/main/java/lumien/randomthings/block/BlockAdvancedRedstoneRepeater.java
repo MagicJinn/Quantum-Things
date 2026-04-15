@@ -488,10 +488,9 @@ public class BlockAdvancedRedstoneRepeater extends BlockContainerBase implements
 	{
 		IBlockState newState = worldIn.getBlockState(pos);
 
-		if (newState.getBlock() == ModBlocks.poweredAdvancedRedstoneRepeater || newState.getBlock() == ModBlocks.unpoweredAdvancedRedstoneRepeater)
-		{
+		if (newState.getBlock() == ModBlocks.poweredAdvancedRedstoneRepeater
+				|| newState.getBlock() == ModBlocks.unpoweredAdvancedRedstoneRepeater)
 			return;
-		}
 		else
 		{
 			super.breakBlock(worldIn, pos, state);

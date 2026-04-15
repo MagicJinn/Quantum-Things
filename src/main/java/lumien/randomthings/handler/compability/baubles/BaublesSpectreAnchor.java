@@ -23,9 +23,7 @@ public class BaublesSpectreAnchor
 			actualHandleClone(event);
 		}
 		else
-		{
 			return;
-		}
 	}
 	
 	public static void handleDropsEarly(PlayerDropsEvent event)
@@ -35,9 +33,7 @@ public class BaublesSpectreAnchor
 			actualHandleDropsEarly(event);
 		}
 		else
-		{
 			return;
-		}
 	}
 	
 	public static void handleDropsLate(PlayerDropsEvent event)
@@ -47,9 +43,7 @@ public class BaublesSpectreAnchor
 			actualHandleDropsLate(event);
 		}
 		else
-		{
 			return;
-		}
 	}
 	
 	private static void actualHandleClone(PlayerEvent.Clone event)

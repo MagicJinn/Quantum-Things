@@ -190,9 +190,7 @@ public class BlockContactButton extends BlockBase
 	{
 		IBlockState state = world.getBlockState(pos);
 		if (state.getValue(POWERED).booleanValue())
-		{
 			return;
-		}
 		else
 		{
 			world.setBlockState(pos, state.withProperty(POWERED, Boolean.valueOf(true)), 3);

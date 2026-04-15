@@ -91,9 +91,7 @@ public class TileEntityIgniter extends TileEntityBase implements IRedstoneSensit
 			}
 		}
 		else
-		{
 			return;
-		}
 	}
 
 	public void rotateMode()
