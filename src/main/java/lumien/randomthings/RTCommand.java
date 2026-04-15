@@ -11,6 +11,8 @@ import lumien.randomthings.handler.festival.FestivalHandler;
 import lumien.randomthings.handler.floo.FlooFireplace;
 import lumien.randomthings.handler.floo.FlooNetworkHandler;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationHandler;
+import lumien.randomthings.handler.EnderLetterHandler;
+import lumien.randomthings.handler.EnderLetterHandler.EnderMailboxInventory;
 import lumien.randomthings.config.Features;
 import lumien.randomthings.item.ItemBiomeCrystal;
 import lumien.randomthings.item.ItemPositionFilter;
@@ -60,6 +62,7 @@ public class RTCommand extends CommandBase
 	private static final String SUB_OP = "op";
 	private static final String SUB_TI = "ti";
 	private static final String SUB_TIME_IN_A_BOTTLE = "timeinabottle";
+	private static final String SUB_TEST_ENDER_MAILBOX = "testEnderMailbox";
 
 	private static final String TIB_MODE_ADD = "add";
 	private static final String TIB_MODE_QUERY = "query";
@@ -87,7 +90,8 @@ public class RTCommand extends CommandBase
 			return getListOfStringsMatchingLastWord(args,
 					new String[] { SUB_GENERATE_BIOME_CRYSTAL_CHESTS, SUB_SET_BIOME_CRYSTAL, SUB_TP_FILTER,
 							SUB_TEST_SLIME_SPAWN,
-							SUB_NOTIFY, SUB_FIREPLACES, SUB_FESTIVAL, SUB_OP, SUB_TIME_IN_A_BOTTLE });
+							SUB_NOTIFY, SUB_FIREPLACES, SUB_FESTIVAL, SUB_OP, SUB_TIME_IN_A_BOTTLE,
+							SUB_TEST_ENDER_MAILBOX });
 		}
 		else
 		{
@@ -458,6 +462,35 @@ public class RTCommand extends CommandBase
 						throw new CommandException("Unknown action: " + mode);
 					}
 			}
+		}
+		else if (args[0].equals(SUB_TEST_ENDER_MAILBOX)) {
+			if (!(sender instanceof EntityPlayerMP))
+				throw new CommandException("Only players can use this command.");
+
+			EntityPlayerMP player = (EntityPlayerMP) sender;
+			EnderMailboxInventory mailboxInventory = EnderLetterHandler.get(player.world)
+					.getOrCreateInventoryForPlayer(player.getUniqueID());
+
+			int emptySlot = -1;
+			for (int slot = 0; slot < mailboxInventory.getSizeInventory(); slot++) {
+				if (mailboxInventory.getStackInSlot(slot).isEmpty()) {
+					emptySlot = slot;
+					break;
+				}
+			}
+
+			if (emptySlot < 0)
+				throw new CommandException("Your Ender Mailbox is full.");
+
+			ItemStack letter = new ItemStack(ModItems.enderLetter);
+			NBTTagCompound letterNBT = new NBTTagCompound();
+			letterNBT.setBoolean("received", true);
+			letterNBT.setString("sender", player.getName());
+			letterNBT.setString("receiver", player.getName());
+			letter.setTagCompound(letterNBT);
+
+			mailboxInventory.setInventorySlotContents(emptySlot, letter);
+			sender.sendMessage(new TextComponentString("Sent a test Ender Letter to your own mailbox."));
 		}
 	}
 
