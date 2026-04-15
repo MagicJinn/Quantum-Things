@@ -6,7 +6,8 @@
   ],
   "key": {
     "O": {
-      "item": "minecraft:obsidian"
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
     },
     "B": {
       "item": "randomthings:enderbucket"

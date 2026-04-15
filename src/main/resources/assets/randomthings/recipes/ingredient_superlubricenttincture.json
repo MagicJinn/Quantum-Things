@@ -17,8 +17,8 @@
       }
     },
     "B": {
-      "item": "randomthings:beans",
-      "data": 0
+     "type": "forge:ore_dict",
+     "ore": "cropBean"
     }
   },
   "result": {

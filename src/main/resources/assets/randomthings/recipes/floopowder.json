@@ -6,10 +6,12 @@
   ],
   "key": {
     "E": {
-      "item": "minecraft:ender_pearl"
+      "type": "forge:ore_dict",
+      "ore": "enderpearl"
     },
     "R": {
-      "item": "minecraft:redstone"
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     },
     "G": {
         "item": "minecraft:gunpowder"

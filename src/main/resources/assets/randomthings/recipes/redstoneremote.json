@@ -10,7 +10,8 @@
       "item": "randomthings:redstoneactivator"
     },
     "O": {
-      "item": "minecraft:obsidian"
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
     },
     "S": {
       "item": "randomthings:stableenderpearl"

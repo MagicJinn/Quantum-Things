@@ -10,7 +10,8 @@
       "data": 5
     },
     "E": {
-      "item": "minecraft:ender_pearl"
+      "type": "forge:ore_dict",
+      "ore": "enderpearl"
     }
   },
   "result": {

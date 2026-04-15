@@ -7,23 +7,27 @@
     ],
     "key": {
         "D": {
-            "item": "minecraft:diamond_block"
+            "type": "forge:ore_dict",
+            "ore": "blockDiamond"
         },
         "E": {
-            "item": "minecraft:emerald"
+            "type": "forge:ore_dict",
+            "ore": "gemEmerald"
         },
         "B": {
             "item": "randomthings:biomecrystal"
         },
         "Q": {
-            "item": "minecraft:quartz"
+            "type": "forge:ore_dict",
+            "ore": "gemQuartz"
         },
         "G": {
             "type": "forge:ore_dict",
             "ore": "blockGlass"
         },
         "O": {
-            "item": "minecraft:obsidian"
+            "type": "forge:ore_dict",
+            "ore": "obsidian"
         }
     },
     "result": {

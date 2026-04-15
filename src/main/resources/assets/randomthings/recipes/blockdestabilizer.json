@@ -7,17 +7,20 @@
   ],
   "key": {
     "O": {
-      "item": "minecraft:obsidian"
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
     },
     "R": {
-      "item": "minecraft:redstone"
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     },
     "S": {
-      "item": "minecraft:sand",
-      "data": 0
+      "type": "forge:ore_dict",
+      "ore": "sand"
     },
     "D": {
-        "item": "minecraft:diamond"
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
     }
   },
   "result": {

@@ -9,7 +9,8 @@
       "item": "randomthings:superlubricentice"
     },
     "E": {
-      "item": "minecraft:ender_pearl"
+      "type": "forge:ore_dict",
+      "ore": "enderpearl"
     }
   },
   "result": {

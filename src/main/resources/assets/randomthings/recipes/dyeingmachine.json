@@ -19,8 +19,8 @@
       "ore": "dyeBlue"
     },
     "W": {
-      "item": "minecraft:wool",
-      "data": 15
+      "type": "forge:ore_dict",
+      "ore": "woolBlack"
     },
     "C": {
       "item": "minecraft:crafting_table"

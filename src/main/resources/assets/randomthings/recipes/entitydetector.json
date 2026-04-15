@@ -14,7 +14,8 @@
       "item": "minecraft:redstone_torch"
     },
     "E": {
-      "item": "minecraft:ender_pearl"
+      "type": "forge:ore_dict",
+      "ore": "enderpearl"
     },
     "P": {
       "item": "minecraft:stone_pressure_plate"

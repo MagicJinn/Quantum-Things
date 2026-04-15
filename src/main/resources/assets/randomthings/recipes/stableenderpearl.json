@@ -7,14 +7,16 @@
   ],
   "key": {
     "O": {
-      "item": "minecraft:obsidian"
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
     },
     "L": {
       "item": "minecraft:dye",
       "data": 4
     },
     "E": {
-      "item": "minecraft:ender_pearl"
+      "type": "forge:ore_dict",
+      "ore": "enderpearl"
     }
   },
   "result": {

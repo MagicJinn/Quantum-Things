@@ -13,7 +13,8 @@
       "item": "randomthings:quartzglass"
     },
     "A": {
-      "item": "minecraft:redstone"
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     }
   },
   "result": {

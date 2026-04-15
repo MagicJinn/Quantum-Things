@@ -7,10 +7,12 @@
   ],
   "key": {
     "E": {
-      "item": "minecraft:end_stone"
+      "type": "forge:ore_dict",
+      "ore": "endstone"
     },
     "R": {
-      "item": "minecraft:redstone"
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     },
     "S": {
       "item": "randomthings:stableenderpearl"

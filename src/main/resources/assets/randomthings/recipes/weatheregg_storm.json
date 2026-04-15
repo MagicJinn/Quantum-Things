@@ -7,14 +7,15 @@
   ],
   "key": {
     "O": {
-      "item":"minecraft:obsidian"
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
     },
     "C": {
       "item":"minecraft:fire_charge"
     },
     "L": {
-      "item":"minecraft:dye",
-      "data": 4
+      "type": "forge:ore_dict",
+      "ore": "gemLapis"
     },
     "S": {
       "item":"minecraft:sugar"

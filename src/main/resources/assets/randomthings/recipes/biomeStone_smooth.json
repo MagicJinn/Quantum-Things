@@ -7,8 +7,8 @@
   ],
   "key": {
     "S": {
-      "item": "minecraft:stone",
-      "data": 0
+      "type": "forge:ore_dict",
+      "ore": "stone"
     },
     "B": {
       "item": "randomthings:biomecrystal"

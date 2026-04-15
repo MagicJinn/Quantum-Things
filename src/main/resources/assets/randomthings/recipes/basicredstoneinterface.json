@@ -11,7 +11,8 @@
       "ore": "ingotIron"
     },
     "R": {
-      "item": "minecraft:redstone"
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     },
     "S": {
       "item": "randomthings:stableenderpearl"

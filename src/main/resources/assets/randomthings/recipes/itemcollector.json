@@ -7,13 +7,15 @@
   ],
   "key": {
     "E": {
-      "item": "minecraft:ender_pearl"
+      "type": "forge:ore_dict",
+      "ore": "enderpearl"
     },
     "H": {
       "item": "minecraft:hopper"
     },
     "O": {
-      "item": "minecraft:obsidian"
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
     }
   },
   "result": {

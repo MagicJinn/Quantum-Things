@@ -10,7 +10,8 @@
       "item": "randomthings:stableenderpearl"
     },
     "E": {
-      "item": "minecraft:ender_pearl"
+      "type": "forge:ore_dict",
+      "ore": "enderpearl"
     },
     "C": {
       "item": "randomthings:spectrecharger",

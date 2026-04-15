@@ -11,7 +11,8 @@
       "data": 0
     },
     "W": {
-      "item": "minecraft:wheat"
+      "type": "forge:ore_dict",
+      "ore": "cropWheat"
     },
     "O": {
       "item": "minecraft:bowl"

@@ -11,7 +11,8 @@
       "ore": "dyeBlue"
     },
     "P": {
-      "item": "minecraft:paper"
+      "type": "forge:ore_dict",
+      "ore": "paper"
     }
   },
   "result": {

@@ -11,7 +11,8 @@
       "ore": "blockRedstone"
     },
     "O": {
-      "item": "minecraft:obsidian"
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
     },
     "I": {
       "item": "randomthings:basicredstoneinterface"

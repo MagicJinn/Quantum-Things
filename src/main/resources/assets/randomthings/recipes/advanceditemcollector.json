@@ -9,7 +9,8 @@
       "item": "minecraft:redstone_torch"
     },
     "G": {
-      "item": "minecraft:glowstone_dust"
+      "type": "forge:ore_dict",
+      "ore": "dustGlowstone"
     },
     "I": {
       "item": "randomthings:itemcollector"

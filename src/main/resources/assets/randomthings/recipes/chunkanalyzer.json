@@ -10,19 +10,20 @@
 			"item": "minecraft:iron_bars"
 		},
 		"I": {
-			"item": "minecraft:iron_ingot"
+			"type": "forge:ore_dict",
+			"ore": "ingotIron"
 		},
 		"G": {
 			"type": "forge:ore_dict",
 			"ore": "blockGlass"
 		},
 		"S": {
-			"item": "minecraft:stone",
-			"data": 0
+			"type": "forge:ore_dict",
+			"ore": "stone"
 		},
 		"D": {
-			"item": "minecraft:dirt",
-			"data": 0
+			"type": "forge:ore_dict",
+			"ore": "dirt"
 		}
 	},
 	"result": {

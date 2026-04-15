@@ -10,7 +10,8 @@
       "item" : "minecraft:redstone_torch"
     },
     "R": {
-      "item": "minecraft:redstone"
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     },
     "D" : {
     	"item" : "randomthings:chatdetector"

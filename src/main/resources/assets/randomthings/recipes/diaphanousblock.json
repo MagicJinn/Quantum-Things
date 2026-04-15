@@ -7,20 +7,20 @@
   ],
   "key": {
     "R": {
-      "item": "minecraft:stained_glass",
-      "data": 14
+      "type": "forge:ore_dict",
+      "ore": "blockGlassRed"
     },
     "G": {
-      "item": "minecraft:stained_glass",
-      "data": 13
+      "type": "forge:ore_dict",
+      "ore": "blockGlassGreen"
     },
     "B": {
-      "item": "minecraft:stained_glass",
-      "data": 11
+      "type": "forge:ore_dict",
+      "ore": "blockGlassBlue"
     },
     "Y": {
-      "item": "minecraft:stained_glass",
-      "data": 4
+      "type": "forge:ore_dict",
+      "ore": "blockGlassYellow"
     },
     "Q": {
       "item": "randomthings:quartzglass"

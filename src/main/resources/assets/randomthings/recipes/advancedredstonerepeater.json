@@ -9,11 +9,12 @@
       "item": "minecraft:redstone_torch"
     },
     "X": {
-      "item": "minecraft:redstone"
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     },
     "S": {
-      "item": "minecraft:stone",
-      "data": 0
+      "type": "forge:ore_dict",
+      "ore": "stone"
     },
     "I": {
       "type": "forge:ore_dict",

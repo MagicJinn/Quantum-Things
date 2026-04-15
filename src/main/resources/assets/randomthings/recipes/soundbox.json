@@ -11,8 +11,8 @@
       "ore": "plankWood"
     },
     "L": {
-      "item": "minecraft:dye",
-      "data": 4
+      "type": "forge:ore_dict",
+      "ore": "dyeBlue"
     }
   },
   "result": {

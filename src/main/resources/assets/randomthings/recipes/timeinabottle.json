@@ -11,11 +11,12 @@
       "ore": "ingotGold"
     },
     "D": {
-      "item": "minecraft:diamond"
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
     },
     "L": {
-      "item": "minecraft:dye",
-      "data": 4
+      "type": "forge:ore_dict",
+      "ore": "gemLapis"
     },
     "C": {
         "item": "minecraft:clock"
