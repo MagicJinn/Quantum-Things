@@ -16,10 +16,16 @@ import net.minecraftforge.items.SlotItemHandler;
 public class ContainerGlobalChatDetector extends Container
 {
 	IItemHandler itemHandler;
+	BlockPos pos;
+	World world;
+	TileEntityGlobalChatDetector expectedTileEntity;
 
 	public ContainerGlobalChatDetector(EntityPlayer player, World world, int x, int y, int z)
 	{
-		TileEntityGlobalChatDetector te = (TileEntityGlobalChatDetector) world.getTileEntity(new BlockPos(x, y, z));
+		this.world = world;
+		this.pos = new BlockPos(x, y, z);
+		TileEntityGlobalChatDetector te = (TileEntityGlobalChatDetector) world.getTileEntity(this.pos);
+		expectedTileEntity = te;
 		itemHandler = te.getItemHandler();
 		for (int i = 0; i < 9; i++)
 		{
@@ -198,6 +204,9 @@ public class ContainerGlobalChatDetector extends Container
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn)
 	{
-		return true;
+		return playerIn.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D
+				&& expectedTileEntity != null
+				&& !expectedTileEntity.isInvalid()
+				&& this.world.getTileEntity(this.pos) == expectedTileEntity;
 	}
 }

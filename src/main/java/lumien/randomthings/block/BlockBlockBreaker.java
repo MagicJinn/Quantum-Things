@@ -29,7 +29,9 @@ public class BlockBlockBreaker extends BlockContainerBase
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
-		((TileEntityBlockBreaker) worldIn.getTileEntity(pos)).breakBlock(worldIn, pos, state);
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (te instanceof TileEntityBlockBreaker)
+			((TileEntityBlockBreaker) te).breakBlock(worldIn, pos, state);
 		super.breakBlock(worldIn, pos, state);
 	}
 
@@ -55,7 +57,9 @@ public class BlockBlockBreaker extends BlockContainerBase
 		super.onBlockAdded(worldIn, pos, state);
 		this.setDefaultFacing(worldIn, pos, state);
 
-		((TileEntityBlockBreaker) worldIn.getTileEntity(pos)).neighborChanged(state, worldIn, pos, null, null);
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (te instanceof TileEntityBlockBreaker)
+			((TileEntityBlockBreaker) te).neighborChanged(state, worldIn, pos, null, null);
 	}
 
 	private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state)
@@ -69,21 +73,13 @@ public class BlockBlockBreaker extends BlockContainerBase
 			EnumFacing enumfacing = state.getValue(FACING);
 
 			if (enumfacing == EnumFacing.NORTH && iblockstate.isFullBlock() && !iblockstate1.isFullBlock())
-			{
 				enumfacing = EnumFacing.SOUTH;
-			}
 			else if (enumfacing == EnumFacing.SOUTH && iblockstate1.isFullBlock() && !iblockstate.isFullBlock())
-			{
 				enumfacing = EnumFacing.NORTH;
-			}
 			else if (enumfacing == EnumFacing.WEST && iblockstate2.isFullBlock() && !iblockstate3.isFullBlock())
-			{
 				enumfacing = EnumFacing.EAST;
-			}
 			else if (enumfacing == EnumFacing.EAST && iblockstate3.isFullBlock() && !iblockstate2.isFullBlock())
-			{
 				enumfacing = EnumFacing.WEST;
-			}
 
 			worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
 		}
