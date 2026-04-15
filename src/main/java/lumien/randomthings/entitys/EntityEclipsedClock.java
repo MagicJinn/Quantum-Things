@@ -122,7 +122,7 @@ public class EntityEclipsedClock extends EntityHanging implements IEntityAdditio
 		{
 			if (!this.world.isRemote && cooldownCounter == 0)
 			{
-				long timeStored = ItemTimeInABottle.getStoredTime(player);
+				long timeStored = ItemTimeInABottle.getStoredTime(bottle, player);
 				int dif = (getTargetTime() - (int) this.world.getWorldTime()) % 24000;
 
 				if (dif < 0)
@@ -135,7 +135,7 @@ public class EntityEclipsedClock extends EntityHanging implements IEntityAdditio
 					world.setWorldTime(world.getWorldTime() + dif);
 
 					if (!player.capabilities.isCreativeMode)
-						ItemTimeInABottle.setStoredTime(player, timeStored - dif);
+						ItemTimeInABottle.setStoredTime(bottle, player, timeStored - dif);
 
 					cooldownCounter = 110;
 					MessageEclipsedClock msg = new MessageEclipsedClock(this.getEntityId());

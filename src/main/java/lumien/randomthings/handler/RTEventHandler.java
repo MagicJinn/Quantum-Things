@@ -814,12 +814,7 @@ public class RTEventHandler {
     public void itemTooltip(ItemTooltipEvent event) {  
         if (event.getItemStack().getItem() instanceof ItemTimeInABottle) {  
             EntityPlayer player = event.getEntityPlayer();  
-            long storedTime = 0;  
-            if (player != null) {  
-                IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);  
-                if (cap != null)  
-                    storedTime = cap.getBottledTime();  
-            }  
+			long storedTime = ItemTimeInABottle.getStoredTime(event.getItemStack(), player);
             int storedSeconds = (int) (storedTime / 20);  
             int hours = storedSeconds / 3600;  
             int minutes = (storedSeconds % 3600) / 60;  
@@ -892,7 +887,7 @@ public class RTEventHandler {
 				if (equippedItem.getItem() == ModItems.timeInABottle && pointedEntity instanceof EntityEclipsedClock) {
 					int targetTime = ((EntityEclipsedClock) pointedEntity).getTargetTime();
 
-					long stored = ItemTimeInABottle.getStoredTime(minecraft.player);
+					long stored = ItemTimeInABottle.getStoredTime(equippedItem, minecraft.player);
 
 					int width = event.getResolution().getScaledWidth();
 					int height = event.getResolution().getScaledHeight();

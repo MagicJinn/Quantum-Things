@@ -11,6 +11,7 @@ import lumien.randomthings.handler.festival.FestivalHandler;
 import lumien.randomthings.handler.floo.FlooFireplace;
 import lumien.randomthings.handler.floo.FlooNetworkHandler;
 import lumien.randomthings.handler.spectreilluminator.SpectreIlluminationHandler;
+import lumien.randomthings.config.Features;
 import lumien.randomthings.item.ItemBiomeCrystal;
 import lumien.randomthings.item.ItemPositionFilter;
 import lumien.randomthings.item.ItemTimeInABottle;
@@ -64,6 +65,7 @@ public class RTCommand extends CommandBase
 	private static final String TIB_MODE_QUERY = "query";
 	private static final String TIB_MODE_SET = "set";
 	private static final String TIB_MODE_SUBTRACT = "subtract";
+	private static final String TIB_MODE_TRANSFER = "transfer";
 
 	@Override
 	public String getName()
@@ -113,13 +115,13 @@ public class RTCommand extends CommandBase
 			}
 			else if (args[0].equals(SUB_TIME_IN_A_BOTTLE)) {
 				if (args.length == 2) {
-					return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
+					return getListOfStringsMatchingLastWord(args, new String[] { TIB_MODE_TRANSFER, TIB_MODE_ADD,
+							TIB_MODE_QUERY, TIB_MODE_SET, TIB_MODE_SUBTRACT });
 				} else if (args.length == 3) {
-					return getListOfStringsMatchingLastWord(args,
-							new String[] { TIB_MODE_ADD, TIB_MODE_QUERY, TIB_MODE_SET, TIB_MODE_SUBTRACT });
+					return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
 				} else if (args.length == 4
-						&& (args[2].equals(TIB_MODE_ADD) || args[2].equals(TIB_MODE_SET)
-								|| args[2].equals(TIB_MODE_SUBTRACT))) {
+						&& (args[1].equals(TIB_MODE_TRANSFER) || args[1].equals(TIB_MODE_ADD)
+								|| args[1].equals(TIB_MODE_SET) || args[1].equals(TIB_MODE_SUBTRACT))) {
 					return getListOfStringsMatchingLastWord(args, new String[] { "30s", "60s", "10m", "1h" });
 				}
 			}
@@ -128,11 +130,29 @@ public class RTCommand extends CommandBase
 	}
 
 	@Override
+	public int getRequiredPermissionLevel()
+	{
+		return 0;
+	}
+
+	@Override
+	public boolean checkPermission(MinecraftServer server, ICommandSender sender)
+	{
+		return true;
+	}
+
+	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		if (args.length == 0)
 		{
 			return;
+		}
+
+		boolean isPublicTransfer = args[0].equals(SUB_TIME_IN_A_BOTTLE) && args.length >= 2
+				&& args[1].equals(TIB_MODE_TRANSFER);
+		if (!isPublicTransfer && !sender.canUseCommand(2, COMMAND_ROOT)) {
+			throw new CommandException("You don't have permission to use this command.");
 		}
 
 		if (args[0].equals(SUB_SET_BIOME_CRYSTAL))
@@ -309,18 +329,91 @@ public class RTCommand extends CommandBase
 		}
 		else if (args[0].equals(SUB_TI))
 		{
+			if (Features.DISABLE_SPECTRE_ILLUMINATOR) {
+				sender.sendMessage(new TextComponentString("Spectre Illuminator is disabled by config."));
+				return;
+			}
+
 			SpectreIlluminationHandler.get(sender.getEntityWorld()).toggleChunk(sender.getEntityWorld(), sender.getPosition());
 		}
 		else if (args[0].equals(SUB_TIME_IN_A_BOTTLE)) {
-			// Check if we have all arguments
-			if (args.length >= 3) {
-				EntityPlayerMP target = server.getPlayerList().getPlayerByUsername(args[1]);
-				if (target == null) {
-					throw new CommandException("Player not found: " + args[1]);
+			if (args.length >= 4 && args[1].equals(TIB_MODE_TRANSFER)) {
+				if (!(sender instanceof EntityPlayerMP)) {
+					throw new CommandException("Only players can use transfer.");
 				}
 
-				String mode = args[2];
-				long currentTicks = ItemTimeInABottle.getStoredTime(target);
+				EntityPlayerMP source = (EntityPlayerMP) sender;
+				EntityPlayerMP target = server.getPlayerList().getPlayerByUsername(args[2]);
+				if (target == null) {
+					throw new CommandException("Player not found: " + args[2]);
+				}
+				if (target == source) {
+					throw new CommandException("You cannot transfer time to yourself.");
+				}
+
+				long seconds = parseTimeInBottleSeconds(args[3], 1);
+				long requestedTicks = seconds * 20L;
+
+				if (Features.LEGACY_TIME_IN_A_BOTTLE) {
+					ItemStack sourceBottle = findBottleForLegacyCommand(source);
+					ItemStack targetBottle = findBottleForLegacyCommand(target);
+					if (sourceBottle.isEmpty()) {
+						throw new CommandException("You must have a Time in a Bottle in your inventory.");
+					}
+					if (targetBottle.isEmpty()) {
+						throw new CommandException(target.getName() + " must have a Time in a Bottle in their inventory.");
+					}
+
+					long sourceTime = ItemTimeInABottle.getStoredTime(sourceBottle, source);
+					long targetTime = ItemTimeInABottle.getStoredTime(targetBottle, target);
+					long maxTicks = 42949672940L;
+					long moved = Math.min(requestedTicks, sourceTime);
+					moved = Math.min(moved, Math.max(0L, maxTicks - targetTime));
+					if (moved <= 0) {
+						throw new CommandException("No transferable time available.");
+					}
+
+					ItemTimeInABottle.setStoredTime(sourceBottle, source, sourceTime - moved);
+					ItemTimeInABottle.setStoredTime(targetBottle, target, targetTime + moved);
+					sender.sendMessage(new TextComponentString("Transferred " + (moved / 20L) + " seconds to "
+							+ target.getName() + "."));
+				}
+				else {
+					long sourceTime = ItemTimeInABottle.getStoredTime(source);
+					long targetTime = ItemTimeInABottle.getStoredTime(target);
+					long maxTicks = 42949672940L;
+					long moved = Math.min(requestedTicks, sourceTime);
+					moved = Math.min(moved, Math.max(0L, maxTicks - targetTime));
+					if (moved <= 0) {
+						throw new CommandException("No transferable time available.");
+					}
+
+					ItemTimeInABottle.setStoredTime(source, sourceTime - moved);
+					ItemTimeInABottle.setStoredTime(target, targetTime + moved);
+					sender.sendMessage(new TextComponentString("Transferred " + (moved / 20L) + " seconds to "
+							+ target.getName() + "."));
+				}
+				return;
+			}
+
+			// Check if we have all arguments
+			if (args.length >= 3) {
+				if (!sender.canUseCommand(2, SUB_TIME_IN_A_BOTTLE)) {
+					throw new CommandException("You don't have permission to use this action.");
+				}
+
+				String mode = args[1];
+				EntityPlayerMP target = server.getPlayerList().getPlayerByUsername(args[2]);
+				if (target == null) {
+					throw new CommandException("Player not found: " + args[2]);
+				}
+
+				ItemStack targetBottle = findBottleForLegacyCommand(target);
+				if (Features.LEGACY_TIME_IN_A_BOTTLE && targetBottle.isEmpty()) {
+					throw new CommandException(target.getName() + " must have a Time in a Bottle in their inventory.");
+				}
+				long currentTicks = Features.LEGACY_TIME_IN_A_BOTTLE ? ItemTimeInABottle.getStoredTime(targetBottle, target)
+						: ItemTimeInABottle.getStoredTime(target);
 				long maxTicks = 42949672940L;
 
 				if (mode.equals(TIB_MODE_QUERY)) {
@@ -329,23 +422,23 @@ public class RTCommand extends CommandBase
 				} else if (mode.equals(TIB_MODE_ADD)) {
 					if (args.length < 4)
 						throw new CommandException("Usage: " + COMMAND_PREFIX + " " + SUB_TIME_IN_A_BOTTLE
-								+ " <playername> " + TIB_MODE_ADD + " <time>");
+								+ " " + TIB_MODE_ADD + " <playername> <time>");
 
 					long seconds = parseTimeInBottleSeconds(args[3], 1);
 					long newTicks = Math.min(maxTicks, currentTicks + seconds * 20L);
 					long changed = (newTicks - currentTicks) / 20L;
-					ItemTimeInABottle.setStoredTime(target, newTicks);
+					setCommandTime(target, targetBottle, newTicks);
 
 					sender.sendMessage(new TextComponentString("Added " + changed + " seconds to " + target.getName()
 							+ " (now " + (newTicks / 20L) + " seconds)."));
 				} else if (mode.equals(TIB_MODE_SET)){
 					if (args.length < 4)
 						throw new CommandException("Usage: " + COMMAND_PREFIX + " " + SUB_TIME_IN_A_BOTTLE
-								+ " <playername> " + TIB_MODE_SET + " <time>");
+								+ " " + TIB_MODE_SET + " <playername> <time>");
 
 						long seconds = parseTimeInBottleSeconds(args[3], 0);
 						long newTicks = Math.min(maxTicks, seconds * 20L);
-						ItemTimeInABottle.setStoredTime(target, newTicks);
+						setCommandTime(target, targetBottle, newTicks);
 
 						sender.sendMessage(new TextComponentString(
 								"Set " + target.getName() + "'s Time in a Bottle to " + (newTicks / 20L)
@@ -353,12 +446,12 @@ public class RTCommand extends CommandBase
 					} else if (mode.equals(TIB_MODE_SUBTRACT)) {
 						if (args.length < 4)
 							throw new CommandException("Usage: " + COMMAND_PREFIX + " " + SUB_TIME_IN_A_BOTTLE
-									+ " <playername> " + TIB_MODE_SUBTRACT + " <time>");
+									+ " " + TIB_MODE_SUBTRACT + " <playername> <time>");
 
 						long seconds = parseTimeInBottleSeconds(args[3], 1);
 						long newTicks = Math.max(0L, currentTicks - seconds * 20L);
 						long changed = (currentTicks - newTicks) / 20L;
-						ItemTimeInABottle.setStoredTime(target, newTicks);
+						setCommandTime(target, targetBottle, newTicks);
 						sender.sendMessage(new TextComponentString("Subtracted " + changed + " seconds from "
 								+ target.getName() + " (now " + (newTicks / 20L) + " seconds)."));
 					} else {
@@ -421,5 +514,39 @@ public class RTCommand extends CommandBase
 		}
 
 		return seconds;
+	}
+
+	private void setCommandTime(EntityPlayerMP target, ItemStack targetBottle, long ticks) throws CommandException
+	{
+		if (Features.LEGACY_TIME_IN_A_BOTTLE) {
+			if (targetBottle.isEmpty()) {
+				throw new CommandException(target.getName() + " must have a Time in a Bottle in their inventory.");
+			}
+			ItemTimeInABottle.setStoredTime(targetBottle, target, ticks);
+			return;
+		}
+
+		ItemTimeInABottle.setStoredTime(target, ticks);
+	}
+
+	private ItemStack findBottleForLegacyCommand(EntityPlayerMP player)
+	{
+		ItemStack main = player.getHeldItemMainhand();
+		if (!main.isEmpty() && main.getItem() == ModItems.timeInABottle) {
+			return main;
+		}
+		ItemStack off = player.getHeldItemOffhand();
+		if (!off.isEmpty() && off.getItem() == ModItems.timeInABottle) {
+			return off;
+		}
+
+		for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+			ItemStack stack = player.inventory.getStackInSlot(i);
+			if (!stack.isEmpty() && stack.getItem() == ModItems.timeInABottle) {
+				return stack;
+			}
+		}
+
+		return ItemStack.EMPTY;
 	}
 }
