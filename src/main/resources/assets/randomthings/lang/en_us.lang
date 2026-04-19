@@ -81,9 +81,9 @@ item.enderBucket.filled.name=%s Ender Bucket
 item.reinforcedEnderBucket.name=Reinforced Ender Bucket
 item.reinforcedEnderBucket.filled.name=%s Reinforced Ender Bucket
 
-tile.spectrePlank.name=Spectre Planks
-tile.spectreStairs.name=Spectre Stairs
-tile.spectreSlab.name=Spectre Slab
+tile.spectrePlank.name=Spectre Wood Planks
+tile.spectreStairs.name=Spectre Wood Stairs
+tile.spectreSlab.name=Spectre Wood Slab
 tile.spectreFence.name=Spectre Fence
 tile.spectreFenceGate.name=Spectre Fence Gate
 tile.spectreSapling.name=Spectre Sapling

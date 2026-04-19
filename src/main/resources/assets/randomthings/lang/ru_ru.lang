@@ -81,7 +81,9 @@ item.enderBucket.filled.name=%s ведро Края
 item.reinforcedEnderBucket.name=Усиленное ведро Края
 item.reinforcedEnderBucket.filled.name=%s усиленное ведро Края
 
-tile.spectrePlank.name=Призрачные доски
+tile.spectrePlank.name=Доски из призрачного дерева
+tile.spectreStairs.name=Ступеньки из призрачного дерева
+tile.spectreSlab.name=Плита из призрачного дерева
 tile.spectreSapling.name=Призрачный саженец
 tile.spectreLeaf.name=Призрачные листья
 tile.spectreLog.name=Призрачное бревно

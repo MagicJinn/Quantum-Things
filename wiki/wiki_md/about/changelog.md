@@ -7,6 +7,12 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.3.0 (In Development)
+
+### Fixes
+
+- Named the new variants of Spectre wood consistently with vanilla (Spectre Planks > Spectre Wood Planks) (Introduced in 1.2.0).
+
 ## 1.2.0
 
 ### Changes

@@ -81,7 +81,9 @@ item.enderBucket.filled.name=%s末影桶
 item.reinforcedEnderBucket.name=强化末影桶
 item.reinforcedEnderBucket.filled.name=强化末影%s桶
 
-tile.spectrePlank.name=通灵木板
+tile.spectrePlank.name=通灵木木板
+tile.spectreStairs.name=通灵木楼梯
+tile.spectreSlab.name=通灵木台阶
 tile.spectreSapling.name=通灵树苗
 tile.spectreLeaf.name=通灵树叶
 tile.spectreLog.name=通灵原木
