@@ -17,8 +17,8 @@ Using Spectre Ingots, crafted from [Ectoplasm](ectoplasm) you can craft Spectre 
 | --------------- | ------------- | ------------ | ---------- | ---------------- | ------------ | --------------- |
 | Spectre Sword   | 7.0           | 1.6          | 2000       | -                | -            | Damages Spirits |
 | Spectre Pickaxe | 5.0           | 1.2          | 2000       | 3 (Diamond tier) | 8.0          | +3 reach        |
-| Spectre Shovel  | 5.5           | 1.0          | 2000       | 3 (Diamond tier) | 8.0          | +3 reach        |
 | Spectre Axe     | 9.0           | 1.0          | 2000       | 3 (Diamond tier) | 8.0          | +3 reach        |
+| Spectre Shovel  | 5.5           | 1.0          | 2000       | 3 (Diamond tier) | 8.0          | +3 reach        |
 | Spectre Hoe     | 1.0           | 4.0          | 2000       | 3 (Diamond tier) | 8.0          | +3 reach        |
 
 ## Crafting
