@@ -18,7 +18,7 @@ You can use the following commands to manage the stored time in a bottle:
 - `/rt timeinabottle <playername> <add|query|set|subtract> <time><s|m|h|d>`
 - `/qt timeinabottle transfer <playername> <time><s|m|h|d>`
 
-By default, number is interpreted as seconds. You can use the following suffixes to specify the unit: s, m, h, d. The command can be used by any players with operator permissions, and is meant to replace the old nbt system, where time could be read and changed from the item nbt.
+By default, time is interpreted as seconds. You can use the following suffixes to specify the unit: s, m, h, d. The command can be used by any players with operator permissions, and is meant to replace the old nbt system, where time could be read and changed from the item nbt.
 
 Players can use the transfer command to move their stored time directly to another player. Any player can execute this command, regardless of operator status. In legacy mode, both the source and target player must have a Time in a Bottle in their inventory.
 

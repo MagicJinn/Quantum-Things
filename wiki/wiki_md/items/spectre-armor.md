@@ -21,7 +21,7 @@ Spectre Armor is a powerful set of armor crafted from Spectre Ingots and Diamond
 | Boots | 3 | 455 |
 | **Full Set** | **22** | - |
 
-The full set provides 22 armor points (2 points above Diamond Armor) but with significantly higher durability and a toughness of 3.0 (1 point above Diamond Armor's). It has an enchantability of 22, less than Gold, but more than Diamond.
+The full set provides 22 armor points (2 points above Diamond Armor) but with slightly higher durability and a toughness of 3.0 (1 point above Diamond Armor's). It has an enchantability of 22, less than Gold, but more than Diamond.
 
 ### Transparency Effect
 
