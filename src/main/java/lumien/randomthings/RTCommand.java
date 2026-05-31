@@ -1,9 +1,6 @@
 package lumien.randomthings;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import com.mojang.authlib.GameProfile;
 
@@ -51,8 +48,11 @@ import javax.annotation.Nonnull;
 
 public class RTCommand extends CommandBase
 {
+	// TODO: Create a system where, if a command is registered, it is automatically
+	// added to the tabCompletions
 	private static final String COMMAND_ROOT = "rt";
 	private static final String COMMAND_PREFIX = "/" + COMMAND_ROOT;
+
 	private static final String SUB_GENERATE_BIOME_CRYSTAL_CHESTS = "generateBiomeCrystalChests";
 	private static final String SUB_SET_BIOME_CRYSTAL = "setBiomeCrystal";
 	private static final String SUB_TP_FILTER = "tpFilter";
@@ -72,6 +72,12 @@ public class RTCommand extends CommandBase
 	private static final String TIB_MODE_SUBTRACT = "subtract";
 	private static final String TIB_MODE_TRANSFER = "transfer";
 
+	private static final List<String> SUBCOMMANDS = Arrays.asList(
+			SUB_GENERATE_BIOME_CRYSTAL_CHESTS, SUB_SET_BIOME_CRYSTAL, SUB_TP_FILTER,
+			SUB_TEST_SLIME_SPAWN,
+			SUB_NOTIFY, SUB_FIREPLACES, SUB_FESTIVAL, SUB_OP, SUB_TIME_IN_A_BOTTLE,
+			SUB_TEST_ENDER_MAILBOX, SUB_ANCIENT_FURNACE);
+
 	@Override
 	public String getName()
 	{
@@ -87,13 +93,8 @@ public class RTCommand extends CommandBase
 	@Override
 	public List<String> getTabCompletions(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, String[] args, BlockPos pos)
 	{
-		if (args.length == 1)
-		{
-			return getListOfStringsMatchingLastWord(args,
-                    SUB_GENERATE_BIOME_CRYSTAL_CHESTS, SUB_SET_BIOME_CRYSTAL, SUB_TP_FILTER,
-                    SUB_TEST_SLIME_SPAWN,
-                    SUB_NOTIFY, SUB_FIREPLACES, SUB_FESTIVAL, SUB_OP, SUB_TIME_IN_A_BOTTLE,
-                    SUB_TEST_ENDER_MAILBOX);
+		if (args.length == 1) {
+			return getListOfStringsMatchingLastWord(args, SUBCOMMANDS);
 		}
 		else
 		{

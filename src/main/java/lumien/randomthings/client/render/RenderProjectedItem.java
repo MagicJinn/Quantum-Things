@@ -94,7 +94,7 @@ public class RenderProjectedItem extends Render<EntityProjectedItem>
 	 * Renders the desired {@code T} type Entity.
 	 */
 	@Override
-	public void doRender(EntityProjectedItem entity, double x, double y, double z, float entityYaw, float partialTicks)
+	public void doRender(@Nonnull EntityProjectedItem entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
 		ItemStack itemstack = entity.getItem();
 		int i;

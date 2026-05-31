@@ -29,7 +29,7 @@ public class RenderWeatherCloud extends Render<EntityWeatherCloud>
 	}
 
 	@Override
-	public void doRender(EntityWeatherCloud entity, double x, double y, double z, float entityYaw, float partialTicks)
+	public void doRender(@Nonnull EntityWeatherCloud entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
 		if (entity.getEggType() == ItemWeatherEgg.TYPE.SUN)
 		{

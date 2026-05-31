@@ -43,7 +43,7 @@ public class RenderTimeAccelerator extends Render<EntityTimeAccelerator>
 	}));
 
 	@Override
-	public void doRender(EntityTimeAccelerator entity, double x, double y, double z, float entityYaw, float partialTicks)
+	public void doRender(@Nonnull EntityTimeAccelerator entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
 		GlStateManager.disableTexture2D();
 

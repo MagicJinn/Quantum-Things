@@ -43,7 +43,7 @@ public class RenderEclipsedClock extends Render<EntityEclipsedClock>
 	 * Renders the desired {@code T} type Entity.
 	 */
 	@SuppressWarnings("null")
-	public void doRender(EntityEclipsedClock entity, double x, double y, double z, float entityYaw, float partialTicks)
+	public void doRender(@Nonnull EntityEclipsedClock entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
 		GlStateManager.pushMatrix();
 		BlockPos blockpos = entity.getHangingPosition();

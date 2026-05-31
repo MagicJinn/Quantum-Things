@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import lumien.randomthings.client.render.magiccircles.ColorFunctions;
 import lumien.randomthings.client.render.magiccircles.IColorFunction;
@@ -73,7 +74,8 @@ public class RenderSpectreIlluminator extends Render<EntitySpectreIlluminator>
 
 	@Override
 	@SuppressWarnings("null")
-	public void doRender(@Nonnull EntitySpectreIlluminator entity, double x, double y, double z, float entityYaw, float partialTicks)
+	public void doRender(@Nullable EntitySpectreIlluminator entity, double x, double y, double z, float entityYaw,
+	                     float partialTicks)
 	{
 		GlStateManager.disableTexture2D();
 
@@ -92,7 +94,8 @@ public class RenderSpectreIlluminator extends Render<EntitySpectreIlluminator>
 
 		// Shift rendering up by half the entity height to align visual with hitbox
 		// Only apply offset when rendering as entity (not as item in hand)
-        y += Y_OFFSET;
+		if (entity != null)
+			y += Y_OFFSET;
 
 		GlStateManager.translate(x, y, z);
 

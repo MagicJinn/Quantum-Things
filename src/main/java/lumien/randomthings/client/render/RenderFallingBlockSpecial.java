@@ -28,7 +28,7 @@ public class RenderFallingBlockSpecial extends Render<EntityFallingBlockSpecial>
 	}
 
 	@Override
-	public void doRender(EntityFallingBlockSpecial entity, double x, double y, double z, float entityYaw, float partialTicks)
+	public void doRender(@Nonnull EntityFallingBlockSpecial entity, double x, double y, double z, float entityYaw, float partialTicks)
 	{
 		if (entity.getBlock() != null)
 		{
