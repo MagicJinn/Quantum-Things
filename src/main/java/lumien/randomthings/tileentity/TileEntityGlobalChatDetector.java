@@ -59,7 +59,8 @@ public class TileEntityGlobalChatDetector extends TileEntityBase implements ITic
 				if (pulsingCounter <= 0)
 				{
 					pulsing = false;
-					this.world.setBlockState(pos, ModBlocks.globalChatDetector.getDefaultState().withProperty(BlockGlobalChatDetector.POWERED, pulsing));
+					this.getWorld().setBlockState(pos, ModBlocks.globalChatDetector.getDefaultState()
+							.withProperty(BlockGlobalChatDetector.POWERED, pulsing));
 				}
 			}
 		}
@@ -111,7 +112,8 @@ public class TileEntityGlobalChatDetector extends TileEntityBase implements ITic
 		pulsing = true;
 		pulsingCounter = 20;
 
-		this.world.setBlockState(pos, ModBlocks.globalChatDetector.getDefaultState().withProperty(BlockGlobalChatDetector.POWERED, pulsing));
+		this.getWorld().setBlockState(pos,
+				ModBlocks.globalChatDetector.getDefaultState().withProperty(BlockGlobalChatDetector.POWERED, pulsing));
 	}
 
 	@Override
@@ -122,7 +124,7 @@ public class TileEntityGlobalChatDetector extends TileEntityBase implements ITic
 
 	public boolean checkMessage(EntityPlayerMP entityPlayerMP, String sendMessage)
 	{
-		if (!this.world.isRemote)
+		if (!this.getWorld().isRemote)
 		{
 			UUID sendUUID = entityPlayerMP.getGameProfile().getId();
 			if (sendUUID != null && this.chatMessage.equals(sendMessage))

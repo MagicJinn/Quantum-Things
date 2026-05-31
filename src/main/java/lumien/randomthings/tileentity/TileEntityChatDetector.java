@@ -7,12 +7,9 @@ import java.util.WeakHashMap;
 
 import lumien.randomthings.block.BlockChatDetector;
 import lumien.randomthings.block.ModBlocks;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class TileEntityChatDetector extends TileEntityBase implements ITickable
@@ -54,15 +51,11 @@ public class TileEntityChatDetector extends TileEntityBase implements ITickable
 				if (pulsingCounter <= 0)
 				{
 					pulsing = false;
-					this.world.setBlockState(pos, ModBlocks.chatDetector.getDefaultState().withProperty(BlockChatDetector.POWERED, pulsing));
+					this.getWorld().setBlockState(pos,
+							ModBlocks.chatDetector.getDefaultState().withProperty(BlockChatDetector.POWERED, pulsing));
 				}
 			}
 		}
-	}
-
-	public boolean isPulsing()
-	{
-		return pulsing;
 	}
 
 	@Override
@@ -114,18 +107,13 @@ public class TileEntityChatDetector extends TileEntityBase implements ITickable
 		pulsing = true;
 		pulsingCounter = 20;
 
-		this.world.setBlockState(pos, ModBlocks.chatDetector.getDefaultState().withProperty(BlockChatDetector.POWERED, pulsing));
+		this.getWorld().setBlockState(pos,
+				ModBlocks.chatDetector.getDefaultState().withProperty(BlockChatDetector.POWERED, pulsing));
 	}
 
-	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
+	public boolean checkIfShouldConsume(EntityPlayerMP entityPlayerMP, String sendMessage)
 	{
-		return (oldState.getBlock() != newState.getBlock());
-	}
-
-	public boolean checkMessage(EntityPlayerMP entityPlayerMP, String sendMessage)
-	{
-		if (!this.world.isRemote)
+		if (this.hasWorld() && !this.getWorld().isRemote)
 		{
 			UUID sendUUID = entityPlayerMP.getGameProfile().getId();
 			if (sendUUID != null && sendUUID.equals(this.playerUUID))
@@ -134,14 +122,7 @@ public class TileEntityChatDetector extends TileEntityBase implements ITickable
 				{
 					pulse();
 
-					if (consume)
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
+					return consume;
 				}
 			}
 		}

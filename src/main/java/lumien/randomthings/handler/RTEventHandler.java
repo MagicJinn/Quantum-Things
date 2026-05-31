@@ -100,7 +100,6 @@ import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
@@ -155,7 +154,6 @@ import net.minecraftforge.event.world.BlockEvent.NeighborNotifyEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.event.world.WorldEvent.PotentialSpawns;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
@@ -788,7 +786,7 @@ public class RTEventHandler {
 				if (chatDetector.isInvalid()) {
 					iterator.remove();
 				} else {
-					if (chatDetector.checkMessage(event.getPlayer(), event.getMessage())) {
+					if (chatDetector.checkIfShouldConsume(event.getPlayer(), event.getMessage())) {
 						event.setCanceled(true);
 					}
 				}
