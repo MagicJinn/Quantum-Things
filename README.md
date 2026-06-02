@@ -134,6 +134,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed a crash from CustomClassWriter on newer java versions. ([courtesy of Leclowndu93150](https://github.com/MagicJinn/Quantum-Things/pull/55))
 - Fixed a crash when the Notification Interface was used in Multiplayer. ([courtesy of Alternis](https://github.com/MagicJinn/Quantum-Things/pull/57))
 - Fixed a rare crash caused by the Chat Detector and Global Chat Detector trying to access a null world.
+- Fixed the Ancient Furnace being able to break indestructible blocks.
 
 ### Reporting Issues
 

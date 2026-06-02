@@ -14,6 +14,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Named the new variants of Spectre wood consistently with vanilla (Spectre Planks > Spectre Wood Planks) (Introduced in 1.2.0).
 - Fixed a crash from CustomClassWriter on newer java versions. ([courtesy of Leclowndu93150](https://github.com/MagicJinn/Quantum-Things/pull/55))
 - Fixed a crash when the Notification Interface was used in Multiplayer. ([courtesy of Alternis](https://github.com/MagicJinn/Quantum-Things/pull/57))
+- Fixed the Ancient Furnace being able to break indestructible blocks.
 
 ## 1.2.0
 

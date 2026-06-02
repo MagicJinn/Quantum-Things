@@ -7,6 +7,7 @@ import lumien.randomthings.config.Numbers;
 import lumien.randomthings.lib.AncientFurnaceConversion;
 import lumien.randomthings.util.NBTUtil;
 import lumien.randomthings.util.WorldUtil;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -248,10 +249,14 @@ public class TileEntityAncientFurnace extends TileEntityBase implements ITickabl
 
 					if (!world.isAirBlock(nextBreak))
 					{
-						world.setBlockToAir(nextBreak);
+						IBlockState breakState = world.getBlockState(nextBreak);
+						if (breakState.getBlockHardness(world, nextBreak) >= 0) {
+							world.setBlockToAir(nextBreak);
 
-						world.playSound(null, nextBreak, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
-						world.playEvent(2000, nextBreak, 4);
+							world.playSound(null, nextBreak, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS,
+									0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
+							world.playEvent(2000, nextBreak, 4);
+						}
 					}
 				}
 				else if (startingCounter == 20 * 20)
