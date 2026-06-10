@@ -7,6 +7,10 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.2.2
+
+- Fix Spectre Lens NullPointerException when starting a server (introduced in 1.2.1).
+
 ## 1.2.1
 
 ### Fixes
