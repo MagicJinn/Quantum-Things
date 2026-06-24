@@ -1,18 +1,18 @@
 // Save and restore navigation scroll position
-const nav = document.getElementById("container_navigation");
-if (nav) {
+const navContainer = document.getElementById("container_navigation");
+if (navContainer) {
     const savedScroll = sessionStorage.getItem("scroll");
     if (savedScroll) {
-        nav.scrollTop = savedScroll;
+        navContainer.scrollTop = savedScroll;
         sessionStorage.removeItem("scroll");
     }
 }
 
 document.body.addEventListener('click', function (e) {
     if (e.target.tagName === 'A') {
-        const nav = document.getElementById("container_navigation");
-        if (nav) {
-            sessionStorage.setItem("scroll", nav.scrollTop);
+        const container = document.getElementById("container_navigation");
+        if (container) {
+            sessionStorage.setItem("scroll", container.scrollTop);
         }
     }
 });

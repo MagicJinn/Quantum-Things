@@ -1,10 +1,10 @@
 // Wiki search functionality
 const searchInput = document.getElementById('wiki-search');
-const nav = document.getElementById('nav');
+const wikiNav = document.getElementById('nav');
 
-if (searchInput && nav) {
-    const allSections = Array.from(nav.querySelectorAll('li.section'));
-    const allPages = Array.from(nav.querySelectorAll('li.page'));
+if (searchInput && wikiNav) {
+    const allSections = Array.from(wikiNav.querySelectorAll('li.section'));
+    const allPages = Array.from(wikiNav.querySelectorAll('li.page'));
 
     function matches(search, text) {
         if (!search) return true;
