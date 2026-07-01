@@ -138,6 +138,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed the Ancient Furnace being able to break indestructible blocks.
 - Fixed Magic Beans being able to resume growing when being interacted with with the Acceleration Wand (or any other item that would run updateTick()).
 - Fixed Plains biome generating in the Spectre dimension instead of the Spectral biome.
+- Optimized some worldgen features to be more performant, specifically in regards to lighting calculations.
 
 ### Reporting Issues
 

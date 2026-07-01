@@ -16,6 +16,8 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 ### Fixes
 
 - Fixed Plains biome generating in the Spectre dimension instead of the Spectral biome.
+- Possibly fixed Spectre Illuminators randomly disabling themselves after reload/relog.
+- Optimized some worldgen features to be more performant, specifically in regards to lighting calculations.
 
 ## 1.2.2
 
