@@ -12,6 +12,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 ### Fixes
 
 - Fixed the Spectre Key return location getting lost on death or when returning from the End.
+- Fixed a crash where Spectre Log would crash Bewitchment witches' altars because of an incorrect block state property (placed logs keep their rotation).
 
 ## 1.3.0
 

@@ -5,13 +5,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -24,8 +21,6 @@ import javax.annotation.Nonnull;
 
 public class BlockSpectreLog extends BlockRotatedPillar
 {
-	public static final PropertyEnum<BlockSpectreLog.EnumAxis> LOG_AXIS = PropertyEnum.create("axis", BlockSpectreLog.EnumAxis.class);
-
 	public BlockSpectreLog()
 	{
 		super(Material.WOOD);
@@ -33,29 +28,49 @@ public class BlockSpectreLog extends BlockRotatedPillar
 		this.setHardness(2.0F);
 		this.setSoundType(SoundType.WOOD);
 
-		this.setDefaultState(this.blockState.getBaseState().withProperty(LOG_AXIS, BlockSpectreLog.EnumAxis.Y));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(AXIS, EnumFacing.Axis.Y));
 
 		BlockBase.registerBlock("spectreLog", this);
 
 		OreDictionary.registerOre("logWood", this);
 	}
 
-	@Override
-	protected BlockStateContainer createBlockState()
-	{
-		return new BlockStateContainer(this, LOG_AXIS);
-	}
-
+	/**
+	 * Keep the historical meta encoding (0=X, 1=Y, 2=Z, 3=legacy NONE→Y)
+	 * so existing worlds retain log rotation
+	 */
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return state.getValue(LOG_AXIS).ordinal();
+		switch (state.getValue(AXIS)) {
+			case X:
+				return 0;
+			case Z:
+				return 2;
+			case Y:
+			default:
+				return 1;
+		}
 	}
 
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return this.getDefaultState().withProperty(LOG_AXIS, EnumAxis.values()[meta]);
+		EnumFacing.Axis axis;
+		switch (meta) {
+			case 0:
+				axis = EnumFacing.Axis.X;
+				break;
+			case 2:
+				axis = EnumFacing.Axis.Z;
+				break;
+			case 1:
+			case 3: // legacy EnumAxis.NONE
+			default:
+				axis = EnumFacing.Axis.Y;
+				break;
+		}
+		return this.getDefaultState().withProperty(AXIS, axis);
 	}
 
 	@Override
@@ -85,7 +100,7 @@ public class BlockSpectreLog extends BlockRotatedPillar
 	@Override
 	public IBlockState getStateForPlacement(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, @Nonnull EntityLivingBase placer)
 	{
-		return this.getStateFromMeta(meta).withProperty(LOG_AXIS, BlockSpectreLog.EnumAxis.fromFacingAxis(facing.getAxis()));
+		return this.getDefaultState().withProperty(AXIS, facing.getAxis());
 	}
 
 	/**
@@ -100,12 +115,12 @@ public class BlockSpectreLog extends BlockRotatedPillar
 		case COUNTERCLOCKWISE_90:
 		case CLOCKWISE_90:
 
-			switch (state.getValue(LOG_AXIS))
+			switch (state.getValue(AXIS))
 			{
 			case X:
-				return state.withProperty(LOG_AXIS, BlockSpectreLog.EnumAxis.Z);
+				return state.withProperty(AXIS, EnumFacing.Axis.Z);
 			case Z:
-				return state.withProperty(LOG_AXIS, BlockSpectreLog.EnumAxis.X);
+				return state.withProperty(AXIS, EnumFacing.Axis.X);
 			default:
 				return state;
 			}
@@ -125,45 +140,6 @@ public class BlockSpectreLog extends BlockRotatedPillar
 	public boolean isWood(@Nonnull net.minecraft.world.IBlockAccess world, @Nonnull BlockPos pos)
 	{
 		return true;
-	}
-
-	public static enum EnumAxis implements IStringSerializable
-	{
-		X("x"), Y("y"), Z("z"), NONE("none");
-
-		private final String name;
-
-		private EnumAxis(String name)
-		{
-			this.name = name;
-		}
-
-		@Override
-		public String toString()
-		{
-			return this.name;
-		}
-
-		public static BlockSpectreLog.EnumAxis fromFacingAxis(EnumFacing.Axis axis)
-		{
-			switch (axis)
-			{
-			case X:
-				return X;
-			case Y:
-				return Y;
-			case Z:
-				return Z;
-			default:
-				return NONE;
-			}
-		}
-
-		@Override
-		public String getName()
-		{
-			return this.name;
-		}
 	}
 
 	@Override
