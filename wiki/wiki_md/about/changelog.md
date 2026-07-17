@@ -7,6 +7,12 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.3.1
+
+### Fixes
+
+- Fixed the Spectre Key return location getting lost on death or when returning from the End.
+
 ## 1.3.0
 
 ### Changes

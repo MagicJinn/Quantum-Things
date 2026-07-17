@@ -20,7 +20,6 @@ import lumien.randomthings.block.BlockCompressedSlimeBlock;
 import lumien.randomthings.block.BlockContactButton;
 import lumien.randomthings.block.BlockContactLever;
 import lumien.randomthings.block.ModBlocks;
-import lumien.randomthings.capability.bottledtime.IBottledTime;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.client.models.blocks.ModelCustomWorkbench;
 import lumien.randomthings.client.models.blocks.ModelFluidDisplay;
@@ -448,13 +447,8 @@ public class RTEventHandler {
 			EntityPlayer oldPlayer = event.getOriginal();
 			EntityPlayer newPlayer = event.getEntityPlayer();
 
-			IBottledTime oldCap = oldPlayer.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
-			IBottledTime newCap = newPlayer.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
-			if (oldCap != null && newCap != null) {
-				newCap.setBottledTime(oldCap.getBottledTime());
-				newCap.setLastAddedWorldTime(oldCap.getLastAddedWorldTime());
-				ItemTimeInABottle.syncBottledTimeToClient(newPlayer);
-			}
+			ItemTimeInABottle.copyBottledTime(oldPlayer, newPlayer);
+			SpectreHandler.copyReturnLocation(oldPlayer, newPlayer);
 		}
 
 		if (event.isWasDeath()

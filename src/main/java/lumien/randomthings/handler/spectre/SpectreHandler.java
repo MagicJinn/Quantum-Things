@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import lumien.randomthings.config.Internals;
 import lumien.randomthings.util.PlayerUtil;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -190,6 +191,19 @@ public class SpectreHandler extends WorldSavedData
 		if (world != null)
 		{
 			world.getMapStorage().setData(ID, new SpectreHandler());
+		}
+	}
+
+	public static void copyReturnLocation(EntityPlayer from, EntityPlayer to)
+	{
+		NBTTagCompound fromData = from.getEntityData();
+		if (fromData.hasKey("spectrePosX"))
+		{
+			NBTTagCompound toData = to.getEntityData();
+			toData.setDouble("spectrePosX", fromData.getDouble("spectrePosX"));
+			toData.setDouble("spectrePosY", fromData.getDouble("spectrePosY"));
+			toData.setDouble("spectrePosZ", fromData.getDouble("spectrePosZ"));
+			toData.setInteger("spectreDimension", fromData.getInteger("spectreDimension"));
 		}
 	}
 

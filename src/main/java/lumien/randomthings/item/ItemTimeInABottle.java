@@ -357,4 +357,15 @@ public class ItemTimeInABottle extends ItemBase
 		if (cap != null && player instanceof EntityPlayerMP)
 			PacketHandler.instance().sendTo(new MessageBottledTimeSync(cap.getBottledTime()), (EntityPlayerMP) player);
 	}
+
+	public static void copyBottledTime(EntityPlayer from, EntityPlayer to)
+	{
+		IBottledTime oldCap = from.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+		IBottledTime newCap = to.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+		if (oldCap != null && newCap != null) {
+			newCap.setBottledTime(oldCap.getBottledTime());
+			newCap.setLastAddedWorldTime(oldCap.getLastAddedWorldTime());
+			syncBottledTimeToClient(to);
+		}
+	}
 }
