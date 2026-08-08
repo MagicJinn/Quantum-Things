@@ -387,7 +387,8 @@ class WikiBuilder:
                 }
             }
             
-            # Add breadcrumb
+            # Home > page only. Category dirs have no index page, so linking
+            # {base}/{category}/ creates crawlable 404s (e.g. /about/).
             breadcrumb_schema = {
                 "@context": "https://schema.org",
                 "@type": "BreadcrumbList",
@@ -401,12 +402,6 @@ class WikiBuilder:
                     {
                         "@type": "ListItem",
                         "position": 2,
-                        "name": category.title(),
-                        "item": f"{self.base_url}/{category}/"
-                    },
-                    {
-                        "@type": "ListItem",
-                        "position": 3,
                         "name": short_title,
                         "item": url
                     }
