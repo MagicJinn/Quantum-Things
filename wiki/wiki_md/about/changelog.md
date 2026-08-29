@@ -9,6 +9,12 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 ## 1.3.1
 
+### Changes
+
+- Added CraftTweaker support for Golden Chicken conversion recipes (`mods.randomthings.GoldenChicken`). Default is still gold ore -> 3 gold ingots.
+- Golden Chickens now show eating particles of the item they are chewing, and follow players holding a valid input.
+- Added a JEI recipe category for Golden Chicken conversions.
+
 ### Fixes
 
 - Fixed the Spectre Key return location getting lost on death or when returning from the End.
