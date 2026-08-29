@@ -108,7 +108,7 @@ public class EntityGoldenChicken extends EntityAnimal {
         if (this.world.isRemote && EATING_ITEM.equals(key)) {
             ItemStack stack = this.getEatingItem();
             if (!stack.isEmpty()) {
-                this.spawnEatingParticles(stack, 4);
+                this.spawnEatingParticles(stack, 2);
             }
         }
     }
@@ -221,7 +221,7 @@ public class EntityGoldenChicken extends EntityAnimal {
             Vec3d pos = new Vec3d(((double) this.rand.nextFloat() - 0.5D) * 0.2D, d0, 0.35D);
             pos = pos.rotatePitch(-this.rotationPitch * 0.017453292F);
             pos = pos.rotateYaw(-this.rotationYawHead * 0.017453292F);
-            pos = pos.add(this.posX, this.posY + (double) this.height * 0.55D, this.posZ);
+            pos = pos.add(this.posX, this.posY + (double) this.height * 0.90D, this.posZ);
 
             this.world.spawnParticle(EnumParticleTypes.ITEM_CRACK, pos.x, pos.y, pos.z, velocity.x,
                     velocity.y + 0.05D, velocity.z, Item.getIdFromItem(stack.getItem()), stack.getMetadata());
