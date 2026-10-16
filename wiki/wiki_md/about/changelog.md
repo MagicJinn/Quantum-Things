@@ -7,6 +7,13 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.3.2
+
+### Changes
+
+- Added eating particles to the Golden Chicken.
+- Added CraftTweaker support for the Golden Chicken.
+
 ## 1.3.1
 
 ### Fixes
