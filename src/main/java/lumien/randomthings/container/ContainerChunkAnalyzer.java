@@ -11,6 +11,7 @@ import lumien.randomthings.handler.chunkanalyzer.ChunkAnalyzerResult;
 import lumien.randomthings.item.ModItems;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.Item;
@@ -131,23 +132,30 @@ public class ContainerChunkAnalyzer extends Container
 
 							String name;
 
-							if (i == null)
+							// getItemFromBlock returns AIR (not null) when a block has no item form
+							if (i == null || i == Items.AIR)
 							{
-								name = state.getBlock().getLocalizedName();
+								name = safeBlockName(state);
 								br.stack = ItemStack.EMPTY;
 							}
 							else
 							{
 								br.stack = new ItemStack(i, 1, meta);
-								try {
+								try
+								{
 									name = br.stack.getDisplayName();
 									if (name.equals("Air"))
 									{
-										name = state.getBlock().getLocalizedName();
+										name = safeBlockName(state);
 									}
-								} catch (RuntimeException e) {
-									// Some mods throw exceptions for invalid metadata
-									name = state.getBlock().getLocalizedName();
+								}
+								catch (Exception e)
+								{
+									// Mods like Ferdinand's Flowers / Erebus throw on invalid
+									// world metadata (e.g. double-plant halves). Drop the stack
+									// so later GUI rendering cannot crash the same way.
+									name = safeBlockName(state);
+									br.stack = ItemStack.EMPTY;
 								}
 							}
 
@@ -199,6 +207,18 @@ public class ContainerChunkAnalyzer extends Container
 					nextX++;
 				}
 			}
+		}
+	}
+
+	private static String safeBlockName(IBlockState state)
+	{
+		try
+		{
+			return state.getBlock().getLocalizedName();
+		}
+		catch (Exception e)
+		{
+			return state.getBlock().getRegistryName() != null ? state.getBlock().getRegistryName().toString() : "unknown";
 		}
 	}
 

@@ -15,6 +15,10 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 - Added CraftTweaker support for the Golden Chicken.
 - Added optional FTB Utilities AFK pause for Time in a Bottle (`TimeInABottlePauseWhenAFK`, off by default).
 
+### Fixes
+
+- Fixed Chunk Analyzer crashing when scanning blocks with invalid item metadata (e.g. Ferdinand's Flowers double plants).
+
 ## 1.3.1
 
 ### Changes
