@@ -17,6 +17,12 @@ The basic divining rods only show you one ore type while the universal one shows
 
 The detection range of divining rods can be adjusted in the config menu. You can also add, remove, or disable divining rods through the config menu to customize which rods are available in your game.
 
+Each rod entry uses the format `oreDictionaryName,recipeItem,red,green,blue`. For example:
+
+```
+oreCopper,ingotCopper,252,113,21
+```
+
 ## Supported Mods
 
 Divining Rods support ores from many mods, including:
