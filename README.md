@@ -48,6 +48,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Re-added Obsidian Stick from 1.7.10, now used for Spectre Tools and the Biome Painter.
 - Added the Spectre Hoe.
 - Added the ability to configure whether Golden Chickens should produce gold ingots automatically (legacy), or only when fed gold ore (current).
+- Added CraftTweaker support for Golden Chicken conversion recipes, eating particles while chewing, and a JEI recipe category.
 - Added the ability to configure the maximum number of blocks a Potion Vaporizer can affect.
 - Reduced the number of particles spawned by the Potion Vaporizer by several orders of magnitude.
 - Changed the Ancient Furnace to change blocks in a circular area around it, rather than a diamond shape.
