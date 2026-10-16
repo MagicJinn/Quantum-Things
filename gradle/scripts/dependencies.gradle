@@ -78,4 +78,6 @@ dependencies {
     compileOnly rfg.deobf("mezz:jei:4.29.14")
     compileOnly "CraftTweaker2:CraftTweaker2-API:4.1.20.684"
     compileOnly rfg.deobf("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.684")
+    // Runtime for local CraftTweaker script testing (run/scripts/*.zs)
+    runtimeOnly rfg.deobf("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.684")
 }
