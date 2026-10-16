@@ -403,6 +403,7 @@ tooltip.entityDetector.weakOutput=Слабый редстоун выход
 tooltip.entityDetector.strongOutput=Сильный редстоун выход
 
 tooltip.timeInABottle=%d Ч | %d М | %d С
+tooltip.timeInABottle.afk=Время не увеличивается в режиме AFK
 
 gui.basicRedstoneInterface.notarget=Нет цели
 gui.basicRedstoneInterface.targetX=Цель-X: %s

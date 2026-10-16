@@ -6,6 +6,7 @@ import lumien.randomthings.config.Features;
 import lumien.randomthings.config.Numbers;
 import lumien.randomthings.entitys.EntityTimeAccelerator;
 import lumien.randomthings.capability.bottledtime.IBottledTime;
+import lumien.randomthings.handler.compability.ftb.FTBUtilitiesComp;
 import net.minecraft.entity.player.EntityPlayerMP;
 import lumien.randomthings.network.PacketHandler;
 import lumien.randomthings.network.client.MessageBottledTimeSync;
@@ -74,7 +75,8 @@ public class ItemTimeInABottle extends ItemBase
 			boolean cycle = secondWorth == 0 || worldTime % secondWorth == 0;
 
 			if (cycle && cap.getLastAddedWorldTime() != worldTime) {
-				if (cap.getBottledTime() < MAX_BOTTLED_TIME_TICKS) {
+				boolean paused = updateAfkPauseState(player, cap);
+				if (!paused && cap.getBottledTime() < MAX_BOTTLED_TIME_TICKS) {
 					cap.setBottledTime(cap.getBottledTime() + 20);
 					cap.setLastAddedWorldTime(worldTime);
 					syncBottledTimeToClient(player);
@@ -92,9 +94,12 @@ public class ItemTimeInABottle extends ItemBase
 		boolean cycle = secondWorth == 0 || worldTime % secondWorth == 0;
 
 		if (cycle) {
-			long current = getLegacyStoredTime(stack);
-			if (current < MAX_BOTTLED_TIME_TICKS) {
-				setLegacyStoredTime(stack, Math.min(MAX_BOTTLED_TIME_TICKS, current + 20L));
+			IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+			boolean paused = updateAfkPauseState(player, cap);
+			if (!paused) {
+				long current = getLegacyStoredTime(stack);
+				if (current < MAX_BOTTLED_TIME_TICKS)
+					setLegacyStoredTime(stack, Math.min(MAX_BOTTLED_TIME_TICKS, current + 20L));
 			}
 		}
 
@@ -110,6 +115,22 @@ public class ItemTimeInABottle extends ItemBase
 				}
 			}
 		}
+	}
+
+	private static boolean shouldPauseAccumulation(EntityPlayer player)
+	{
+		return Features.TIME_IN_A_BOTTLE_PAUSE_WHEN_AFK && FTBUtilitiesComp.isPlayerAfk(player);
+	}
+
+	/** Updates synced AFK pause flag. Returns whether accumulation should pause. */
+	private static boolean updateAfkPauseState(EntityPlayer player, IBottledTime cap)
+	{
+		boolean paused = shouldPauseAccumulation(player);
+		if (cap != null && cap.isPausedDueToAfk() != paused) {
+			cap.setPausedDueToAfk(paused);
+			syncBottledTimeToClient(player);
+		}
+		return paused;
 	}
 
 	// Migrates legacy NBT to the current capability system
@@ -355,7 +376,7 @@ public class ItemTimeInABottle extends ItemBase
 			return;
 		IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
 		if (cap != null && player instanceof EntityPlayerMP)
-			PacketHandler.instance().sendTo(new MessageBottledTimeSync(cap.getBottledTime()), (EntityPlayerMP) player);
+			PacketHandler.instance().sendTo(new MessageBottledTimeSync(cap.getBottledTime(), cap.isPausedDueToAfk()), (EntityPlayerMP) player);
 	}
 
 	public static void copyBottledTime(EntityPlayer from, EntityPlayer to)
