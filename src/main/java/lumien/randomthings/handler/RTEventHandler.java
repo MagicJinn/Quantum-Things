@@ -20,6 +20,7 @@ import lumien.randomthings.block.BlockCompressedSlimeBlock;
 import lumien.randomthings.block.BlockContactButton;
 import lumien.randomthings.block.BlockContactLever;
 import lumien.randomthings.block.ModBlocks;
+import lumien.randomthings.capability.bottledtime.IBottledTime;
 import lumien.randomthings.capability.redstone.IDynamicRedstoneManager;
 import lumien.randomthings.client.models.blocks.ModelCustomWorkbench;
 import lumien.randomthings.client.models.blocks.ModelFluidDisplay;
@@ -818,7 +819,12 @@ public class RTEventHandler {
             int hours = storedSeconds / 3600;  
             int minutes = (storedSeconds % 3600) / 60;  
             int seconds = storedSeconds % 60;  
-            event.getToolTip().add(I18n.format("tooltip.timeInABottle", hours, minutes, seconds));  
+            event.getToolTip().add(I18n.format("tooltip.timeInABottle", hours, minutes, seconds));
+			if (player != null) {
+				IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+				if (cap != null && cap.isPausedDueToAfk())
+					event.getToolTip().add(TextFormatting.RED + I18n.format("tooltip.timeInABottle.afk"));
+			}
         }  
   
         if (event.getItemStack().hasTagCompound()) {  

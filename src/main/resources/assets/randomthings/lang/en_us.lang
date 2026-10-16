@@ -409,6 +409,7 @@ tooltip.entityDetector.weakOutput=Weak Redstone Output
 tooltip.entityDetector.strongOutput=Strong Redstone Output
 
 tooltip.timeInABottle=%d H | %d M | %d S
+tooltip.timeInABottle.afk=Time is not increasing while AFK
 
 gui.basicRedstoneInterface.notarget=No Target
 gui.basicRedstoneInterface.targetX=Target-X: %s

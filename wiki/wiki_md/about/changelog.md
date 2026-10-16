@@ -13,6 +13,7 @@ This page documents the changes and fixes made in Quantum Things, compared to th
 
 - Added eating particles to the Golden Chicken.
 - Added CraftTweaker support for the Golden Chicken.
+- Added optional FTB Utilities AFK pause for Time in a Bottle (`TimeInABottlePauseWhenAFK`, off by default).
 
 ## 1.3.1
 

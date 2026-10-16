@@ -56,4 +56,7 @@ public class Features {
 
 	@ConfigOption(category = CATEGORY, name = "LegacyTimeInABottle", comment = "Reverts Time in a Bottle to legacy per-item storage via NBT instead of global player storage.")
 	public static boolean LEGACY_TIME_IN_A_BOTTLE = false;
+
+	@ConfigOption(category = CATEGORY, name = "TimeInABottlePauseWhenAFK", comment = "When enabled and FTB Utilities is present, Time in a Bottle does not gather time while the player is AFK according to FTB Utilities. Disabled by default.")
+	public static boolean TIME_IN_A_BOTTLE_PAUSE_WHEN_AFK = false;
 }

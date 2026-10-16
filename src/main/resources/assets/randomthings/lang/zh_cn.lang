@@ -404,6 +404,7 @@ tooltip.entityDetector.weakOutput=低频红石信号输出
 tooltip.entityDetector.strongOutput=高频红石信号输出
 
 tooltip.timeInABottle=%d 时 | %d 分 | %d 秒
+tooltip.timeInABottle.afk=挂机时时间不会增加
 
 gui.basicRedstoneInterface.notarget=无目标锁定
 gui.basicRedstoneInterface.targetX=目标-X：%s
