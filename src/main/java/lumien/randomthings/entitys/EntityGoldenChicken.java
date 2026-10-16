@@ -1,15 +1,14 @@
 package lumien.randomthings.entitys;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Sets;
-
 import lumien.randomthings.config.Features;
 import lumien.randomthings.item.ModItems;
+import lumien.randomthings.recipes.goldenchicken.GoldenChickenRecipe;
+import lumien.randomthings.recipes.goldenchicken.GoldenChickenRecipeHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
@@ -18,7 +17,6 @@ import net.minecraft.entity.ai.EntityAIFollowParent;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIPanic;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
@@ -29,20 +27,25 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class EntityGoldenChicken extends EntityAnimal {
-    private static final Set<Item> TEMPTATION_ITEMS = Sets.newHashSet(Items.WHEAT_SEEDS, Items.MELON_SEEDS,
-            Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
+    private static final DataParameter<ItemStack> EATING_ITEM = EntityDataManager
+            .createKey(EntityGoldenChicken.class, DataSerializers.ITEM_STACK);
+
     public float wingRotation;
     public float destPos;
     public float oFlapSpeed;
@@ -53,6 +56,8 @@ public class EntityGoldenChicken extends EntityAnimal {
     public int ingotDropTimer;
     public boolean chickenJockey;
 
+    private ItemStack pendingOutput = ItemStack.EMPTY;
+
     private int eggDropTime = 6000;
 
     public EntityGoldenChicken(World worldIn) {
@@ -62,10 +67,16 @@ public class EntityGoldenChicken extends EntityAnimal {
         this.setPathPriority(PathNodeType.WATER, 0.0F);
     }
 
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        this.dataManager.register(EATING_ITEM, ItemStack.EMPTY);
+    }
+
     protected void initEntityAI() {
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIPanic(this, 1.4D));
-        this.tasks.addTask(3, new EntityAITempt(this, 1.0D, false, TEMPTATION_ITEMS));
+        this.tasks.addTask(3, new EntityAIGoldenChickenTempt(this, 1.0D, false));
         this.tasks.addTask(4, new EntityAIFollowParent(this, 1.1D));
         this.tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0D));
         this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
@@ -80,6 +91,26 @@ public class EntityGoldenChicken extends EntityAnimal {
         super.applyEntityAttributes();
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(4.0D);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+    }
+
+    public ItemStack getEatingItem() {
+        return this.dataManager.get(EATING_ITEM);
+    }
+
+    public void setEatingItem(ItemStack stack) {
+        this.dataManager.set(EATING_ITEM, stack.isEmpty() ? ItemStack.EMPTY : stack.copy());
+        this.dataManager.setDirty(EATING_ITEM);
+    }
+
+    @Override
+    public void notifyDataManagerChange(DataParameter<?> key) {
+        super.notifyDataManagerChange(key);
+        if (this.world.isRemote && EATING_ITEM.equals(key)) {
+            ItemStack stack = this.getEatingItem();
+            if (!stack.isEmpty()) {
+                this.spawnEatingParticles(stack, 2);
+            }
+        }
     }
 
     public void onLivingUpdate() {
@@ -101,8 +132,10 @@ public class EntityGoldenChicken extends EntityAnimal {
 
         this.wingRotation += this.wingRotDelta * 2.0F;
 
-        if (this.world.isRemote)
+        if (this.world.isRemote) {
+            this.updateEatingParticles();
             return;
+        }
 
         if (Features.GOLDEN_CHICKEN_PRODUCTION)
         // Produce gold like eggs
@@ -118,13 +151,17 @@ public class EntityGoldenChicken extends EntityAnimal {
                 }
             }
         }
-        // Even if Golden Chicken Production is enabled, we also drop ingots when fed
-        // gold ore
+        // Even if Golden Chicken Production is enabled, we also drop items when fed
+        // a matching recipe input
 
         if (ingotDropTimer > 0 && --this.ingotDropTimer <= 0) {
             this.playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1.0F,
                     (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.5F);
-            this.dropItem(Items.GOLD_INGOT, 3);
+            ItemStack output = this.pendingOutput.isEmpty() ? new ItemStack(Items.GOLD_INGOT, 3)
+                    : this.pendingOutput.copy();
+            this.entityDropItem(output, 0.0F);
+            this.pendingOutput = ItemStack.EMPTY;
+            this.setEatingItem(ItemStack.EMPTY);
         }
 
         if (this.ingotDropTimer == 0) {
@@ -132,31 +169,62 @@ public class EntityGoldenChicken extends EntityAnimal {
                     this.getEntityBoundingBox().grow(0.5));
 
             if (items.size() > 0) {
-                int goldOreID = OreDictionary.getOreID("oreGold");
                 for (EntityItem ei : items) {
                     ItemStack stack = ei.getItem();
 
                     if (!stack.isEmpty()) {
-                        int[] ids = OreDictionary.getOreIDs(stack);
+                        GoldenChickenRecipe recipe = GoldenChickenRecipeHandler.findRecipe(stack);
+                        if (recipe != null) {
+                            ItemStack eaten = stack.copy();
+                            eaten.setCount(1);
+                            stack.shrink(1);
+                            ei.setItem(stack);
 
-                        boolean found = false;
-                        for (int i : ids) {
-                            if (i == goldOreID) {
-                                stack.shrink(1);
-                                ei.setItem(stack);
-
-                                found = true;
-                                break;
-                            }
-                        }
-
-                        if (found) {
-                            this.ingotDropTimer = 600 + this.rand.nextInt(600);
+                            this.pendingOutput = recipe.getOutput();
+                            this.setEatingItem(eaten);
+                            this.ingotDropTimer = recipe.rollDigestTime(this.rand);
+                            this.playSound(SoundEvents.ENTITY_GENERIC_EAT,
+                                    0.5F + 0.5F * (float) this.rand.nextInt(2),
+                                    (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
                             break;
                         }
                     }
                 }
             }
+        }
+    }
+
+    private void updateEatingParticles() {
+        ItemStack eating = this.getEatingItem();
+        if (eating.isEmpty() || this.ticksExisted % 4 != 0) {
+            return;
+        }
+
+        // Player eating is 5 particles every 4 ticks. About 50% of that is 2-3.
+        int count = 2 + (this.rand.nextBoolean() ? 1 : 0);
+        this.spawnEatingParticles(eating, count);
+
+        if (this.ticksExisted % 8 == 0) {
+            this.playSound(SoundEvents.ENTITY_GENERIC_EAT, 0.5F + 0.5F * (float) this.rand.nextInt(2),
+                    (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+        }
+    }
+
+    private void spawnEatingParticles(ItemStack stack, int particleCount) {
+        for (int i = 0; i < particleCount; ++i) {
+            Vec3d velocity = new Vec3d(((double) this.rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D,
+                    0.0D);
+            velocity = velocity.rotatePitch(-this.rotationPitch * 0.017453292F);
+            velocity = velocity.rotateYaw(-this.rotationYawHead * 0.017453292F);
+
+            double d0 = (double) (-this.rand.nextFloat()) * 0.4D - 0.1D;
+            Vec3d pos = new Vec3d(((double) this.rand.nextFloat() - 0.5D) * 0.2D, d0, 0.35D);
+            pos = pos.rotatePitch(-this.rotationPitch * 0.017453292F);
+            pos = pos.rotateYaw(-this.rotationYawHead * 0.017453292F);
+            pos = pos.add(this.posX, this.posY + (double) this.height * 0.90D, this.posZ);
+
+            this.world.spawnParticle(EnumParticleTypes.ITEM_CRACK, pos.x, pos.y, pos.z, velocity.x,
+                    velocity.y + 0.05D, velocity.z, Item.getIdFromItem(stack.getItem()), stack.getMetadata());
         }
     }
 
@@ -207,6 +275,12 @@ public class EntityGoldenChicken extends EntityAnimal {
         this.chickenJockey = compound.getBoolean("IsChickenJockey");
         this.timeUntilNextIngotEgg = compound.getInteger("timeUntilNextIngotEgg");
         this.ingotDropTimer = compound.getInteger("ingotDropTimer");
+        if (compound.hasKey("pendingOutput")) {
+            this.pendingOutput = new ItemStack(compound.getCompoundTag("pendingOutput"));
+        }
+        if (compound.hasKey("eatingItem")) {
+            this.setEatingItem(new ItemStack(compound.getCompoundTag("eatingItem")));
+        }
     }
 
     /**
@@ -217,5 +291,12 @@ public class EntityGoldenChicken extends EntityAnimal {
         compound.setBoolean("IsChickenJockey", this.chickenJockey);
         compound.setInteger("timeUntilNextIngotEgg", this.timeUntilNextIngotEgg);
         compound.setInteger("ingotDropTimer", this.ingotDropTimer);
+        if (!this.pendingOutput.isEmpty()) {
+            compound.setTag("pendingOutput", this.pendingOutput.writeToNBT(new NBTTagCompound()));
+        }
+        ItemStack eating = this.getEatingItem();
+        if (!eating.isEmpty()) {
+            compound.setTag("eatingItem", eating.writeToNBT(new NBTTagCompound()));
+        }
     }
 }
