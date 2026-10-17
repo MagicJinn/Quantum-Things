@@ -7,6 +7,7 @@ import java.util.Random;
 
 import lumien.randomthings.item.block.ItemBlockOfSticks;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -34,6 +35,7 @@ public class BlockBlockOfSticks extends BlockBase
 		super("blockOfSticks", Material.WOOD, ItemBlockOfSticks.class);
 
 		this.setHardness(0.2F);
+        this.setSoundType(SoundType.WOOD);
 		this.setLightOpacity(1);
 
 		this.setDefaultState(this.blockState.getBaseState().withProperty(RETURNING, false));
@@ -122,7 +124,7 @@ public class BlockBlockOfSticks extends BlockBase
 			}
 			else
 			{
-				worldIn.playSound(null, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 0.6f, 1.2f);
+				worldIn.playSound(null, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 0.6f, 2.0f);
 				worldIn.playEvent(2001, pos, Block.getStateId(state));
 			}
 		}
