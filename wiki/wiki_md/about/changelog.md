@@ -7,30 +7,20 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
-## 1.3.2
-
-### Changes
-
-- Added eating particles to the Golden Chicken.
-- Added CraftTweaker support for the Golden Chicken.
-- Added optional FTB Utilities AFK pause for Time in a Bottle (`TimeInABottlePauseWhenAFK`, off by default).
-
-### Fixes
-
-- Fixed Chunk Analyzer crashing when scanning blocks with invalid item metadata (e.g. Ferdinand's Flowers double plants).
-
 ## 1.3.1
 
 ### Changes
 
 - Added CraftTweaker support for Golden Chicken conversion recipes (`mods.randomthings.GoldenChicken`). Default is still gold ore -> 3 gold ingots.
-- Golden Chickens now show eating particles of the item they are chewing, and follow players holding a valid input.
+- Golden Chickens now show eating particles of the item they are chewing, and follow players holding a valid eating item.
 - Added a JEI recipe category for Golden Chicken conversions.
+- Added optional FTB Utilities AFK pause for Time in a Bottle (`TimeInABottlePauseWhenAFK`, off by default).
 
 ### Fixes
 
 - Fixed the Spectre Key return location getting lost on death or when returning from the End.
 - Fixed a crash where Spectre Log would crash Bewitchment witches' altars because of an incorrect block state property (placed logs keep their rotation).
+- Fixed Chunk Analyzer crashing when scanning blocks with invalid item metadata (e.g. Ferdinand's Flowers double plants).
 
 ## 1.3.0
 
