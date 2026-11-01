@@ -564,8 +564,8 @@ jei.spectreCoil.number.suffix= and outputs it into the block it's attached to. T
 jei.spectreCoil.transfer.suffix= out of the spectre energy buffer of whoever placed it into the block it's attached to. You get energy into your spectre energy buffer using a Spectre Energy Injector.
 jei.spectreCoil.generate.suffix= and outputs it into the block it's attached to.
 jei.randomthings.goldenchicken=Golden Chicken
-jei.randomthings.goldenchicken.time=Chew time: %s-%s seconds
-jei.randomthings.goldenchicken.time.exact=Chew time: %s seconds
+jei.randomthings.goldenchicken.time=Chew time: %ss-%ss
+jei.randomthings.goldenchicken.time.exact=Chew time: %ss
 
 tile.plate_redirector.info=Entities moving over this plate are redirected towards a different direction. Right clicking the plate allows you to change that direction.
 tile.plate_filteredredirector.info=Entities moving over this plate are redirected towards a different direction depending on which filter they match.

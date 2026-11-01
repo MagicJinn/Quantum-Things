@@ -559,6 +559,9 @@ tile.spectreEnergyInjector.info=通灵能量注入器最多能够存储1000000RF
 jei.spectreCoil.number.suffix=并输出至其连接的方块。它们可以在地牢中找到。
 jei.spectreCoil.transfer.suffix=从放置者的通灵能量缓冲区输出至其连接的方块。使用通灵能量注入器可将能量输入到你的通灵能量缓冲区。
 jei.spectreCoil.generate.suffix=并输出至其连接的方块。
+jei.randomthings.goldenchicken=金鸡
+jei.randomthings.goldenchicken.time=咀嚼时间：%ss-%ss
+jei.randomthings.goldenchicken.time.exact=咀嚼时间：%ss
 
 
 tile.plate_redirector.info=在这个板上移动的实体会被重定向到一个不同的方向，右键单击以改变方向。
