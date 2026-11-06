@@ -80,6 +80,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Golden Chickens now show eating particles of the item they are chewing, and follow players holding a valid eating item.
 - Added a JEI recipe category for Golden Chicken conversions.
 - Added optional FTB Utilities AFK pause for Time in a Bottle (`TimeInABottlePauseWhenAFK`, off by default).
+- Updated the Golden Egg item texture to make it more shiny. ([courtesy of MisterIceCat](https://github.com/MagicJinn/Quantum-Things/pull/66))
 
 ### Fixes
 
@@ -149,6 +150,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Possibly fixed Spectre Illuminators randomly disabling themselves after reload/relog.
 - Fixed the Spectre Key return location getting lost on death or when returning from the End.
 - Fixed Chunk Analyzer crashing when scanning blocks with invalid item metadata (e.g. Ferdinand's Flowers double plants).
+- Made Block of Sticks use wood sounds when placed, walked on, and broken. ([courtesy of MisterIceCat](https://github.com/MagicJinn/Quantum-Things/pull/66))
 
 ### Reporting Issues
 
