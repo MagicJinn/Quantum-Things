@@ -11,6 +11,8 @@ public class BottledTimeStorage implements IBottledTime {
     private long bottledTime;
     // Only used to detect multiple bottles. Not persistent
     private long lastAddedWorldTime = -1;
+    // Client-synced AFK pause flag. Not persistent
+    private boolean pausedDueToAfk;
 
     @Override
     public long getBottledTime() {
@@ -30,6 +32,16 @@ public class BottledTimeStorage implements IBottledTime {
     @Override
     public void setLastAddedWorldTime(long worldTime) {
         this.lastAddedWorldTime = worldTime;
+    }
+
+    @Override
+    public boolean isPausedDueToAfk() {
+        return pausedDueToAfk;
+    }
+
+    @Override
+    public void setPausedDueToAfk(boolean paused) {
+        this.pausedDueToAfk = paused;
     }
 
     @Nonnull

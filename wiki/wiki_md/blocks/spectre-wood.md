@@ -9,7 +9,7 @@ category: blocks
 
 ---
 
-Spectre Wood is a wood type that can be crafted from Spectre Logs of a [Spectre Tree](../blocks/spectre-tree). It can be used to craft various blocks, such as Slabs, Stairs, Fences and Fence Gates. Spectre Wood is translucent.
+Spectre Wood is a wood type that can be crafted from Spectre Logs of a [Spectre Tree](../blocks/spectre-sapling). It can be used to craft various blocks, such as Slabs, Stairs, Fences and Fence Gates. Spectre Wood is translucent.
 
 ## Crafting
 

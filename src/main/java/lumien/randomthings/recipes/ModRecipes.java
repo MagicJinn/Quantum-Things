@@ -18,6 +18,7 @@ import lumien.randomthings.item.ItemIngredient;
 import lumien.randomthings.item.ItemPositionFilter;
 import lumien.randomthings.item.ModItems;
 import lumien.randomthings.recipes.anvil.AnvilRecipeHandler;
+import lumien.randomthings.recipes.goldenchicken.GoldenChickenRecipeHandler;
 import lumien.randomthings.recipes.imbuing.ImbuingRecipeHandler;
 import lumien.randomthings.util.ReflectionUtil;
 import net.minecraft.block.Block;
@@ -104,6 +105,8 @@ public class ModRecipes
 
 	public static void register()
 	{
+		GoldenChickenRecipeHandler.registerDefaults();
+
 		for (int i = 0; i < oreDictDyes.length; i++)
 		{
 			oreDictDyes[i] = "dye" + dyes[i];

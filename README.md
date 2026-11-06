@@ -60,6 +60,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Reworked the internals of the (Advanced) Redstone Interface/Observer/Activator/Remote. This should improve redstone performance, even if you aren't using any of these blocks/items in your world. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
 - Changed the Redstone Interface & Observer to only send/receive signals from their target(s) once the target(s) are loaded. ([courtesy of ChaosStrikez](https://github.com/MagicJinn/Quantum-Things/pull/22))
 - Changed Time in a Bottle to store bottled time per player (in a global capability) instead of in the item's NBT. Time is no longer tied to the physical bottle. (This may break custom recipes or mod integrations that rely on the item's NBT. If you are a mod/pack dev, plan accordingly before updating.). A legacy mode is available to revert to the old per-item storage via NBT.
+- Time in a Bottle now stores the last player to hold it, useful for modpack developers to track who uses it in a recipe.
 - Re-used vanilla textures for the Potion Vaporizer and Block Breaker, instead of copying vanilla textures.
 - Added the ability to configure whether Ancient Brick blocks can be broken and will drop their item forms, allowing you to remove them, use them as decoration, or rebuild them elsewhere.
 - Simplified and improved the logic (and performance slightly) for checking if the Ender Dragon has been defeated. It should now also register the dragon death even when the mod is not installed.
@@ -68,13 +69,18 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Added the ability to configure the chance for a Spectre Leaf to drop an Ectoplasm.
 - Added ore dictionary support for various items and crafting recipes, improving compatibility with other mods and modpacks.
 - Added the ability to configure whether Spectre Tools should be disabled.
+- Added the ability to configure whether Spectre Armor should be disabled.
 - Added the ability to configure whether Luminous Blocks should emit light (disabled by default).
 - Added `/qt` as an alias for `/rt`.
 - Added `/rt timeinabottle transfer <playername> <time><s|m|h|d>` to let players transfer their stored Time in a Bottle value to other players.
 - Added the ability to configure whether Spectre Illuminators should be disabled.
 - Added Spectre variants of Stairs, Fences, Fence Gates and Slabs.
 - Added the ability to configure whether Custom Workbenches should be disabled. ([courtesy of Bronitt](https://github.com/MagicJinn/Quantum-Things/pull/60))
-- Made Block of Sticks use wood sounds when placed, walked on, and broken. ([courtesy of MisterIceCat](https://github.com/MagicJinn/Quantum-Things/pull/66))
+- Added CraftTweaker support for Golden Chicken conversion recipes (`mods.randomthings.GoldenChicken`). Default is still gold ore -> 3 gold ingots.
+- Golden Chickens now show eating particles of the item they are chewing, and follow players holding a valid eating item.
+- Added a JEI recipe category for Golden Chicken conversions.
+- Added optional FTB Utilities AFK pause for Time in a Bottle (`TimeInABottlePauseWhenAFK`, off by default).
+- - Made Block of Sticks use wood sounds when placed, walked on, and broken. ([courtesy of MisterIceCat](https://github.com/MagicJinn/Quantum-Things/pull/66))
 - Updated the Golden Egg item texture to make it more shiny. ([courtesy of MisterIceCat](https://github.com/MagicJinn/Quantum-Things/pull/66))
 
 ### Fixes
@@ -118,7 +124,6 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Precious Emeralds being removed from your inventory when giving them to villagers in creative mode.
 - Fixed beans not being able to be planted on non-vanilla blocks, even if the block could sustain plants.
 - Fixed the Imbuing Station not dropping its contents when broken.
-- Fixed a crash when the Chunk Analyzer tried to scan a block that doesn't have a valid metadata.
 - Fixed Entity Detector having no clear difference between Weak and Strong power modes.
 - Fixed Spectre Leaves having their Decay flag set to true when placed.
 - Fixed the Summoning Pendulum being able to capture entities that are targeting you, but are not classified as monsters.
@@ -142,6 +147,10 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Plains biome generating in the Spectre dimension instead of the Spectral biome.
 - Optimized some worldgen features to be more performant, specifically in regards to lighting calculations.
 - Fixed a Redstone Observer crash when writer was null.
+- Fixed a crash where Spectre Log would crash Bewitchment witches' altars because of an incorrect block state property (placed logs keep their rotation).
+- Possibly fixed Spectre Illuminators randomly disabling themselves after reload/relog.
+- Fixed the Spectre Key return location getting lost on death or when returning from the End.
+- Fixed Chunk Analyzer crashing when scanning blocks with invalid item metadata (e.g. Ferdinand's Flowers double plants).
 
 ### Reporting Issues
 

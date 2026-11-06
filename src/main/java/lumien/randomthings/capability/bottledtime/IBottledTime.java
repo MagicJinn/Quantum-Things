@@ -22,4 +22,9 @@ public interface IBottledTime extends ICapability<IBottledTime> {
     long getLastAddedWorldTime();
 
     void setLastAddedWorldTime(long worldTime);
+
+    // Client-synced AFK pause flag. Not persistent
+    boolean isPausedDueToAfk();
+
+    void setPausedDueToAfk(boolean paused);
 }
