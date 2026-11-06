@@ -74,7 +74,6 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Added the ability to configure whether Spectre Illuminators should be disabled.
 - Added Spectre variants of Stairs, Fences, Fence Gates and Slabs.
 - Added the ability to configure whether Custom Workbenches should be disabled. ([courtesy of Bronitt](https://github.com/MagicJinn/Quantum-Things/pull/60))
-- Made Block of Sticks use wood sounds when placed, walked on, and broken. ([courtesy of MisterIceCat](https://github.com/MagicJinn/Quantum-Things/pull/66))
 - Updated the Golden Egg item texture to make it more shiny. ([courtesy of MisterIceCat](https://github.com/MagicJinn/Quantum-Things/pull/66))
 
 ### Fixes
@@ -142,6 +141,7 @@ The goal of Quantum Things is to provide continued support for Random Things, su
 - Fixed Plains biome generating in the Spectre dimension instead of the Spectral biome.
 - Optimized some worldgen features to be more performant, specifically in regards to lighting calculations.
 - Fixed a Redstone Observer crash when writer was null.
+- Made Block of Sticks use wood sounds when placed, walked on, and broken. ([courtesy of MisterIceCat](https://github.com/MagicJinn/Quantum-Things/pull/66))
 
 ### Reporting Issues
 

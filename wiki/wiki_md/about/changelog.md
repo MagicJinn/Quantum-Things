@@ -7,13 +7,21 @@ category: about
 
 This page documents the changes and fixes made in Quantum Things, compared to the original Random Things mod, in reverse chronological order.
 
+## 1.3.1
+
+### Changes
+
+- Updated the Golden Egg item texture. ([courtesy of MisterIceCat](https://github.com/MagicJinn/Quantum-Things/pull/66))
+
+### Fixes
+
+- Made Block of Sticks use wood sounds when placed, walked on, and broken. ([courtesy of MisterIceCat](https://github.com/MagicJinn/Quantum-Things/pull/66))
+
 ## 1.3.0
 
 ### Changes
 
 - Added the ability to configure whether Custom Workbenches should be disabled. ([courtesy of Bronitt](https://github.com/MagicJinn/Quantum-Things/pull/60))
-- Made Block of Sticks use wood sounds when placed, walked on, and broken. ([courtesy of MisterIceCat](https://github.com/MagicJinn/Quantum-Things/pull/66))
-- Updated the Golden Egg item texture. ([courtesy of MisterIceCat](https://github.com/MagicJinn/Quantum-Things/pull/66))
 
 ### Fixes
 
