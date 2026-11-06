@@ -448,13 +448,8 @@ public class RTEventHandler {
 			EntityPlayer oldPlayer = event.getOriginal();
 			EntityPlayer newPlayer = event.getEntityPlayer();
 
-			IBottledTime oldCap = oldPlayer.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
-			IBottledTime newCap = newPlayer.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
-			if (oldCap != null && newCap != null) {
-				newCap.setBottledTime(oldCap.getBottledTime());
-				newCap.setLastAddedWorldTime(oldCap.getLastAddedWorldTime());
-				ItemTimeInABottle.syncBottledTimeToClient(newPlayer);
-			}
+			ItemTimeInABottle.copyBottledTime(oldPlayer, newPlayer);
+			SpectreHandler.copyReturnLocation(oldPlayer, newPlayer);
 		}
 
 		if (event.isWasDeath()
@@ -824,7 +819,12 @@ public class RTEventHandler {
             int hours = storedSeconds / 3600;  
             int minutes = (storedSeconds % 3600) / 60;  
             int seconds = storedSeconds % 60;  
-            event.getToolTip().add(I18n.format("tooltip.timeInABottle", hours, minutes, seconds));  
+            event.getToolTip().add(I18n.format("tooltip.timeInABottle", hours, minutes, seconds));
+			if (player != null) {
+				IBottledTime cap = player.getCapability(IBottledTime.CAPABILITY_BOTTLED_TIME, null);
+				if (cap != null && cap.isPausedDueToAfk())
+					event.getToolTip().add(TextFormatting.RED + I18n.format("tooltip.timeInABottle.afk"));
+			}
         }  
   
         if (event.getItemStack().hasTagCompound()) {  

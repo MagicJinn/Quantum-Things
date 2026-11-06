@@ -403,6 +403,7 @@ tooltip.entityDetector.weakOutput=Слабый редстоун выход
 tooltip.entityDetector.strongOutput=Сильный редстоун выход
 
 tooltip.timeInABottle=%d Ч | %d М | %d С
+tooltip.timeInABottle.afk=Время не увеличивается в режиме AFK
 
 gui.basicRedstoneInterface.notarget=Нет цели
 gui.basicRedstoneInterface.targetX=Цель-X: %s
@@ -556,6 +557,9 @@ tile.spectreEnergyInjector.info=Энергия, помещенная в этот
 jei.spectreCoil.number.suffix= и выводит его в блок, к которому он прикреплен. Их можно найти в сундуках подземелий.
 jei.spectreCoil.transfer.suffix= из буфера призрачной энергии того, кто его разместил, в блок, к которому он прикреплен. Вы получаете энергию в свой буфер призрачной энергии, используя инъектор призрачной энергии.
 jei.spectreCoil.generate.suffix= и выводит его в блок, к которому он прикреплен.
+jei.randomthings.goldenchicken=Золотая курица
+jei.randomthings.goldenchicken.time=Время жевания: %ss-%ss
+jei.randomthings.goldenchicken.time.exact=Время жевания: %ss
 
 tile.plate_redirector.info=Сущности, движущиеся по этой пластине, перенаправляются в другое направление. Правый клик по пластине позволяет вам изменить это направление.
 tile.plate_filteredredirector.info=Сущности, движущиеся по этой пластине, перенаправляются в другое направление в зависимости от того, какой фильтр они соответствуют.
